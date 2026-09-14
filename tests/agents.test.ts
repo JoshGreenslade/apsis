@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import pack from "../curricula/agentic-engineering";
 import { validatePack } from "../lib/curriculum-engine";
-test("the outlined course covers 30 concepts and two projects with usable lab references", () => {
+test("the outlined course covers 32 concepts and two projects with usable lab references", () => {
   const p = validatePack(pack);
   assert.equal(p.topics.length, 32);
   assert.equal(p.topics.filter((t) => t.practical).length, 10);
@@ -12,7 +12,7 @@ test("the outlined course covers 30 concepts and two projects with usable lab re
   assert.equal(p.topics.at(-2)!.id, "tiny-harness");
   assert.equal(p.topics.at(-1)!.id, "graduation");
   for (const t of p.topics) {
-    assert.equal(t.retrievalProblems.length + t.fadedExercise.steps.length, 3);
+    assert.equal(t.retrievalProblems.length + t.fadedExercise.steps.length, 6);
     assert.ok(t.teaching?.outcomes.length);
     assert.ok(t.theory.length >= 2);
     if (t.practical) {

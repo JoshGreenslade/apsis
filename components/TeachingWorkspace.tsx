@@ -648,6 +648,13 @@ export default function TeachingWorkspace({
                               question={checkpoint.question}
                               answer={checkpoint.answer}
                             />
+                            {checkpoint.further?.map((r) => (
+                              <Reflection
+                                key={r.question}
+                                question={r.question}
+                                answer={r.answer}
+                              />
+                            ))}
                           </>
                         )}
                       </section>

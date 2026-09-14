@@ -1,62 +1,4 @@
-import type { Diagram, Problem } from "@/types/curriculum";
-export function numeric(
-  id: string,
-  prompt: string,
-  value: number,
-  unit: string,
-  solution: string,
-  hint: string,
-  extra: Partial<Problem> = {},
-): Problem {
-  return {
-    id,
-    prompt,
-    answer: {
-      kind: "numeric",
-      value,
-      unit,
-      acceptedUnits: [unit],
-      absoluteTolerance: 0.001,
-      relativeTolerance: 0.002,
-    },
-    solution,
-    hint,
-    rubric: {
-      defaultCategory: "algebraic",
-      explanation:
-        "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
-      misconceptions: [],
-    },
-    ...extra,
-  };
-}
-export function choice(
-  id: string,
-  prompt: string,
-  options: string[],
-  correct: number,
-  solution: string,
-  hint: string,
-  extra: Partial<Problem> = {},
-): Problem {
-  return {
-    id,
-    prompt,
-    answer: {
-      kind: "choice",
-      value: String(correct),
-      options: options.map((label, i) => ({ id: String(i), label })),
-    },
-    solution,
-    hint,
-    rubric: {
-      defaultCategory: "conceptual",
-      explanation: hint,
-      misconceptions: [],
-    },
-    ...extra,
-  };
-}
+import type { Diagram } from "@/types/curriculum";
 export const orbitDiagram: Diagram = {
   title: "An ellipse, viewed in its orbital plane",
   caption:
@@ -115,12 +57,4 @@ export const transferDiagram: Diagram = {
     { kind: "label", at: [120, 40], text: "Final circular orbit" },
     { kind: "label", at: [472, 252], text: "Prograde burns" },
   ],
-};
-export const nasa = {
-  title: "NASA · Basics of Space Flight: Trajectories",
-  url: "https://science.nasa.gov/learn/basics-of-space-flight/chapter4-1/",
-};
-export const jpl = {
-  title: "JPL · Astrodynamic Parameters",
-  url: "https://ssd.jpl.nasa.gov/astro_par.html",
 };

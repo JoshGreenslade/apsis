@@ -2,10 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import katex from "katex";
 import agents from "../curricula/agentic-engineering";
-import {
-  astroPractice,
-  foundationsPractice,
-} from "../curriculum-support/practice";
+import astrodynamics from "../curricula/astrodynamics";
+import { mu } from "../curricula/astrodynamics/constants";
 import {
   calculate,
   generatePractice,
@@ -15,9 +13,12 @@ import {
 import { evaluate } from "../lib/curriculum-engine";
 const templates = [
   ...agents.topics.flatMap((t) => t.practiceTemplates ?? []),
-  ...Object.values(astroPractice).flat(),
-  ...foundationsPractice,
+  ...astrodynamics.topics.flatMap((t) => t.practiceTemplates ?? []),
 ];
+const astroPractice = (id: string) =>
+  astrodynamics.topics.find((t) => t.id === id)!.practiceTemplates![0];
+const visVivaPractice =
+  astrodynamics.topics.find((t) => t.id === "two-body")!.practiceTemplates!;
 test("every practice template calculates finite, parseable questions at boundaries and samples", () => {
   for (const t of templates) {
     const low = Object.fromEntries(t.variables.map((v) => [v.name, v.min])),
@@ -43,9 +44,8 @@ test("every practice template calculates finite, parseable questions at boundari
   }
 });
 test("formula values agree with independent numerical benchmarks", () => {
-  const p = instantiate(astroPractice.hohmann[0], { r1: 7000, r2: 18000 });
-  const mu = 398600.4418,
-    a = 12500;
+  const p = instantiate(astroPractice("hohmann"), { r1: 7000, r2: 18000 });
+  const a = 12500;
   const expected =
     Math.sqrt(mu * (2 / 7000 - 1 / a)) -
     Math.sqrt(mu / 7000) +
@@ -53,12 +53,11 @@ test("formula values agree with independent numerical benchmarks", () => {
     Math.sqrt(mu * (2 / 18000 - 1 / a));
   assert.equal(p.answer.value, expected);
   assert.equal(
-    instantiate(foundationsPractice[0], { distance: 120, hours: 4 }).answer
-      .value,
-    30,
+    instantiate(visVivaPractice[0], { a: 12000, r: 8000 }).answer.value,
+    Math.sqrt(mu * (2 / 8000 - 1 / 12000)),
   );
   assert.throws(
-    () => instantiate(astroPractice.geometry[0], { rp: 999999, ra: 16000 }),
+    () => instantiate(astroPractice("geometry"), { rp: 999999, ra: 16000 }),
     /range/,
   );
   assert.throws(
@@ -80,7 +79,7 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
     delete process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_MODEL;
     const offline = await generatePractice(
-      foundationsPractice,
+      visVivaPractice,
       {},
       async () => {
         throw new Error("Must not call provider");
@@ -100,10 +99,10 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
               {
                 type: "output_text",
                 text: JSON.stringify({
-                  templateId: "rate-variant",
+                  templateId: "vis-viva-variant",
                   parameters: [
-                    { name: "distance", value: 120 },
-                    { name: "hours", value: 4 },
+                    { name: "a", value: 12000 },
+                    { name: "r", value: 8000 },
                   ],
                 }),
               },
@@ -112,9 +111,9 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
         ],
       });
     };
-    const ai = await generatePractice(foundationsPractice, {}, provider);
+    const ai = await generatePractice(visVivaPractice, {}, provider);
     assert.equal(ai.source, "ai");
-    assert.equal(ai.problem.answer.value, 30);
+    assert.equal(ai.problem.answer.value, Math.sqrt(mu * (2 / 8000 - 1 / 12000)));
     assert.equal(request.store, false);
     assert.equal(request.text.format.strict, true);
     assert.ok(!("scratchpad" in JSON.parse(request.input)));
@@ -127,10 +126,10 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
               {
                 type: "output_text",
                 text: JSON.stringify({
-                  templateId: "rate-variant",
+                  templateId: "vis-viva-variant",
                   parameters: [
-                    { name: "distance", value: 120 },
-                    { name: "hours", value: 0 },
+                    { name: "a", value: 12000 },
+                    { name: "r", value: 100 },
                   ],
                 }),
               },
@@ -139,7 +138,7 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
         ],
       });
     assert.equal(
-      (await generatePractice(foundationsPractice, {}, invalid)).source,
+      (await generatePractice(visVivaPractice, {}, invalid)).source,
       "template",
     );
     const refusal: typeof fetch = async () =>
@@ -148,12 +147,12 @@ test("offline, successful AI, invalid AI, refusal and provider failure preserve 
         output: [{ content: [{ type: "refusal", refusal: "No" }] }],
       });
     assert.equal(
-      (await generatePractice(foundationsPractice, {}, refusal)).source,
+      (await generatePractice(visVivaPractice, {}, refusal)).source,
       "template",
     );
     const failure: typeof fetch = async () => new Response("", { status: 429 });
     assert.equal(
-      (await generatePractice(foundationsPractice, {}, failure)).source,
+      (await generatePractice(visVivaPractice, {}, failure)).source,
       "template",
     );
   } finally {

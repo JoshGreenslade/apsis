@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import katex from "katex";
 import astrodynamics from "../curricula/astrodynamics";
-import foundations from "../curricula/foundations";
 import agents from "../curricula/agentic-engineering";
 import {
   applyAction,
@@ -23,7 +22,7 @@ const pack = validatePack(astrodynamics),
   t = pack.topics[0];
 
 test("every pack validates, every answer passes, every formula parses", () => {
-  for (const p of [pack, validatePack(foundations), validatePack(agents)]) {
+  for (const p of [pack, validatePack(agents)]) {
     for (const topic of p.topics)
       assert.ok(
         !topic.intuition.body.includes("\\n"),
@@ -68,7 +67,7 @@ test("DAG rejects cycles, duplicates, dangling dependencies and missing diagnost
   missing.prerequisites = ["absent"];
   assert.throws(() => topologicalOrder([missing]), /Missing/);
   const bad = structuredClone(pack);
-  bad.topics[1].diagnostics[0].prerequisiteId = undefined;
+  bad.topics[1].diagnostics.forEach((d) => (d.prerequisiteId = undefined));
   assert.throws(() => validatePack(bad), /Missing diagnostic/);
 });
 test("numeric evaluation distinguishes units, malformed inputs and tolerances", () => {
@@ -160,7 +159,20 @@ test("review round-robins due topics, early practice preserves dates, lapses sur
   const queue = reviewQueue(pack, state, now);
   assert.deepEqual(
     queue.map((x) => x.topicId),
-    ["two-body", "geometry", "two-body", "geometry"],
+    [
+      "two-body",
+      "geometry",
+      "two-body",
+      "geometry",
+      "two-body",
+      "geometry",
+      "two-body",
+      "geometry",
+      "two-body",
+      "geometry",
+      "two-body",
+      "geometry",
+    ],
   );
   const p = t.retrievalProblems[0];
   state = applyAction(

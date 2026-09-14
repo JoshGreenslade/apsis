@@ -4,9 +4,8 @@ A teaching-led Next.js textbook with open lessons, optional questions, persisten
 
 ## Courses
 
-- **Agentic engineering:** 30 concept lessons, eight section labs, a nine-stage tiny-harness project and a measured repository capstone. Covers models, agents, harnesses, orchestration, context, memory, coding products, delegation, gh-aw, tools/MCP/skills, multi-agent systems, evaluation and economics. Each lesson contains original explanatory prose, a worked engineering case and three optional comprehension/application questions. Product references were checked on 13 September 2026.
+- **Agentic engineering:** 32 concept lessons in 10 units, ten practical labs, a nine-stage tiny-harness project and a measured repository capstone. Covers models, agents, harnesses, orchestration, context, memory, coding products, delegation, gh-aw, tools/MCP/skills, multi-agent systems, evaluation and economics. Each lesson contains original explanatory prose, teaching checkpoints that bridge each theory section, a worked engineering case and three optional comprehension/application questions. Product references were checked on 13 September 2026.
 - **Astrodynamics:** six lessons from two-body energy to transfers, perturbations and patched conics, with worked calculations and numerical practice.
-- **Quantitative foundations:** a short ratios, rates and units refresher.
 
 The [agent lab guide](public/agent-labs/README.md) includes an executable offline harness, deliberately failing fixture, evaluator, CSV template and a gh-aw source/compiled example. Download the kit in the app from the harness project. The scripted model is a test double; live-model integration, advanced v4–v9 extensions and the real-repository capstone are learner projects with explicit acceptance criteria. The gh-aw example compiled with v0.88.7; no live agent workflow or model benchmark is claimed.
 
@@ -46,7 +45,7 @@ The optional integration uses the [OpenAI Responses API's structured-output form
 
 Validation checks the template ID, variable names, distinctness, allowed ranges, and step sizes. Out-of-range output, refusal, incomplete output, timeout, provider errors, or repetition fall back to a new locally sampled variation. The interface identifies whether AI selected the variation or a checked template supplied it. Without credentials, it explicitly says that AI is not connected.
 
-The API implementation has been tested with simulated valid responses, invalid values, refusals, and provider failures. A live paid request was not made because no API key/model was configured in this workspace. Numerical correctness is checked independently of the model. Template variety is deliberately bounded: the astrodynamics pack currently has one numerical practice family per lesson, plus a rate family in quantitative foundations.
+The API implementation has been tested with simulated valid responses, invalid values, refusals, and provider failures. A live paid request was not made because no API key/model was configured in this workspace. Numerical correctness is checked independently of the model. Template variety is deliberately bounded: the astrodynamics pack currently has one numerical practice family per lesson.
 
 Practice creation is limited to 30 requests per anonymous identity per hour and 60 globally per hour, stored transactionally in SQLite. Questions are scoped to the creating identity and removed after seven days during subsequent generation. Extra practice is separate from fixed mastery checks and spaced-review scheduling.
 
@@ -61,11 +60,10 @@ components/FadedExercise.tsx        Optional supported practice and answer entry
 components/ExtraPractice.tsx        Fresh-question generation and feedback
 components/MathText.tsx             Markdown, KaTeX, copyable formula source
 components/Diagram.tsx              Declarative SVG with optional labels/construction
-curricula/astrodynamics.ts          Six reference lessons and fixed question sets
-curricula/foundations.ts            An independent mathematics subject pack
-curricula/registry.ts               Lazy automatic curriculum discovery
-curriculum-support/teaching.ts      Teaching bridges, predictions, outcomes, course goals
-curriculum-support/practice.ts      Declarative numerical variation families
+curricula/astrodynamics/             Folder curriculum pack: index, shared constants/diagrams, topics/
+curricula/agentic-engineering/       Folder curriculum pack: index, shared lesson builder, units/
+curricula/registry.ts                Lazy discovery of every curricula/<id>/index.ts
+curriculum-support/authoring.ts      Shared problem/expression/diagram builders for all packs
 lib/practice-generator.ts           Safe arithmetic, sampling, bounded AI integration
 lib/store.ts                       Transactional notes, progress, questions, rate limits
 app/api/progress/route.ts           Read status, submitted answers, notes
@@ -77,13 +75,15 @@ app/teaching.css                    Teaching workspace and responsive visual des
 
 The application engine contains no orbital equations. All teaching content, prerequisites, diagrams, fixed questions, correct answers, tolerances, and practice formulas come from curriculum data.
 
-Add a `.ts` file directly under `curricula/` with a default `CurriculumPack` export. The lazy registry automatically includes it on the next build. Helper data belongs in `curriculum-support/`; the registry excludes only its own file and `helpers.ts`. Discovery is build-time, not hot loading of untrusted remote curricula.
+Each curriculum is a self-contained folder directly under `curricula/`, with a default `CurriculumPack` export from its `index.ts`. The lazy registry automatically includes every `curricula/<id>/index.ts` on the next build — adding a curriculum is adding a folder, not editing a shared file. Within a pack, give every topic (or, for agentic engineering, every lesson) its own file under a `topics/` or `units/` subfolder so a single lesson can be found, reviewed and extended without scrolling a large shared file. Curriculum-agnostic authoring helpers (numeric/choice problem builders, the practice-formula expression DSL, shared diagram primitives) live in `curriculum-support/authoring.ts`; a curriculum's own constants, diagrams or lesson-building helpers stay local to that curriculum's folder. Discovery is build-time, not hot loading of untrusted remote curricula.
 
 Every pack has a unique ID and version, and every topic has a unique ID and declared dependencies. Dependencies form a validated DAG and guide the recommended learning order; they do not lock the learner out. Each dependency still has a corresponding optional diagnostic. Questions have unique IDs within a topic. Numeric questions specify tolerances and accepted units; choice answers reference declared options.
 
-Optional `overview` data supplies course outcomes and the final challenge. Optional `teaching` data supplies the motivating question, practical outcomes, a bridge/interpretation/checkpoint for each theory section, a takeaway, and the connection to the next lesson. Older packs without these additions receive a functional generic presentation. Keep the number and order of teaching checkpoints aligned with theory sections.
+Optional `overview` data supplies course outcomes and the final challenge. Optional `teaching` data supplies the motivating question, practical outcomes, a bridge/interpretation/checkpoint for each theory section, a takeaway, and the connection to the next lesson. Every current lesson in every pack supplies a checkpoint for each theory section, plus several harder `further` reflections per checkpoint. Older or future packs without these additions still receive a functional generic presentation. Keep the number and order of teaching checkpoints aligned with theory sections.
 
-`teaching.checkpoints` may be empty for continuous prose lessons whose checks live in the practice panel. Optional `practical` data adds a brief, estimated time, steps, deliverables and an expandable review guide. It never gates reading. New course helper modules remain in `curriculum-support/`, outside the registry's pack-discovery directory.
+New lessons follow [docs/TEACHING_STANDARD.md](docs/TEACHING_STANDARD.md), which sets the required prose register (open with a concrete scene or analogy, long connected paragraphs, jargon explained inline) and question depth (roughly 20 graduated questions per topic across diagnostics, guided practice, retrieval problems and reflection checkpoints). The astrodynamics `two-body` lesson is the reference exemplar for both.
+
+`teaching.checkpoints` may be empty for continuous prose lessons whose checks live in the practice panel. Optional `practical` data adds a brief, estimated time, steps, deliverables and an expandable review guide. It never gates reading.
 
 Additional checks: `npm run test:labs` tests the offline harness and evaluator; `npm run test:agents-browser` visits all 32 agent-course lessons, verifies optional labs and questions, downloads the lab kit and checks mobile layout. Browser smoke tests use installed Microsoft Edge by default.
 

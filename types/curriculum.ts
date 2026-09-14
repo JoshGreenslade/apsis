@@ -103,7 +103,16 @@ export const TeachingSchema = z.object({
   why: text,
   outcomes: z.array(text).min(1),
   checkpoints: z.array(
-    z.object({ bridge: text, meaning: text, question: text, answer: text }),
+    z.object({
+      bridge: text,
+      meaning: text,
+      question: text,
+      answer: text,
+      // Additional, progressively harder reflection prompts for the same
+      // theory section, shown after the primary question. Optional so
+      // existing single-question checkpoints remain valid unchanged.
+      further: z.array(z.object({ question: text, answer: text })).optional(),
+    }),
   ),
   takeaway: text,
   nextConnection: text,

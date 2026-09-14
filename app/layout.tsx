@@ -5,7 +5,7 @@ import "./teaching.css";
 export const metadata: Metadata = {
   title: "Apsis · Understand the ideas. Put them to work.",
   description:
-    "Learn agentic engineering, astrodynamics and quantitative foundations through open lessons, worked examples, optional questions and practical projects.",
+    "Learn agentic engineering and astrodynamics through open lessons, worked examples, optional questions and practical projects.",
   icons: { icon: "/favicon.svg" },
 };
 export default function RootLayout({
