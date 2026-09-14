@@ -1,0 +1,569 @@
+import type { Chapter } from "../chapter";
+const chapter: Chapter = {
+  "id": "quantum-vectors",
+  "intuition": {
+    "body": "A two-component column can describe many things: two displacements, two circuit amplitudes, or two coefficients in a mathematical basis. Calling it a quantum state adds physical meaning that the column alone does not possess. We must say how it is normalized, which measurements are being modeled, and how its components predict probabilities.\n\nConsider an ideal system with two distinguishable measurement outcomes, labeled 0 and 1. We represent a pure state by ψ=α|0⟩+β|1⟩, with complex amplitudes α and β. The symbols |0⟩ and |1⟩ are basis vectors, not numerical probabilities. The physical probability rule in this model assigns |α|² and |β|² to the two outcomes. To make their sum one, the vector must have unit norm under a particular complex inner product.\n\nWhy complex amplitudes rather than ordinary probability weights? Two states can have the same probabilities in the 0/1 basis while differing in relative phase. When a different measurement basis is used, their amplitudes combine differently and can produce different probabilities. The phase information is therefore part of the state representation even when one chosen measurement cannot reveal it.\n\nWe will keep to finite two-state mathematics. Wavefunctions, differential operators, domains of unbounded operators and a complete account of quantum measurement require later study. The purpose here is to make the notation readable and to calculate enough to understand what it says and what physical assumptions enter.",
+    "thoughtExperiments": [
+      "Do the states (1,1)/√2 and (1,−1)/√2 give the same probabilities in every measurement basis?",
+      "Could a transformation preserve ordinary component sums yet fail to preserve total quantum probability?"
+    ]
+  },
+  "theory": [
+    {
+      "heading": "1. Conjugation makes the complex norm positive",
+      "body": "For complex columns u and v, use the convention\n$$\\langle u|v\\rangle=u^\\dagger v=\\sum_j\\overline{u_j}v_j.$$\nThe dagger means conjugate transpose: turn the column into a row and conjugate each entry. The first argument is conjugated, while the second is linear. Thus $\\langle u|u\\rangle=\\sum_j|u_j|^2$ is real and nonnegative, and is zero only for the zero vector. The norm is its square root.\n\nWithout conjugation, the vector (1,i) would have the misleading “square” 1+i²=0 even though it is not zero. With conjugation, its norm squared is 1+(−i)i=2. The normalized vector is therefore (1,i)/√2. This is the direct reason for the complex inner product convention, not an ornamental change in notation.\n\nA ket |ψ⟩ denotes a column vector, and its corresponding bra ⟨ψ| denotes the conjugate-transposed row. For the standard basis, |0⟩=(1,0) and |1⟩=(0,1). These basis vectors are orthonormal: each has norm one and their inner product is zero. The coefficients of ψ are projections α=⟨0|ψ⟩ and β=⟨1|ψ⟩.\n\nWe now state the physical rule used in this introductory model: a normalized pure state measured in an orthonormal basis has outcome probabilities equal to the squared moduli of its projections onto those basis vectors. This is the Born rule. Mathematics guarantees that these weights sum to one; identifying them with observed probabilities is physical input.\n\nMultiplying every amplitude by the same phase e^(iχ) leaves every projection probability unchanged. Such vectors represent the same pure physical state in this model. Changing only one amplitude's phase can change probabilities in a different basis. For example, |+⟩=(|0⟩+|1⟩)/√2 and |−⟩=(|0⟩−|1⟩)/√2 both give equal 0/1 probabilities, yet a measurement in the +/− basis distinguishes them with certainty. Global phase and relative phase must not be confused."
+    },
+    {
+      "heading": "2. Hermitian operators encode a finite measurement model",
+      "body": "A matrix A is **Hermitian** if A†=A. Suppose Av=λv for a nonzero eigenvector v. Then $\\langle v|Av\\rangle=\\lambda\\langle v|v\\rangle$. Hermiticity also makes this scalar equal to its own complex conjugate, so it is real. Since ⟨v|v⟩>0, λ is real. This short argument explains why Hermitian eigenvalues can serve as real measurement labels.\n\nA further finite-dimensional result is that a Hermitian matrix has an orthonormal eigenbasis. We use this spectral theorem here; the two-state examples can also be checked directly. If normalized eigenvectors are |aⱼ⟩, define the projectors $P_j=|a_j\\rangle\\langle a_j|$. Acting on ψ, a projector keeps its component in the indicated eigendirection. It satisfies Pⱼ²=Pⱼ and Pⱼ†=Pⱼ.\n\nIn the ideal projective measurement model, eigenvalue aⱼ is observed with probability $\\langle\\psi|P_j|\\psi\\rangle=|\\langle a_j|\\psi\\rangle|^2$ for a nondegenerate outcome. If a measurement outcome is selected, its conditional post-measurement state is the normalized projected vector, when that outcome has nonzero probability. This is another physical measurement postulate for the model, not a theorem about arbitrary matrices.\n\nFor the matrix $Z=\\begin{pmatrix}1&0\\\\0&-1\\end{pmatrix}$, the basis states |0⟩ and |1⟩ have measurement labels +1 and −1. A state (√3/2,i/2) gives probabilities 3/4 and 1/4. Its expectation is ⟨Z⟩=3/4−1/4=1/2. The expectation need not be an individual outcome; repeated trials yield +1 or −1, not the number one half.\n\nThe matrix $X=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}$ exchanges the basis components. Its eigenvectors are |+⟩ and |−⟩ with eigenvalues +1 and −1. Measuring X therefore probes the relative amplitude information hidden from a Z measurement. The measurement operator specifies the question asked of the state; a state column without an operator or basis does not determine a unique list of outcome probabilities."
+    },
+    {
+      "heading": "3. Preserve norms and inspect the order of operations",
+      "body": "A matrix U is **unitary** if U†U=I. Applying it to a state preserves the inner product:\n$$\\langle Uu|Uv\\rangle=u^\\dagger U^\\dagger Uv=u^\\dagger v.$$\nIn particular, a normalized state stays normalized. The finite closed-system quantum model uses unitary time evolution; deciding which U describes a physical interaction requires a dynamical law or experimental model.\n\nA useful example is\n$$U(\\theta)=\\begin{pmatrix}\\cos\\theta&-\\sin\\theta\\\\\\sin\\theta&\\cos\\theta\\end{pmatrix}.$$\nIts entries happen to be real, so its dagger is its transpose. Multiplying UᵀU gives I through cos²θ+sin²θ=1 and cancellation of the cross terms. Acting on |0⟩ produces cos θ|0⟩+sin θ|1⟩, whose 0/1 probabilities are cos²θ and sin²θ. The angle is a parameter of this state transformation; it need not equal a physical spatial rotation angle.\n\nOrder can matter. For two operators A and B, the **commutator** is [A,B]=AB−BA. Using the X and Z matrices above, XZ|0⟩=|1⟩ while ZX|0⟩=−|1⟩. Hence [X,Z]|0⟩=2|1⟩, showing that the operators do not commute. A nonzero commutator prevents them from having one complete common eigenbasis in this finite Hermitian setting.\n\nThis does not mean that the two final vectors in that particular example are distinguishable merely by their global sign. They are not. The example establishes unequal matrix operations; it should not be misread as a complete measurement experiment. More generally, noncommuting observables require care when comparing sequential ideal measurements, whose state updates also enter. An uncertainty relation is a further theorem, not the definition of the commutator.\n\nKeep the preserved structure explicit. Unitary matrices preserve a positive complex inner product. Later, Lorentz transformations will preserve an indefinite spacetime interval instead. Both are invariance statements, but they involve different forms and different physical interpretations. Learning to check the relevant form directly is more useful than treating every invertible matrix as an interchangeable change of viewpoint."
+    }
+  ],
+  "teaching": {
+    "question": "What extra structure turns a complex column into a normalized state with measurable probabilities?",
+    "why": "Finite two-state models introduce quantum notation without hiding the inner product or confusing mathematical structure with physical postulates.",
+    "outcomes": [
+      "Compute conjugate inner products and normalized two-state probabilities.",
+      "Use Hermitian projectors and explain their real measurement values.",
+      "Check unitary norm preservation and calculate a simple commutator."
+    ],
+    "checkpoints": [
+      {
+        "bridge": "Conjugation makes the complex norm positive",
+        "meaning": "The conjugate inner product defines a positive norm, and the Born rule gives it a physical probability interpretation.",
+        "question": "Why is the norm squared of (1,i) equal to two?",
+        "answer": "Conjugation gives 1×1+(−i)×i=2; squaring components without conjugation would not define a positive norm.",
+        "further": [
+          {
+            "question": "Which argument of the inner product is conjugated in this course?",
+            "answer": "The first argument, so ⟨u|v⟩=u†v."
+          },
+          {
+            "question": "What normalizes the outcome probabilities in an orthonormal basis?",
+            "answer": "The unit-norm condition makes the sum of squared projection magnitudes equal one."
+          },
+          {
+            "question": "Why can relative phase matter even when 0/1 probabilities match?",
+            "answer": "Projections in another basis add amplitudes before squaring; changed relative signs or phases alter those sums."
+          }
+        ]
+      },
+      {
+        "bridge": "Hermitian operators encode a finite measurement model",
+        "meaning": "Hermitian eigenvectors define orthogonal measurement alternatives, and projectors extract their amplitudes.",
+        "question": "Can an expectation of Z equal one half even though its outcomes are ±1?",
+        "answer": "Yes. An expectation is a probability-weighted average across trials, not a requirement that one trial equal that average.",
+        "further": [
+          {
+            "question": "Why are Hermitian eigenvalues real?",
+            "answer": "The scalar v†Av is real, and dividing it by the positive norm squared of an eigenvector yields its eigenvalue."
+          },
+          {
+            "question": "What does P²=P mean geometrically?",
+            "answer": "Once a vector has been projected onto the selected subspace, projecting it again makes no further change."
+          },
+          {
+            "question": "What basis measures X in the two-state example?",
+            "answer": "The normalized sum and difference states |+⟩ and |−⟩, which are its eigenvectors."
+          }
+        ]
+      },
+      {
+        "bridge": "Preserve norms and inspect the order of operations",
+        "meaning": "Unitarity preserves total probability; commutators test whether matrix operations depend on order.",
+        "question": "Why does U†U=I guarantee normalization is preserved?",
+        "answer": "The transformed norm squared is ψ†U†Uψ=ψ†ψ.",
+        "further": [
+          {
+            "question": "Is every invertible matrix unitary?",
+            "answer": "No. Invertibility permits reversal, while unitarity additionally preserves the specified inner product."
+          },
+          {
+            "question": "What does a nonzero commutator establish here?",
+            "answer": "The operator products differ with order and the two Hermitian operators cannot have a complete shared eigenbasis."
+          },
+          {
+            "question": "Why is a global minus sign not a distinct pure state?",
+            "answer": "It is multiplication by a common unit phase and leaves every projection probability unchanged."
+          }
+        ]
+      }
+    ],
+    "takeaway": "State amplitudes, the conjugate inner product, an operator and physical probability rules play distinct roles in a two-state calculation.",
+    "nextConnection": "We next separate vectors from their coordinate arrays more systematically through covectors and tensors."
+  },
+  "diagnostics": [
+    {
+      "id": "d-eigen",
+      "prompt": "An eigenvector of A satisfies which relation?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Av=λv with v nonzero"
+          },
+          {
+            "id": "1",
+            "label": "Av=v for every v"
+          },
+          {
+            "id": "2",
+            "label": "v=0 only"
+          }
+        ]
+      },
+      "hint": "Use the definition and the stated assumptions.",
+      "solution": "An eigenvector's direction is preserved up to a scalar eigenvalue.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the definition and the stated assumptions.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "eigenvectors"
+    },
+    {
+      "id": "d-modsq",
+      "prompt": "Find |1+2i|². Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 5,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Identify the relation before substituting.",
+      "solution": "The squared modulus is 1²+2²=5.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Identify the relation before substituting.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "complex-numbers"
+    },
+    {
+      "id": "d-prob",
+      "prompt": "Outcomes +1 and −1 have probabilities 3/4 and 1/4. Find their expectation. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.5,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Identify the relation before substituting.",
+      "solution": "The weighted mean is 3/4−1/4=1/2.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Identify the relation before substituting.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "probability"
+    }
+  ],
+  "workedExample": {
+    "title": "Normalize and measure a complex state",
+    "problem": "Start with the unnormalized column v=(√3,i). Normalize it, find its Z probabilities and expectation, then find its X probabilities.",
+    "steps": [
+      {
+        "title": "Compute the norm",
+        "body": "v†v=3+(−i)i=4, so ‖v‖=2.",
+        "reason": "The first argument must be conjugated.",
+        "trap": "Using i² instead of |i|² would give the wrong norm."
+      },
+      {
+        "title": "Normalize and measure Z",
+        "body": "ψ=(√3/2,i/2), giving P(+1)=3/4 and P(−1)=1/4.",
+        "reason": "Z's eigenvectors are the standard basis columns.",
+        "trap": "The amplitudes themselves are not probabilities."
+      },
+      {
+        "title": "Average the Z labels",
+        "body": "⟨Z⟩=(+1)(3/4)+(−1)(1/4)=1/2.",
+        "reason": "Expectations weight measurement labels by their probabilities.",
+        "trap": "One trial still returns one of the two eigenvalues."
+      },
+      {
+        "title": "Project onto the X eigenvectors",
+        "body": "⟨+|ψ⟩=(√3+i)/(2√2) and ⟨−|ψ⟩=(√3−i)/(2√2). Each has squared modulus (3+1)/8=1/2.",
+        "reason": "A new measurement basis requires new projections.",
+        "trap": "Reusing the Z probabilities would ignore the basis change."
+      }
+    ]
+  },
+  "fadedExercise": {
+    "prompt": "Use the distinct unnormalized vector v=(1,−1). Normalize it, then measure Z and X.",
+    "supplied": [
+      {
+        "heading": "Starting information",
+        "body": "The norm squared is the sum of the two squared moduli. The X eigenvectors are |+⟩=(1,1)/√2 and |−⟩=(1,−1)/√2."
+      }
+    ],
+    "steps": [
+      {
+        "id": "g-norm",
+        "prompt": "Find v†v. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "1",
+          "acceptedUnits": [
+            "1"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Identify the relation before substituting.",
+        "solution": "The squared moduli add to 1+1=2.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Identify the relation before substituting.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "g-z",
+        "prompt": "For ψ=(1,−1)/√2, find the probability of Z=+1. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.5,
+          "unit": "1",
+          "acceptedUnits": [
+            "1"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Identify the relation before substituting.",
+        "solution": "The first amplitude has squared magnitude 1/2.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Identify the relation before substituting.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "g-plus",
+        "prompt": "For ψ=(1,−1)/√2, find P(X=+1). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0,
+          "unit": "1",
+          "acceptedUnits": [
+            "1"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Identify the relation before substituting.",
+        "solution": "The sum projection is (1−1)/2=0.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Identify the relation before substituting.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "g-xmean",
+        "prompt": "The normalized state is |−⟩. Find ⟨X⟩. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": -1,
+          "unit": "1",
+          "acceptedUnits": [
+            "1"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Identify the relation before substituting.",
+        "solution": "It is an X eigenstate with eigenvalue −1, so that outcome is certain.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Identify the relation before substituting.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-norm",
+      "prompt": "Find the norm squared of (2,i). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 5,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Identify the relation before substituting.",
+      "solution": "Conjugate multiplication gives 4+1=5.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Identify the relation before substituting.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-born",
+      "prompt": "What converts an orthonormal-basis amplitude into an outcome probability?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Its real part"
+          },
+          {
+            "id": "1",
+            "label": "Its squared modulus"
+          },
+          {
+            "id": "2",
+            "label": "Its complex square"
+          }
+        ]
+      },
+      "hint": "Use the definition and the stated assumptions.",
+      "solution": "The squared modulus is real, nonnegative and normalized by the state norm.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the definition and the stated assumptions.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-phase",
+      "prompt": "Which change leaves every pure-state measurement probability unchanged?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Multiplying all amplitudes by one common unit phase"
+          },
+          {
+            "id": "1",
+            "label": "Changing one relative phase arbitrarily"
+          },
+          {
+            "id": "2",
+            "label": "Multiplying only one amplitude by two"
+          }
+        ]
+      },
+      "hint": "Use the definition and the stated assumptions.",
+      "solution": "A common unit phase factors out of each projection and disappears in its modulus.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the definition and the stated assumptions.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-rotation",
+      "prompt": "U(π/6) acts on |0⟩. Find P(1). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.25,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Identify the relation before substituting.",
+      "solution": "The second amplitude is sin(π/6)=1/2, whose square is 1/4.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Identify the relation before substituting.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-project",
+      "prompt": "P=diag(1,0) acts twice on (3,4). Find the first component. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 3,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Identify the relation before substituting.",
+      "solution": "One projection gives (3,0); the second changes nothing.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Identify the relation before substituting.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-unitary",
+      "prompt": "Which condition directly checks positive-norm preservation?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "det U is nonzero"
+          },
+          {
+            "id": "1",
+            "label": "U has real entries"
+          },
+          {
+            "id": "2",
+            "label": "U†U=I"
+          }
+        ]
+      },
+      "hint": "Use the definition and the stated assumptions.",
+      "solution": "Invertibility or real entries alone do not guarantee preservation of the complex inner product.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the definition and the stated assumptions.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "diagram": {
+    "title": "Two orthonormal measurement bases",
+    "caption": "In the real slice of the two-state space, the standard basis is horizontal/vertical and the X eigenbasis is at ±45 degrees. Each displayed basis vector has the same length; complex phases require more dimensions than this slice shows.",
+    "viewBox": [
+      0,
+      0,
+      600,
+      320
+    ],
+    "elements": [
+      {
+        "kind": "line",
+        "from": [
+          250,
+          180
+        ],
+        "to": [
+          390,
+          180
+        ],
+        "tone": "ink"
+      },
+      {
+        "kind": "line",
+        "from": [
+          250,
+          180
+        ],
+        "to": [
+          250,
+          40
+        ],
+        "tone": "ink"
+      },
+      {
+        "kind": "line",
+        "from": [
+          250,
+          180
+        ],
+        "to": [
+          349,
+          81
+        ],
+        "tone": "accent"
+      },
+      {
+        "kind": "line",
+        "from": [
+          250,
+          180
+        ],
+        "to": [
+          349,
+          279
+        ],
+        "tone": "accent"
+      },
+      {
+        "kind": "label",
+        "at": [
+          400,
+          185
+        ],
+        "text": "|0⟩"
+      },
+      {
+        "kind": "label",
+        "at": [
+          230,
+          25
+        ],
+        "text": "|1⟩"
+      },
+      {
+        "kind": "label",
+        "at": [
+          355,
+          80
+        ],
+        "text": "|+⟩"
+      },
+      {
+        "kind": "label",
+        "at": [
+          355,
+          285
+        ],
+        "text": "|−⟩"
+      },
+      {
+        "kind": "label",
+        "at": [
+          65,
+          270
+        ],
+        "text": "equal norms; different projections"
+      }
+    ]
+  },
+  "sidebars": [
+    {
+      "heading": "Optional: Hermitian and unitary are different conditions",
+      "body": "Z is both Hermitian and unitary because Z†=Z and Z²=I. The matrix diag(2,3) is Hermitian but not unitary: it changes norms. The phase matrix diag(i,1) is unitary but not Hermitian: its dagger is diag(−i,1). Hermitian matrices model observables in the stated finite projective framework; unitary matrices model norm-preserving transformations. Some matrices belong to both classes, but the definitions are not synonyms."
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Linear Algebra",
+      "url": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/"
+    },
+    {
+      "title": "Cambridge · Mathematical Methods II",
+      "url": "https://www.damtp.cam.ac.uk/user/gio10/nst_notes.pdf"
+    }
+  ]
+};
+export default chapter;
+

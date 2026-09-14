@@ -21,7 +21,7 @@ async function main() {
     await page
       .getByRole("heading", { name: course.overview!.headline })
       .waitFor();
-    assert.equal(await page.locator("#curriculum option").count(), 3);
+    assert.equal(await page.locator(`#curriculum option[value="${course.id}"]`).count(), 1);
     const nav = page.getByRole("navigation", { name: "Lessons" });
     assert.equal(await nav.getByRole("button").count(), 32);
     await page.screenshot({ path: "../../work/qa-agents/overview.png" });

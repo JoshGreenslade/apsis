@@ -1,17 +1,12 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
   serverExternalPackages: ["node:sqlite"],
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "DENY" },
-        ],
-      },
-    ];
-  },
+  // Static export for GitHub Pages. The workflow sets PAGES_BASE_PATH to the
+  // repository's base path (e.g. "/apsis") so assets resolve under the Pages
+  // subpath. When unset (local `next dev` / `next build`), the app runs at the
+  // root with the full server (SQLite + API routes) intact.
+  output: "export",
+  basePath: process.env.PAGES_BASE_PATH,
+  trailingSlash: true,
 };
 export default config;

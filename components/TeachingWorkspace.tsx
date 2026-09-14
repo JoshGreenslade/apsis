@@ -27,10 +27,11 @@ import type {
   Problem,
   Submission,
 } from "@/types/curriculum";
-import { MathText, FormulaCopies } from "./MathText";
+import { MathText, FormulaCopies, InlineMathText } from "./MathText";
 import { Diagram } from "./Diagram";
 import FadedExercise, { ProblemInput } from "./FadedExercise";
 import ExtraPractice from "./ExtraPractice";
+import MathematicsExplorer from "./MathematicsExplorer";
 const empty: LearnerState = { topics: {}, scratchpads: {} };
 type Screen = "overview" | "lesson" | "review";
 type ReviewItem = { topicId: string; problem: Problem };
@@ -52,7 +53,7 @@ function Reflection({
       <summary>
         <Lightbulb size={18} />
         <span>
-          {question}
+          <InlineMathText>{question}</InlineMathText>
           <small>Think it through, then compare your reasoning</small>
         </span>
       </summary>
@@ -612,7 +613,7 @@ export default function TeachingWorkspace({
                       PAUSE & PREDICT
                     </div>
                     {topic.intuition.thoughtExperiments.map((q) => (
-                      <p key={q}>{q}</p>
+                      <p key={q}><InlineMathText>{q}</InlineMathText></p>
                     ))}
                     <small>
                       No answer box required. Say it aloud or jot down your
@@ -632,7 +633,7 @@ export default function TeachingWorkspace({
                       <section className="reasoning-step" key={s.heading}>
                         <h3>{s.heading}</h3>
                         {checkpoint && (
-                          <p className="teaching-bridge">{checkpoint.bridge}</p>
+                          <p className="teaching-bridge"><InlineMathText>{checkpoint.bridge}</InlineMathText></p>
                         )}
                         <div className="formal-theory">
                           <MathText>{s.body}</MathText>
@@ -642,7 +643,7 @@ export default function TeachingWorkspace({
                           <>
                             <div className="meaning">
                               <h4>What this is really saying</h4>
-                              <p>{checkpoint.meaning}</p>
+                              <p><InlineMathText>{checkpoint.meaning}</InlineMathText></p>
                             </div>
                             <Reflection
                               question={checkpoint.question}
@@ -660,6 +661,7 @@ export default function TeachingWorkspace({
                       </section>
                     );
                   })}
+                  {pack.id === "mathematics-for-physics" && <MathematicsExplorer topicId={topic.id} />}
                   <div className="deeper-heading">
                     Curious about the details?
                   </div>

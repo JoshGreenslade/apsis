@@ -22,6 +22,12 @@ npm run dev
 
 Open the printed URL, normally `http://127.0.0.1:3000`. For a production Node server, use `npm run build` then `npm start`. Webpack is selected explicitly for lazy curriculum-module discovery.
 
+## Static GitHub Pages deployment
+
+The repository deploys to GitHub Pages as a read-only static site via the workflow in `.github/workflows/deploy.yml`. The workflow builds with `output: 'export'` and sets `PAGES_BASE_PATH` (from `actions/configure-pages`) so assets resolve under the repository's Pages subpath.
+
+On the static site, all teaching content, worked examples, diagrams and set questions render fully. The SQLite-backed interactive features — saved notes, progress tracking, spaced review and fresh-question generation — require the Node server and are not available on the static export; the interface degrades gracefully and explains that reading remains available. To run the full interactive app, use the Node server above (no `PAGES_BASE_PATH` set).
+
 ## What changed in this revision
 
 The user's textbook shortlist now informs the [teaching standard](docs/TEACHING_STANDARD.md). The energy chapter explicitly develops the conservation argument and apsides algebra, handles the circular exception, and tests a tempting misconception. Geometry, transfers, plane changes and escape include additional reasoning between equations; the perturbation lesson distinguishes quoted advanced results from derivations taught here.

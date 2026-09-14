@@ -1,0 +1,20 @@
+.math-explorer { margin: 2rem 0; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); overflow: hidden; }
+.math-explorer > summary { cursor: pointer; padding: 1.15rem 1.4rem; font-weight: 600; background: var(--accent-light); line-height: 1.6; }
+.math-explorer-body { padding: 1.4rem; }
+.math-explorer-body h3 { margin-top: 0; }
+.math-explorer-body svg { display: block; width: 100%; height: auto; margin: 1rem 0; }
+.math-explorer-body svg text { font: 13px Arial, sans-serif; fill: var(--ink); }
+.math-explorer-body svg circle { fill: var(--accent); }
+.math-range { display: grid; gap: .65rem; margin: 1.25rem 0; }
+.math-range input { accent-color: var(--accent); width: 100%; min-height: 36px; cursor: pointer; }
+.math-axes { stroke: var(--diagram-muted); stroke-width: 1; }
+.math-curve, .math-highlight { fill: none; stroke: var(--accent); stroke-width: 3; }
+.math-highlight { stroke: #994c1e; stroke-width: 3; }
+.math-comparison { fill: none; stroke: #69519b; stroke-width: 2; stroke-dasharray: 6 4; }
+.math-explorer-body svg .math-unit-circle { fill: none; stroke: var(--diagram-muted); stroke-width: 1; }
+.math-upper { fill: none; stroke: #69519b; stroke-width: 1; }
+.math-lower { fill: var(--accent-light); stroke: var(--accent); stroke-width: 1; }
+.math-readout { padding: .9rem 1rem; border-left: 3px solid var(--accent); background: var(--panel); font-variant-numeric: tabular-nums; line-height: 1.8; }
+.inline-math { overflow-wrap: anywhere; }
+.math-explorer .prose { min-width: 0; }
+@media (max-width: 640px) { .math-explorer-body { padding: 1rem; } .math-explorer > summary { padding: 1rem; } }

@@ -5,8 +5,13 @@ import { loadCurricula } from "@/curricula/registry";
 import { generatePractice } from "@/lib/practice-generator";
 import { evaluate } from "@/lib/curriculum-engine";
 import { getPractice, reservePractice, storePractice } from "@/lib/store";
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+import { isStaticExport } from "@/lib/static-mode";
+
+// On the static GitHub Pages build the SQLite-backed API cannot run. The
+// client components already degrade gracefully, so these handlers report the
+// feature as unavailable. The full server app keeps the interactive version.
+export const dynamic = "force-static";
+
 const schema = z.discriminatedUnion("type", [
   z
     .object({
@@ -30,12 +35,22 @@ const schema = z.discriminatedUnion("type", [
     .strict(),
 ]);
 export async function GET() {
+  if (isStaticExport)
+    return NextResponse.json(
+      { error: "Practice is not available on the static site." },
+      { status: 503 },
+    );
   return NextResponse.json(
     { aiAvailable: !!(process.env.OPENAI_API_KEY && process.env.OPENAI_MODEL) },
     { headers: { "Cache-Control": "no-store" } },
   );
 }
 export async function POST(req: NextRequest) {
+  if (isStaticExport)
+    return NextResponse.json(
+      { error: "Practice is not available on the static site." },
+      { status: 503 },
+    );
   const origin =
     process.env.APP_ORIGIN ??
     `${req.nextUrl.protocol}//${req.headers.get("host")}`;

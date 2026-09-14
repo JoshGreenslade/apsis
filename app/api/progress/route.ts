@@ -3,8 +3,14 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { loadCurricula } from "@/curricula/registry";
 import { readState, updateState } from "@/lib/store";
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+import { isStaticExport } from "@/lib/static-mode";
+
+// On the static GitHub Pages build the SQLite-backed API cannot run. The
+// client components already degrade gracefully ("you can still read every
+// lesson"), so these handlers report the feature as unavailable. The full
+// server app (no PAGES_BASE_PATH) keeps the interactive implementation.
+export const dynamic = "force-static";
+
 const actionSchema = z.discriminatedUnion("type", [
   z
     .object({
@@ -59,6 +65,11 @@ function respond(data: unknown, id: string, req: NextRequest, status = 200) {
   return res;
 }
 export async function GET(req: NextRequest) {
+  if (isStaticExport)
+    return NextResponse.json(
+      { error: "Progress is not available on the static site." },
+      { status: 503 },
+    );
   const id = session(req);
   const pack = (await loadCurricula()).find(
     (p) => p.id === req.nextUrl.searchParams.get("pack"),
@@ -67,6 +78,11 @@ export async function GET(req: NextRequest) {
   return respond({ state: readState(id, pack) }, id, req);
 }
 export async function POST(req: NextRequest) {
+  if (isStaticExport)
+    return NextResponse.json(
+      { error: "Progress is not available on the static site." },
+      { status: 503 },
+    );
   // Next may normalize its internal URL to localhost; compare the browser's
   // actual Host, or an explicitly configured public origin behind a proxy.
   const origin =

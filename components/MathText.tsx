@@ -3,6 +3,19 @@ import Markdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { useState } from "react";
+export function InlineMathText({ children }: { children: string }) {
+  return (
+    <span className="inline-math">
+      <Markdown
+        remarkPlugins={[remarkMath]}
+        rehypePlugins={[[rehypeKatex, { strict: "warn", trust: false }]]}
+        components={{ p: ({ children }) => <span>{children}</span> }}
+      >
+        {children}
+      </Markdown>
+    </span>
+  );
+}
 export function MathText({ children }: { children: string }) {
   const markdown = children.replace(
     /\$\$([\s\S]+?)\$\$/g,

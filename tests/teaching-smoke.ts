@@ -75,7 +75,7 @@ async function main() {
     .click();
   await page.getByRole("button", { name: "With support", exact: true }).click();
   const guided = page.locator(".practice-body form");
-  assert.equal(await guided.count(), 2);
+  assert.equal(await guided.count(), pack.topics[0].fadedExercise.steps.length);
   const second = pack.topics[0].fadedExercise.steps[1];
   await guided
     .nth(1)
@@ -83,7 +83,7 @@ async function main() {
     .fill(String(second.answer.value));
   await guided.nth(1).getByLabel("Answer unit").fill("km/s");
   await guided.nth(1).getByLabel("Answer unit").press("Control+Enter");
-  await page.locator(".faded-step").nth(1).getByText("Step 2 / 2").waitFor();
+  await page.locator(".faded-step").nth(1).getByText(`Step 2 / ${pack.topics[0].fadedExercise.steps.length}`).waitFor();
   await page.getByRole("button", { name: "Self-check", exact: true }).click();
   assert.equal(
     await page.getByRole("button", { name: "Need a hint?" }).count(),
