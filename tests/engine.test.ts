@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import katex from "katex";
 import astrodynamics from "../curricula/astrodynamics";
 import agents from "../curricula/agentic-engineering";
+import mathematics from "../curricula/mathematics-for-physics";
 import {
   applyAction,
   evaluate,
@@ -22,7 +23,7 @@ const pack = validatePack(astrodynamics),
   t = pack.topics[0];
 
 test("every pack validates, every answer passes, every formula parses", () => {
-  for (const p of [pack, validatePack(agents)]) {
+  for (const p of [pack, validatePack(agents), validatePack(mathematics)]) {
     for (const topic of p.topics)
       assert.ok(
         !topic.intuition.body.includes("\\n"),

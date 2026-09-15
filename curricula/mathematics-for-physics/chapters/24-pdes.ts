@@ -1,57 +1,1215 @@
 import type { Chapter } from "../chapter";
-import { numeric } from "@/curriculum-support/authoring";
-import { differential } from "../sources";
-
-// STUB — placeholder chapter. Full teaching content is not yet written.
-// This stub exists so the pack validates and the course can be published
-// with the finished chapters. Replace with real content before release.
 const chapter: Chapter = {
   id: "pdes",
   intuition: {
-    body: "STUB: Waves, diffusion and boundary conditions. This chapter is not yet written; it is published as a placeholder so the course remains complete and navigable.",
-    thoughtExperiments: ["STUB: A placeholder prediction to be replaced with real content."],
+    body: "Pluck a string into a curved shape and it moves through its equilibrium position. Heat a thin rod into the same shaped temperature profile and it relaxes toward equilibrium instead. The spatial picture may be similar, but the first system remembers both displacement and velocity, while the second needs only its current temperature to determine its future in the ideal model.\n\nA partial differential equation relates changes in several independent variables. Here a field depends on position $x$ and time $t$, so one derivative measures spatial shape while another measures temporal evolution. The equation tells us how local shape produces local change, but it does not specify a unique experiment until boundary and initial conditions are supplied.\n\nWe will derive two equations from explicit physical assumptions. A taut string uses Newton's law and a small-slope approximation; a conducting rod uses conservation of heat and a law relating current to temperature gradient. Both involve the second spatial derivative, but their time derivatives differ.\n\nThe sine patterns of Fourier analysis will let us solve simple fixed-end examples. Seeing one spatial pattern oscillate in the string and decay in the rod explains why a mode shape alone is not a dynamical prediction. The physical law determines what its amplitude does.",
+    thoughtExperiments: [
+      "Why does releasing a string from the same shape with a different velocity change its future?",
+      "If a rod's interior is hotter than both neighbours, should its local temperature initially rise or fall?",
+    ],
   },
   theory: [
-    { heading: "1. STUB", body: "STUB: This section is not yet written." },
+    {
+      heading: "1. Derive the string equation from a force imbalance",
+      body: "Take a short piece of a stretched string between $x$ and $x+\\Delta x$. Let $u(x,t)$ be its transverse displacement, $\\mu$ its constant mass per length, and $\\mathcal T$ its approximately constant tension. Assume small slopes, negligible bending stiffness, no damping, and motion transverse to the equilibrium line. Small slope means $|u_x|\\ll1$, allowing the vertical component of tension to be approximated by $\\mathcal T u_x$.\n\nThe tension at the right end pulls toward the right neighbour, while the tension at the left end pulls toward the left neighbour. Their net vertical force is therefore\n$$\\mathcal T[u_x(x+\\Delta x,t)-u_x(x,t)]\n\\approx\\mathcal T u_{xx}\\Delta x.$$\nThe segment mass is $\\mu\\Delta x$, and Newton's law gives $\\mu\\Delta x\\,u_{tt}=\\mathcal T u_{xx}\\Delta x$. Cancelling the common length yields\n$$u_{tt}=c^2u_{xx},\\qquad c=\\sqrt{\\mathcal T/\\mu}.$$\nThe quantity $c$ has units of speed because tension divided by mass per length has units m²/s².\n\nCurvature determines acceleration. At the top of a smooth positive hump, $u_{xx}<0$, so the string accelerates downward. A straight sloping portion has zero curvature and no net transverse tension imbalance in this approximation. The force depends on the difference of slopes at the ends, not the absolute displacement alone.\n\nFor a string fixed at $x=0$ and $x=L$, the boundary conditions are $u(0,t)=u(L,t)=0$. They describe the supports throughout the experiment. Initial conditions specify $u(x,0)=f(x)$ and $u_t(x,0)=g(x)$, the initial shape and transverse velocity. These are functions because each point has its own initial data.\n\nThe fixed supports require compatible endpoint data, such as $f(0)=f(L)=0$ for a continuous classical solution. Additional regularity may be needed to justify derivatives at the initial time. The ideal equation captures small transverse waves, not arbitrary large deformations or a string whose tension changes substantially with stretching.",
+    },
+    {
+      heading: "2. Derive diffusion from conservation and conduction",
+      body: "Now take a short slice of a uniform rod with insulated sides. Let $\\vartheta(x,t)$ be temperature relative to a fixed reference, $C$ the heat capacity per volume, and $\\lambda$ the thermal conductivity, all treated as constant except temperature. Assume no internal heating and a one-dimensional model. Fourier's conduction law is physical input:\n$$q=-\\lambda\\vartheta_x,$$\nwhere $q$ is heat current per cross-sectional area. The minus sign sends heat from hotter toward colder material.\n\nFor cross-section $A$, heat stored in a slice changes at rate $CA\\Delta x\\,\\vartheta_t$. Incoming heat minus outgoing heat is $A[q(x,t)-q(x+\\Delta x,t)]\\approx-Aq_x\\Delta x$. Conservation gives $C\\vartheta_t=-q_x$. Substituting the conduction law yields\n$$\\vartheta_t=D\\vartheta_{xx},\\qquad D=\\lambda/C>0.$$\nThe diffusivity $D$ has units m²/s, so $D\\vartheta_{xx}$ has the units of temperature per time.\n\nAt a smooth temperature maximum, negative curvature makes $\\vartheta_t<0$: the hot region cools. Unlike the string, the equation relates curvature directly to a rate of change rather than to an acceleration. Only the initial temperature profile is prescribed; an arbitrary second initial function $\\vartheta_t(x,0)$ would generally conflict with the equation.\n\nBoundary conditions still define the experiment. Holding both ends at the reference temperature gives $\\vartheta(0,t)=\\vartheta(L,t)=0$, called homogeneous Dirichlet conditions. Insulating an end instead gives zero normal heat current, and hence $\\vartheta_x=0$ there in this constant-conductivity model; this is a Neumann condition. These different choices select different spatial modes and long-time states.\n\nThe diffusion equation smooths short spatial features rapidly in the ideal model. It also has mathematical responses extending arbitrarily far at any positive time on an infinite line, so it should not be read as a microscopic law of signal propagation at every scale. It is a continuum approximation for heat transport in its appropriate regime.",
+    },
+    {
+      heading: "3. Separate a spatial pattern from its time amplitude",
+      body: "Prepare either system in a sine-shaped profile that vanishes at both endpoints. Seek a separated solution $w(x,t)=X(x)A(t)$, where $w$ stands for displacement or temperature. A separated solution is one possible pattern, not an assumption that every initial profile has a single product form. Superposition will combine such patterns because both equations are linear.\n\nFor zero endpoint values, the spatial eigenvalue problem is $X''=-k^2X$, with $X(0)=X(L)=0$. Solving the second-order equation gives sines and cosines; the first endpoint removes cosine, and the second requires $kL=n\\pi$. Thus\n$$X_n(x)=\\sin(n\\pi x/L),\\qquad k_n=n\\pi/L,\\quad n=1,2,\\ldots.$$\nA zero spatial eigenvalue gives only the trivial linear function under these two zero endpoint conditions, while the opposite sign gives hyperbolic functions with no nontrivial solution satisfying both endpoints.\n\nSubstitution into the wave equation gives $A_n''+c^2k_n^2A_n=0$. Each string mode oscillates at $\\omega_n=ck_n$, with two constants determined by projected initial displacement and velocity. If $f_n=(2/L)\\int_0^L f(x)\\sin(k_nx)\\,dx$ and $g_n$ is defined similarly, its amplitude is\n$$A_n(t)=f_n\\cos(\\omega_nt)+\\frac{g_n}{\\omega_n}\\sin(\\omega_nt).$$\nAdding modes reconstructs sufficiently regular initial data, with weaker convergence interpretations available when necessary.\n\nFor heat, the same substitution gives $A_n'=-Dk_n^2A_n$, so\n$$A_n(t)=a_ne^{-Dk_n^2t},\\qquad\na_n=\\frac2L\\int_0^L\\vartheta(x,0)\\sin(k_nx)\\,dx.$$\nHigher harmonics decay faster because their curvature is larger for the same amplitude. Doubling mode number doubles a string frequency but quadruples a heat decay rate. This is an experimentally meaningful distinction between the two laws.\n\nA stationary source-free heat profile satisfies $\\vartheta_{xx}=0$, giving a line between fixed endpoint temperatures. In several dimensions the corresponding steady equation is Laplace's equation $\\nabla^2\\vartheta=0$, where the Laplacian is the sum of second spatial derivatives in Cartesian coordinates. Nonzero fixed boundaries are often handled by subtracting a steady solution before expanding the remaining zero-boundary transient.\n\nThe difference in time order also appears in conserved or decreasing quadratic quantities. For a fixed-end string, multiply $u_{tt}=c^2u_{xx}$ by $u_t$ and integrate over the interval. Integration by parts turns the right side into a boundary term minus $c^2\\int u_xu_{xt}dx$. The boundary term vanishes because fixed endpoints have $u_t=0$. Rearranging gives\n$$\\frac{d}{dt}\\frac12\\int_0^L(u_t^2+c^2u_x^2)\\,dx=0.$$\nMultiplying by the constant mass density supplies the physical string energy in this ideal model.\n\nFor heat with zero endpoint deviations, the same method starts by multiplying by $\\vartheta$ rather than a velocity. It gives $\\frac{d}{dt}\\frac12\\int\\vartheta^2dx=-D\\int\\vartheta_x^2dx\\leq0$. One system retains a combination of kinetic and spatial-gradient energy; the other smooths its squared temperature deviation. These checks reflect the different physical laws even though the spatial operator is the same.\n\nThey also support uniqueness in the corresponding smooth solution classes: subtract two solutions with the same data, apply the relevant nonnegative energy identity to their difference, and use its initially zero value to show the difference remains zero. This is a reason to trust the constructed solution as the solution of the stated experiment, rather than merely one lucky formula.\n\nThe opening comparison is now resolved. Spatial eigenfunctions organize both systems, while Newton's law gives second-order oscillation and conservation plus conduction gives first-order relaxation. Boundary conditions select the permitted patterns, and initial data select their amplitudes. All three pieces are needed for a complete prediction.",
+    },
   ],
   teaching: {
-    question: "STUB",
-    why: "STUB",
-    outcomes: ["STUB"],
-    checkpoints: [
-      { bridge: "STUB", meaning: "STUB", question: "STUB", answer: "STUB" },
+    question:
+      "Why does one spatial pattern oscillate in a string but decay in a rod?",
+    why: "Deriving PDEs from local balances links the mathematical operator to its physical meaning and required data.",
+    outcomes: [
+      "Derive ideal wave and heat equations from stated laws.",
+      "Choose compatible boundary and initial conditions.",
+      "Solve fixed-end sine modes and compare their time scales.",
     ],
-    takeaway: "STUB",
-    nextConnection: "STUB",
+    checkpoints: [
+      {
+        bridge: "Balance tension on a string segment.",
+        meaning: "Spatial curvature creates transverse acceleration.",
+        question: "Why subtract the left slope contribution?",
+        answer:
+          "The left-end tension pulls in the opposite horizontal direction, reversing its transverse contribution.",
+        further: [
+          {
+            question:
+              "What justifies replacing the vertical tension component by tension times slope?",
+            answer: "The small-slope approximation.",
+          },
+          {
+            question: "Why supply both displacement and velocity initially?",
+            answer: "The wave equation is second order in time.",
+          },
+          {
+            question:
+              "Does zero displacement everywhere initially force the string to remain still?",
+            answer:
+              "Only if its initial velocity also vanishes and no forcing is applied.",
+          },
+        ],
+      },
+      {
+        bridge: "Balance heat entering and leaving.",
+        meaning:
+          "Conservation plus a conduction law gives first-order relaxation.",
+        question:
+          "Why is the conduction current opposite the temperature gradient?",
+        answer:
+          "Heat flows toward lower temperature in the assumed constitutive law.",
+        further: [
+          {
+            question: "What does negative curvature at a hot maximum imply?",
+            answer: "The local temperature decreases because D is positive.",
+          },
+          {
+            question:
+              "Why not prescribe an arbitrary initial temperature derivative too?",
+            answer:
+              "The PDE already determines it from the initial profile's curvature.",
+          },
+          {
+            question:
+              "How does an insulated end differ from a fixed-temperature end?",
+            answer:
+              "It specifies zero heat current, hence a derivative condition, rather than a temperature value.",
+          },
+        ],
+      },
+      {
+        bridge: "Project initial data onto boundary-compatible patterns.",
+        meaning:
+          "The same spatial eigenvalue drives different temporal equations.",
+        question: "Why does k equal nπ/L?",
+        answer:
+          "Both endpoint zeros require sin(kL) = 0 after the cosine term is removed.",
+        further: [
+          {
+            question: "What changes on doubling mode number for a string?",
+            answer: "Its angular frequency doubles.",
+          },
+          {
+            question: "What changes on doubling mode number for heat?",
+            answer: "Its decay rate quadruples.",
+          },
+          {
+            question: "How can nonzero fixed endpoint temperatures be handled?",
+            answer:
+              "Subtract the steady linear profile, then expand the remaining zero-boundary transient.",
+          },
+        ],
+      },
+    ],
+    takeaway:
+      "A PDE prediction needs a physical law, boundary conditions and the correct number of initial functions.",
+    nextConnection:
+      "Green functions will assemble responses to localized inputs; the final rod investigation will test a full diffusion solution.",
   },
   diagnostics: [
-    numeric("d-pdes-fourier", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "fourier" }),
-    numeric("d-pdes-multi", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "multivariable" }),
+    {
+      id: "d-fourier",
+      prompt:
+        "On 0 < x < L, a profile is 3sin(πx/L). Find its first sine coefficient. Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 3,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "Projection recovers the coefficient 3.",
+      hint: "Use orthogonality.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use orthogonality.",
+        misconceptions: [],
+      },
+      prerequisiteId: "fourier",
+    },
+    {
+      id: "d-partial",
+      prompt: "For w(x,t) = x²t, find wₓₓ at t = 3. Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 6,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "Two x derivatives give 2t = 6.",
+      hint: "Hold t fixed.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Hold t fixed.",
+        misconceptions: [],
+      },
+      prerequisiteId: "multivariable",
+    },
   ],
   workedExample: {
-    title: "STUB",
-    problem: "STUB",
+    title: "One temperature pattern on a finite rod",
+    problem:
+      "A rod of length π m has D = 0.5 m²/s, zero endpoint temperature deviations and initial deviation 8sin(x/(1 m)) K. Find the solution and midpoint temperature at t = 2 s.",
     steps: [
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
+      {
+        title: "Identify the spatial mode",
+        body: "k₁ = π/L = 1/m; the initial shape is the first sine mode.",
+        reason: "It already satisfies both endpoint conditions.",
+        trap: "A physical sine argument must be dimensionless.",
+      },
+      {
+        title: "Derive the time law",
+        body: "A′ = −Dk₁²A = −0.5A/s, so A(t) = 8exp(−t/(2 s)) K.",
+        reason:
+          "Substitute the mode's second derivative into the heat equation.",
+        trap: "Heat has a first-order amplitude equation.",
+      },
+      {
+        title: "Evaluate the midpoint",
+        body: "At x = L/2, sine equals 1; at t = 2 s the deviation is 8/e ≈ 2.943 K.",
+        reason: "Evaluate space and time factors separately.",
+        trap: "Do not square the decay exponent.",
+      },
+      {
+        title: "Check the equation and data",
+        body: "The time derivative is −0.5/s times the solution, while D times its spatial second derivative gives the same result; t = 0 returns the initial amplitude.",
+        reason:
+          "A proposed solution must satisfy PDE, boundaries and initial data.",
+        trap: "Checking only the initial shape is insufficient.",
+      },
     ],
   },
   fadedExercise: {
-    prompt: "STUB",
-    supplied: [{ heading: "STUB", body: "STUB" }],
-    steps: [numeric("f-pdes", "STUB", 1, "1", "STUB", "STUB")],
+    prompt:
+      "A string of length 2 m has wave speed 4 m/s. Its initial shape is 0.1sin(πx/(2 m)) m and initial velocity zero.",
+    supplied: [
+      {
+        heading: "Independent inputs",
+        body: "k₁ = π/(2 m), ω₁ = ck₁ = 2π/s. The first-mode solution is 0.1sin(πx/(2 m))cos(2πt/(1 s)) m.",
+      },
+    ],
+    steps: [
+      {
+        id: "f-wavenumber",
+        prompt: "Find the numerical value of k₁ in inverse metres.",
+        answer: {
+          kind: "numeric",
+          value: 1.5707963267948966,
+          unit: "1/m",
+          acceptedUnits: ["1/m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "π/L = π/2 per metre.",
+        hint: "Use the rod length in the spatial phase.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Use the rod length in the spatial phase.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-frequency",
+        prompt: "Find the angular frequency in inverse seconds.",
+        answer: {
+          kind: "numeric",
+          value: 6.283185307179586,
+          unit: "1/s",
+          acceptedUnits: ["1/s"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "4 × π/2 = 2π/s.",
+        hint: "Multiply wave speed by wavenumber.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Multiply wave speed by wavenumber.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-period",
+        prompt: "Find the period 2π/ω₁ in seconds.",
+        answer: {
+          kind: "numeric",
+          value: 1,
+          unit: "s",
+          acceptedUnits: ["s"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "2π/(2π/s) = 1 s.",
+        hint: "Distinguish angular frequency from cycles per second.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Distinguish angular frequency from cycles per second.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-position",
+        prompt:
+          "At midpoint x = 1 m and time t = 0.5 s, find the displacement.",
+        answer: {
+          kind: "numeric",
+          value: -0.1,
+          unit: "m",
+          acceptedUnits: ["m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "The spatial sine is 1 and cos π = −1.",
+        hint: "The string crosses to the opposite displacement.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "The string crosses to the opposite displacement.",
+          misconceptions: [],
+        },
+      },
+    ],
   },
   retrievalProblems: [
-    numeric("r-pdes-1", "STUB", 1, "1", "STUB", "STUB"),
-    numeric("r-pdes-2", "STUB", 2, "1", "STUB", "STUB"),
+    {
+      id: "r-data",
+      prompt:
+        "Which initial data are generally required for the ideal wave equation?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "Displacement only",
+          },
+          {
+            id: "1",
+            label: "Displacement and velocity",
+          },
+          {
+            id: "2",
+            label: "Temperature and conductivity",
+          },
+        ],
+      },
+      solution: "Second-order time evolution needs two initial functions.",
+      hint: "Count time derivatives.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Count time derivatives.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-heat-data",
+      prompt: "For the heat equation, the initial temperature derivative is:",
+      answer: {
+        kind: "choice",
+        value: "2",
+        options: [
+          {
+            id: "0",
+            label: "An independent arbitrary function",
+          },
+          {
+            id: "1",
+            label: "Always zero",
+          },
+          {
+            id: "2",
+            label:
+              "Determined by D times initial curvature when derivatives exist",
+          },
+        ],
+      },
+      solution: "The first-order PDE already specifies the rate.",
+      hint: "Use the equation at t = 0.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Use the equation at t = 0.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-speed",
+      prompt:
+        "For string tension 18 N and mass density 2 kg/m, find wave speed.",
+      answer: {
+        kind: "numeric",
+        value: 3,
+        unit: "m/s",
+        acceptedUnits: ["m/s"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "√(18/2) = 3 m/s.",
+      hint: "Take √(tension/mass per length).",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Take √(tension/mass per length).",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-decay",
+      prompt:
+        "If the first heat mode decays at rate 2/s, find the third-mode decay rate.",
+      answer: {
+        kind: "numeric",
+        value: 18,
+        unit: "1/s",
+        acceptedUnits: ["1/s"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "Rates scale as n², so 9 × 2 = 18/s.",
+      hint: "Square the mode-number ratio.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Square the mode-number ratio.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-boundary",
+      prompt:
+        "An insulated end in the one-dimensional constant-conductivity model imposes:",
+      answer: {
+        kind: "choice",
+        value: "0",
+        options: [
+          {
+            id: "0",
+            label: "Zero temperature gradient there",
+          },
+          {
+            id: "1",
+            label: "Zero temperature necessarily",
+          },
+          {
+            id: "2",
+            label: "Zero temperature everywhere",
+          },
+        ],
+      },
+      solution: "Zero current q = −λθₓ requires θₓ = 0.",
+      hint: "Distinguish a flux condition from a value condition.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Distinguish a flux condition from a value condition.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-steady",
+      prompt:
+        "A uniform source-free rod of length 4 m has fixed deviations 2 K at x = 0 and 10 K at x = 4 m. Find the steady value at x = 1 m.",
+      answer: {
+        kind: "numeric",
+        value: 4,
+        unit: "K",
+        acceptedUnits: ["K"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "The steady line is 2 K + (2 K/m)x, giving 4 K.",
+      hint: "A steady one-dimensional profile has zero second derivative.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation:
+          "A steady one-dimensional profile has zero second derivative.",
+        misconceptions: [],
+      },
+    },
   ],
   diagram: {
-    title: "STUB",
-    caption: "STUB",
+    title: "One shape, two kinds of time evolution",
+    caption:
+      "Normalized first-mode amplitudes versus dimensionless time τ: the string follows cos τ, while heat follows exp(−τ). Curves share an initial amplitude but obey different time equations.",
     viewBox: [0, 0, 600, 320],
-    elements: [{ kind: "line", from: [60, 265], to: [550, 265], tone: "muted" }],
+    elements: [
+      {
+        kind: "line",
+        from: [60, 160],
+        to: [550, 160],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [60, 280],
+        to: [60, 40],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [60, 60],
+        to: [68, 60.54781046317267],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [68, 60.54781046317267],
+        to: [76, 62.18523992661943],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [76, 62.18523992661943],
+        to: [84, 64.89434837048465],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [84, 64.89434837048465],
+        to: [92, 68.64545423573992],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [92, 68.64545423573992],
+        to: [100, 73.39745962155612],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [100, 73.39745962155612],
+        to: [108, 79.09830056250526],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [108, 79.09830056250526],
+        to: [116, 85.68551745226057],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [116, 85.68551745226057],
+        to: [124, 93.08693936411417],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [124, 93.08693936411417],
+        to: [132, 101.22147477075268],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [132, 101.22147477075268],
+        to: [140, 109.99999999999999],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [140, 109.99999999999999],
+        to: [148, 119.32633569241996],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [148, 119.32633569241996],
+        to: [156, 129.09830056250524],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [156, 129.09830056250524],
+        to: [164, 139.20883091822407],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [164, 139.20883091822407],
+        to: [172, 149.54715367323465],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [172, 149.54715367323465],
+        to: [180, 159.99999999999997],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [180, 159.99999999999997],
+        to: [188, 170.45284632676533],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [188, 170.45284632676533],
+        to: [196, 180.79116908177593],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [196, 180.79116908177593],
+        to: [204, 190.90169943749473],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [204, 190.90169943749473],
+        to: [212, 200.67366430758],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [212, 200.67366430758],
+        to: [220, 209.99999999999997],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [220, 209.99999999999997],
+        to: [228, 218.7785252292473],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [228, 218.7785252292473],
+        to: [236, 226.91306063588578],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [236, 226.91306063588578],
+        to: [244, 234.3144825477394],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [244, 234.3144825477394],
+        to: [252, 240.90169943749473],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [252, 240.90169943749473],
+        to: [260, 246.60254037844388],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [260, 246.60254037844388],
+        to: [268, 251.35454576426008],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [268, 251.35454576426008],
+        to: [276, 255.10565162951536],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [276, 255.10565162951536],
+        to: [284, 257.81476007338057],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [284, 257.81476007338057],
+        to: [292, 259.45218953682735],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [292, 259.45218953682735],
+        to: [300, 260],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [300, 260],
+        to: [308, 259.45218953682735],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [308, 259.45218953682735],
+        to: [316, 257.81476007338057],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [316, 257.81476007338057],
+        to: [324, 255.10565162951536],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [324, 255.10565162951536],
+        to: [332, 251.35454576426008],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [332, 251.35454576426008],
+        to: [340, 246.60254037844388],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [340, 246.60254037844388],
+        to: [348, 240.90169943749476],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [348, 240.90169943749476],
+        to: [356, 234.31448254773943],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [356, 234.31448254773943],
+        to: [364, 226.91306063588584],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [364, 226.91306063588584],
+        to: [372, 218.77852522924732],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [372, 218.77852522924732],
+        to: [380, 210.00000000000006],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [380, 210.00000000000006],
+        to: [388, 200.67366430758008],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [388, 200.67366430758008],
+        to: [396, 190.90169943749476],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [396, 190.90169943749476],
+        to: [404, 180.791169081776],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [404, 180.791169081776],
+        to: [412, 170.4528463267654],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [412, 170.4528463267654],
+        to: [420, 160.00000000000003],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [420, 160.00000000000003],
+        to: [428, 149.5471536732347],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [428, 149.5471536732347],
+        to: [436, 139.20883091822407],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [436, 139.20883091822407],
+        to: [444, 129.09830056250527],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [444, 129.09830056250527],
+        to: [452, 119.32633569242003],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [452, 119.32633569242003],
+        to: [460, 109.99999999999999],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [460, 109.99999999999999],
+        to: [468, 101.2214747707527],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [468, 101.2214747707527],
+        to: [476, 93.08693936411416],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [476, 93.08693936411416],
+        to: [484, 85.68551745226057],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [484, 85.68551745226057],
+        to: [492, 79.09830056250527],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [492, 79.09830056250527],
+        to: [500, 73.39745962155612],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [500, 73.39745962155612],
+        to: [508, 68.6454542357399],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [508, 68.6454542357399],
+        to: [516, 64.89434837048465],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [516, 64.89434837048465],
+        to: [524, 62.18523992661943],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [524, 62.18523992661943],
+        to: [532, 60.54781046317267],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [532, 60.54781046317267],
+        to: [540, 60],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [60, 60],
+        to: [68, 69.94231307178516],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [68, 69.94231307178516],
+        to: [76, 78.89613025139641],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [76, 78.89613025139641],
+        to: [84, 86.95973089513544],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [84, 86.95973089513544],
+        to: [92, 94.22162311801544],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [92, 94.22162311801544],
+        to: [100, 100.7615152811611],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [100, 100.7615152811611],
+        to: [108, 106.65119089088967],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [108, 106.65119089088967],
+        to: [116, 111.95529651258647],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [116, 111.95529651258647],
+        to: [124, 116.732051347716],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [124, 116.732051347716],
+        to: [132, 121.03388626246533],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [132, 121.03388626246533],
+        to: [140, 124.9080192821589],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [140, 124.9080192821589],
+        to: [148, 128.39697386821715],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [148, 128.39697386821715],
+        to: [156, 131.53904566639707],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [156, 131.53904566639707],
+        to: [164, 134.36872284946168],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [164, 134.36872284946168],
+        to: [172, 136.91706466806514],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [172, 136.91706466806514],
+        to: [180, 139.2120423649238],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [180, 139.2120423649238],
+        to: [188, 141.27884619423315],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [188, 141.27884619423315],
+        to: [196, 143.1401619162529],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [196, 143.1401619162529],
+        to: [204, 144.81641980193513],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [204, 144.81641980193513],
+        to: [212, 146.3260188807323],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [212, 146.3260188807323],
+        to: [220, 147.6855288929867],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [220, 147.6855288929867],
+        to: [228, 148.90987216358047],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [228, 148.90987216358047],
+        to: [236, 150.01248739313849],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [236, 150.01248739313849],
+        to: [244, 151.00547716459667],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [244, 151.00547716459667],
+        to: [252, 151.89974078420568],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [252, 151.89974078420568],
+        to: [260, 152.7050939150661],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [260, 152.7050939150661],
+        to: [268, 153.43037631632293],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [268, 153.43037631632293],
+        to: [276, 154.08354887059224],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [276, 154.08354887059224],
+        to: [284, 154.67178096461714],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [284, 154.67178096461714],
+        to: [292, 155.20152918226535],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [292, 155.20152918226535],
+        to: [300, 155.67860817362276],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [300, 155.67860817362276],
+        to: [308, 156.10825447805973],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [308, 156.10825447805973],
+        to: [316, 156.4951840018082],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [316, 156.4951840018082],
+        to: [324, 156.84364378093846],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [324, 156.84364378093846],
+        to: [332, 157.1574585978983],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [332, 157.1574585978983],
+        to: [340, 157.44007296329036],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [340, 157.44007296329036],
+        to: [348, 157.6945889236893],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [348, 157.6945889236893],
+        to: [356, 157.92380011048775],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [356, 157.92380011048775],
+        to: [364, 158.1302224034991],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [364, 158.1302224034991],
+        to: [372, 158.31612154588933],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [372, 158.31612154588933],
+        to: [380, 158.48353801354534],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [380, 158.48353801354534],
+        to: [388, 158.63430941185328],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [388, 158.63430941185328],
+        to: [396, 158.77009064571874],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [396, 158.77009064571874],
+        to: [404, 158.89237208422054],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [404, 158.89237208422054],
+        to: [412, 159.00249591927783],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [412, 159.00249591927783],
+        to: [420, 159.10167089788706],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [420, 159.10167089788706],
+        to: [428, 159.1909855896341],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [428, 159.1909855896341],
+        to: [436, 159.27142033510853],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [436, 159.27142033510853],
+        to: [444, 159.3438580063694],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [444, 159.3438580063694],
+        to: [452, 159.4090936975716],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [452, 159.4090936975716],
+        to: [460, 159.46784345211995],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [460, 159.46784345211995],
+        to: [468, 159.52075212214217],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [468, 159.52075212214217],
+        to: [476, 159.56840044654868],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [476, 159.56840044654868],
+        to: [484, 159.61131142536925],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [484, 159.61131142536925],
+        to: [492, 159.6499560603333],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [492, 159.6499560603333],
+        to: [500, 159.68475852470377],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [500, 159.68475852470377],
+        to: [508, 159.71610081910984],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [508, 159.71610081910984],
+        to: [516, 159.74432696448218],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [516, 159.74432696448218],
+        to: [524, 159.7697467781135],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [524, 159.7697467781135],
+        to: [532, 159.79263927429133],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [532, 159.79263927429133],
+        to: [540, 159.8132557268292],
+        tone: "ink",
+      },
+      {
+        kind: "label",
+        at: [410, 50],
+        text: "wave: cos τ",
+      },
+      {
+        kind: "label",
+        at: [370, 145],
+        text: "heat: exp(−τ)",
+      },
+      {
+        kind: "label",
+        at: [500, 300],
+        text: "2π",
+      },
+      {
+        kind: "label",
+        at: [30, 60],
+        text: "1",
+      },
+      {
+        kind: "label",
+        at: [20, 265],
+        text: "−1",
+      },
+    ],
   },
-  sidebars: [],
-  sources: [differential],
+  sidebars: [
+    {
+      heading: "A separated ansatz is not the general initial shape",
+      body: "A single product X(x)A(t) captures one mode. Linearity lets sums of separated solutions remain solutions, and completeness of the appropriate spatial eigenfunctions supports reconstruction of broader initial data. The convergence and differentiability of an infinite sum must be checked before differentiating term by term; finite sine sums avoid that issue and provide exact classroom examples.",
+    },
+  ],
+  sources: [
+    {
+      title: "MIT OpenCourseWare · Differential Equations",
+      url: "https://www.ocw.mit.edu/courses/18-03-differential-equations-spring-2010/pages/lecture-notes/",
+    },
+    {
+      title: "Cambridge · Mathematical Methods II",
+      url: "https://www.damtp.cam.ac.uk/user/gio10/nst_notes.pdf",
+    },
+  ],
 };
 export default chapter;

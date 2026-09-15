@@ -1,57 +1,698 @@
 import type { Chapter } from "../chapter";
-import { numeric } from "@/curriculum-support/authoring";
-import { relativity } from "../sources";
-
-// STUB — placeholder chapter. Full teaching content is not yet written.
-// This stub exists so the pack validates and the course can be published
-// with the finished chapters. Replace with real content before release.
 const chapter: Chapter = {
   id: "metrics",
   intuition: {
-    body: "STUB: Metrics and a first look at spacetime. This chapter is not yet written; it is published as a placeholder so the course remains complete and navigable.",
-    thoughtExperiments: ["STUB: A placeholder prediction to be replaced with real content."],
+    body: "Walk one degree around a circular track close to its centre, then walk one degree around a much larger track. The angle change is the same, but the distances are different. Coordinate increments cannot be interpreted as physical lengths until a rule tells us how the local coordinate directions are scaled.\n\nA metric supplies that rule. On an ordinary plane it reproduces Euclidean distance even when we use polar coordinates. On a curved surface it describes local lengths without requiring a traveller to step off the surface. In spacetime it measures an interval with a different sign structure, so a nonzero separation can have zero squared interval.\n\nThese examples share the idea of a bilinear measurement rule, but their interpretations differ. Positive spatial metrics produce lengths. The Minkowski metric used in special relativity has one negative direction and three positive ones; it classifies event separations and supplies proper time for timelike paths.\n\nWe will derive the polar metric directly, inspect a sphere's local geometry, and verify a Lorentz boost by calculating the interval before and after transformation. This is an introduction to geometric measurement and flat spacetime, not a derivation of gravitational field equations or a complete theory of curvature.",
+    thoughtExperiments: [
+      "Does a coordinate-dependent metric necessarily mean the underlying surface is curved?",
+      "Can two distinct spacetime events have zero interval without being the same event?",
+    ],
   },
   theory: [
-    { heading: "1. STUB", body: "STUB: This section is not yet written." },
+    {
+      heading: "1. Derive a metric from physical displacement",
+      body: "On the workshop floor, Cartesian coordinates measure a small displacement through $ds^2=dx^2+dy^2$. Replace them with polar coordinates $x=r\\cos\\theta$, $y=r\\sin\\theta$, where $\\theta$ is in radians. Differentiation gives\n$$dx=\\cos\\theta\\,dr-r\\sin\\theta\\,d\\theta,\\qquad\ndy=\\sin\\theta\\,dr+r\\cos\\theta\\,d\\theta.$$\nSquaring and adding cancels the cross terms, while $\\sin^2\\theta+\\cos^2\\theta=1$ combines the remaining pieces:\n$$ds^2=dr^2+r^2d\\theta^2.$$\n\nThe factor $r^2$ records a physical fact: at radius $r$, an angular increment $d\\theta$ corresponds to tangential length $r\\,d\\theta$. Both terms have units of length squared, even though the coordinate increments have different units. The metric matrix in coordinates $(r,\\theta)$ is $\\operatorname{diag}(1,r^2)$.\n\nMore generally, a metric is a symmetric bilinear form applied to two tangent vectors; applying it twice to the same displacement gives its squared size. In coordinates, $ds^2=dq^Tg\\,dq$, where $dq$ is a column of coordinate increments and $g$ records the form. This reuses the tensor transformation rule from the previous chapter. If $dq=J\\,dq'$, then $g'=J^TgJ$, ensuring both coordinate descriptions give the same scalar.\n\nThe polar formula is a local line element, not an exact finite-distance rule obtained by replacing differentials with arbitrary endpoint differences. To measure a curve's length, integrate $\\sqrt{\\dot r^2+r^2\\dot\\theta^2}$ over its parameter. A circular arc at fixed radius has length $r|\\Delta\\theta|$, whereas the straight chord joining its endpoints generally has a different length.\n\nAt $r=0$ the polar metric matrix appears degenerate because its angular entry vanishes. The plane itself is not defective there: all angle labels identify the same origin, so polar coordinates fail to give independent local directions. Cartesian coordinates remove the issue. A coordinate singularity must be distinguished from a singularity of the physical geometry.",
+    },
+    {
+      heading: "2. Distinguish changing coordinates from curved geometry",
+      body: "An ant walking on a sphere can measure nearby distances without seeing the sphere from outside. Let the sphere have radius $R$, colatitude $\\theta$ measured down from the north pole, and azimuth $\\phi$. Its position in surrounding Euclidean space is\n$$\\mathbf r=R(\\sin\\theta\\cos\\phi,\\sin\\theta\\sin\\phi,\\cos\\theta).$$\nThe tangent derivative with respect to $\\theta$ has length $R$, the derivative with respect to $\\phi$ has length $R\\sin\\theta$, and their dot product is zero. Therefore\n$$ds^2=R^2d\\theta^2+R^2\\sin^2\\theta\\,d\\phi^2.$$\n\nNear any ordinary point, a sufficiently small patch can be approximated by its flat tangent plane. That local approximation does not make the whole sphere flat. For instance, a triangle formed by the north pole and two equatorial points ninety degrees apart, joined by great-circle arcs, has three right angles. Great-circle arcs are the sphere's locally shortest paths, and the resulting angle sum differs from a Euclidean straight-edged triangle.\n\nThis is intrinsic evidence of curvature: it can be measured using distances and angles on the surface. By contrast, the polar plane's metric depends on $r$ while the plane remains flat. Coordinate-dependent entries alone therefore do not diagnose curvature. Determining curvature systematically requires derivatives of the metric in combinations that separate coordinate effects from geometry; that machinery lies beyond this chapter.\n\nThe metric also determines local area in a positive-definite two-dimensional geometry. The area factor is $\\sqrt{\\det g}$, because the metric's determinant is the squared area of the parallelogram formed by coordinate tangent vectors. For the plane this gives $r\\,dr\\,d\\theta$ on $r>0$, matching the polar Jacobian. For the sphere it gives $R^2\\sin\\theta\\,d\\theta\\,d\\phi$ for $0<\\theta<\\pi$.\n\nThe poles are singularities of the angular chart, not tears in the sphere. All azimuths identify the same pole, much as every polar angle identifies the plane's origin. These examples teach a useful sequence: identify the physical displacement, compute the metric in the chosen coordinates, and ask which apparent irregularities disappear in a different valid chart.",
+    },
+    {
+      heading: "3. Preserve the spacetime interval under a boost",
+      body: "Record two events, each with a time and spatial position. In flat spacetime use coordinates $(ct,x,y,z)$ so every coordinate has units of length. The special-relativistic model assigns the invariant squared interval\n$$\\Delta s^2=-(c\\Delta t)^2+\\Delta x^2+\\Delta y^2+\\Delta z^2.$$\nThis is the course's $(-,+,+,+)$ convention. The metric matrix is $\\eta=\\operatorname{diag}(-1,1,1,1)$. Its negative time contribution makes it indefinite, so it is not a positive norm.\n\nA nonzero separation is timelike when $\\Delta s^2<0$, spacelike when $\\Delta s^2>0$, and null when $\\Delta s^2=0$. For an inertial clock connecting timelike-separated events, elapsed proper time is $\\Delta\\tau=\\sqrt{-\\Delta s^2}/c$. Null separation can connect distinct events on a light ray; zero interval therefore does not imply zero displacement. An arbitrary accelerated clock's elapsed time requires integrating along its actual path rather than using only the endpoint interval.\n\nFor two standard inertial frames in relative motion $v$ along the x-axis, define $\\beta=v/c$ and $\\gamma=1/\\sqrt{1-\\beta^2}$ with $|\\beta|<1$. With shared origins at zero, the boost of event differences is\n$$c\\Delta t'=\\gamma(c\\Delta t-\\beta\\Delta x),\\qquad\n\\Delta x'=\\gamma(\\Delta x-\\beta c\\Delta t),$$\nwhile transverse differences stay unchanged. The transformation follows the special-relativistic inertial-frame model; we now check its preserved quantity explicitly.\n\nWrite $T=c\\Delta t$ and $X=\\Delta x$. Expansion gives\n$$-T'^2+X'^2\n=\\gamma^2[-(T-\\beta X)^2+(X-\\beta T)^2]\n=\\gamma^2(1-\\beta^2)(-T^2+X^2)\n=-T^2+X^2.$$\nThe mixed terms cancel, and the defining factor in $\\gamma$ cancels the remaining scale. In matrix language $\\Lambda^T\\eta\\Lambda=\\eta$. This is different from the Euclidean orthogonality condition $\\Lambda^T\\Lambda=I$, which a nontrivial boost does not satisfy.\n\nFor $T=5$ m, $X=3$ m and $\\beta=0.6$, $\\gamma=1.25$ gives $T'=4$ m and $X'=0$. Both frames obtain interval $-16$ m², while their coordinate time and position differences disagree. The transformed frame is at rest relative to the straight timelike separation. The invariant is the structured quadratic combination, not each component separately.\n\nThe sign classification can be understood by asking whether a frame can remove one component. For a timelike separation with $T>0$ and $|X|<T$, choose $\\beta=X/T$. This lies within the permitted speed range and makes $X'=0$, leaving a purely temporal separation. For a spacelike separation with $|X|>T$, choosing $\\beta=T/X$ instead makes $T'=0$, so some inertial frame sees the events simultaneously.\n\nFor a nonzero null separation with $X=T$, either attempt would require $|\\beta|=1$, outside the allowed inertial boost family. A finite boost cannot turn that separation into zero or give it a rest frame. These conclusions follow directly from the transformation formulas and explain the different names without relying only on a sign table.\n\nFor a curved spatial surface, by contrast, the metric remains positive on every nonzero tangent vector in a valid chart. The possibility of nonzero null vectors is a consequence of the spacetime form's signature, not merely of using unfamiliar coordinates. This is the key conceptual change when moving from lengths on a sphere to intervals between events.\n\nMetrics have now linked coordinate bookkeeping to physical measurement in two settings. The next chapter asks how families of structure-preserving transformations are described near the identity, and how symmetry of a dynamical law can imply a conserved quantity.",
+    },
   ],
   teaching: {
-    question: "STUB",
-    why: "STUB",
-    outcomes: ["STUB"],
-    checkpoints: [
-      { bridge: "STUB", meaning: "STUB", question: "STUB", answer: "STUB" },
+    question:
+      "What turns coordinate differences into a meaningful measurement?",
+    why: "Metrics separate coordinate labels from geometry and make the preserved quantity in a spacetime transformation explicit.",
+    outcomes: [
+      "Derive and use a polar line element.",
+      "Distinguish coordinate singularities from curvature.",
+      "Classify intervals and verify a Lorentz boost.",
     ],
-    takeaway: "STUB",
-    nextConnection: "STUB",
+    checkpoints: [
+      {
+        bridge: "Measure angular motion through its radius.",
+        meaning:
+          "The metric converts coordinate increments into squared length.",
+        question: "Why does dθ² carry a factor r²?",
+        answer: "The tangential length associated with dθ is r dθ.",
+        further: [
+          {
+            question: "Why do polar cross terms cancel?",
+            answer:
+              "The radial and angular tangent directions are perpendicular.",
+          },
+          {
+            question:
+              "Can finite endpoint differences always replace differentials in the line element?",
+            answer:
+              "No. The metric gives local lengths, which must be integrated along a path.",
+          },
+          {
+            question:
+              "Why is r = 0 a coordinate failure rather than a defect in the plane?",
+            answer:
+              "The angular labels collapse there, while Cartesian coordinates remain regular.",
+          },
+        ],
+      },
+      {
+        bridge: "Inspect geometry independently of its labels.",
+        meaning:
+          "Variable metric entries do not by themselves establish curvature.",
+        question: "Does the r-dependent polar metric make the plane curved?",
+        answer:
+          "No. It is still Euclidean geometry written in different coordinates.",
+        further: [
+          {
+            question: "What does the sphere's three-right-angle triangle show?",
+            answer: "Its intrinsic geometry differs from the flat plane's.",
+          },
+          {
+            question: "Why is the area factor √det g?",
+            answer:
+              "The determinant of the tangent-vector Gram matrix is the squared coordinate parallelogram area.",
+          },
+          {
+            question: "Why is azimuth ill-defined at a sphere's pole?",
+            answer:
+              "All azimuth labels refer to the same point and no longer define independent coordinate directions.",
+          },
+        ],
+      },
+      {
+        bridge: "Check the form that the transformation preserves.",
+        meaning: "A Lorentz boost preserves an indefinite interval.",
+        question: "What sign identifies timelike separation in this course?",
+        answer: "Negative squared interval.",
+        further: [
+          {
+            question: "Can distinct events have zero interval?",
+            answer: "Yes. Null-separated events do.",
+          },
+          {
+            question: "Which terms cancel in the boost calculation?",
+            answer: "The mixed TX terms cancel, and γ²(1 − β²) equals one.",
+          },
+          {
+            question: "Does a boost preserve T² + X²?",
+            answer:
+              "Generally no. It preserves −T² + X², with the transverse terms included in three spatial dimensions.",
+          },
+        ],
+      },
+    ],
+    takeaway:
+      "A metric measures geometric structure; its coordinate entries and its signature determine how to interpret the resulting scalar.",
+    nextConnection:
+      "Symmetry will organize transformations that preserve a structure and relate dynamical invariance to conservation.",
   },
   diagnostics: [
-    numeric("d-metrics-tensors", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "tensors" }),
-    numeric("d-metrics-multi", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "multiple-integrals" }),
+    {
+      id: "d-tensor",
+      prompt: "If e′ = eS, how does a metric matrix transform?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "S⁻¹g",
+          },
+          {
+            id: "1",
+            label: "SᵀgS",
+          },
+          {
+            id: "2",
+            label: "gS⁻¹",
+          },
+        ],
+      },
+      solution: "Both slots of the bilinear form receive the basis change.",
+      hint: "Transform both arguments.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Transform both arguments.",
+        misconceptions: [],
+      },
+      prerequisiteId: "tensors",
+    },
+    {
+      id: "d-area",
+      prompt: "In polar coordinates, what is the area factor r at radius 3 m?",
+      answer: {
+        kind: "numeric",
+        value: 3,
+        unit: "m",
+        acceptedUnits: ["m"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "The area element is r dr dθ, so its factor is 3 m.",
+      hint: "Recall the polar Jacobian.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Recall the polar Jacobian.",
+        misconceptions: [],
+      },
+      prerequisiteId: "multiple-integrals",
+    },
   ],
   workedExample: {
-    title: "STUB",
-    problem: "STUB",
+    title: "Check a timelike separation in two frames",
+    problem:
+      "Use T = cΔt = 10 m, X = Δx = 6 m, no transverse separation, and β = 0.6.",
     steps: [
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
+      {
+        title: "Classify the separation",
+        body: "Δs² = −100 + 36 = −64 m², so it is timelike.",
+        reason: "Use the specified negative-time convention.",
+        trap: "The positive Euclidean sum measures a different form.",
+      },
+      {
+        title: "Find the boost factor",
+        body: "γ = 1/√(1 − 0.6²) = 1.25.",
+        reason: "Relative speed is entered as the dimensionless ratio v/c.",
+        trap: "Do not put a dimensional speed directly inside the square root.",
+      },
+      {
+        title: "Transform both components",
+        body: "T′ = 1.25(10 − 0.6 × 6) = 8 m; X′ = 1.25(6 − 0.6 × 10) = 0.",
+        reason: "Time and space mix under the boost.",
+        trap: "Transforming only X cannot preserve the interval.",
+      },
+      {
+        title: "Verify the invariant",
+        body: "−T′² + X′² = −64 m². The inertial proper-time separation is 8 m/c.",
+        reason: "The transformed frame makes the spatial separation vanish.",
+        trap: "Proper time is a duration, so divide the length 8 m by c.",
+      },
     ],
   },
   fadedExercise: {
-    prompt: "STUB",
-    supplied: [{ heading: "STUB", body: "STUB" }],
-    steps: [numeric("f-metrics", "STUB", 1, "1", "STUB", "STUB")],
+    prompt:
+      "Transform T = 5 m, X = 0 with β = 0.6 and no transverse separation.",
+    supplied: [
+      {
+        heading: "Independent inputs",
+        body: "Use γ = 1.25, T′ = γ(T − βX) and X′ = γ(X − βT). The original interval is −25 m².",
+      },
+    ],
+    steps: [
+      {
+        id: "f-time",
+        prompt: "Find T′ in metres.",
+        answer: {
+          kind: "numeric",
+          value: 6.25,
+          unit: "m",
+          acceptedUnits: ["m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "1.25 × 5 = 6.25 m.",
+        hint: "The original spatial separation vanishes.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "The original spatial separation vanishes.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-space",
+        prompt: "Find X′ in metres.",
+        answer: {
+          kind: "numeric",
+          value: -3.75,
+          unit: "m",
+          acceptedUnits: ["m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "1.25(−0.6 × 5) = −3.75 m.",
+        hint: "Keep the negative sign.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Keep the negative sign.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-interval",
+        prompt: "Using T′ = 6.25 m and X′ = −3.75 m, calculate −T′² + X′².",
+        answer: {
+          kind: "numeric",
+          value: -25,
+          unit: "m²",
+          acceptedUnits: ["m²"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "−39.0625 + 14.0625 = −25 m².",
+        hint: "Square the components before combining.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Square the components before combining.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-classify",
+        prompt: "What is the transformed separation?",
+        answer: {
+          kind: "choice",
+          value: "1",
+          options: [
+            {
+              id: "0",
+              label: "Spacelike because X′ is nonzero",
+            },
+            {
+              id: "1",
+              label: "Timelike because the interval remains negative",
+            },
+            {
+              id: "2",
+              label: "Null because a boost was used",
+            },
+          ],
+        },
+        solution:
+          "Classification depends on the invariant interval, not on one component.",
+        hint: "Use the computed sign.",
+        rubric: {
+          defaultCategory: "conceptual",
+          explanation: "Use the computed sign.",
+          misconceptions: [],
+        },
+      },
+    ],
   },
   retrievalProblems: [
-    numeric("r-metrics-1", "STUB", 1, "1", "STUB", "STUB"),
-    numeric("r-metrics-2", "STUB", 2, "1", "STUB", "STUB"),
+    {
+      id: "r-polar",
+      prompt:
+        "At fixed radius 3 m, find the length of a circular arc spanning 0.2 rad.",
+      answer: {
+        kind: "numeric",
+        value: 0.6,
+        unit: "m",
+        acceptedUnits: ["m"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "rΔθ = 3 × 0.2 = 0.6 m.",
+      hint: "Use the angular scale factor.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use the angular scale factor.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-curvature",
+      prompt:
+        "Does coordinate dependence of metric entries alone prove curvature?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "Yes",
+          },
+          {
+            id: "1",
+            label: "No",
+          },
+          {
+            id: "2",
+            label: "Only at large radius",
+          },
+        ],
+      },
+      solution: "The polar metric varies even on a flat plane.",
+      hint: "Use the polar counterexample.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Use the polar counterexample.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-spacelike",
+      prompt: "For T = 3 m and X = 5 m, find the squared interval.",
+      answer: {
+        kind: "numeric",
+        value: 16,
+        unit: "m²",
+        acceptedUnits: ["m²"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "−9 + 25 = 16 m².",
+      hint: "Use the course signature.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use the course signature.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-null",
+      prompt:
+        "A nonzero event separation with T = X and zero transverse components is:",
+      answer: {
+        kind: "choice",
+        value: "2",
+        options: [
+          {
+            id: "0",
+            label: "Timelike",
+          },
+          {
+            id: "1",
+            label: "Spacelike",
+          },
+          {
+            id: "2",
+            label: "Null",
+          },
+        ],
+      },
+      solution: "−T² + X² vanishes.",
+      hint: "Zero interval is not zero separation.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Zero interval is not zero separation.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-gamma",
+      prompt: "Find γ for β = 0.8. Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 1.6666666666666667,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "1/√(1 − 0.64) = 1/0.6 = 5/3.",
+      hint: "Use the dimensionless speed.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use the dimensionless speed.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-transfer",
+      prompt:
+        "Which identity defines preservation of the Minkowski metric by a boost matrix?",
+      answer: {
+        kind: "choice",
+        value: "0",
+        options: [
+          {
+            id: "0",
+            label: "ΛᵀηΛ = η",
+          },
+          {
+            id: "1",
+            label: "ΛᵀΛ = I for every boost",
+          },
+          {
+            id: "2",
+            label: "Λ = I",
+          },
+        ],
+      },
+      solution:
+        "The preserved bilinear form is η, not the Euclidean identity matrix.",
+      hint: "Name the form being preserved.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Name the form being preserved.",
+        misconceptions: [],
+      },
+    },
   ],
   diagram: {
-    title: "STUB",
-    caption: "STUB",
+    title: "Timelike points on one invariant hyperbola",
+    caption:
+      "With T = cΔt upward and X horizontal at equal scales, (X,T) = (3,5) and (0,4) have interval −16 m². Dashed light directions separate timelike and spacelike regions.",
     viewBox: [0, 0, 600, 320],
-    elements: [{ kind: "line", from: [60, 265], to: [550, 265], tone: "muted" }],
+    elements: [
+      {
+        kind: "line",
+        from: [80, 280],
+        to: [530, 280],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [80, 280],
+        to: [80, 25],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [80, 280],
+        to: [320, 40],
+        tone: "muted",
+        dashed: true,
+      },
+      {
+        kind: "line",
+        from: [80, 140],
+        to: [85.83333333333333, 139.87852492291634],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [85.83333333333333, 139.87852492291634],
+        to: [91.66666666666667, 139.5147299140899],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [91.66666666666667, 139.5147299140899],
+        to: [97.5, 138.91048940477538],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [97.5, 138.91048940477538],
+        to: [103.33333333333333, 138.06887429304155],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [103.33333333333333, 138.06887429304155],
+        to: [109.16666666666667, 136.99407549180194],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [109.16666666666667, 136.99407549180194],
+        to: [115, 135.69130310338187],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [115, 135.69130310338187],
+        to: [120.83333333333334, 134.16666666666666],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [120.83333333333334, 134.16666666666666],
+        to: [126.66666666666666, 132.42704252547563],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [126.66666666666666, 132.42704252547563],
+        to: [132.5, 130.47993445694323],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [132.5, 130.47993445694323],
+        to: [138.33333333333334, 128.33333333333334],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [138.33333333333334, 128.33333333333334],
+        to: [144.16666666666666, 125.99558087148566],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [144.16666666666666, 125.99558087148566],
+        to: [150, 123.4752415750147],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [150, 123.4752415750147],
+        to: [155.83333333333331, 120.78098592051123],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [155.83333333333331, 120.78098592051123],
+        to: [161.66666666666669, 117.92148678975227],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [161.66666666666669, 117.92148678975227],
+        to: [167.5, 114.90533018900945],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [167.5, 114.90533018900945],
+        to: [173.33333333333331, 111.74094047834717],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [173.33333333333331, 111.74094047834717],
+        to: [179.16666666666669, 108.43651968505134],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [179.16666666666669, 108.43651968505134],
+        to: [185, 105],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [185, 105],
+        to: [190.83333333333331, 101.43900824150373],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [190.83333333333331, 101.43900824150373],
+        to: [196.66666666666669, 97.76084089551136],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [196.66666666666669, 97.76084089551136],
+        to: [202.5, 93.97244827714363],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [202.5, 93.97244827714363],
+        to: [208.33333333333331, 90.08042637883676],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [208.33333333333331, 90.08042637883676],
+        to: [214.16666666666669, 86.09101504972895],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [214.16666666666669, 86.09101504972895],
+        to: [220, 82.01010126776669],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [220, 82.01010126776669],
+        to: [225.83333333333334, 77.84322640309301],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [225.83333333333334, 77.84322640309301],
+        to: [231.66666666666666, 73.59559651553516],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [231.66666666666666, 73.59559651553516],
+        to: [237.5, 69.27209487113481],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [237.5, 69.27209487113481],
+        to: [243.33333333333334, 64.87729599649927],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [243.33333333333334, 64.87729599649927],
+        to: [249.16666666666666, 60.41548071161503],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [249.16666666666666, 60.41548071161503],
+        to: [255, 55.8906516898503],
+        tone: "ink",
+      },
+      {
+        kind: "point",
+        at: [185, 105],
+        label: "(3,5)",
+        tone: "accent",
+        labelOffset: [15, 5],
+      },
+      {
+        kind: "point",
+        at: [80, 140],
+        label: "(0,4)",
+        tone: "accent",
+        labelOffset: [10, 25],
+      },
+      {
+        kind: "label",
+        at: [95, 30],
+        text: "T",
+      },
+      {
+        kind: "label",
+        at: [500, 305],
+        text: "X",
+      },
+      {
+        kind: "label",
+        at: [300, 65],
+        text: "T = X",
+      },
+    ],
   },
-  sidebars: [],
-  sources: [relativity],
+  sidebars: [
+    {
+      heading: "Proper time along a timelike path",
+      body: "For a timelike path in one spatial dimension, $d\\tau=\\sqrt{dt^2-dx^2/c^2}=dt\\sqrt{1-v(t)^2/c^2}$ when coordinate time increases. Integrating gives the clock's elapsed proper time along that path. For constant velocity between the endpoints it reduces to the endpoint interval formula. Different timelike paths between the same events need not accumulate the same proper time.",
+    },
+  ],
+  sources: [
+    {
+      title: "David Tong · Dynamics and Relativity",
+      url: "https://davidtong.org/teaching/dynamics-and-relativity/",
+    },
+    {
+      title: "MIT OpenCourseWare · Multivariable Calculus",
+      url: "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/",
+    },
+  ],
 };
 export default chapter;

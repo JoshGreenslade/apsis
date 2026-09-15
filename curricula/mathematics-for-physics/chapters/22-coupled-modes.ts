@@ -1,57 +1,558 @@
 import type { Chapter } from "../chapter";
-import { numeric } from "@/curriculum-support/authoring";
-import { differential } from "../sources";
-
-// STUB — placeholder chapter. Full teaching content is not yet written.
-// This stub exists so the pack validates and the course can be published
-// with the finished chapters. Replace with real content before release.
 const chapter: Chapter = {
   id: "coupled-modes",
   intuition: {
-    body: "STUB: Coupled oscillators and normal modes. This chapter is not yet written; it is published as a placeholder so the course remains complete and navigable.",
-    thoughtExperiments: ["STUB: A placeholder prediction to be replaced with real content."],
+    body: "Two identical carts sit on a low-friction track, each attached to a wall by a spring and connected to the other cart by a third spring. Pull only the left cart and release it. The right cart soon moves too, so neither cart behaves like an isolated oscillator with its own independent initial displacement.\n\nTry a different release: move both carts the same distance in the same direction. The connecting spring does not change length, and the carts can move together. Move them equal distances in opposite directions instead, and the connecting spring is stretched or compressed twice as much as either cart moves. This second pattern has a stronger restoring effect.\n\nThese fixed relative patterns are normal modes. In a linear model, a general motion can be assembled from them even though the carts' individual coordinates remain coupled. The new coordinates measure amounts of each pattern, rather than positions of individual carts.\n\nWe will derive the force matrix from explicitly assumed ideal springs, connect its eigenvectors to the patterns, and reconstruct a release of just one cart. Equal masses make the first calculation especially transparent. An extension will explain why unequal masses require weighting the coordinates instead of treating every stiffness eigenvalue directly as a squared frequency.",
+    thoughtExperiments: [
+      "If both carts move together, which spring is unextended?",
+      "Would the opposite-motion pattern have a higher or lower frequency, and why?",
+    ],
   },
   theory: [
-    { heading: "1. STUB", body: "STUB: This section is not yet written." },
+    {
+      heading: "1. Build the coupled equations from spring extensions",
+      body: "Let each cart have mass $m>0$, each outer spring stiffness $k>0$, and the connecting spring stiffness $\\kappa\\geq0$. Let $x_1,x_2$ be displacements to the right from equilibrium. Assume ideal linear springs, no damping or driving, and motion along one straight line. Hooke's law says a spring's force opposes its extension and has magnitude stiffness times extension; Newton's law is mass times acceleration equals net force.\n\nThe left outer spring contributes $-kx_1$. The connecting spring's extension is $x_2-x_1$, so its force on cart 1 is $\\kappa(x_2-x_1)$ and on cart 2 the opposite. Thus\n$$m\\ddot x_1=-(k+\\kappa)x_1+\\kappa x_2,\\qquad\nm\\ddot x_2=\\kappa x_1-(k+\\kappa)x_2.$$\nThe positive off-cart terms do not represent an unstable spring: they express that a neighbour pulling right can pull this cart right as well.\n\nWith $\\mathbf x=(x_1,x_2)^T$, write $m\\ddot{\\mathbf x}+K\\mathbf x=0$, where\n$$K=\\begin{pmatrix}k+\\kappa&-\\kappa\\\\-\\kappa&k+\\kappa\\end{pmatrix}.$$\nThis stiffness matrix is symmetric because the connecting spring supplies equal and opposite forces. Its entries have units N/m, so dividing by mass produces units $1/\\mathrm s^2$, appropriate for squared angular frequencies.\n\nThe potential energy makes the sign structure easier to check:\n$$V=\\tfrac12kx_1^2+\\tfrac12kx_2^2+\\tfrac12\\kappa(x_2-x_1)^2\n=\\tfrac12\\mathbf x^TK\\mathbf x.$$\nEvery term is nonnegative, and the two outer terms make the energy positive for any nonzero displacement. Differentiating $V$ with respect to each coordinate and negating reproduces its force. This also identifies which physical assumptions created the matrix rather than introducing it as an arbitrary algebra exercise.\n\nIf $k=0$, translating both carts together costs no spring energy. That limiting model has a zero-frequency mode describing free collective translation, not an oscillation. Our main calculation keeps $k>0$, but the limit is a useful check on the formulas we are about to derive.",
+    },
+    {
+      heading: "2. Turn eigenvectors into independent oscillators",
+      body: "Release both carts at the same displacement. Algebraically this tests the vector $(1,1)$: multiplying by $K$ gives $k(1,1)$. Opposite displacements test $(1,-1)$, whose image is $(k+2\\kappa)(1,-1)$. The normalized mode shapes are therefore\n$$\\mathbf e_+=\\frac{1}{\\sqrt2}(1,1),\\qquad\n\\mathbf e_-=\\frac{1}{\\sqrt2}(1,-1).$$\nTheir eigenvalues measure stiffness along each collective direction.\n\nExpand the displacement as $\\mathbf x=q_+\\mathbf e_++q_-\\mathbf e_-$. Since these vectors are constant and orthonormal, the coefficients are $q_\\pm=\\mathbf e_\\pm\\cdot\\mathbf x$. Substitute into the vector equation and project onto each mode. The mixed terms vanish, leaving\n$$\\ddot q_++\\omega_+^2q_+=0,\\qquad\n\\ddot q_-+\\omega_-^2q_-=0,$$\nwhere $\\omega_+^2=k/m$ and $\\omega_-^2=(k+2\\kappa)/m$. A normal mode is thus a spatial pattern whose amplitude obeys an independent oscillator equation.\n\nThe square root matters: stiffness divided by mass is a squared frequency, not a frequency. In-phase motion has the lower frequency because the connecting spring is unchanged. Opposite motion has the extra restoring contribution $2\\kappa$. When $\\kappa\\to0$, the frequencies coincide and the carts cease to exchange forces; any orthonormal combination of their identical independent motions is then an equally valid modal basis.\n\nEach modal equation requires two initial data:\n$$q_\\pm(t)=q_\\pm(0)\\cos(\\omega_\\pm t)\n+\\frac{\\dot q_\\pm(0)}{\\omega_\\pm}\\sin(\\omega_\\pm t).$$\nThese data come from projecting both initial displacement and initial velocity. Specifying only the release positions is sufficient only if velocities are also stated, commonly as zero. Arbitrary motion does not require new mode shapes; it requires the correct amplitudes and phases.\n\nA single mode preserves the displacement ratio of the two carts wherever that ratio is defined. A mixture generally does not, because its components oscillate at different frequencies. Watching one cart alone can therefore reveal a complicated signal even though the underlying modal equations are simple.\n\nInitial velocity can excite a mode even when its initial displacement is zero. Suppose the carts start at equilibrium, with velocities $(v_0,0)$. Then $q_\\pm(0)=0$ and $\\dot q_\\pm(0)=v_0/\\sqrt2$, so $q_\\pm(t)=v_0\\sin(\\omega_\\pm t)/(\\sqrt2\\,\\omega_\\pm)$. Reconstructing gives\n$$x_1(t)=\\frac{v_0}{2}\\left[\\frac{\\sin(\\omega_+t)}{\\omega_+}+\\frac{\\sin(\\omega_-t)}{\\omega_-}\\right].$$\nThe factor $1/\\omega$ converts velocity amplitude into displacement amplitude and supplies the correct units. Differentiating at zero returns $v_0$, which checks both terms and their normalization.\n\nA different preparation, equal displacements and equal velocities, has no opposite-mode component at all. The coupling spring then remains unchanged throughout the ideal motion, not merely at the initial instant. This is a useful experimental way to isolate the lower frequency. An imperfect release introduces a small opposite-mode amplitude, but linearity lets us quantify it directly by projection rather than treating the resulting signal as a failure of the normal-mode model.\n\nThese examples distinguish choosing a mode shape from choosing its phase and amplitude. The former comes from the system's masses and springs; the latter comes from how the experiment is prepared.",
+    },
+    {
+      heading: "3. Reconstruct motion, energy and the unequal-mass extension",
+      body: "Pull cart 1 to $a$ and leave cart 2 at zero, releasing both from rest. Projection gives $q_+(0)=q_-(0)=a/\\sqrt2$, with both modal velocities zero. Converting back gives\n$$x_1(t)=\\frac a2[\\cos(\\omega_+t)+\\cos(\\omega_-t)],\\qquad\nx_2(t)=\\frac a2[\\cos(\\omega_+t)-\\cos(\\omega_-t)].$$\nAt $t=0$, these return $a$ and zero; differentiating gives both initial velocities zero. Checking all four initial data is a stronger verification than merely observing oscillatory functions.\n\nUsing the cosine sum and difference identities reveals a faster oscillation multiplied by a slower modulation when the frequencies are close. That behaviour is called beating. It explains why one cart's visible amplitude can shrink while the other's grows. The total motion is still a fixed superposition of undamped modes, rather than one frequency changing gradually into another.\n\nThe kinetic energy is $T=\\frac12m(\\dot x_1^2+\\dot x_2^2)$. Orthonormality preserves the sum of squares, while the stiffness eigenbasis diagonalizes the potential energy. Consequently\n$$E=\\frac m2(\\dot q_+^2+\\omega_+^2q_+^2)\n+\\frac m2(\\dot q_-^2+\\omega_-^2q_-^2).$$\nEach modal energy is constant because differentiating its expression gives $m\\dot q(\\ddot q+\\omega^2q)=0$. Assigning energy to individual carts requires a convention for sharing the coupling-spring energy, so modal conservation is the cleaner statement.\n\nFor unequal masses, write $M\\ddot{\\mathbf x}+K\\mathbf x=0$ with $M$ diagonal and positive. A trial pattern $\\mathbf x=\\mathbf a\\cos\\omega t$ leads to $K\\mathbf a=\\omega^2M\\mathbf a$, a generalized eigenvalue problem. The plain eigenvalues of $K$ no longer suffice, because different coordinates have different inertia.\n\nDefine mass-weighted coordinates $\\mathbf y=M^{1/2}\\mathbf x$, multiplying each displacement by the square root of its mass. The equation becomes\n$$\\ddot{\\mathbf y}+M^{-1/2}KM^{-1/2}\\mathbf y=0.$$\nThe transformed stiffness is symmetric, so the real symmetric spectral theorem applies. Its orthonormal eigenvectors in $\\mathbf y$ correspond to mode shapes orthogonal under the mass-weighted product $\\mathbf a^TM\\mathbf b$ in the original coordinates. We state the general construction as an extension; the equal-mass example already demonstrates its purpose.\n\nThe recurring idea is projection onto patterns that respect both restoring forces and inertia. A vibrating string will have infinitely many spatial degrees of freedom, but the same questions survive: which patterns evolve independently, how are their amplitudes measured, and how do initial data reconstruct the physical motion? Fourier analysis takes up that next step.",
+    },
   ],
   teaching: {
-    question: "STUB",
-    why: "STUB",
-    outcomes: ["STUB"],
-    checkpoints: [
-      { bridge: "STUB", meaning: "STUB", question: "STUB", answer: "STUB" },
+    question:
+      "Can two interacting motions be replaced by independent patterns?",
+    why: "Normal modes turn coupled linear dynamics into scalar oscillators while preserving the physical initial conditions.",
+    outcomes: [
+      "Derive a stiffness matrix from spring forces.",
+      "Find mode shapes and frequencies.",
+      "Reconstruct motion and explain why unequal masses require weighting.",
     ],
-    takeaway: "STUB",
-    nextConnection: "STUB",
+    checkpoints: [
+      {
+        bridge: "Track each spring extension.",
+        meaning: "The force matrix comes from the physical model.",
+        question: "Why is the coupling extension x₂ − x₁?",
+        answer: "It is the change in separation between the carts.",
+        further: [
+          {
+            question: "Why does the coupling vanish for equal displacements?",
+            answer: "Their separation stays unchanged.",
+          },
+          {
+            question: "What units does K/m have?",
+            answer:
+              "Inverse seconds squared, the units of squared angular frequency.",
+          },
+          {
+            question: "What happens to the in-phase mode when k = 0?",
+            answer:
+              "Its restoring force vanishes and collective translation has zero frequency.",
+          },
+        ],
+      },
+      {
+        bridge: "Project onto invariant shapes.",
+        meaning: "Each modal amplitude obeys its own oscillator equation.",
+        question: "Why do mixed terms vanish?",
+        answer:
+          "The stiffness eigenvectors are orthogonal and diagonalize the symmetric matrix.",
+        further: [
+          {
+            question: "Which mode is faster for positive coupling?",
+            answer:
+              "The opposite-motion mode, with squared frequency (k + 2κ)/m.",
+          },
+          {
+            question: "Why project velocity as well as position?",
+            answer: "Each second-order modal equation needs two initial data.",
+          },
+          {
+            question: "Does a mixture keep a fixed cart-displacement ratio?",
+            answer:
+              "Generally no. Different modal frequencies change the relative contributions over time.",
+          },
+        ],
+      },
+      {
+        bridge: "Convert back and check conserved energy.",
+        meaning:
+          "Modes simplify the equations without replacing the measured coordinates.",
+        question: "How does one-cart release excite both modes?",
+        answer:
+          "Its displacement projects equally onto the two normalized shapes.",
+        further: [
+          {
+            question:
+              "Why can cart amplitudes vary while modal energies stay fixed?",
+            answer:
+              "The observed coordinates combine fixed-energy modes with changing relative phases.",
+          },
+          {
+            question:
+              "Why are stiffness eigenvalues insufficient for unequal masses?",
+            answer:
+              "Inertia differs by coordinate, so K a = ω² M a replaces the ordinary eigenproblem.",
+          },
+          {
+            question: "What does mass weighting accomplish?",
+            answer:
+              "It makes the kinetic quadratic form Euclidean and the transformed stiffness symmetric.",
+          },
+        ],
+      },
+    ],
+    takeaway:
+      "Normal modes are independent dynamical patterns; their initial amplitudes reconstruct the coupled physical motion.",
+    nextConnection:
+      "Fourier analysis extends projection from finite vectors to spatial functions and infinitely many patterns.",
   },
   diagnostics: [
-    numeric("d-modes-osc", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "oscillators" }),
-    numeric("d-modes-eigen", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "eigenvectors" }),
+    {
+      id: "d-oscillator",
+      prompt: "For x″ + 9x = 0 with time in seconds, find angular frequency.",
+      answer: {
+        kind: "numeric",
+        value: 3,
+        unit: "1/s",
+        acceptedUnits: ["1/s"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "The squared frequency is 9/s², so the frequency is 3/s.",
+      hint: "Take the square root.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Take the square root.",
+        misconceptions: [],
+      },
+      prerequisiteId: "oscillators",
+    },
+    {
+      id: "d-eigen",
+      prompt:
+        "K = [[2,−1],[−1,2]]. Find the eigenvalue of (1,1). Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 1,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "K(1,1) = (1,1).",
+      hint: "Apply the matrix to the proposed direction.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Apply the matrix to the proposed direction.",
+        misconceptions: [],
+      },
+      prerequisiteId: "eigenvectors",
+    },
   ],
   workedExample: {
-    title: "STUB",
-    problem: "STUB",
+    title: "One-cart release with two distinct frequencies",
+    problem:
+      "Use m = 1 kg, k = 1 N/m, κ = 4 N/m and initial displacement (0.1,0) m, with both velocities zero.",
     steps: [
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
+      {
+        title: "Find modal stiffnesses",
+        body: "The in-phase stiffness is 1 N/m and the opposite stiffness is 9 N/m.",
+        reason: "Use k and k + 2κ.",
+        trap: "The extra coupling contribution is 2κ.",
+      },
+      {
+        title: "Find frequencies",
+        body: "ω₊ = 1/s and ω₋ = 3/s.",
+        reason: "Divide by mass and take square roots.",
+        trap: "Nine is the squared frequency.",
+      },
+      {
+        title: "Project and solve",
+        body: "q₊ = 0.1cos(t)/√2 m and q₋ = 0.1cos(3t)/√2 m, with t in seconds in the displayed numerical arguments.",
+        reason: "Both initial projections are 0.1/√2 m and velocities vanish.",
+        trap: "Do not omit the normalization factors.",
+      },
+      {
+        title: "Reconstruct and verify",
+        body: "x₁ = 0.05[cos(t)+cos(3t)] m and x₂ = 0.05[cos(t)−cos(3t)] m. At t = π s they are (−0.1,0) m.",
+        reason: "The physical coordinates are sums and differences of modes.",
+        trap: "Each cosine argument means its frequency times time.",
+      },
     ],
   },
   fadedExercise: {
-    prompt: "STUB",
-    supplied: [{ heading: "STUB", body: "STUB" }],
-    steps: [numeric("f-modes", "STUB", 1, "1", "STUB", "STUB")],
+    prompt:
+      "Use m = 2 kg, k = 8 N/m and κ = 5 N/m. Release x(0) = (0,0.2) m from rest.",
+    supplied: [
+      {
+        heading: "Independent mode data",
+        body: "The modal stiffnesses are 8 and 18 N/m. Initial amplitudes are q₊(0) = 0.2/√2 m and q₋(0) = −0.2/√2 m. Both initial modal velocities vanish.",
+      },
+    ],
+    steps: [
+      {
+        id: "f-low",
+        prompt: "Find √(8/2), the lower angular frequency.",
+        answer: {
+          kind: "numeric",
+          value: 2,
+          unit: "1/s",
+          acceptedUnits: ["1/s"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "√4 = 2/s.",
+        hint: "Divide stiffness by mass.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Divide stiffness by mass.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-high",
+        prompt: "Find √(18/2), the higher angular frequency.",
+        answer: {
+          kind: "numeric",
+          value: 3,
+          unit: "1/s",
+          acceptedUnits: ["1/s"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "√9 = 3/s.",
+        hint: "Take the square root.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Take the square root.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-amplitude",
+        prompt: "Find the initial coefficient −0.2/√2 in metres.",
+        answer: {
+          kind: "numeric",
+          value: -0.1414213562373095,
+          unit: "m",
+          acceptedUnits: ["m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution:
+          "The projection onto (1,−1)/√2 is negative for a right-cart-only release.",
+        hint: "Keep the sign.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Keep the sign.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-reconstruct",
+        prompt: "Using x₁(t) = 0.1[cos(2t) − cos(3t)] m, find x₁ at t = π s.",
+        answer: {
+          kind: "numeric",
+          value: 0.2,
+          unit: "m",
+          acceptedUnits: ["m"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "cos(2π) = 1 and cos(3π) = −1, giving 0.2 m.",
+        hint: "Evaluate both phases.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Evaluate both phases.",
+          misconceptions: [],
+        },
+      },
+    ],
   },
   retrievalProblems: [
-    numeric("r-modes-1", "STUB", 1, "1", "STUB", "STUB"),
-    numeric("r-modes-2", "STUB", 2, "1", "STUB", "STUB"),
+    {
+      id: "r-shape",
+      prompt:
+        "In-phase motion of identical carts leaves which spring unchanged?",
+      answer: {
+        kind: "choice",
+        value: "0",
+        options: [
+          {
+            id: "0",
+            label: "The connecting spring",
+          },
+          {
+            id: "1",
+            label: "Both outer springs",
+          },
+          {
+            id: "2",
+            label: "Every spring",
+          },
+        ],
+      },
+      solution: "The separation x₂ − x₁ stays zero.",
+      hint: "Compare displacements.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Compare displacements.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-frequency",
+      prompt:
+        "For m = 1 kg, k = 4 N/m and κ = 6 N/m, find the opposite-mode angular frequency.",
+      answer: {
+        kind: "numeric",
+        value: 4,
+        unit: "1/s",
+        acceptedUnits: ["1/s"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "√((4 + 12)/1) = 4/s.",
+      hint: "Use k + 2κ.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use k + 2κ.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-initial",
+      prompt: "What must be projected to determine general undriven motion?",
+      answer: {
+        kind: "choice",
+        value: "2",
+        options: [
+          {
+            id: "0",
+            label: "Only displacement",
+          },
+          {
+            id: "1",
+            label: "Only force",
+          },
+          {
+            id: "2",
+            label: "Both displacement and velocity",
+          },
+        ],
+      },
+      solution: "Each modal equation is second order.",
+      hint: "Count the initial conditions.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Count the initial conditions.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-projection",
+      prompt: "For displacement (1,−1) m, find its amplitude along (1,−1)/√2.",
+      answer: {
+        kind: "numeric",
+        value: 1.4142135623730951,
+        unit: "m",
+        acceptedUnits: ["m"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "The dot product is (1 + 1)/√2 = √2 m.",
+      hint: "Use normalized mode shapes.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use normalized mode shapes.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-energy",
+      prompt: "In the ideal undamped linear model, each modal energy is:",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "Always zero",
+          },
+          {
+            id: "1",
+            label: "Constant",
+          },
+          {
+            id: "2",
+            label: "Transferred directly into another mode each cycle",
+          },
+        ],
+      },
+      solution: "Differentiation gives m q̇(q̈ + ω²q) = 0.",
+      hint: "Distinguish modes from cart coordinates.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Distinguish modes from cart coordinates.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-transfer",
+      prompt: "For unequal masses, the mode equation is:",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "K a = ω²a regardless of units",
+          },
+          {
+            id: "1",
+            label: "K a = ω² M a",
+          },
+          {
+            id: "2",
+            label: "M a = 0",
+          },
+        ],
+      },
+      solution:
+        "The force restoring pattern must match the mass-dependent acceleration pattern.",
+      hint: "Retain inertia in Newton's law.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Retain inertia in Newton's law.",
+        misconceptions: [],
+      },
+    },
   ],
   diagram: {
-    title: "STUB",
-    caption: "STUB",
+    title: "In-phase and opposite-motion patterns",
+    caption:
+      "Equal arrows indicate the displacement signs of the two identical carts. The connecting spring is unchanged in the upper pattern and changes length in the lower one.",
     viewBox: [0, 0, 600, 320],
-    elements: [{ kind: "line", from: [60, 265], to: [550, 265], tone: "muted" }],
+    elements: [
+      {
+        kind: "line",
+        from: [90, 95],
+        to: [480, 95],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [90, 230],
+        to: [480, 230],
+        tone: "muted",
+      },
+      {
+        kind: "point",
+        at: [210, 95],
+        label: "cart",
+        tone: "ink",
+        labelOffset: [-15, 25],
+      },
+      {
+        kind: "point",
+        at: [365, 95],
+        label: "cart",
+        tone: "ink",
+        labelOffset: [-15, 25],
+      },
+      {
+        kind: "point",
+        at: [210, 230],
+        label: "cart",
+        tone: "ink",
+        labelOffset: [-15, 25],
+      },
+      {
+        kind: "point",
+        at: [365, 230],
+        label: "cart",
+        tone: "ink",
+        labelOffset: [-15, 25],
+      },
+      {
+        kind: "line",
+        from: [210, 75],
+        to: [260, 75],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [365, 75],
+        to: [415, 75],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [210, 210],
+        to: [260, 210],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [365, 210],
+        to: [315, 210],
+        tone: "accent",
+      },
+      {
+        kind: "label",
+        at: [80, 40],
+        text: "In phase: (1,1), frequency √(k/m)",
+      },
+      {
+        kind: "label",
+        at: [80, 175],
+        text: "Opposite: (1,−1), frequency √((k+2κ)/m)",
+      },
+      {
+        kind: "line",
+        from: [250, 68],
+        to: [260, 75],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [405, 68],
+        to: [415, 75],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [250, 203],
+        to: [260, 210],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [325, 203],
+        to: [315, 210],
+        tone: "accent",
+      },
+    ],
   },
-  sidebars: [],
-  sources: [differential],
+  sidebars: [
+    {
+      heading: "The slow envelope in a one-cart release",
+      body: "Writing $\\bar\\omega=(\\omega_-+\\omega_+)/2$ and $\\delta=(\\omega_--\\omega_+)/2$ gives $x_1=a\\cos(\\bar\\omega t)\\cos(\\delta t)$ and $x_2=a\\sin(\\bar\\omega t)\\sin(\\delta t)$. A visibly slow envelope requires $|\\delta|\\ll\\bar\\omega$. The exact sum formulas remain valid even when the frequencies are too far apart for a clear separation of time scales.",
+    },
+  ],
+  sources: [
+    {
+      title: "MIT OpenCourseWare · Differential Equations",
+      url: "https://www.ocw.mit.edu/courses/18-03-differential-equations-spring-2010/pages/lecture-notes/",
+    },
+    {
+      title: "MIT OpenCourseWare · Linear Algebra",
+      url: "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/",
+    },
+  ],
 };
 export default chapter;

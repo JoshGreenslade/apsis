@@ -1,66 +1,1283 @@
 import type { Chapter } from "../chapter";
-import { numeric } from "@/curriculum-support/authoring";
-import { differential } from "../sources";
-
-// STUB — placeholder chapter. Full teaching content is not yet written.
-// This stub exists so the pack validates and the course can be published
-// with the finished chapters. Replace with real content before release.
 const chapter: Chapter = {
   id: "fields-synthesis",
   intuition: {
-    body: "STUB: Bring it together — heat on a finite rod. This chapter is not yet written; it is published as a placeholder so the course remains complete and navigable.",
-    thoughtExperiments: ["STUB: A placeholder prediction to be replaced with real content."],
+    body: "A thin rod has both ends clamped to a large temperature-controlled bath. Its interior begins warmer than the bath, with one broad hump plus a smaller asymmetric feature. Will every point cool at the same rate, and can we predict both the temperature profile and the heat escaping through the ends?\n\nThe heat equation gives the local evolution, but a complete answer needs the physical current law, boundary conditions and initial mode amplitudes. A sum of two sine modes is simple enough to solve exactly while still showing different decay rates, changing shape and a nontrivial boundary heat balance.\n\nWe will measure temperature deviation from the bath, rather than absolute temperature. A zero boundary value then means contact with the bath, not absolute zero. This choice also makes negative deviations mathematically meaningful as cooler-than-bath regions, though our main initial profile will be nonnegative.\n\nThe investigation combines conservation, Fourier modes and a Green-function interpretation. It asks for more than a plot: verify the PDE, check the initial and boundary data, and compare loss of stored heat with outward endpoint currents. The same solution should satisfy all these descriptions.",
+    thoughtExperiments: [
+      "Can the total heat excess decrease even if one Fourier component has negative values in part of the rod?",
+      "Does a hotter point always cool at a rate proportional to its own temperature alone?",
+    ],
   },
   theory: [
-    { heading: "1. STUB", body: "STUB: This section is not yet written." },
+    {
+      heading: "1. Set up a physical balance and a complete experiment",
+      body: "Take a uniform rod of length $L$, cross-sectional area $A$, heat capacity per volume $C>0$ and conductivity $\\lambda>0$. Assume insulated sides, no internal heat source, constant material properties and a one-dimensional temperature field. Let $\\vartheta(x,t)$ be temperature relative to the bath. Conduction supplies the physical current law $q=-\\lambda\\vartheta_x$, where $q$ is energy per area per time.\n\nThe heat excess in a short slice is $CA\\,\\vartheta\\,\\Delta x$. Incoming current at its left face minus outgoing current at its right face gives $CA\\,\\vartheta_t\\Delta x=-Aq_x\\Delta x$ in the local limit. Thus\n$$\\vartheta_t=D\\vartheta_{xx},\\qquad D=\\lambda/C.$$\nThe diffusivity has units m²/s. It sets the rate at which spatial variations spread, rather than a propagation speed measured in m/s.\n\nThe bath imposes $\\vartheta(0,t)=\\vartheta(L,t)=0$. Choose the initial profile\n$$\\vartheta(x,0)=a\\sin(\\pi x/L)+b\\sin(2\\pi x/L).$$\nThe two sine terms satisfy both endpoints automatically. The constants $a,b$ have units of temperature and determine the initial shape, including its asymmetry. This finite sum is smooth, so termwise differentiation later will not require an infinite-series convergence argument.\n\nFor a concrete experiment use $L=\\pi$ m, $D=1$ m²/s, $a=10$ K and $b=2$ K. The first mode is a broad positive hump, while the second is positive on one half and negative on the other. Their sum is nevertheless nonnegative: writing $s=\\pi x/L$ gives $\\vartheta(x,0)=\\sin s(a+2b\\cos s)$. On $0\\leq s\\leq\\pi$, $\\sin s\\geq0$ and $a-2|b|=6$ K is positive.\n\nThis positivity check is about the complete profile. A negative coefficient or a sign-changing basis function is not a negative probability or a separate reservoir of negative heat; modes are mathematical components of one temperature field. Physical interpretation belongs to their sum and to the stated reference temperature.",
+    },
+    {
+      heading: "2. Solve the modes and test every part of the problem",
+      body: "Look first at the broad hump. Its second spatial derivative is $-(\\pi/L)^2$ times itself, so the heat equation makes its amplitude decay exponentially. The second mode has four times that curvature factor. With $\\alpha=D(\\pi/L)^2$, the exact solution is\n$$\\vartheta(x,t)=ae^{-\\alpha t}\\sin(\\pi x/L)+be^{-4\\alpha t}\\sin(2\\pi x/L).$$\nEach exponent is dimensionless, and $\\alpha$ has units inverse time. The two patterns evolve independently because the equation and boundary conditions are linear.\n\nVerification is direct. The time derivative of the first term is $-\\alpha$ times that term, while $D$ times its second spatial derivative gives the same factor. The second term receives $-4\\alpha$ in both calculations. At $t=0$ both exponentials are one, recovering the initial data; at either endpoint both sines vanish for all time. A solution must pass all three checks, not just look plausible.\n\nThe shorter spatial feature decays more quickly. Its amplitude relative to the first is\n$$\\frac{b(t)}{a(t)}=\\frac ba e^{-3\\alpha t}.$$\nFor the chosen values, $\\alpha=1/\\mathrm s$. At $t=1$ s the broad amplitude is $10/e\\approx3.679$ K, while the second is $2e^{-4}\\approx0.03663$ K. The profile is already close to a single sine even though its total amplitude has not vanished.\n\nThe full solution remains nonnegative for this choice. Factoring gives $\\vartheta=\\sin s[ae^{-\\alpha t}+2be^{-4\\alpha t}\\cos s]$. The smallest bracket is at least $ae^{-\\alpha t}-2|b|e^{-4\\alpha t}\\geq e^{-\\alpha t}(a-2|b|)>0$. More generally, the heat equation's maximum principle states that under suitable regularity, nonnegative initial and boundary data remain nonnegative. We quote the general theorem; this finite example verifies its conclusion algebraically.\n\nThe natural longest decay time is $\\tau_1=1/\\alpha=L^2/(\\pi^2D)$. Doubling length with the same diffusivity quadruples that time. A single point's cooling is not generally one exponential when several modes contribute, and the local rate depends on curvature rather than temperature alone. The asymptotic first-mode description becomes accurate only after the faster components are small enough for the chosen tolerance.",
+    },
+    {
+      heading:
+        "3. Check heat loss, squared-norm decay and the Green representation",
+      body: "Integrate the temperature field along the rod to calculate stored heat excess:\n$$H(t)=CA\\int_0^L\\vartheta(x,t)\\,dx\n=CA\\frac{2La}{\\pi}e^{-\\alpha t}.$$\nThe second sine integrates to zero, so it changes the spatial distribution without changing this particular total. This does not make the second mode physically irrelevant: it changes local temperatures and the separate endpoint currents.\n\nThe total outward heat rate is $A[q(L,t)-q(0,t)]$. The left boundary's outward direction is negative x, which explains the subtraction. Differentiating the solution gives\n$$\\vartheta_x(0,t)=\\frac\\pi L[ae^{-\\alpha t}+2be^{-4\\alpha t}],$$\n$$\\vartheta_x(L,t)=\\frac\\pi L[-ae^{-\\alpha t}+2be^{-4\\alpha t}].$$\nUsing $q=-\\lambda\\vartheta_x$, the second-mode terms cancel in the total outward rate, leaving $2A\\lambda(\\pi/L)ae^{-\\alpha t}$. Because $D=\\lambda/C$, this equals $-H'(t)$ exactly. The local PDE and the global boundary balance now agree independently.\n\nA second monotone quantity is $Q(t)=\\frac12\\int_0^L\\vartheta^2dx$. Integration by parts gives\n$$Q'(t)=D[\\vartheta\\vartheta_x]_0^L-D\\int_0^L\\vartheta_x^2dx\n=-D\\int_0^L\\vartheta_x^2dx\\leq0.$$\nThe boundary term vanishes because the temperature deviation is zero at both ends. This squared-norm decay measures smoothing and departure from equilibrium. It is not the same as the thermodynamic heat excess $H$, whose definition is linear in temperature under constant heat capacity.\n\nThe Green-function viewpoint packages all sine modes into a response kernel:\n$$G(x,\\xi,t)=\\frac2L\\sum_{n=1}^{\\infty}\n\\sin(n\\pi x/L)\\sin(n\\pi\\xi/L)e^{-D(n\\pi/L)^2t},\\qquad t>0.$$\nThen $\\vartheta(x,t)=\\int_0^L G(x,\\xi,t)\\vartheta(\\xi,0)\\,d\\xi$ for suitable initial data. The kernel has units inverse length and obeys these specific zero-temperature boundaries. As $t$ approaches zero it reproduces initial data in the appropriate limiting sense; it is not an ordinary pointwise delta function at zero time.\n\nFor our two-mode initial profile, orthogonality in the $\\xi$ integral selects exactly the two terms already found. This is an independent organizational view of the same solution, not a new physical law. A different boundary condition would require a different kernel, and nonzero boundary forcing needs additional terms or a suitable subtraction.\n\nChanging the endpoints changes the global story. If both ends were insulated instead, the normal current would vanish there and the stored heat excess would be conserved. A constant spatial mode would then be allowed, with zero decay rate, so the rod could approach a nonzero uniform deviation equal to its initial average. Under the bath-clamped conditions used here, the constant mode is excluded and heat can escape until the deviation approaches zero.\n\nThis comparison gives a practical diagnostic for a simulation. If a calculation intended to represent bath-clamped ends conserves the total heat excess exactly while the interior remains positive, inspect whether zero-gradient conditions were accidentally imposed. If an insulated model loses heat through its boundaries, inspect its boundary flux implementation. A correct differential equation in the interior cannot compensate for incorrect boundary data.\n\nThe squared-norm identity also depends on the boundary term being handled correctly. It vanishes under either zero deviation or zero normal derivative, but its physical interpretation and the final equilibrium differ. Sharing one decay inequality does not make the two experiments equivalent; the admissible modes and conserved totals still distinguish them.\n\nThe rod experiment is complete only when the profile, its data and its conservation checks agree. In the investigation, use these independent relations to diagnose mistakes before interpreting a disagreement as unexpected material behaviour.",
+    },
   ],
   teaching: {
-    question: "STUB",
-    why: "STUB",
-    outcomes: ["STUB"],
-    checkpoints: [
-      { bridge: "STUB", meaning: "STUB", question: "STUB", answer: "STUB" },
+    question:
+      "Can one diffusion solution satisfy local evolution, boundary data and global heat balance?",
+    why: "The capstone connects field calculus with mode solutions and distinguishes mathematical decay measures from physical heat.",
+    outcomes: [
+      "Construct and verify a finite-mode rod solution.",
+      "Calculate endpoint heat currents and stored heat loss.",
+      "Use positivity, decay rates and a Green kernel as independent checks.",
     ],
-    takeaway: "STUB",
-    nextConnection: "STUB",
+    checkpoints: [
+      {
+        bridge: "State the experiment as well as the equation.",
+        meaning:
+          "Boundary values and initial amplitudes define a specific solution.",
+        question: "What does zero temperature deviation at the ends mean?",
+        answer: "The ends remain at the bath temperature, not absolute zero.",
+        further: [
+          {
+            question:
+              "Why is the initial profile nonnegative when a ≥ 2|b| and a ≥ 0?",
+            answer:
+              "It factors as sin s(a + 2b cos s), with both factors nonnegative on the interval.",
+          },
+          {
+            question:
+              "Does a sign-changing second mode imply an unphysical full temperature?",
+            answer:
+              "No. The complete sum relative to the bath determines the actual temperature profile.",
+          },
+          {
+            question: "Why specify insulated sides?",
+            answer:
+              "It justifies neglecting lateral heat losses in the one-dimensional balance.",
+          },
+        ],
+      },
+      {
+        bridge: "Test the PDE, boundaries and initial data.",
+        meaning: "Mode number controls decay through its square.",
+        question: "Why does the second mode decay four times as fast?",
+        answer:
+          "Its second derivative has four times the spatial eigenvalue magnitude.",
+        further: [
+          {
+            question: "What is the relative-amplitude decay factor?",
+            answer:
+              "The ratio gains exp(−3αt), the difference of the two rates.",
+          },
+          {
+            question: "Does every point follow one exponential immediately?",
+            answer:
+              "No. Several spatial modes generally contribute at a point.",
+          },
+          {
+            question: "How does doubling L change the slow decay time?",
+            answer: "It quadruples L²/(π²D).",
+          },
+        ],
+      },
+      {
+        bridge: "Compare local and global descriptions.",
+        meaning:
+          "Stored heat and squared norm are different quantities with different balances.",
+        question:
+          "Why does the second sine not contribute to total heat excess?",
+        answer: "Its integral over the rod is zero.",
+        further: [
+          {
+            question: "Why subtract q(0) from q(L) for outward heat flow?",
+            answer:
+              "The left endpoint's outward normal points toward negative x.",
+          },
+          {
+            question:
+              "Why does the boundary term vanish in squared-norm decay?",
+            answer: "The temperature deviation is zero at both ends.",
+          },
+          {
+            question:
+              "Can a kernel for insulated ends replace this fixed-temperature kernel?",
+            answer:
+              "No. A Green kernel incorporates its operator and boundary conditions.",
+          },
+        ],
+      },
+    ],
+    takeaway:
+      "Verify the full initial-boundary-value problem and its conservation law, then interpret the changing profile.",
+    nextConnection:
+      "The final investigation compares two different preserved structures: quantum probability norm and spacetime interval.",
   },
   diagnostics: [
-    numeric("d-fields-pdes", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "pdes" }),
-    numeric("d-fields-div", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "divergence" }),
-    numeric("d-fields-green", "STUB: placeholder readiness check.", 1, "1", "STUB", "STUB", { prerequisiteId: "green-functions" }),
+    {
+      id: "d-pdes",
+      prompt:
+        "A heat mode has D = 2 m²/s and k = 3/m. Find its decay rate Dk².",
+      answer: {
+        kind: "numeric",
+        value: 18,
+        unit: "1/s",
+        acceptedUnits: ["1/s"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "2 × 9 = 18/s.",
+      hint: "Use the spatial eigenvalue.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use the spatial eigenvalue.",
+        misconceptions: [],
+      },
+      prerequisiteId: "pdes",
+    },
+    {
+      id: "d-divergence",
+      prompt:
+        "With no source, stored material changes at what rate relative to total outward current?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "The same signed rate",
+          },
+          {
+            id: "1",
+            label: "The negative of the outward rate",
+          },
+          {
+            id: "2",
+            label: "Always zero",
+          },
+        ],
+      },
+      solution: "Outward flow removes material from the region.",
+      hint: "Recall the conservation sign.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Recall the conservation sign.",
+        misconceptions: [],
+      },
+      prerequisiteId: "divergence",
+    },
+    {
+      id: "d-green",
+      prompt: "A Green function depends on:",
+      answer: {
+        kind: "choice",
+        value: "2",
+        options: [
+          {
+            id: "0",
+            label: "Only the initial profile",
+          },
+          {
+            id: "1",
+            label: "Only the coordinate names",
+          },
+          {
+            id: "2",
+            label: "The operator and its boundary or causality conditions",
+          },
+        ],
+      },
+      solution:
+        "Its response is defined by both the differential rule and the imposed conditions.",
+      hint: "Recall what fixes an impulse response.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Recall what fixes an impulse response.",
+        misconceptions: [],
+      },
+      prerequisiteId: "green-functions",
+    },
   ],
   workedExample: {
-    title: "STUB",
-    problem: "STUB",
+    title: "Check temperatures and total heat",
+    problem:
+      "Use L = π m, D = 1 m²/s, a = 10 K, b = 2 K and CA = 3 J/(m K). Evaluate the midpoint and heat excess at t = 1 s.",
     steps: [
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
-      { title: "STUB", body: "STUB", reason: "STUB", trap: "STUB" },
+      {
+        title: "Write the full solution",
+        body: "$\\vartheta=10e^{-t/(1\\,\\mathrm s)}\\sin(x/(1\\,\\mathrm m))+2e^{-4t/(1\\,\\mathrm s)}\\sin(2x/(1\\,\\mathrm m))$ K.",
+        reason:
+          "The two decay rates follow from the boundary-compatible wavenumbers.",
+        trap: "Use dimensionless arguments.",
+      },
+      {
+        title: "Evaluate the midpoint",
+        body: "At x = L/2, the first sine is 1 and the second is 0, so θ = 10/e ≈ 3.67879 K.",
+        reason: "The midpoint filters out the second harmonic.",
+        trap: "A midpoint measurement alone cannot determine b.",
+      },
+      {
+        title: "Integrate the heat excess",
+        body: "H = CA(2La/π)e⁻¹ = 60/e ≈ 22.0728 J.",
+        reason: "The second sine has zero integral.",
+        trap: "Heat excess is proportional to ∫θ, not ∫θ².",
+      },
+      {
+        title: "Check the boundary loss",
+        body: "Aλ = CA D = 3 J m/(s K), so outward power is 60/e ≈ 22.0728 W, equal to −H′ at this time.",
+        reason:
+          "Differentiate the heat total and independently use endpoint gradients.",
+        trap: "The equal numerical values have different units because the decay rate is 1/s.",
+      },
     ],
   },
   fadedExercise: {
-    prompt: "STUB",
-    supplied: [{ heading: "STUB", body: "STUB" }],
-    steps: [numeric("f-fields", "STUB", 1, "1", "STUB", "STUB")],
+    prompt: "Use L = 2 m, D = 4/π² m²/s, a = 6 K and b = 1 K.",
+    supplied: [
+      {
+        heading: "Independent data",
+        body: "The slow rate is α = Dπ²/L² = 1/s. The solution is 6e⁻ᵗ sin(πx/2) + e⁻⁴ᵗ sin(πx), with x in metres and t in seconds in the numerical arguments. The amplitude ratio is (1/6)e⁻³ᵗ.",
+      },
+    ],
+    steps: [
+      {
+        id: "f-rate",
+        prompt: "Find the second mode's decay rate.",
+        answer: {
+          kind: "numeric",
+          value: 4,
+          unit: "1/s",
+          acceptedUnits: ["1/s"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "4α = 4/s.",
+        hint: "Mode-number dependence is quadratic.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Mode-number dependence is quadratic.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-midpoint",
+        prompt: "Find θ at x = 1 m and t = ln 2 seconds.",
+        answer: {
+          kind: "numeric",
+          value: 3,
+          unit: "K",
+          acceptedUnits: ["K"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "The second sine vanishes and 6e⁻ˡⁿ² = 3 K.",
+        hint: "Use the supplied solution.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Use the supplied solution.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-second",
+        prompt: "Find the second-mode amplitude at t = ln 2 seconds.",
+        answer: {
+          kind: "numeric",
+          value: 0.0625,
+          unit: "K",
+          acceptedUnits: ["K"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "e⁻⁴ˡⁿ² = 2⁻⁴ = 1/16 K.",
+        hint: "The second mode decays four times as fast.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "The second mode decays four times as fast.",
+          misconceptions: [],
+        },
+      },
+      {
+        id: "f-ratio",
+        prompt:
+          "At t = ln 2 seconds, find the second-to-first amplitude ratio. Enter unit 1.",
+        answer: {
+          kind: "numeric",
+          value: 0.020833333333333332,
+          unit: "1",
+          acceptedUnits: ["1"],
+          absoluteTolerance: 0.001,
+          relativeTolerance: 0.002,
+        },
+        solution: "(1/16)/3 = 1/48.",
+        hint: "Use the supplied amplitudes independently of position.",
+        rubric: {
+          defaultCategory: "algebraic",
+          explanation: "Use the supplied amplitudes independently of position.",
+          misconceptions: [],
+        },
+      },
+    ],
   },
   retrievalProblems: [
-    numeric("r-fields-1", "STUB", 1, "1", "STUB", "STUB"),
-    numeric("r-fields-2", "STUB", 2, "1", "STUB", "STUB"),
+    {
+      id: "r-boundaries",
+      prompt:
+        "Which pattern satisfies zero temperature deviations at both x = 0 and x = L?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "cos(πx/L)",
+          },
+          {
+            id: "1",
+            label: "sin(πx/L)",
+          },
+          {
+            id: "2",
+            label: "A nonzero constant",
+          },
+        ],
+      },
+      solution: "The sine vanishes at both endpoints.",
+      hint: "Check both ends.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Check both ends.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-timescale",
+      prompt:
+        "If L doubles and D stays fixed, find the ratio of slow decay times. Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 4,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "The time scale is proportional to L².",
+      hint: "Square the length ratio.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Square the length ratio.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-total",
+      prompt: "A second sine harmonic contributes what to ∫₀ᴸθ dx?",
+      answer: {
+        kind: "choice",
+        value: "2",
+        options: [
+          {
+            id: "0",
+            label: "Always a positive amount",
+          },
+          {
+            id: "1",
+            label: "Its maximum amplitude",
+          },
+          {
+            id: "2",
+            label: "Zero",
+          },
+        ],
+      },
+      solution: "Its positive and negative halves cancel.",
+      hint: "Integrate across the full interval.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Integrate across the full interval.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-ratio",
+      prompt:
+        "If b/a = 0.5 and α = 1/s, find the amplitude ratio at t = ln 2 seconds. Enter unit 1.",
+      answer: {
+        kind: "numeric",
+        value: 0.0625,
+        unit: "1",
+        acceptedUnits: ["1"],
+        absoluteTolerance: 0.001,
+        relativeTolerance: 0.002,
+      },
+      solution: "0.5e⁻³ˡⁿ² = 0.5/8 = 1/16.",
+      hint: "Use the difference of decay rates.",
+      rubric: {
+        defaultCategory: "algebraic",
+        explanation: "Use the difference of decay rates.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-norm",
+      prompt: "Q = 1/2∫θ² dx in this model is:",
+      answer: {
+        kind: "choice",
+        value: "0",
+        options: [
+          {
+            id: "0",
+            label: "A squared-deviation measure that decays",
+          },
+          {
+            id: "1",
+            label: "Always equal to stored heat excess",
+          },
+          {
+            id: "2",
+            label: "A conserved total",
+          },
+        ],
+      },
+      solution:
+        "Its derivative is −D∫θₓ²dx, whereas heat excess is linear in θ.",
+      hint: "Keep the two integrals distinct.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Keep the two integrals distinct.",
+        misconceptions: [],
+      },
+    },
+    {
+      id: "r-transfer",
+      prompt:
+        "A computed solution matches the initial profile but has nonzero endpoint deviations later. What follows?",
+      answer: {
+        kind: "choice",
+        value: "1",
+        options: [
+          {
+            id: "0",
+            label: "It solves the stated bath-clamped problem",
+          },
+          {
+            id: "1",
+            label: "It fails the stated boundary conditions",
+          },
+          {
+            id: "2",
+            label: "The bath temperature must be zero",
+          },
+        ],
+      },
+      solution:
+        "A valid solution must satisfy the boundary data for every time.",
+      hint: "Check all parts of the problem.",
+      rubric: {
+        defaultCategory: "conceptual",
+        explanation: "Check all parts of the problem.",
+        misconceptions: [],
+      },
+    },
   ],
   diagram: {
-    title: "STUB",
-    caption: "STUB",
+    title: "A two-mode profile smooths toward the first mode",
+    caption:
+      "Temperature deviation for the main rod at t = 0 (accent) and t = 1 s (ink). The initial profile is asymmetric; the fast second harmonic soon becomes small.",
     viewBox: [0, 0, 600, 320],
-    elements: [{ kind: "line", from: [60, 265], to: [550, 265], tone: "muted" }],
+    elements: [
+      {
+        kind: "line",
+        from: [60, 275],
+        to: [540, 275],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [60, 285],
+        to: [60, 30],
+        tone: "muted",
+      },
+      {
+        kind: "line",
+        from: [60, 275],
+        to: [68, 261.81650319863456],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [68, 261.81650319863456],
+        to: [76, 248.70005574238303],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [76, 248.70005574238303],
+        to: [84, 235.71718449526034],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [84, 235.71718449526034],
+        to: [92, 222.9333765020745],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [92, 222.9333765020745],
+        to: [100, 210.41257188154628],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [100, 210.41257188154628],
+        to: [108, 198.21667192998044],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [108, 198.21667192998044],
+        to: [116, 186.40506725292704],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [116, 186.40506725292704],
+        to: [124, 175.0341905291698],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [124, 175.0341905291698],
+        to: [132, 164.15709824938347],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [132, 164.15709824938347],
+        to: [140, 153.8230854637602],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [140, 153.8230854637602],
+        to: [148, 144.07733722216153],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [148, 144.07733722216153],
+        to: [156, 134.9606200007293],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [156, 134.9606200007293],
+        to: [164, 126.50901598461223],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [164, 126.50901598461223],
+        to: [172, 118.75370262214767],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [172, 118.75370262214767],
+        to: [180, 111.72077938642144],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [180, 111.72077938642144],
+        to: [188, 105.43114318081123],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [188, 105.43114318081123],
+        to: [196, 99.90041331132824],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [196, 99.90041331132824],
+        to: [204, 95.13890642588393],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [204, 95.13890642588393],
+        to: [212, 91.15166129469003],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [212, 91.15166129469003],
+        to: [220, 87.93851278256128],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [220, 87.93851278256128],
+        to: [228, 85.49421384859568],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [228, 85.49421384859568],
+        to: [236, 83.80860390714562],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [236, 83.80860390714562],
+        to: [244, 82.86682140158479],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [244, 82.86682140158479],
+        to: [252, 82.64955798434335],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [252, 82.64955798434335],
+        to: [260, 83.1333512679677],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [260, 83.1333512679677],
+        to: [268, 84.29091271718616],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [268, 84.29091271718616],
+        to: [276, 86.09148689537707],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [276, 86.09148689537707],
+        to: [284, 88.50123796427147],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [284, 88.50123796427147],
+        to: [292, 91.48365906654121],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [292, 91.48365906654121],
+        to: [300, 94.99999999999997],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [300, 94.99999999999997],
+        to: [308, 99.0097084218122],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [308, 99.0097084218122],
+        to: [316, 103.4708797031501],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [316, 103.4708797031501],
+        to: [324, 108.34071049037328],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [324, 108.34071049037328],
+        to: [332, 113.57595101864379],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [332, 113.57595101864379],
+        to: [340, 119.1333512679677],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [340, 119.1333512679677],
+        to: [348, 124.9700961494014],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [348, 124.9700961494014],
+        to: [356, 131.0442250594226],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [356, 131.0442250594226],
+        to: [364, 137.315031341518],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [364, 137.315031341518],
+        to: [372, 143.7434374435919],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [372, 143.7434374435919],
+        to: [380, 150.2923418550408],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [380, 150.2923418550408],
+        to: [388, 156.92693424495724],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [388, 156.92693424495724],
+        to: [396, 163.614975599135],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [396, 163.614975599135],
+        to: [404, 170.32704056416225],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [404, 170.32704056416225],
+        to: [412, 177.03671964732683],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [412, 177.03671964732683],
+        to: [420, 183.72077938642144],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [420, 183.72077938642144],
+        to: [428, 190.35927908866336],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [428, 190.35927908866336],
+        to: [436, 196.93564323744627],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [436, 196.93564323744627],
+        to: [444, 203.43668917398034],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [444, 203.43668917398034],
+        to: [452, 209.85261017242874],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [452, 209.85261017242874],
+        to: [460, 216.1769145362398],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [460, 216.1769145362398],
+        to: [468, 222.40632184437968],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [468, 222.40632184437968],
+        to: [476, 228.54061796354216],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [476, 228.54061796354216],
+        to: [484, 234.58247091076487],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [484, 234.58247091076487],
+        to: [492, 240.5372100950385],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [492, 240.5372100950385],
+        to: [500, 246.41257188154628],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [500, 246.41257188154628],
+        to: [508, 252.21841480353214],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [508, 252.21841480353214],
+        to: [516, 257.96640809025655],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [516, 257.96640809025655],
+        to: [524, 263.6696974812617],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [524, 263.6696974812617],
+        to: [532, 269.34255255390565],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [532, 269.34255255390565],
+        to: [540, 274.99999999999994],
+        tone: "accent",
+      },
+      {
+        kind: "line",
+        from: [60, 275],
+        to: [68, 271.46547977842613],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [68, 271.46547977842613],
+        to: [76, 267.94121364619394],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [76, 267.94121364619394],
+        to: [84, 264.437421383328],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [84, 264.437421383328],
+        to: [92, 260.9642543132254],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [92, 260.9642543132254],
+        to: [100, 257.5317614781713],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [100, 257.5317614781713],
+        to: [108, 254.14985629613176],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [108, 254.14985629613176],
+        to: [116, 250.8282838537566],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [116, 250.8282838537566],
+        to: [124, 247.5765889858816],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [124, 247.5765889858816],
+        to: [132, 244.40408528610337],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [132, 244.40408528610337],
+        to: [140, 241.3198251862595],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [140, 241.3198251862595],
+        to: [148, 238.33257123495076],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [148, 238.33257123495076],
+        to: [156, 235.45076869666073],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [156, 235.45076869666073],
+        to: [164, 232.6825195836454],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [164, 232.6825195836454],
+        to: [172, 230.0355582226689],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [172, 230.0355582226689],
+        to: [180, 227.51722844794557],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [180, 227.51722844794557],
+        to: [188, 225.13446250041673],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [188, 225.13446250041673],
+        to: [196, 222.89376170184474],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [196, 222.89376170184474],
+        to: [204, 220.80117896025737],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [204, 220.80117896025737],
+        to: [212, 218.86230315113173],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [212, 218.86230315113173],
+        to: [220, 217.08224540648075],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [220, 217.08224540648075],
+        to: [228, 215.46562733180778],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [228, 215.46562733180778],
+        to: [236, 214.01657115883438],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [236, 214.01657115883438],
+        to: [244, 212.7386918300934],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [244, 212.7386918300934],
+        to: [252, 211.63509100001437],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [252, 211.63509100001437],
+        to: [260, 210.70835292611127],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [260, 210.70835292611127],
+        to: [268, 209.96054221340876],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [268, 209.96054221340876],
+        to: [276, 209.39320336539575],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [276, 209.39320336539575],
+        to: [284, 209.00736208565655],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [284, 209.00736208565655],
+        to: [292, 208.80352826596922],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [292, 208.80352826596922],
+        to: [300, 208.78170058914037],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [300, 208.78170058914037],
+        to: [308, 208.94137266821917],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [308, 208.94137266821917],
+        to: [316, 209.2815406380396],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [316, 209.2815406380396],
+        to: [324, 209.8007121103164],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [324, 209.8007121103164],
+        to: [332, 210.496916399781],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [332, 210.496916399781],
+        to: [340, 211.36771592610572],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [340, 211.36771592610572],
+        to: [348, 212.41021869462247],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [348, 212.41021869462247],
+        to: [356, 213.62109175808715],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [356, 213.62109175808715],
+        to: [364, 214.9965755619486],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [364, 214.9965755619486],
+        to: [372, 216.53249907672287],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [372, 216.53249907672287],
+        to: [380, 218.22429562310214],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [380, 218.22429562310214],
+        to: [388, 220.0670192982967],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [388, 220.0670192982967],
+        to: [396, 222.05536191575462],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [396, 222.05536191575462],
+        to: [404, 224.18367037475912],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [404, 224.18367037475912],
+        to: [412, 226.44596438139706],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [412, 226.44596438139706],
+        to: [420, 228.83595444793443],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [420, 228.83595444793443],
+        to: [428, 231.34706010364926],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [428, 231.34706010364926],
+        to: [436, 233.9724282565598],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [436, 233.9724282565598],
+        to: [444, 236.70495165215797],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [444, 236.70495165215797],
+        to: [452, 239.53728738211578],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [452, 239.53728738211578],
+        to: [460, 242.46187540288088],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [460, 242.46187540288088],
+        to: [468, 245.47095703101843],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [468, 245.47095703101843],
+        to: [476, 248.55659338899585],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [476, 248.55659338899585],
+        to: [484, 251.71068378175033],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [484, 251.71068378175033],
+        to: [492, 254.92498399073986],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [492, 254.92498399073986],
+        to: [500, 258.1911244781657],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [500, 258.1911244781657],
+        to: [508, 261.50062849959767],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [508, 261.50062849959767],
+        to: [516, 264.8449301282487],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [516, 264.8449301282487],
+        to: [524, 268.215392198577],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [524, 268.215392198577],
+        to: [532, 271.60332418067605],
+        tone: "ink",
+      },
+      {
+        kind: "line",
+        from: [532, 271.60332418067605],
+        to: [540, 274.99999999999994],
+        tone: "ink",
+      },
+      {
+        kind: "label",
+        at: [65, 30],
+        text: "temperature deviation (K)",
+      },
+      {
+        kind: "label",
+        at: [485, 305],
+        text: "x = L",
+      },
+      {
+        kind: "label",
+        at: [110, 65],
+        text: "t = 0",
+      },
+      {
+        kind: "label",
+        at: [280, 225],
+        text: "t = 1 s",
+      },
+    ],
   },
-  sidebars: [],
-  sources: [differential],
+  sidebars: [
+    {
+      heading: "A midpoint measurement cannot identify every mode",
+      body: "At x = L/2, every even sine mode vanishes. Two rods with different even-mode content can therefore have identical midpoint temperature histories in this linear model. Measuring away from the midpoint, or measuring endpoint gradients, supplies additional information. This is an example of choosing observations that can actually distinguish the model parameters.",
+    },
+  ],
   practical: {
-    title: "STUB",
+    title: "Audit a finite-rod heat solution",
     minutes: 60,
-    brief: "STUB: This investigation is not yet written.",
-    steps: ["STUB"],
-    deliverables: ["STUB"],
-    review: "STUB",
+    brief:
+      "Use L = π m, D = 1 m²/s, initial deviation 10sin(x/(1 m)) + 2sin(2x/(1 m)) K, and CA = 3 J/(m K). The ends stay at the bath temperature. Work by hand or with optional code; self-assess the explanation using the worked review.",
+    steps: [
+      "Derive the diffusion equation from current q = −λθₓ and conservation, stating the assumptions and boundary conditions.",
+      "Write the two-mode solution and verify the PDE, endpoint values and initial profile explicitly.",
+      "Tabulate θ at x = L/4, L/2 and 3L/4 for t = 0, 0.5 and 1 s, keeping enough digits to see the disappearing asymmetry.",
+      "Compute H(t), left and right outward heat rates, and their sum. Verify H′ plus the total outward rate is zero.",
+      "Find when the second-to-first amplitude ratio becomes less than 1%. Explain why a midpoint-only measurement cannot check this ratio, and distinguish stored heat from the decaying squared norm.",
+    ],
+    deliverables: [
+      "The derived equation and a solution checked against all data.",
+      "A nine-value temperature table and optional labelled plot.",
+      "A heat-balance calculation with outward signs and units.",
+      "A one-paragraph account of mode decay, measurement placement and model limitations.",
+    ],
+    review:
+      "**Model and solution:** obtain rates 1/s and 4/s and use the supplied two-mode amplitudes. **Temperature checks:** the initial quarter, midpoint and three-quarter values are approximately 9.0711, 10 and 5.0711 K. At 0.5 s they are approximately 4.5595, 6.0653 and 4.0181 K; at 1 s they are approximately 2.6379, 3.6788 and 2.5647 K. **Conservation:** $H=60e^{-t/(1\\,\\mathrm s)}$ J, left outward power is $[30e^{-t/(1\\,\\mathrm s)}+12e^{-4t/(1\\,\\mathrm s)}]$ W and right outward power is $[30e^{-t/(1\\,\\mathrm s)}-12e^{-4t/(1\\,\\mathrm s)}]$ W. Their sum equals $-H'$. **Interpretation:** the ratio is $0.2e^{-3t/(1\\,\\mathrm s)}$, below 0.01 when $t>(\\ln20)/3$ s, about 0.9986 s. The midpoint never sees the second sine; use an off-centre point to test its decay. A complete review distinguishes numerical rounding, the continuum assumptions and the separate meanings of heat excess and squared temperature deviation.",
   },
+  sources: [
+    {
+      title: "MIT OpenCourseWare · Differential Equations",
+      url: "https://www.ocw.mit.edu/courses/18-03-differential-equations-spring-2010/pages/lecture-notes/",
+    },
+    {
+      title: "MIT OpenCourseWare · Multivariable Calculus",
+      url: "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/",
+    },
+  ],
 };
 export default chapter;

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import katex from "katex";
 import agents from "../curricula/agentic-engineering";
 import astrodynamics from "../curricula/astrodynamics";
+import mathematics from "../curricula/mathematics-for-physics";
 import { mu } from "../curricula/astrodynamics/constants";
 import {
   calculate,
@@ -14,6 +15,7 @@ import { evaluate } from "../lib/curriculum-engine";
 const templates = [
   ...agents.topics.flatMap((t) => t.practiceTemplates ?? []),
   ...astrodynamics.topics.flatMap((t) => t.practiceTemplates ?? []),
+  ...mathematics.topics.flatMap((t) => t.practiceTemplates ?? []),
 ];
 const astroPractice = (id: string) =>
   astrodynamics.topics.find((t) => t.id === id)!.practiceTemplates![0];
