@@ -1,4 +1,4 @@
-import type { CurriculumTopic } from "@/types/curriculum";
+import type { CurriculumTopic, Problem } from "@/types/curriculum";
 import { choice, pointFlow } from "@/curriculum-support/authoring";
 import { sources } from "./sources";
 export type Check = [
@@ -383,4 +383,139 @@ export function buildUnit(lessons: Lesson[], previousLast?: Lesson): CurriculumT
   return lessons.map((lesson, i) =>
     buildTopic(lesson, i === 0 ? previousLast : lessons[i - 1]),
   );
+}
+
+/**
+ * Join adjacent lessons when their ideas form one teachable argument. The
+ * source lessons remain separate files so they are reviewable, while the
+ * learner sees a chapter with one opening question and one continuous path.
+ */
+export function consolidateTopics(
+  topics: CurriculumTopic[],
+  groups: string[][],
+): CurriculumTopic[] {
+  const byId = new Map(topics.map((topic) => [topic.id, topic]));
+  const assigned = new Set<string>();
+  return groups.map((ids, groupIndex) => {
+    const parts = ids.map((id) => {
+      const topic = byId.get(id);
+      if (!topic) throw new Error(`Unknown lesson in consolidation: ${id}`);
+      assigned.add(id);
+      return topic;
+    });
+    const first = parts[0];
+    const last = parts.at(-1)!;
+    const prefix = (part: CurriculumTopic, id: string) =>
+      `${part.id}-${id}`;
+    const renameProblem = (part: CurriculumTopic, problem: Problem): Problem => ({
+      ...problem,
+      id: prefix(part, problem.id),
+      ...(problem.prerequisiteId ? { prerequisiteId: undefined } : {}),
+    });
+    const diagnostics = parts.flatMap((part) =>
+      part.diagnostics.map((problem) => renameProblem(part, problem)),
+    );
+    const prior = groupIndex ? groups[groupIndex - 1][0] : undefined;
+    if (prior) {
+      const firstDiagnostic = diagnostics[0];
+      diagnostics[0] = {
+        ...firstDiagnostic,
+        prerequisiteId: prior,
+      };
+    }
+    const sections = parts.flatMap((part) =>
+      part.theory.map((section) => ({
+        heading: `${part.title} · ${section.heading}`,
+        body: section.body,
+      })),
+    );
+    const checkpoints = parts.flatMap((part) => part.teaching?.checkpoints ?? []);
+    const examples = parts.flatMap((part) => [
+      {
+        title: part.workedExample.title,
+        body: part.workedExample.problem,
+        reason: "This is the concrete case for the chapter's next idea.",
+        trap: "Do not skip the assumptions: a locally correct step can still answer the wrong question.",
+      },
+      ...part.workedExample.steps,
+    ]);
+    const practicalParts = parts.flatMap((part) =>
+      part.practical ? [part.practical] : [],
+    );
+    const practical = practicalParts.length
+      ? {
+          title: practicalParts.map((p) => p.title).join(" · "),
+          minutes: practicalParts.reduce((sum, p) => sum + p.minutes, 0),
+          brief: practicalParts.map((p) => p.brief).join("\n\n"),
+          steps: practicalParts.flatMap((p) => p.steps),
+          deliverables: practicalParts.flatMap((p) => p.deliverables),
+          review: practicalParts.map((p) => p.review).join("\n\n"),
+        }
+      : undefined;
+    const minimums = parts.flatMap((part) =>
+      part.theoreticalMinimum ? [part.theoreticalMinimum] : [],
+    );
+    return {
+      ...first,
+      id: first.id,
+      title: parts.map((part) => part.title.split(":")[0]).join(" · "),
+      description: parts.map((part) => part.description).join(" "),
+      unit: `${String(groupIndex + 1).padStart(2, "0")} · ${first.unit.replace(/^\d+\s*·\s*/, "")}`,
+      prerequisites: prior ? [prior] : [],
+      minutes: Math.max(25, parts.reduce((sum, part) => sum + part.minutes, 0)),
+      teaching: {
+        question: first.teaching?.question ?? first.title,
+        why: parts.map((part) => part.teaching?.why ?? part.description).join(" "),
+        outcomes: [...new Set(parts.flatMap((part) => part.teaching?.outcomes ?? []))],
+        checkpoints,
+        takeaway: last.teaching?.takeaway ?? last.description,
+        nextConnection: last.teaching?.nextConnection ?? "Continue to the next chapter.",
+      },
+      theoreticalMinimum: minimums.length
+        ? {
+            coreIdea: minimums.map((m) => m.coreIdea).join(" "),
+            widerConnection: minimums.map((m) => m.widerConnection).join(" "),
+            primitives: [...new Set(minimums.flatMap((m) => m.primitives ?? []))],
+            assumptions: [...new Set(minimums.flatMap((m) => m.assumptions ?? []))],
+            derivation: minimums.map((m) => m.derivation).join(" "),
+            checks: [...new Set(minimums.flatMap((m) => m.checks ?? []))],
+            governingLaw: minimums.map((m) => m.governingLaw).join(" "),
+            invariant: minimums.map((m) => m.invariant).join(" "),
+            limitingCase: minimums.map((m) => m.limitingCase).join(" "),
+            counterexample: minimums.map((m) => m.counterexample).join(" "),
+            validity: minimums.map((m) => m.validity).join(" "),
+          }
+        : undefined,
+      diagnostics,
+      intuition: {
+        body: parts.map((part) => part.intuition.body).join("\n\n"),
+        thoughtExperiments: [...new Set(parts.flatMap((part) => part.intuition.thoughtExperiments))],
+      },
+      theory: sections,
+      workedExample: {
+        title: "One connected case, examined in stages",
+        problem: examples[0].body,
+        steps: examples.slice(1).map((step) => ({
+          title: step.title,
+          body: step.body,
+          reason: step.reason,
+          trap: step.trap,
+        })),
+      },
+      fadedExercise: {
+        prompt: "Try the next decision yourself, then compare the layers involved.",
+        supplied: parts.flatMap((part) => part.fadedExercise.supplied),
+        steps: parts.flatMap((part) =>
+          part.fadedExercise.steps.map((problem) => renameProblem(part, problem)),
+        ),
+      },
+      retrievalProblems: parts.flatMap((part) =>
+        part.retrievalProblems.map((problem) => renameProblem(part, problem)),
+      ),
+      diagram: first.diagram,
+      sidebars: parts.flatMap((part) => part.sidebars),
+      sources: [...new Map(parts.flatMap((part) => part.sources).map((source) => [source.url, source])).values()],
+      practical,
+    };
+  });
 }

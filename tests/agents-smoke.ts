@@ -23,7 +23,7 @@ async function main() {
       .waitFor();
     assert.equal(await page.locator(`#curriculum option[value="${course.id}"]`).count(), 1);
     const nav = page.getByRole("navigation", { name: "Lessons" });
-    assert.equal(await nav.getByRole("button").count(), 32);
+    assert.equal(await nav.getByRole("button").count(), 15);
     await page.screenshot({ path: "../../work/qa-agents/overview.png" });
     // Every authored lesson must render with no gates and its complete exposition.
     for (const topic of course.topics) {
@@ -77,7 +77,7 @@ async function main() {
     assert.equal(kit.status(), 200);
     assert.equal((await kit.body()).subarray(0, 2).toString(), "PK");
     await page.screenshot({ path: "../../work/qa-agents/harness-lab.png" });
-    await nav.getByRole("button", { name: /Models: prediction/ }).click();
+    await nav.getByRole("button", { name: /Models/ }).click();
     await page
       .getByRole("button", { name: "Show practice", exact: true })
       .click();
@@ -93,7 +93,7 @@ async function main() {
     await page
       .getByRole("button", { name: "Try the supported question", exact: true })
       .click();
-    await page.locator(".faded-step").waitFor();
+    await page.locator(".faded-step").first().waitFor();
     await page.getByRole("button", { name: "Self-check", exact: true }).click();
     const first = page.locator(".practice-body form").first(),
       problem = course.topics[0].retrievalProblems[0];
@@ -106,7 +106,7 @@ async function main() {
     await first.getByRole("button", { name: "Check answer" }).click();
     await first.getByText("Verified", { exact: true }).waitFor();
     await page.screenshot({ path: "../../work/qa-agents/lesson.png" });
-    await nav.getByRole("button", { name: /Economics: cost/ }).click();
+    await nav.getByRole("button", { name: /Economics/ }).click();
     await page
       .getByRole("button", { name: "Fresh question", exact: true })
       .click();
@@ -134,7 +134,7 @@ async function main() {
     await page.screenshot({ path: "../../work/qa-agents/mobile-lab.png" });
     assert.deepEqual(errors, []);
     console.log(
-      "PASS: all 32 lessons, 10 practicals, three-course discovery, open reading, conceptual grading, lab download, fresh economics, mobile layout and no browser errors.",
+      "PASS: all 15 consolidated chapters, practicals, course discovery, open reading, conceptual grading, lab download, fresh economics, mobile layout and no browser errors.",
     );
   } finally {
     await browser.close();

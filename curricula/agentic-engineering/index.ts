@@ -1,5 +1,5 @@
 import type { CurriculumPack } from "@/types/curriculum";
-import { buildUnit } from "./lesson";
+import { buildUnit, consolidateTopics } from "./lesson";
 import { overview } from "./overview";
 import { unit01BuildTheMentalModel } from "./units/01-build-the-mental-model";
 import { unit02MakeInformationUsable } from "./units/02-make-information-usable";
@@ -11,9 +11,9 @@ import { unit07CoordinateAgents } from "./units/07-coordinate-agents";
 import { unit08EvaluateQualityAndEconomics } from "./units/08-evaluate-quality-and-economics";
 import { unit09BuildIt } from "./units/09-build-it";
 import { unit10ProveTheValue } from "./units/10-prove-the-value";
-// Every lesson's warm-up diagnostic depends on the immediately preceding lesson,
-// so the whole 32-lesson sequence reads as one continuous chain across units.
-const topics = [
+// Raw lesson files stay individually reviewable; the learner sees consolidated
+// chapters whose dependencies form one continuous chain.
+const rawTopics = [
   ...buildUnit(unit01BuildTheMentalModel),
   ...buildUnit(unit02MakeInformationUsable, unit01BuildTheMentalModel.at(-1)),
   ...buildUnit(unit03ChooseAndOperate, unit02MakeInformationUsable.at(-1)),
@@ -25,6 +25,23 @@ const topics = [
   ...buildUnit(unit09BuildIt, unit08EvaluateQualityAndEconomics.at(-1)),
   ...buildUnit(unit10ProveTheValue, unit09BuildIt.at(-1)),
 ];
+const topics = consolidateTopics(rawTopics, [
+  ["models", "agents"],
+  ["harnesses", "orchestration"],
+  ["context", "context-engineering", "memory"],
+  ["landscape", "environment"],
+  ["long-horizon", "choosing"],
+  ["specification", "agent-friendly", "failure-modes"],
+  ["gh-aw", "controls"],
+  ["customisation", "workflow-patterns"],
+  ["tools", "mcp", "skills"],
+  ["why-multiple", "subagents"],
+  ["coordination", "patterns", "when-not-multi"],
+  ["evaluation", "benchmark"],
+  ["verification", "economics"],
+  ["tiny-harness"],
+  ["graduation"],
+]);
 const pack: CurriculumPack = {
   id: "agentic-engineering",
   version: "1.0.0",
@@ -32,7 +49,7 @@ const pack: CurriculumPack = {
   description:
     "From using a coding assistant to designing, operating and evaluating useful agent systems.",
   conventions:
-    "Examples use a fictional retry-service incident. Product references checked 13 September 2026; verify installed versions and engine-specific configuration. All monetary examples are hypothetical. Core lessons take roughly 10–15 minutes including reflection; practical labs require additional time. Fixed checks assess comprehension, not completion of real engineering projects.",
+    "Examples use a fictional retry-service incident. Product references checked 13 September 2026; verify installed versions and engine-specific configuration. All monetary examples are hypothetical. The 15 chapters take roughly 25–45 minutes each including reflection; practical labs require additional time. Fixed checks assess comprehension, not completion of real engineering projects.",
   overview,
   topics,
 };
@@ -50,7 +67,7 @@ pack.topics.find((t) => t.id === "evaluation")!.practiceTemplates = [
       "{{accepted}} / 20 × 100 = {{answer}}%. This describes the pilot; it does not establish a universal product ranking.",
   },
 ];
-pack.topics.find((t) => t.id === "economics")!.practiceTemplates = [
+pack.topics.find((t) => t.id === "verification")!.practiceTemplates = [
   {
     id: "accepted-cost",
     title: "Cost per accepted engineering result",

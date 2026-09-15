@@ -4,7 +4,7 @@ A teaching-led Next.js textbook with open lessons, optional questions, persisten
 
 ## Courses
 
-- **Agentic engineering:** 32 concept lessons in 10 units, ten practical labs, a nine-stage tiny-harness project and a measured repository capstone. Covers models, agents, harnesses, orchestration, context, memory, coding products, delegation, gh-aw, tools/MCP/skills, multi-agent systems, evaluation and economics. Each lesson contains original explanatory prose, teaching checkpoints that bridge each theory section, a worked engineering case and three optional comprehension/application questions. Product references were checked on 13 September 2026.
+- **Agentic engineering:** 15 connected chapters in 15 units, ten practical labs, a nine-stage tiny-harness project and a measured repository capstone. Covers models, agents, harnesses, orchestration, context, memory, coding products, delegation, gh-aw, tools/MCP/skills, multi-agent systems, evaluation and economics. Each chapter gathers related ideas into one argument while retaining original explanatory prose, teaching checkpoints, worked engineering cases and optional comprehension/application questions. Product references were checked on 13 September 2026.
 - **Astrodynamics:** six lessons from two-body energy to transfers, perturbations and patched conics, with worked calculations and numerical practice.
 
 The [agent lab guide](public/agent-labs/README.md) includes an executable offline harness, deliberately failing fixture, evaluator, CSV template and a gh-aw source/compiled example. Download the kit in the app from the harness project. The scripted model is a test double; live-model integration, advanced v4–v9 extensions and the real-repository capstone are learner projects with explicit acceptance criteria. The gh-aw example compiled with v0.88.7; no live agent workflow or model benchmark is claimed.
@@ -91,7 +91,7 @@ New lessons follow [docs/TEACHING_STANDARD.md](docs/TEACHING_STANDARD.md), which
 
 `teaching.checkpoints` may be empty for continuous prose lessons whose checks live in the practice panel. Optional `practical` data adds a brief, estimated time, steps, deliverables and an expandable review guide. It never gates reading.
 
-Additional checks: `npm run test:labs` tests the offline harness and evaluator; `npm run test:agents-browser` visits all 32 agent-course lessons, verifies optional labs and questions, downloads the lab kit and checks mobile layout. Browser smoke tests use installed Microsoft Edge by default.
+Additional checks: `npm run test:labs` tests the offline harness and evaluator; `npm run test:agents-browser` visits all 15 agent-course chapters, verifies optional labs and questions, downloads the lab kit and checks mobile layout. Browser smoke tests use installed Microsoft Edge by default.
 
 Use `String.raw` template literals for LaTeX and normal paragraph breaks. Use `$...$` for inline math and `$$...$$` for display equations. Raw HTML is disabled. Diagrams contain only validated coordinate primitives. Practice formulas use a bounded arithmetic tree with named variables and explicit operators; they are never JavaScript strings to execute.
 
