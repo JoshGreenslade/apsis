@@ -24,9 +24,9 @@ Open the printed URL, normally `http://127.0.0.1:3000`. For a production Node se
 
 ## Static GitHub Pages deployment
 
-The repository deploys to GitHub Pages as a read-only static site via the workflow in `.github/workflows/deploy.yml`. The workflow builds with `output: 'export'` and sets `PAGES_BASE_PATH` (from `actions/configure-pages`) so assets resolve under the repository's Pages subpath.
+The repository deploys to GitHub Pages as a static site via the workflow in `.github/workflows/deploy.yml`. The workflow builds with `output: 'export'` and sets `PAGES_BASE_PATH` (from `actions/configure-pages`) so assets resolve under the repository's Pages subpath, then uploads `out/` with the Pages artifact action.
 
-On the static site, all teaching content, worked examples, diagrams and set questions render fully. The SQLite-backed interactive features — saved notes, progress tracking, spaced review and fresh-question generation — require the Node server and are not available on the static export; the interface degrades gracefully and explains that reading remains available. To run the full interactive app, use the Node server above (no `PAGES_BASE_PATH` set).
+On the static site, all teaching content, worked examples, diagrams, set questions, saved notes, progress tracking, spaced review, mastery checks and checked-template fresh questions work in the browser. State is stored in `localStorage` under a curriculum/version-specific key, so it belongs to that browser and is cleared if site data is removed; there is no cross-device synchronisation. AI-selected fresh questions and SQLite-backed shared persistence still require the Node server. To run the full server-backed app, use the Node server above with no `PAGES_BASE_PATH` set.
 
 ## What changed in this revision
 

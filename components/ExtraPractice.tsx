@@ -1,8 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, RefreshCw } from "lucide-react";
-import type { Feedback, Problem, Submission } from "@/types/curriculum";
+import type {
+  CurriculumPack,
+  Feedback,
+  Problem,
+  Submission,
+} from "@/types/curriculum";
 import { ProblemInput } from "./FadedExercise";
+import { evaluate } from "@/lib/curriculum-engine";
+import { generatePractice } from "@/lib/practice-generator";
 type Generated = {
   problem: Problem;
   source: "ai" | "template";
@@ -12,10 +19,14 @@ type Generated = {
 export default function ExtraPractice({
   packId,
   topicId,
+  pack,
+  staticMode = false,
   enabled = true,
 }: {
   packId: string;
   topicId: string;
+  pack: CurriculumPack;
+  staticMode?: boolean;
   enabled?: boolean;
 }) {
   const [question, setQuestion] = useState<Generated>(),
@@ -24,12 +35,16 @@ export default function ExtraPractice({
     [ai, setAi] = useState(false);
   const controller = useRef<AbortController | null>(null);
   useEffect(() => {
+    if (staticMode) {
+      setAi(false);
+      return;
+    }
     fetch("/api/practice")
       .then((r) => r.json())
       .then((data) => setAi(data.aiAvailable))
       .catch(() => {});
     return () => controller.current?.abort();
-  }, []);
+  }, [staticMode]);
   async function generate() {
     if (busy || !enabled) return;
     const c = new AbortController();
@@ -37,6 +52,17 @@ export default function ExtraPractice({
     setBusy(true);
     setError("");
     try {
+      if (staticMode) {
+        const topic = pack.topics.find((item) => item.id === topicId);
+        if (!topic?.practiceTemplates?.length)
+          throw new Error(
+            "Checked-template practice is not available for this lesson.",
+          );
+        setQuestion(
+          await generatePractice(topic.practiceTemplates, question?.parameters),
+        );
+        return;
+      }
       const r = await fetch("/api/practice", {
         method: "POST",
         signal: c.signal,
@@ -61,6 +87,7 @@ export default function ExtraPractice({
   async function answer(submission: Submission): Promise<Feedback | undefined> {
     setError("");
     try {
+      if (staticMode) return evaluate(question!.problem, submission);
       const r = await fetch("/api/practice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

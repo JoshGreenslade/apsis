@@ -1,6 +1,9 @@
-import { randomUUID, randomInt } from "node:crypto";
 import { z } from "zod";
 import type { Expression, PracticeTemplate, Problem } from "@/types/curriculum";
+const randomId = () =>
+  globalThis.crypto?.randomUUID?.() ??
+  `local-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const randomInteger = (max: number) => Math.floor(Math.random() * max);
 
 export function calculate(
   expression: Expression,
@@ -40,7 +43,7 @@ export function calculate(
 export function instantiate(
   template: PracticeTemplate,
   values: Record<string, number>,
-  id = randomUUID(),
+  id = randomId(),
 ): Problem {
   if (Object.keys(values).length !== template.variables.length)
     throw new Error("Unexpected parameters");
@@ -99,7 +102,7 @@ export function sample(
         Number(
           (
             v.min +
-            randomInt(Math.floor((v.max - v.min) / v.step) + 1) * v.step
+            randomInteger(Math.floor((v.max - v.min) / v.step) + 1) * v.step
           ).toFixed(8),
         ),
       ]),
@@ -152,7 +155,7 @@ export async function generatePractice(
 ) {
   if (!templates.length)
     throw new Error("No checked practice templates for this lesson");
-  let template = templates[randomInt(templates.length)],
+  let template = templates[randomInteger(templates.length)],
     values = sample(template, previous),
     source: "ai" | "template" = "template",
     notice = "A fresh variation from a checked template. AI is not connected.";

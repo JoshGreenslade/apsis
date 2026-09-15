@@ -32,6 +32,7 @@ import { Diagram } from "./Diagram";
 import FadedExercise, { ProblemInput } from "./FadedExercise";
 import ExtraPractice from "./ExtraPractice";
 import MathematicsExplorer from "./MathematicsExplorer";
+import { applyBrowserAction, readBrowserState } from "@/lib/browser-store";
 const empty: LearnerState = { topics: {}, scratchpads: {} };
 type Screen = "overview" | "lesson" | "review";
 type ReviewItem = { topicId: string; problem: Problem };
@@ -72,8 +73,10 @@ function topicOutcomes(t: CurriculumTopic) {
 }
 export default function TeachingWorkspace({
   packs,
+  staticMode = false,
 }: {
   packs: CurriculumPack[];
+  staticMode?: boolean;
 }) {
   const [packId, setPackId] = useState(packs[0].id),
     [topicId, setTopicId] = useState(packs[0].topics[0].id),
@@ -103,6 +106,11 @@ export default function TeachingWorkspace({
     scratch = drafts[noteKey] ?? state.scratchpads[topicId] ?? "",
     noteSaved = scratch === (state.scratchpads[topicId] ?? "");
   useEffect(() => {
+    if (staticMode) {
+      setState(readBrowserState(pack));
+      setReady(true);
+      return;
+    }
     const c = new AbortController();
     setReady(false);
     setError("");
@@ -122,7 +130,7 @@ export default function TeachingWorkspace({
           );
       });
     return () => c.abort();
-  }, [packId]);
+  }, [pack, packId, staticMode]);
   const act = useCallback(
     async (action: LearningAction): Promise<Feedback | undefined> => {
       if (lock.current || !ready) return;
@@ -130,6 +138,15 @@ export default function TeachingWorkspace({
       setBusy(true);
       setError("");
       try {
+        if (staticMode) {
+          const result = applyBrowserAction(pack, action);
+          setState(result.state);
+          return result.feedback ?? {
+            correct: true,
+            category: null,
+            message: "Saved",
+          };
+        }
         const r = await fetch("/api/progress", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -150,7 +167,7 @@ export default function TeachingWorkspace({
         setBusy(false);
       }
     },
-    [packId, ready],
+    [pack, packId, ready, staticMode],
   );
   function selectTopic(id: string) {
     setTopicId(id);
@@ -996,6 +1013,8 @@ export default function TeachingWorkspace({
                       <ExtraPractice
                         packId={packId}
                         topicId={topicId}
+                        pack={pack}
+                        staticMode={staticMode}
                         enabled={ready && !busy}
                       />
                     ) : (
