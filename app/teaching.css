@@ -661,6 +661,43 @@ a {
   border-left: 2px solid #d4d0ef;
   padding-left: 20px;
 }
+.theoretical-minimum {
+  background: #f1f7f5;
+  border: 1px solid #cfe5df;
+  border-radius: 12px;
+  padding: clamp(20px, 3vw, 30px);
+  margin: 30px 0 38px;
+}
+.theoretical-minimum > .section-kicker {
+  color: #287563;
+}
+.theoretical-minimum > h3 {
+  margin: 8px 0 22px;
+  font-size: 1.35rem;
+}
+.theoretical-minimum-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 28px;
+}
+.theoretical-minimum-grid > div {
+  min-width: 0;
+}
+.theoretical-minimum-grid h4 {
+  color: #287563;
+  margin-bottom: 9px;
+}
+.theoretical-minimum-grid p,
+.theoretical-minimum-grid ul {
+  margin-bottom: 0;
+}
+.theoretical-minimum-grid ul {
+  padding-left: 20px;
+}
+.theoretical-minimum-grid li {
+  margin-bottom: 7px;
+  line-height: 1.65;
+}
 .katex-display {
   padding: 15px 8px !important;
   margin: 22px 0 !important;
@@ -1322,6 +1359,10 @@ textarea {
   }
   .formal-theory {
     padding-left: 13px;
+  }
+  .theoretical-minimum-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
   .lesson-outcomes,
   .pause-card {

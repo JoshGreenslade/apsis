@@ -146,6 +146,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "The final lesson changes the dominant attracting body itself, and shows how to join local models without mixing reference frames.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "The spherical potential, Earth radius $R$, and dimensionless coefficient $J_2$",
+      "Mean motion $n$, semilatus rectum $p$, inclination $i$, and orbital elements",
+      "Mean elements versus instantaneous osculating elements",
+    ],
+    assumptions: [
+      "The correction is axisymmetric, first-order in $J_2$, and averaged over one orbit.",
+      "Higher harmonics, drag, third-body gravity, radiation pressure, and uncertainty are omitted.",
+      "The quoted rates describe mean secular trends, not exact instantaneous element rates.",
+    ],
+    governingLaw:
+      "Replace the spherical potential by $U=-(\\mu/r)[1-J_2(R/r)^2P_2(\\sin\\varphi)]$, then use its gradient and orbital average to obtain secular node and apsidal rates.",
+    invariant:
+      "The spherical model has no preferred equatorial direction; $J_2$ introduces a slow nodal and apsidal drift whose strength scales as $J_2n(R/p)^2$ rather than preserving the two-body angular-momentum vector.",
+    derivation:
+      "Identify the perturbing potential, separate short-period oscillations from long-term trends, average over the fast orbital phase, and interpret the first-order rates through their sign, inclination dependence, and altitude scaling.",
+    checks: [
+      "At $i=90^\\circ$, $\\cos i=0$ and the first-order nodal rate vanishes.",
+      "At $i=\\arccos(1/\\sqrt5)$, the first-order apsidal rate vanishes.",
+      "For a circular orbit, $p=r$, and increasing altitude weakens the effect through $(R/p)^2$.",
+    ],
+    limitingCase:
+      "$J_2\\to0$ recovers the fixed-plane two-body model; the critical inclination zeros $\\dot\\omega$ but does not generally zero $\\dot\\Omega$.",
+    counterexample:
+      "A small coefficient does not guarantee a small accumulated effect, and a secular rate is not the same thing as the instantaneous angle of the orbit.",
+    validity:
+      "These are first-order, averaged, axisymmetric-$J_2$ trend estimates. Precise orbit maintenance and encounter targeting require higher-fidelity numerical force models.",
+  },
   intuition: {
     body: "Give a spinning top a nudge while it is spinning fast, and it does something that looks paradoxical the first time you see it: instead of toppling over in the direction you pushed it, its axis slowly sweeps around in a circle, tracing out a cone. This is precession, and it happens because a fast-spinning object responds to a sideways torque not by immediately tilting toward that torque, but by having its angular momentum vector slowly rotate around the direction the torque is trying to push it. The top does not stop spinning; the whole spin axis just slowly drifts, revolution after revolution, tracing out a lazy circle over many spins.\n\nSomething extremely similar happens to a tilted spacecraft orbit around the real, imperfect Earth. Earth is not a perfect sphere: it bulges very slightly at the equator, a consequence of its own rotation, and this bulge means a tilted orbital plane repeatedly passes through a gravitational field that differs, very slightly, from the perfectly spherical field the last three lessons assumed. Each individual pass contributes only a tiny torque. But — and this is the entire point of the lesson — a tiny torque, applied consistently on every single revolution for months or years, accumulates into something you cannot ignore: the orbital plane itself slowly precesses, exactly like the spinning top's axis, sweeping its ascending node around Earth's equator over time.\n\nFar from being merely a nuisance to correct for, this drift can be turned into a deliberate design tool. A sun-synchronous orbit, used by countless Earth-observation satellites, is deliberately inclined so its $J_2$-driven nodal precession keeps pace with Earth's own yearly trip around the Sun — the satellite passes overhead at the same local solar time on every orbit, year after year, purely because a disturbance that could have been treated as an error was instead treated as a resource.",
     thoughtExperiments: [
@@ -288,6 +317,28 @@ With $n$ in rad/s, both rates come out in rad/s. Read the first equation for wha
       "Distinguish the nodal-rate zero from the apsidal-rate zero — they are different conditions.",
     ),
   ],
+  practical: {
+    title: "Lab 5 · Measure a secular drift",
+    minutes: 90,
+    brief:
+      "Extend the two-body propagator from Lab 1 with the $J_2$ acceleration, or use a numerical orbit tool that exposes the force model. Compare the ideal two-body orbit with the perturbed orbit and separate short-period motion from the long-term secular trend.",
+    steps: [
+      "Choose one inclined Earth orbit and record $a$, $e$, $i$, $p$, and the initial RAAN and argument of periapsis. State whether your plotted elements are osculating or mean elements.",
+      "Propagate the same initial state with $J_2=0$ and with the stated $J_2$ value. Use the same integrator, timestep, duration, and output sampling in both runs.",
+      "Plot RAAN and argument of periapsis against time. Fit a straight line to the long-term trend and compare its slope with the first-order averaged formulas, while showing the short-period residuals around that fit.",
+      "Repeat for a near-polar inclination and for the critical inclination. Predict which rate should approach zero before running each case, then compare the numerical result with the prediction.",
+      "Vary altitude or semilatus rectum while holding the other choices explicit. Explain whether the observed change is consistent with the $(R/p)^2$ scaling and identify where the first-order model becomes inadequate.",
+    ],
+    deliverables: [
+      "A table of force model, duration, timestep, initial elements, fitted nodal rate, and fitted apsidal rate",
+      "Overlaid plots for two-body and $J_2$ RAAN and apsidal angle, with units and angle unwrapping stated",
+      "A comparison between measured slopes and the quoted secular formulas",
+      "A short explanation of mean versus osculating elements and the residual short-period variation",
+      "One limitation that belongs to the physical force model and one that belongs to the numerical method",
+    ],
+    review:
+      "A strong result uses identical numerical settings for the control and perturbed runs, unwraps angular data before fitting, and reports the fit interval. The two-body control should keep its orbital plane fixed apart from numerical drift; $J_2$ should produce a secular nodal trend whose sign changes across polar inclination, while the apsidal trend approaches zero near the critical inclination. The quoted expressions are first-order averaged rates, so short-period oscillations and differences between mean and osculating elements are expected. Do not infer that a small instantaneous residual disproves a long-term drift, and do not attribute integrator drift to $J_2$ without comparing the control run.",
+  },
   sources: [freeflyerJ2, jpl],
 };
 topic.practiceTemplates = [

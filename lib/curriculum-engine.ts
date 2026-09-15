@@ -40,6 +40,7 @@ export function validatePack(input: unknown): CurriculumPack {
       ...t.diagnostics,
       ...t.fadedExercise.steps,
       ...t.retrievalProblems,
+      ...(t.transferProblems ?? []),
     ];
     if (new Set(ps.map((p) => p.id)).size !== ps.length)
       throw new Error(`Duplicate problem in ${t.id}`);
@@ -216,6 +217,7 @@ export function applyAction(
         ...topic.diagnostics,
         ...topic.fadedExercise.steps,
         ...topic.retrievalProblems,
+        ...(topic.transferProblems ?? []),
       ];
   const problem = pool.find((x) => x.id === action.problemId);
   if (!problem) throw new Error("Problem is unavailable in this lesson");

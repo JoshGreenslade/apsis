@@ -151,6 +151,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "Return to the course challenge: explain a lunar-distance journey in words, attach a first burn and time estimate, and list what a real mission analysis must add.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "Specific energy, hyperbolic excess speed $v_\\infty$, and characteristic energy $C_3$",
+      "Planet-relative and heliocentric velocity vectors",
+      "Sphere of influence, departure radius, and target-body state",
+    ],
+    assumptions: [
+      "Departure is an ideal two-body hyperbola around one planet with an instantaneous tangential injection.",
+      "Patched-conic boundaries are approximate bookkeeping surfaces, not physical discontinuities.",
+      "The lunar-distance estimate postpones lunar gravity, lunar motion, encounter geometry, and capture until after the Earth-centred coast.",
+    ],
+    governingLaw:
+      "Set the desired positive energy at infinity, solve $v_p=\\sqrt{v_\\infty^2+2\\mu/r_p}$ locally, and vector-add the planet's heliocentric velocity to the planet-relative excess velocity in one common frame.",
+    invariant:
+      "A frame change creates no impulse, and velocities must be vector-added or subtracted in a shared basis. Reaching a radius is not equivalent to reaching a moving body.",
+    derivation:
+      "Choose the residual energy at infinity, equate it to local kinetic plus potential energy, subtract parking-orbit speed for injection, transform the outgoing state, and then state explicitly which target-body physics the patch has omitted.",
+    checks: [
+      "$v_\\infty=0$ gives parabolic escape but still requires nonzero injection $\\Delta v$.",
+      "$C_3$ has units of squared speed and is not itself a burn magnitude.",
+      "Equal excess-speed magnitudes can produce different heliocentric orbits because their directions differ.",
+    ],
+    limitingCase:
+      "As distance tends to infinity, planet-relative speed approaches $v_\\infty$; positive $v_\\infty$ gives a hyperbola with negative semimajor axis, while zero gives the parabolic boundary.",
+    counterexample:
+      "An Earth-centred ellipse reaching lunar distance is not automatically a lunar transfer: the Moon may be elsewhere, with a different velocity, and capture needs a separate Moon-centred analysis.",
+    validity:
+      "Patched conics are preliminary, piecewise two-body estimates. Low-energy transfers, weak-stability boundaries, long multi-body residence, and precise encounters require restricted-three-body or full numerical dynamics.",
+  },
   intuition: {
     body: "Picture Earth's gravity as a steep-sided bowl carved into a much larger, much shallower basin — the Sun's own gravitational field, which extends across the entire solar system but is so gentle near Earth that it is easy to forget it is even there. A spacecraft climbing out of the steep bowl is, from up close, entirely dominated by Earth: every calculation in the last five lessons assumed exactly this, using Earth's $\\mu$ and nothing else. But climb far enough, and the bowl's walls flatten out into the much larger, much gentler slope of the basin beneath it. The spacecraft has not jumped or changed anything about its motion at that boundary; it is simply that describing its motion using Earth alone stops being the useful approximation, and describing it using the Sun instead becomes the useful one.\n\nPatched conics is the name for exactly this trick: modeling a long journey as a sequence of separate, ideal two-body arcs, each dominated by whichever single body happens to matter most in that region, and stitching the arcs together at the boundaries where dominance switches hands. It is a genuinely useful simplification, precisely because each individual arc reuses everything the previous five lessons already built — vis-viva, energy, the six elements — rather than requiring some entirely new three-body theory. But the stitching itself demands real care: position and velocity have to agree at the seam, expressed in one consistent frame, or the two arcs will describe two different spacecraft rather than one continuous journey.\n\nA Moon-bound trajectory is the cleanest way to see both the power and the limit of this idea at once. An Earth-centered ellipse that reaches lunar distance answers a real, useful energy question: how much of a push does it take to get that far out? But reaching a distance is not the same as reaching a body. The Moon has to actually be at that point in space when the spacecraft arrives, and the spacecraft has to arrive with a velocity, relative to the Moon specifically, that some further plan can actually work with — neither of which an Earth-only energy estimate can tell you on its own.",
     thoughtExperiments: [
@@ -312,6 +341,29 @@ This estimate deliberately ignores both the Moon's own motion and its gravity un
       "Separate an energy estimate from a genuine rendezvous condition.",
     ),
   ],
+  practical: {
+    title: "Capstone · From parking orbit to a defensible lunar estimate",
+    minutes: 120,
+    brief:
+      "Build a preliminary Earth-to-lunar-distance mission estimate from a circular parking orbit. You may use a notebook, spreadsheet, or script, but every number must carry a frame, unit system, model assumption, and stated uncertainty or sensitivity.",
+    steps: [
+      "Choose a circular parking orbit and a departure direction. Compute its circular speed, the Earth-centred transfer ellipse to 384400 km, the departure burn, and the coast time to the transfer apoapsis.",
+      "Declare every reference frame and write the velocity transformation from the Earth-centred departure state to a heliocentric state. Explain which terms are vector additions and which are physical burns.",
+      "Estimate the Moon's angular position at departure and arrival using a deliberately stated circular-motion approximation. Decide whether the transfer geometry actually produces a lunar encounter or merely reaches lunar distance.",
+      "Compute the arrival velocity relative to the Moon by subtracting the Moon's velocity vector in a common frame. State what a capture or insertion calculation would still need.",
+      "Perform a sensitivity study by varying at least two inputs, such as parking-orbit altitude, departure energy, or departure phase. Compare the result with a patched-conic or higher-fidelity reference if available, and explain every discrepancy you can attribute.",
+      "Write a final model ledger: what was derived, what was assumed, what was numerically approximated, what was verified, and what remains outside the estimate.",
+    ],
+    deliverables: [
+      "A mission table containing radii, speeds, burns, coast time, frames, and units",
+      "A diagram or state table showing Earth-centred, Moon-centred, and heliocentric velocity descriptions",
+      "A phase and encounter calculation that distinguishes lunar distance from lunar rendezvous",
+      "A sensitivity table for at least two changed inputs",
+      "A model ledger and a keep/change/stop judgement about the fidelity of the estimate",
+    ],
+    review:
+      "A defensible submission keeps the Earth-centred ellipse, heliocentric patch, and Moon-relative arrival calculation separate rather than blending their velocities into one scalar. It states that a frame transformation is not a burn, that $C_3$ is an energy-like quantity rather than a propellant budget, and that reaching 384400 km does not establish encounter or capture. A useful sensitivity study changes one input at a time before combining changes. The estimate is successful when its assumptions and omitted physics are visible; numerical agreement with a reference is not enough if the frames or denominators are unclear.",
+  },
   sources: [nasa, jpl],
 };
 topic.practiceTemplates = [

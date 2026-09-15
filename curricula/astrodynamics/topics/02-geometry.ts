@@ -167,6 +167,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "A maneuver changes these properties. Start with the cleanest case: changing the size of a circular orbit while keeping its plane fixed.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "The six Keplerian elements $a,e,i,\\Omega,\\omega,\\nu$",
+      "The perifocal frame $PQW$, inertial frame, and epoch",
+      "Derived quantities $p=a(1-e^2)$, $\\mathbf h$, and the eccentricity vector $\\mathbf e$",
+    ],
+    assumptions: [
+      "The motion is a two-body Keplerian conic with constant $\\mu$.",
+      "The reference plane, inertial frame, central body, and epoch are declared.",
+      "The classical elements are used only away from their singular circular and equatorial cases.",
+    ],
+    governingLaw:
+      "The conic is $r=p/(1+e\\cos\\nu)$, while the mean-anomaly clock advances uniformly through $M=E-e\\sin E=n(t-\\tau)$.",
+    invariant:
+      "The state and conserved vectors $\\mathbf h$ and $\\mathbf e$ describe one orbit independently of the chosen coordinate representation; mean anomaly advances uniformly even though true anomaly does not.",
+    derivation:
+      "Recover $a$ and $e$ from the apsides, derive $p$ and the polar conic, build position and velocity in $PQW$, then apply the same ordered rotations to both vectors before introducing the time-of-flight clock.",
+    checks: [
+      "$\\nu=0$ and $\\nu=\\pi$ recover periapsis and apoapsis.",
+      "At an apsis, $v_r=0$ and $h=rv$; for $e=0$, $p=a=r$ and the circular speed is recovered.",
+      "The same rotation must transform both $\\mathbf r$ and $\\mathbf v$.",
+    ],
+    limitingCase:
+      "At $e=0$, periapsis and $\\omega$ are undefined; at $i=0$, the ascending node and $\\Omega$ are undefined. Use longitude or argument of latitude instead.",
+    counterexample:
+      "Equal inclination does not imply equal orbital planes when the RAANs differ, and equal angular intervals do not represent equal elapsed times.",
+    validity:
+      "The elements are a coordinate description of an ideal two-body state. Perturbations make them time-varying, and singular cases require alternate coordinates even when the physical state remains perfectly defined.",
+  },
   intuition: {
     body: "Suppose you wanted to describe, to someone on the phone who cannot see it, the exact shape and position of a bent wire hoop lying on a table. You would naturally break the description into separate, independent pieces: first, how big is the hoop overall; then, is it a perfect circle or has it been squeezed into an oval, and if so how much; only once those two questions are settled does it make sense to ask which way the oval's long axis actually points. Lift the hoop off the table and let it tilt in space, and you need to describe that tilt too, and the direction the tilt itself is facing, since a hoop tilted north looks different from one tilted east even at the same angle. And finally, if there is a bead sitting somewhere on the wire, you need one more piece of information to say exactly where.\n\nDescribing an orbit is exactly this same problem, piece by piece. You are separately choosing: how big the ellipse is; how stretched, or eccentric, it is; how its plane is tilted relative to some reference direction; which way that tilted plane is actually facing; where, within that plane, the ellipse's own long axis points; and finally, where the spacecraft itself currently sits along the path. Six genuinely separate questions, six genuinely separate numbers, usually called the six Keplerian elements — and the reason there are exactly six, no more and no fewer, is that this is precisely how many independent choices are needed to pin down both the shape of a path through space and one object's position on it.\n\nOne thing is worth flagging before going further: the reference plane you measure all of this tilt against is a choice you make, not a property the orbit itself possesses. The very same physical path, described against Earth's equator, gets a different tilt angle than the same path described against the plane of Earth's own orbit around the Sun. Neither answer is wrong; they are answers to two different questions dressed up to look like the same question. Always say which reference plane you are using before comparing two sets of orbital elements, or you risk comparing numbers that were never describing the same thing.",
     thoughtExperiments: [

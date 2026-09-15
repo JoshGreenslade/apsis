@@ -135,6 +135,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "Even without burns, real orbital planes drift. The next lesson shows why Earth’s shape can turn a plane over time.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "Mean motion $n$, phase angle, and synodic period",
+      "Temporary phasing orbit period $T_p$ and semimajor axis $a_p$",
+      "Velocity vectors and the plane angle $\\delta$ between orbital planes",
+    ],
+    assumptions: [
+      "Timing relations use circular, coplanar motion unless a plane change is explicitly introduced.",
+      "Plane-change burns occur at a common node and are treated as instantaneous impulses.",
+      "A pure plane change assumes equal speeds; unequal speeds require the full vector-difference formula.",
+    ],
+    governingLaw:
+      "A rendezvous is a time-and-position condition: phase evolves through mean motion, while an impulsive plane change costs the magnitude of the velocity-vector difference.",
+    invariant:
+      "Correct radius does not imply correct position at the correct time, and a frame or phase change is not itself a physical burn.",
+    derivation:
+      "Compute the target's angular travel during the transfer, derive the required initial lead, wait for relative drift or design a temporary-period orbit, then form the velocity-vector difference at a node for any plane mismatch.",
+    checks: [
+      "$r_1=r_2$ makes the synodic period infinite because the mean motions match.",
+      "$\\delta=0$ gives zero plane-change cost.",
+      "Inclination difference alone is insufficient; the RAAN difference enters the full plane-angle relation.",
+    ],
+    limitingCase:
+      "A small phase gap produces a phasing orbit close to the original orbit; as $v\\to0$ at fixed plane angle, the ideal vector-turn cost tends to zero.",
+    counterexample:
+      "A Hohmann transfer that reaches the target radius is not automatically a rendezvous, and equal inclination does not guarantee coincident orbital planes.",
+    validity:
+      "The timing and plane-change formulas are local impulsive approximations. Atmosphere, surface intersection, finite burns, and coupled orbital changes require propagation and feasibility checks.",
+  },
   intuition: {
     body: "Return to the two circular racetracks from the last lesson. Suppose you are now on the outer one, at the correct radius, but a friend's car is also on that same outer track, some distance ahead of you, and you want to pull up alongside them. On an ordinary racetrack you would simply floor the accelerator and catch up. In orbit that instinct fails immediately: speeding up while staying at the same radius is not an option at all, since the two-body lesson already fixed circular speed as a function of $\\mu$ and $r$ alone, with nothing left free to adjust. If you want to change your position relative to your friend, you have to briefly leave the circle you are both sharing, spend time on a different-sized loop with a different lap time, and rejoin the original circle once you have closed the gap.\n\nThis is the first of two genuinely separate problems this lesson tackles, and it is worth keeping them apart in your head, because they call for different tools entirely. The first is a clock problem: you and a target can share the exact same orbit — same radius, same plane, same everything geometric — and still be permanently unable to meet, simply because you are in the wrong place along that shared orbit at the wrong time. The second is a genuinely geometric problem: even a target sharing your orbit's timing perfectly might be circling in a plane tilted relative to yours, and no amount of speeding up or slowing down along your own path will ever bring you into that other plane. Turning your orbital plane needs a sideways push, not a forward or backward one.\n\nBoth problems eventually reduce to arithmetic, but starting from the right physical picture matters, because the two really are different operations. Changing when you arrive somewhere is a timing adjustment. Changing which plane you arrive in is a direction adjustment. Confusing the two, and reaching for a Hohmann-style forward burn to fix a plane mismatch, wastes propellant solving the wrong problem entirely.",
     thoughtExperiments: [

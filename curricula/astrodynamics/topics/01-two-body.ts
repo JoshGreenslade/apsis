@@ -146,6 +146,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "Next we need a language for that orbit: how big it is, how stretched it is, where its plane points, and where the spacecraft sits.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "Relative position $\\mathbf r$ and velocity $\\mathbf v=\\dot{\\mathbf r}$",
+      "Radius $r=|\\mathbf r|$, gravitational parameter $\\mu$, and specific energy $\\varepsilon$",
+      "Specific angular momentum $\\mathbf h=\\mathbf r\\times\\mathbf v$",
+    ],
+    assumptions: [
+      "The two bodies are point masses, or spherical bodies observed outside their surfaces.",
+      "The reference frame is inertial and there is no thrust, drag, or third-body force during the coast.",
+      "For a spacecraft near Earth, its mass is negligible compared with Earth's mass, so $\\mu\\simeq GM_\\oplus$.",
+    ],
+    governingLaw:
+      "The relative motion obeys $\\ddot{\\mathbf r}=-\\mu\\mathbf r/r^3$: gravity points along $\\mathbf r$ and has inverse-square magnitude.",
+    invariant:
+      "Specific energy $\\varepsilon=v^2/2-\\mu/r$ and angular momentum $\\mathbf h=\\mathbf r\\times\\mathbf v$ remain constant during an unpowered two-body coast.",
+    derivation:
+      "Dot the equation of motion with velocity to turn acceleration into $d(v^2/2)/dt$, then identify the cancelling derivative of $-\\mu/r$. Cross the equation with position to show that the central force produces no torque. Use the two invariants at periapsis and apoapsis to obtain $\\varepsilon=-\\mu/(2a)$ and then vis-viva.",
+    checks: [
+      "Dimensions: $\\mu(2/r-1/a)$ has units of speed squared.",
+      "At $r=a$, vis-viva gives circular speed; as $a\\to\\infty$, it gives escape speed.",
+      "At an apsis, $\\mathbf v$ is transverse, so $h=rv$ and the two apsides must give the same product.",
+    ],
+    limitingCase:
+      "The circular case has $r_p=r_a$ and must be handled without cancelling $r_a-r_p$; the zero-energy limit $a\\to\\infty$ gives the parabolic escape boundary.",
+    counterexample:
+      "Matching the local circular speed at $r=a$ does not prove an orbit is circular: an eccentric orbit passes through that radius with the same speed but a different velocity direction.",
+    validity:
+      "This model predicts ideal osculating motion. Atmospheric drag, nonspherical gravity, thrust, and third-body forces make the two invariants slowly change in a real mission.",
+  },
   intuition: {
     body: "Isaac Newton had a favourite way of explaining why the Moon does not fall into the Earth, and it is still the best way in. Picture a cannon standing on top of an impossibly tall mountain, poking out above the atmosphere entirely, so there is no air resistance to worry about. Fire it gently, and the cannonball arcs over, curves downward under gravity, and lands on the ground some distance away, exactly as any thrown object does. Load more powder, and it goes farther before landing. Load enough powder, and something changes in kind rather than in degree: the cannonball is falling toward the ground at every instant, exactly as before, but the ground itself is curving away beneath it, at the same rate, because the Earth is round. The cannonball never gets any closer to the surface than it started. It has become a satellite, and it did this without ever once turning off gravity or ceasing to fall.\n\nThat is the entire content of an orbit, and it is worth sitting with until it feels obvious: an orbit is not the absence of falling, it is falling that keeps missing the ground. Nothing exotic is added by going from a thrown rock to the International Space Station; the geometry of the fall simply closes on itself. This is also why an orbiting spacecraft, engines off, needs nothing at all to keep going. There is no gentle backward push holding it up, in the way a wing holds up an aircraft. Gravity is doing exactly what it always does, and the shape of the path is doing the rest.\n\nNow ask what changes when an engine actually fires. Suppose the spacecraft is coasting on some closed path, and it briefly burns its engine forward, along its direction of travel. At the instant the burn ends, its position has not moved at all, not even slightly, because a burn changes velocity, not location. And yet everything about its subsequent path is different: it now carries more speed than it did a moment before, and that extra speed carries it farther out on the opposite side of its path than it would otherwise have reached, before gravity turns it back. Watch it climb toward that farther point, though, and something worth noticing happens: it slows down as it goes, trading the speed the burn gave it for altitude, the same way a ball thrown straight up trades speed for height on the way up. The burn itself was local, a single instant at a single point. Its consequence, the whole new shape of the path, is not local at all; it is written into every subsequent point of the orbit.",
     thoughtExperiments: [
@@ -351,6 +380,28 @@ Before trusting an equation this important, check it against cases you already u
       "Add the energy change directly to the old energy, then solve the energy definition for the new speed at the same radius.",
     ),
   ],
+  practical: {
+    title: "Lab 1 · Propagate an orbit and interrogate the model",
+    minutes: 75,
+    brief:
+      "Use a notebook or small script in Python, JavaScript, or another numerical tool to integrate the two-body equation. The point is not to build a flight-quality propagator; it is to make the conserved quantities visible, then see exactly how a numerical method departs from the ideal model.",
+    steps: [
+      "Start with an Earth-centred circular orbit at r = 7000 km and v = sqrt(mu/r). Integrate position and velocity forward for at least one predicted period using a method you can explain, such as velocity Verlet or fourth-order Runge–Kutta.",
+      "Plot the trajectory and record specific energy epsilon = v^2/2 - mu/r and angular-momentum magnitude h = |r x v| at every step. Report the maximum relative drift of each quantity, not just the final value.",
+      "Repeat the same orbit with at least three timesteps. Compare trajectory closure, measured period, and invariant drift. Keep the physical initial condition fixed so that changing the numerical method is the only intended change.",
+      "Perturb the initial speed by +5% while keeping the initial position and direction unchanged. Predict the sign of the energy change before running the experiment, then classify the resulting path from its measured energy and plot.",
+      "Write one paragraph separating three errors: error in the physical model, error from the numerical method, and error from interpreting a finite simulation as an exact orbit.",
+    ],
+    deliverables: [
+      "A trajectory plot for the circular case and the +5% speed case",
+      "A table of timestep, measured period, maximum relative energy drift, and maximum relative angular-momentum drift",
+      "A short derivation of the initial circular speed and predicted period, with units",
+      "A pre-registered prediction for the perturbed orbit and a comparison with what the simulation actually shows",
+      "A statement of which conclusion your experiment supports and which conclusions it cannot establish",
+    ],
+    review:
+      "A strong investigation makes the integrator and timestep explicit, keeps km and seconds consistent, and checks invariants throughout the run rather than only at the end. The circular trajectory should close approximately, with smaller timestep generally reducing numerical drift for a stable method. Increasing speed at fixed radius increases specific energy; if the new energy remains negative the path is an ellipse, while zero or positive energy marks the parabolic or hyperbolic boundary. Do not treat a visually closed plot as proof of conservation, and do not call numerical drift a physical perturbation. The two-body model itself omits drag, nonspherical gravity, thrust, and third-body forces, so this experiment tests the equations and the integrator inside that model, not the fidelity of a real mission.",
+  },
   sources: [jpl, nasa],
 };
 topic.practiceTemplates = [

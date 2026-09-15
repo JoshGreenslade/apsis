@@ -32,6 +32,29 @@ test("the maths syllabus contains real content in every chapter", () => {
       /\bSTUB\b|placeholder (?:chapter|readiness|prediction)|chapter is not yet written/i,
       topic.id,
     );
+    assert.ok(topic.theoreticalMinimum, topic.id);
+    assert.ok(topic.theoreticalMinimum.invariant.length > 0, topic.id);
+    assert.ok(topic.theoreticalMinimum.validity.length > 0, topic.id);
+  }
+});
+
+test("unit boundaries include cumulative transfer practice", () => {
+  const boundaryIds = [
+    "trigonometry",
+    "exponentials",
+    "series",
+    "eigenvectors",
+    "oscillators",
+    "constraints",
+    "curl-stokes",
+    "pdes",
+    "gaussian",
+    "symmetry",
+    "quantum-relativity-synthesis",
+  ];
+  for (const id of boundaryIds) {
+    const topic = mathematics.topics.find((candidate) => candidate.id === id);
+    assert.equal(topic?.transferProblems?.length, 2, id);
   }
 });
 

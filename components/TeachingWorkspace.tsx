@@ -627,6 +627,64 @@ export default function TeachingWorkspace({
                   </div>
                   <h2>Build the reasoning</h2>
                   <Diagram data={topic.diagram} />
+                  {topic.theoreticalMinimum && (
+                    <section className="theoretical-minimum" aria-labelledby="theoretical-minimum-heading">
+                      <div className="section-kicker">THEORETICAL MINIMUM</div>
+                      <h3 id="theoretical-minimum-heading">
+                        The structure to carry forward
+                      </h3>
+                      <div className="theoretical-minimum-grid">
+                        <div>
+                          <h4>Primitive objects</h4>
+                          <ul>
+                            {topic.theoreticalMinimum.primitives.map((item) => (
+                              <li key={item}><MathText>{item}</MathText></li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4>Assumptions</h4>
+                          <ul>
+                            {topic.theoreticalMinimum.assumptions.map((item) => (
+                              <li key={item}><MathText>{item}</MathText></li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4>Governing law</h4>
+                          <MathText>{topic.theoreticalMinimum.governingLaw}</MathText>
+                        </div>
+                        <div>
+                          <h4>Invariant</h4>
+                          <MathText>{topic.theoreticalMinimum.invariant}</MathText>
+                        </div>
+                        <div>
+                          <h4>Derivation route</h4>
+                          <MathText>{topic.theoreticalMinimum.derivation}</MathText>
+                        </div>
+                        <div>
+                          <h4>Validity boundary</h4>
+                          <MathText>{topic.theoreticalMinimum.validity}</MathText>
+                        </div>
+                        <div>
+                          <h4>Checks</h4>
+                          <ul>
+                            {topic.theoreticalMinimum.checks.map((item) => (
+                              <li key={item}><MathText>{item}</MathText></li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4>Limiting case</h4>
+                          <MathText>{topic.theoreticalMinimum.limitingCase}</MathText>
+                        </div>
+                        <div>
+                          <h4>Counterexample</h4>
+                          <MathText>{topic.theoreticalMinimum.counterexample}</MathText>
+                        </div>
+                      </div>
+                    </section>
+                  )}
                   {topic.theory.map((s, i) => {
                     const checkpoint = topic.teaching?.checkpoints[i];
                     return (
@@ -915,6 +973,24 @@ export default function TeachingWorkspace({
                             .
                           </div>
                         )}
+                      </>
+                    ) : topic.transferProblems?.length ? (
+                      <>
+                        <h3>Transfer across the spine</h3>
+                        <p className="muted">
+                          Recognise the same structure in a different mathematical
+                          setting. These questions are practice, not a mastery gate.
+                        </p>
+                        {topic.transferProblems.map((p) => (
+                          <ProblemInput
+                            key={p.id}
+                            problem={p}
+                            allowHint={false}
+                            passed={progress.passed.includes(p.id)}
+                            disabled={busy || !ready}
+                            onSubmit={(s) => submit(p.id, s)}
+                          />
+                        ))}
                       </>
                     ) : topic.practiceTemplates?.length ? (
                       <ExtraPractice

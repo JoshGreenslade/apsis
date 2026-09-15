@@ -59,6 +59,16 @@ test("every pack validates, every answer passes, every formula parses", () => {
     visit(p);
   }
 });
+test("astrodynamics keeps a progressive laboratory spine", () => {
+  const labs = pack.topics.filter((topic) => topic.practical);
+  assert.deepEqual(
+    labs.map((topic) => topic.id),
+    ["two-body", "perturbations", "patched-conics"],
+  );
+  assert.match(labs[0].practical!.title, /Propagate an orbit/);
+  assert.match(labs[1].practical!.title, /secular drift/);
+  assert.match(labs[2].practical!.title, /lunar estimate/);
+});
 test("DAG rejects cycles, duplicates, dangling dependencies and missing diagnostics", () => {
   const clone = structuredClone(pack.topics);
   clone[0].prerequisites = [clone[1].id];

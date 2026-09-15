@@ -145,6 +145,35 @@ const topic: CurriculumTopic = {
     nextConnection:
       "Once the path is right, ask whether the timing and plane are right. Those mismatches need different maneuvers.",
   },
+  theoreticalMinimum: {
+    primitives: [
+      "Initial and final circular radii $r_1$ and $r_2$",
+      "Transfer ellipse semimajor axis $a_t$ and endpoint speeds",
+      "Impulsive velocity changes $\\Delta v_1$, $\\Delta v_2$, and coast time",
+    ],
+    assumptions: [
+      "The two orbits are circular, coplanar, concentric, and already reached.",
+      "Burns are instantaneous and tangential, so velocity vectors are collinear at each endpoint.",
+      "The two-body parameter $\\mu$ is constant; launch losses, finite-burn losses, plane changes, and rendezvous corrections are excluded.",
+    ],
+    governingLaw:
+      "The endpoint radii define one transfer ellipse with $a_t=(r_1+r_2)/2$; vis-viva gives its speed and Kepler's law gives its half-period coast time.",
+    invariant:
+      "An impulse changes velocity immediately but not position. The first tangential burn raises the opposite apsis; the second changes the local apsis to the destination circular radius.",
+    derivation:
+      "Treat the two circular radii as the transfer ellipse's apsides, apply vis-viva at each endpoint, subtract the corresponding circular speeds, and add the two burn magnitudes. Then use half of the transfer ellipse period for the coast.",
+    checks: [
+      "$r_2=r_1$ gives $a_t=r_1$ and zero total burn.",
+      "For an outward transfer both burns are prograde, even though the destination circular speed is lower.",
+      "The second burn must compare transfer apoapsis speed with destination circular speed, not with the departure speed.",
+    ],
+    limitingCase:
+      "As the radius ratio approaches one, the transfer becomes the identity. For very large ratios, a bi-elliptic strategy can challenge Hohmann's propellant advantage by accepting a longer flight.",
+    counterexample:
+      "Arriving at the destination radius is not rendezvous: the target must also be at the same position with a matching velocity at the same time.",
+    validity:
+      "The minimum-\\Delta v claim applies only to the stated coplanar, circular, two-impulse problem. Non-tangential or finite burns require vector propagation and a different optimization problem.",
+  },
   intuition: {
     body: "Picture two circular racetracks, one inside the other, both centered on the same point, and suppose you are driving on the inner one but need to get onto the outer one. You cannot simply steer outward in a straight line — there is nothing for wheels to push against out there, and besides, the outer track is carrying anything on it around too, just more slowly. What actually works is almost the opposite of what you would guess: speed up, right where you already are, while still on the inner track. That extra speed does not lift you outward immediately. It bulges your path outward on the far side of the circle, the way pulling a slingshot back farther does not move the stone sideways, it lets the stone fly farther once released. Only once you arrive at that far, bulged-out point are you actually at the outer track's radius — and only then does a second push settle you onto it properly.\n\nThis is exactly a Hohmann transfer, translated out of the racetrack picture and into orbital mechanics: two forward burns, one at each end of a connecting ellipse, joining two circular orbits of different sizes. The first burn does not lift the spacecraft to the higher orbit directly; it simply turns a circle into an ellipse whose far side happens to reach the higher altitude. The spacecraft then coasts there, and here is the part worth sitting with, because it looks paradoxical at first: it slows down continuously while it climbs, exactly as the two-body lesson predicted for any unpowered outward coast. By the time it reaches the top of the new ellipse, it is moving too slowly to stay on a circle there at all, and would simply fall back down the way it came without a second burn to catch it.\n\nHere is the detail that trips almost everyone up the first time they meet it: both burns point forward, along the direction of travel, even though the final orbit ends up slower than the one the spacecraft started on. There is no contradiction hiding here, only energy quietly changing hands. Each burn adds specific orbital energy at the position where it happens; the long coast in between simply trades some of that added kinetic energy for altitude, exactly as it always does for an unpowered path.",
     thoughtExperiments: [

@@ -15,6 +15,9 @@ test("the outlined course covers 32 concepts and two projects with usable lab re
     assert.equal(t.retrievalProblems.length + t.fadedExercise.steps.length, 6);
     assert.ok(t.teaching?.outcomes.length);
     assert.ok(t.theory.length >= 2);
+    assert.ok(t.theoreticalMinimum);
+    assert.ok(t.theoreticalMinimum.invariant.length > 0);
+    assert.ok(t.theoreticalMinimum.validity.length > 0);
     if (t.practical) {
       const text = JSON.stringify(t.practical);
       for (const match of text.matchAll(/\]\((\/agent-labs\/[^)]+)\)/g))

@@ -174,6 +174,19 @@ export const CurriculumTopicSchema = z.object({
   prerequisites: z.array(text),
   minutes: z.number().int().positive(),
   teaching: TeachingSchema.optional(),
+  theoreticalMinimum: z
+    .object({
+      primitives: z.array(text).min(1),
+      assumptions: z.array(text).min(1),
+      governingLaw: text,
+      invariant: text,
+      derivation: text,
+      checks: z.array(text).min(1),
+      limitingCase: text,
+      counterexample: text,
+      validity: text,
+    })
+    .optional(),
   practiceTemplates: z.array(PracticeTemplateSchema).optional(),
   practical: z
     .object({
@@ -203,6 +216,7 @@ export const CurriculumTopicSchema = z.object({
     steps: z.array(ProblemSchema).min(1),
   }),
   retrievalProblems: z.array(ProblemSchema).min(2),
+  transferProblems: z.array(ProblemSchema).optional(),
   sources: z.array(z.object({ title: text, url: z.url() })).min(1),
 });
 export type CurriculumTopic = z.infer<typeof CurriculumTopicSchema>;
