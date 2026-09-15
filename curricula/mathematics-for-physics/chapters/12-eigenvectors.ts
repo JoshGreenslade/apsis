@@ -522,4 +522,17 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Why independent modes need not preserve ordinary length",
+  body: String.raw`Suppose a linear evolution has two independent eigenvectors, v and w, with eigenvalues $-1$ and $-2$. Its solution can be written $x(t)=a e^{-t}v+b e^{-2t}w$. Both coefficients decay. Does the ordinary length of x have to decrease at every instant?
+
+If v and w are perpendicular, their squared contributions add, and the answer is yes. If the directions are almost parallel, choose a and b with opposite signs. At the start, the two large contributions can nearly cancel. As their decay rates differ, that cancellation weakens; the resulting vector can first grow before eventually approaching zero.
+
+A concrete matrix is
+$$A=\begin{pmatrix}-1&10\\0&-2\end{pmatrix}.$$
+Starting from $(0,1)$ gives $y=e^{-2t}$ and $x=10(e^{-t}-e^{-2t})$. Initially the length is one. At $t=\ln2$ the state is $(2.5,0.25)$, so its length has increased, even though both eigenvalues are negative.
+
+Negative eigenvalues guarantee eventual decay for this system, but do not guarantee monotonic decrease of Euclidean length. Orthogonality supplied that stronger conclusion in symmetric examples. This distinction matters when interpreting stability: the eventual fate of a perturbation and its largest temporary amplification are different questions.`,
+});
+
 export default chapter;

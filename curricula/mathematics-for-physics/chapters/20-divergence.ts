@@ -537,4 +537,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Conservation is the local equation behind global bookkeeping",
+  body: String.raw`Let $\rho$ be an amount per unit volume and j its flux, measured as amount crossing unit area per unit time. In a fixed region V with no sources, conservation says
+$$\frac{d}{dt}\int_V\rho\,dV=-\int_{\partial V}j\cdot n\,dS.$$
+The minus sign means outward flow reduces the amount inside. The divergence theorem turns the right side into a volume integral. For smooth fields,
+$$\int_V(\partial_t\rho+\nabla\cdot j)\,dV=0.$$
+If this holds for every small region, the integrand must vanish: $\partial_t\rho+\nabla\cdot j=0$. Otherwise a neighbourhood with a definite sign would have a nonzero integral.
+
+This local continuity equation is the compartment cancellation from the integration chapter expressed in three dimensions. It is shared by mass, charge and probability when the corresponding quantities are conserved.
+
+Conservation does not yet determine the flux. If a diffusing substance obeys $j=-D\nabla\rho$ with constant positive D, substitution gives $\partial_t\rho=D\nabla^2\rho$. The diffusion equation combines two ideas: a balance law and a separate physical rule describing transport.
+
+Change that transport rule and a different evolution equation can still conserve the total. This distinction helps prevent a common confusion: the Laplacian is not synonymous with conservation. It appears here because the flux was assumed proportional to the negative gradient.`,
+});
+
 export default chapter;

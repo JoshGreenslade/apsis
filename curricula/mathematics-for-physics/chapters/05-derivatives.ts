@@ -561,4 +561,17 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Why a smaller numerical step can give a worse derivative",
+  body: String.raw`The definition of a derivative suggests estimating $f'(a)$ from $[f(a+h)-f(a)]/h$ with a very small h. For exact data this is sensible. Suppose, however, that each function value is measured with an unknown error of magnitude at most $\eta$. Subtraction can then have error as large as $2\eta$, and division by h magnifies it to at most $2\eta/|h|$.
+
+There are now two competing errors. For a smooth curve with second derivative bounded in magnitude by M near a, the error from replacing the tangent by the forward secant is at most $M|h|/2$. Combining the bounds gives
+$$\text{error}\ \leq M|h|/2+2\eta/|h|.$$
+The first term decreases as the step shrinks; the second increases. Balancing them gives the scale $|h|\approx2\sqrt{\eta/M}$ when M and $\eta$ are positive. This is a guide to a useful step, not a universal prescription: the curvature bound and the noise estimate may themselves be uncertain.
+
+For a quadratic the curvature contribution can be calculated exactly, so you can check the competing trends directly. A perfectly straight line has no curvature error, which changes the balance entirely.
+
+The derivative remains a well-defined mathematical object. What has changed is our access to its inputs. This is the first meeting of local approximation and measurement uncertainty: an exact limiting definition does not imply that pushing a noisy computation closer to the limit improves the result.`,
+});
+
 export default chapter;

@@ -21,4 +21,20 @@ const chapter: Chapter = {
  diagram:{title:"Multiplication by i preserves radius",caption:"3 + 2i becomes −2 + 3i under a counterclockwise quarter turn. Both radii are √13; the axes use equal scales.",viewBox:[0,0,600,320],elements:[{kind:"line",from:[70,220],to:[540,220],tone:"muted"},{kind:"line",from:[280,290],to:[280,30],tone:"muted"},{kind:"line",from:[280,220],to:[400,140],tone:"accent"},{kind:"line",from:[280,220],to:[200,100],tone:"ink"},{kind:"point",at:[400,140],label:"3 + 2i",tone:"accent",labelOffset:[10,0]},{kind:"point",at:[200,100],label:"−2 + 3i",tone:"ink",labelOffset:[-90,-10]},{kind:"label",at:[500,245],text:"real"},{kind:"label",at:[295,40],text:"imaginary"}]},
  sidebars:[{heading:"Why regrouping is legitimate",body:"Absolute convergence means $\\sum |(i\\theta)^n/n!|$ is finite. The ratio of successive magnitudes is $|\\theta|/(n+1)$, eventually below a fixed number less than one, so a geometric tail bounds the sum. Grouping even and odd terms is safe. Such regrouping is not automatically safe for a conditionally convergent series."}],sources:[calculus,methods]
 };
+chapter.sidebars.push({
+  heading: "The same rotation written as a number and as a matrix",
+  body: String.raw`Multiply $z=x+iy$ by $e^{i\theta}=\cos\theta+i\sin\theta$. Expanding and collecting real and imaginary parts gives
+$$x'=x\cos\theta-y\sin\theta,\qquad y'=x\sin\theta+y\cos\theta.$$
+These are exactly the entries of a real linear map:
+$$\binom{x'}{y'}=
+\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}\binom{x}{y}.$$
+Complex multiplication and a two-dimensional rotation matrix are two representations of the same action.
+
+Multiplication by i corresponds to $J=\begin{pmatrix}0&-1\\1&0\end{pmatrix}$. Calculate $J^2=-I$: two quarter-turns reverse every vector. The identity $i^2=-1$ therefore has a direct geometric counterpart. Expanding the matrix exponential in powers of J separates its even and odd powers, giving $e^{\theta J}=I\cos\theta+J\sin\theta$.
+
+For rotation at constant angular speed, $\dot z=i\omega z$ has solution $z(t)=e^{i\omega t}z(0)$. In real coordinates it is the coupled system $\dot x=-\omega y$, $\dot y=\omega x$. Differentiating again gives $\ddot x=-\omega^2x$: the oscillator is one coordinate of a rotating state.
+
+The bridge connects three chapters at once: exponential evolution, linear maps and oscillations. Complex notation earns its usefulness by simplifying a specific real structure. It does not make every pair of real equations into a rotation; the coupling must have the form shown here.`,
+});
+
 export default chapter;

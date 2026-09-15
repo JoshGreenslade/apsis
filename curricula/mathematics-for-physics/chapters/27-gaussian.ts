@@ -722,5 +722,20 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Why averaging removes some uncertainty and leaves other uncertainty intact",
+  body: String.raw`Suppose repeated measurements satisfy $X_i=\mu+B+\epsilon_i$. Here $\mu$ is the fixed quantity, B is a shared calibration offset with mean zero and variance $\tau^2$, and the independent random errors $\epsilon_i$ have mean zero and variance $\sigma^2$. Assume B is independent of the individual errors.
+
+The average is $\bar X=\mu+B+N^{-1}\sum_i\epsilon_i$. Its variance is therefore
+$$\operatorname{Var}(\bar X)=\tau^2+\sigma^2/N.$$
+Only the independent part shrinks with more measurements. The shared offset remains because averaging repeats it N times and then divides by N.
+
+This can also be written as $w^T\Sigma w$, where $\Sigma$ is the covariance matrix and every entry of w is $1/N$. Its off-diagonal entries are $\tau^2$: different measurements are correlated through the same calibration. Ignoring those entries would incorrectly predict that all uncertainty vanishes.
+
+A fixed unknown bias has a related interpretation: it shifts the average without appearing as random scatter across repeated readings. A narrow histogram can therefore coexist with a poor estimate of the true value.
+
+Neither the variance calculation nor its warning requires Gaussian errors. If the ingredients are Gaussian, the resulting average is Gaussian too, but it retains the uncertainty floor. This links probability to quadratic forms and linear maps: the covariance matrix describes which combinations of errors persist, and the averaging map selects one such combination.`,
+});
+
 export default chapter;
 

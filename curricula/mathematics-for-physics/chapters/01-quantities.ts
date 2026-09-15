@@ -572,5 +572,29 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "The hidden linear algebra: from dimensions to Buckingham’s theorem",
+  body: String.raw`The unknown exponents in our pendulum calculation obeyed two linear equations. That was not an accident. Multiplying physical quantities adds their dimensional exponents, and raising a quantity to a power multiplies its exponents by that power. Those are precisely the operations that a linear map preserves.
+
+Include the period P itself among the quantities $(P,\ell,g)$. Represent each quantity by its powers of length and time, placing these lists in columns:
+$$D=\begin{pmatrix}0&1&1\\1&0&-2\end{pmatrix}.$$
+For a product $P^a\ell^b g^c$, the resulting dimension exponents are $D(a,b,c)^T$. The product is dimensionless exactly when
+$$D(a,b,c)^T=0,\qquad b+c=0,\quad a-2c=0.$$
+Choosing $c=1/2$ gives $(a,b,c)=(1,-1/2,1/2)$ and the dimensionless group $\Pi=P\sqrt{g/\ell}$. Every solution is a multiple of this one, so every such dimensionless product is a power of the same group.
+
+Now add the damping rate $\gamma$. Its dimensional column is $(0,-1)^T$. We have four columns but still only two independent dimensional constraints, leaving two independent exponent choices. One gives $P\sqrt{g/\ell}$; another gives $\gamma\sqrt{\ell/g}$. A release angle is already dimensionless and supplies an additional group.
+
+Under the usual assumption that the physical relation is independent of our choice of units and the listed quantities contain its relevant dimensional inputs, Buckingham’s theorem says that it can be expressed as a relation among these dimensionless groups. If that relation determines P, it takes the form
+$$P\sqrt{g/\ell}=F(\gamma\sqrt{\ell/g},\theta_0).$$
+The theorem does not determine F or promise an oscillation for every input.
+
+In the linear-maps chapter, the set of exponent vectors sent to zero will be called the **nullspace**. If the dimension matrix has n columns and rank r, it has n−r independent nullspace directions. That counts independent dimensionless products. The relevant number is the rank of the dimensional constraints, which can be smaller than the number of base units written down. Dimensional analysis is already linear algebra; later terminology will let us recognise and reuse what we have just done.`,
+});
+
+chapter.sources.push({
+  title: "MIT OpenCourseWare · The Buckingham Pi Theorem in Dimensional Analysis",
+  url: "https://ocw.mit.edu/courses/2-25-advanced-fluid-mechanics-fall-2013/resources/mit2_25f13_the_buckingham/",
+});
+
 export default chapter;
 

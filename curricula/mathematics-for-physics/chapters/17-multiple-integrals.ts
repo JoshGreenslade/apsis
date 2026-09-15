@@ -21,4 +21,17 @@ retrievalProblems:[numeric("r-triangle","Find the area 0 ≤ y ≤ x ≤ 2.",2,"
 diagram:{title:"Equal angular widths have different physical widths",caption:"Two circular arcs at radii r and 2r subtend the same angle. Their arc lengths are rΔθ and 2rΔθ, which explains the polar area factor.",viewBox:[0,0,600,320],elements:[{kind:"line",from:[80,260],to:[520,260],tone:"muted"},{kind:"line",from:[80,260],to:[440,80],tone:"ink"},{kind:"line",from:[80,260],to:[440,170],tone:"ink"},{kind:"line",from:[200,200],to:[210,227.5],tone:"accent"},{kind:"line",from:[320,140],to:[340,195],tone:"accent"},{kind:"label",at:[145,175],text:"r Δθ"},{kind:"label",at:[350,165],text:"2r Δθ"},{kind:"label",at:[100,290],text:"same angle Δθ"},{kind:"label",at:[205,250],text:"near ring"},{kind:"label",at:[365,230],text:"far ring"}]},
 sidebars:[{heading:"When a transformation counts more than once",body:"The map $(u,v)\\mapsto(u^2,v)$ on −1 ≤ u ≤ 1 covers most points in its image twice. Integrating with $|2u|$ over the entire coordinate domain counts both sheets. Restricting to 0 ≤ u ≤ 1 makes the map one-to-one except on its boundary. A Jacobian does not by itself repair an incorrectly chosen covering domain."}],sources:[multivariable,calculus]
 };
+chapter.sidebars.push({
+  heading: "The Jacobian determinant is local volume scaling",
+  body: String.raw`A linear map A sends a small parallelogram to another parallelogram and multiplies its area by $|\det A|$. A smooth nonlinear coordinate change is approximately linear inside a sufficiently small neighbourhood. Its derivative J therefore supplies the local area factor. Adding all the small transformed patches gives the change-of-variables formula.
+
+For polar coordinates, the Jacobian columns are perpendicular, with lengths one and r. A tiny coordinate rectangle of sides $dr$ and $d\theta$ becomes approximately a patch of sides $dr$ and $r\,d\theta$. Its area is $r\,dr\,d\theta$, which is why the factor r appears in a polar integral. The factor is a geometric consequence of angular lines spreading apart.
+
+A probability density makes the meaning especially clear. If p is probability per unit Cartesian area, then the same probability element is
+$$p(x,y)\,dx\,dy=p(r\cos\theta,r\sin\theta)\,r\,dr\,d\theta.$$
+The value of a density depends on the measure it is defined against; the probability assigned to the patch does not.
+
+The determinant alone cannot ensure that patches are counted once. Letting the angle run from zero to $4\pi$ covers most points twice. Thus both the local linear map and the global coordinate domain matter. This connects integration to determinants, probability densities and the distinction between an object and its coordinate description.`,
+});
+
 export default chapter;

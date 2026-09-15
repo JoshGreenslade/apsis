@@ -21,4 +21,19 @@ retrievalProblems:[numeric("r-frequency","For m = 4 kg and k = 16 N/m, find ω�
 diagram:{title:"Energy trades between speed and displacement",caption:"For an undamped oscillator, x divided by amplitude and v divided by ω₀ times amplitude lie on a unit circle. The same plot in unscaled x and v coordinates is an ellipse.",viewBox:[0,0,600,320],elements:[{kind:"ellipse",center:[270,160],rx:105,ry:105,tone:"accent"},{kind:"line",from:[100,160],to:[450,160],tone:"muted"},{kind:"line",from:[270,295],to:[270,25],tone:"muted"},{kind:"point",at:[375,160],label:"turn: v = 0",tone:"accent",labelOffset:[15,-15]},{kind:"point",at:[270,55],label:"x = 0: greatest speed",tone:"ink",labelOffset:[15,-15]},{kind:"label",at:[410,190],text:"x / amplitude"},{kind:"label",at:[85,25],text:"v / (ω₀ amplitude)"}]},
 sidebars:[{heading:"Deriving the displacement peak",body:"Write the squared response denominator divided by $m^2$ as $D=(\\omega_0^2-\\Omega^2)^2+4\\gamma^2\\Omega^2$. Then $D'=4\\Omega(\\Omega^2-\\omega_0^2+2\\gamma^2)$. A positive stationary frequency exists only if $\\omega_0^2>2\\gamma^2$. There it minimizes D and maximizes displacement amplitude. Peaks of velocity amplitude or absorbed power answer different questions."}],sources:[differential,relativity]
 };
+chapter.sidebars.push({
+  heading: "A spring can emerge from the curvature of any smooth potential",
+  body: String.raw`Suppose a particle experiences force $F(x)=-U'(x)$ for a smooth potential energy U. Let $x_*$ be an equilibrium, so $U'(x_*)=0$, and write $\xi=x-x_*$. A Taylor expansion gives
+$$U(x_*+\xi)=U(x_*)+\tfrac12U''(x_*)\xi^2+\cdots.$$
+The first-order term vanished because we expanded at equilibrium. Differentiating gives $F\approx-U''(x_*)\xi$, hence
+$$m\ddot\xi+U''(x_*)\xi\approx0.$$
+When $U''(x_*)>0$, the curvature acts as an effective spring constant and the small-oscillation frequency is $\sqrt{U''(x_*)/m}$.
+
+The physical system need not contain a literal spring. A pendulum, a molecule near its equilibrium bond length, and a mass in a smooth potential well all share this local mathematical structure. Their nonlinear differences appear in the terms omitted from the expansion.
+
+Change the sign of the curvature and the solution changes character: negative curvature produces exponential departure rather than oscillation. If the curvature is zero, the quadratic model cannot decide. A potential proportional to $\xi^4$ still confines the particle, but has no nonzero small-oscillation frequency obtained from this formula.
+
+This is why Taylor series are central to physics. They explain when different systems have the same leading behaviour and identify the coefficient that carries their physical differences. In several coordinates, U’s curvature becomes a Hessian matrix; its modes will replace the single effective spring constant.`,
+});
+
 export default chapter;

@@ -566,5 +566,19 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Projection survives, but amplitudes carry interference",
+  body: String.raw`In an orthonormal quantum basis, write a normalized state as $|\psi\rangle=a|0\rangle+b|1\rangle$, with $|a|^2+|b|^2=1$. The coefficients are inner products with basis states, just as Fourier coefficients were projections. Measurement in this basis has probabilities $|a|^2$ and $|b|^2$.
+
+Now measure in the basis $|+\rangle=(|0\rangle+|1\rangle)/\sqrt2$ and $|-\rangle=(|0\rangle-|1\rangle)/\sqrt2$. Projection gives
+$$P(+)=\left|\frac{a+b}{\sqrt2}\right|^2
+=\frac{|a|^2+|b|^2+2\operatorname{Re}(a^*b)}2.$$
+The cross term retains relative phase information. The states $(|0\rangle+|1\rangle)/\sqrt2$ and $(|0\rangle-|1\rangle)/\sqrt2$ both give equal probabilities in the original basis, yet give opposite certain outcomes in the new one.
+
+Replacing amplitudes prematurely by probabilities would discard the information needed for this prediction. This is the same algebra of reinforcement and cancellation seen in trigonometry, now combined with the quantum rule that squared projections give probabilities.
+
+A common overall phase cancels from every squared projection, while a relative phase can alter outcomes. That is a precise invariance statement. The calculation links complex rotations, inner products and basis changes, but the probability interpretation is additional physical input; linear algebra alone does not derive the measurement rule.`,
+});
+
 export default chapter;
 

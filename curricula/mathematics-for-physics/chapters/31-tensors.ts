@@ -589,5 +589,20 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Why a gradient and a displacement transform differently",
+  body: String.raw`Let the old coordinate column x be related to new coordinates by $x'=Ax$, where A is invertible and constant. A displacement transforms as $\delta x'=A\delta x$. A scalar function f, however, must have the same physical change in either description:
+$$df=g^T\delta x=g'^T\delta x'.$$
+Substitution forces $g'=A^{-T}g$. The derivative components transform with the inverse transpose, not with A.
+
+A one-dimensional rescaling makes this unavoidable. If $x'=2x$, the same displacement has twice the coordinate increment, while $df/dx'$ is half $df/dx$. Their product stays unchanged. The derivative is naturally a linear rule acting on displacements—a covector.
+
+In an orthonormal Euclidean basis we often identify that rule with a gradient vector. The identification uses the metric. Outside that setting, silently treating both component lists in the same way obscures which quantity is preserved.
+
+For a metric matrix G, the requirement $\delta x^TG\delta x=\delta x'^TG'\delta x'$ gives $G'=A^{-T}GA^{-1}$. This is a tensor transformation law derived from an invariant comparison, rather than introduced as a rule to memorise.
+
+The shared idea is duality: one object supplies an input and another evaluates it. Tensor notation keeps these roles straight so that contractions such as df represent coordinate-independent quantities. An array becomes meaningful through those roles and transformation rules.`,
+});
+
 export default chapter;
 

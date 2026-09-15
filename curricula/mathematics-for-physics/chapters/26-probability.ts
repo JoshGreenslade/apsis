@@ -572,5 +572,20 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Least-squares prediction is orthogonal projection again",
+  body: String.raw`Let X and Y be random variables with finite variances, and suppose we predict Y using $a+bX$. First choose a so that the average prediction error is zero: $a=E[Y]-bE[X]$. With centred variables $X_c=X-E[X]$ and $Y_c=Y-E[Y]$, the remaining mean squared error is
+$$E[(Y_c-bX_c)^2]=\operatorname{Var}(Y)-2b\operatorname{Cov}(X,Y)+b^2\operatorname{Var}(X).$$
+For positive $\operatorname{Var}(X)$, completing the square gives the optimal slope
+$$b=\frac{\operatorname{Cov}(X,Y)}{\operatorname{Var}(X)}.$$
+This has exactly the form of a projection coefficient: comparison with the direction, divided by its squared length.
+
+The inner product here is $\langle U,V\rangle=E[UV]$ on square-integrable random variables, identifying variables that agree with probability one. The residual $R=Y_c-bX_c$ satisfies $E[RX_c]=0$. Just as in Fourier approximation, the best squared-error residual is perpendicular to the directions available to the predictor.
+
+No Gaussian assumption was needed. The result identifies the best affine predictor, not necessarily the best possible nonlinear predictor. If $Y=X^2$ and X has a symmetric distribution about zero, covariance may vanish while Y is completely determined by X. Orthogonality removes a linear component; it does not establish independence.
+
+The same geometry has now appeared in vectors, functions and random variables. What changes is the inner product and therefore the meaning of error; the projection argument remains the same.`,
+});
+
 export default chapter;
 

@@ -1026,4 +1026,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Fourier coefficients are coordinates obtained by projection",
+  body: String.raw`For ordinary orthonormal vectors, a component is obtained by taking an inner product with a basis vector. Fourier analysis does the same thing with functions. On $[0,L]$, define $\langle f,g\rangle=\int_0^L f(x)g(x)\,dx$ for real functions. Distinct sine modes $\phi_n=\sin(n\pi x/L)$ are orthogonal, and $\langle\phi_n,\phi_n\rangle=L/2$.
+
+If $f\approx\sum_{n=1}^Na_n\phi_n$, taking the inner product with $\phi_m$ removes every term except one:
+$$a_m=\frac{\langle f,\phi_m\rangle}{\langle\phi_m,\phi_m\rangle}.$$
+This is the projection formula from vectors, with an integral replacing a finite sum.
+
+Why are these coefficients the best ones for squared error? Let r be the residual after projection. It is orthogonal to every retained mode. Changing the approximation by any retained combination h gives
+$$\|r-h\|^2=\|r\|^2+\|h\|^2,$$
+because the cross term vanishes. No such change reduces the integrated squared error.
+
+That is a precise sense of “best,” but it does not promise small error at every point. A sharp edge can retain overshoot while the integrated error shrinks. The choice of inner product determines what is being minimised. Fourier analysis is linear algebra in a function space, and its convergence questions ask how faithfully finite-dimensional projections approximate the original object.`,
+});
+
 export default chapter;

@@ -21,4 +21,17 @@ retrievalProblems:[choice("r-stationary","At the origin, x² − y² has what ty
 diagram:{title:"The smallest circle touching a constraint line",caption:"For U = x² + y² with x + y = 2, the circle U = 2 touches the line at (1,1). The radius, objective gradient and constraint normal are parallel.",viewBox:[0,0,600,320],elements:[{kind:"line",from:[90,260],to:[490,260],tone:"muted"},{kind:"line",from:[140,290],to:[140,35],tone:"muted"},{kind:"ellipse",center:[140,260],rx:141.421,ry:141.421,tone:"muted"},{kind:"line",from:[140,60],to:[340,260],tone:"ink"},{kind:"line",from:[140,260],to:[240,160],tone:"accent"},{kind:"point",at:[240,160],label:"(1,1)",tone:"accent",labelOffset:[18,-5]},{kind:"label",at:[325,235],text:"x + y = 2"},{kind:"label",at:[80,110],text:"U = 2"}]},
 sidebars:[{heading:"Why the constrained Hessian includes the constraint",body:"Let a feasible path r(s) pass through a multiplier solution with tangent v. Twice differentiating U(r(s)) gives vᵀH(U)v + ∇U · r''. Twice differentiating the constant g(r(s)) gives vᵀH(g)v + ∇g · r'' = 0. Since ∇U = λ∇g, eliminate r'' to obtain vᵀ[H(U) − λH(g)]v. This is the Hessian of the Lagrangian restricted to tangent directions."}],sources:[multivariable,linear]
 };
+chapter.sidebars.push({
+  heading: "A constraint tells you which variations are available",
+  body: String.raw`Consider minimising $U(x,y)=x^2+y^2$ while keeping $x+y=1$. An unconstrained minimum at the origin is irrelevant because it is forbidden. A small allowed displacement must satisfy $\delta x+\delta y=0$, so every allowed tangent direction is proportional to $(1,-1)$.
+
+The first-order change is $\delta U=2x\,\delta x+2y\,\delta y=2(x-y)\delta x$. To make it zero for every allowed displacement requires x=y. Together with the constraint this gives $x=y=1/2$. We obtained the multiplier result by asking directly which variations can occur.
+
+In matrix language, if a linear constraint is $Aq=b$, its allowed small changes satisfy $A\delta q=0$. They lie in the nullspace of A. Stationarity means the gradient is perpendicular to that nullspace. This is why the gradient can be expressed through the constraint normals.
+
+Notice the link to the opening dimensional analysis: there, nullspace vectors were exponent choices that preserved dimensions; here, they are displacements that preserve a constraint. “Sent to zero” means “does not change the quantity being monitored” in both settings.
+
+For a curved constraint, its derivative gives the tangent condition only locally. Second-order changes must also account for the curvature of the feasible path. This prepares the variational chapter, where allowed displacements become whole functions rather than a finite list of coordinates.`,
+});
+
 export default chapter;

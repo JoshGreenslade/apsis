@@ -700,5 +700,22 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "The Euler–Lagrange equation is a gradient condition in function space",
+  body: String.raw`For a function of finitely many coordinates, stationarity means the first-order change vanishes for every allowed displacement. For an action
+$$S[q]=\int_a^b L(q,\dot q,t)\,dt,$$
+the variable is a whole path. Choose a small path displacement $q\mapsto q+\varepsilon\eta$, with $\eta(a)=\eta(b)=0$ because the endpoints are fixed.
+
+The chain rule gives the first-order change
+$$\delta S=\int_a^b(L_q\eta+L_{\dot q}\dot\eta)\,dt.$$
+Integration by parts moves the derivative from the arbitrary displacement onto its coefficient:
+$$\delta S=[L_{\dot q}\eta]_a^b+\int_a^b\left(L_q-\frac{d}{dt}L_{\dot q}\right)\eta\,dt.$$
+The endpoint term vanishes under the stated restriction. Since a smooth displacement can be concentrated in any small interior region, stationarity for every such displacement forces the remaining coefficient to vanish. This is the Euler–Lagrange equation.
+
+The argument is the gradient test from multivariable calculus, with an integral pairing replacing a dot product. Integration by parts reveals the appropriate gradient of the action.
+
+Change the allowed variations and the answer changes. If an endpoint value is free, its boundary contribution need not vanish, and stationarity imposes an additional boundary condition. Constraints restrict the displacement directions, just as they did in finite dimensions. The differential equation and the boundary conditions therefore come from one consistent question: which first-order changes must be zero? Stationarity still does not by itself establish a minimum.`,
+});
+
 export default chapter;
 

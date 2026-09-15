@@ -21,4 +21,19 @@ retrievalProblems:[numeric("r-partial","For f = x²y, find fₓ at (2,3). Enter 
 diagram:{title:"A gradient crosses a level line",caption:"For f = x + 2y, level lines have slope −1/2. At the highlighted point, the vector (1,2) is normal and points toward larger f; the axes use equal scales.",viewBox:[0,0,600,320],elements:[{kind:"line",from:[70,275],to:[530,275],tone:"muted"},{kind:"line",from:[70,275],to:[70,25],tone:"muted"},{kind:"line",from:[100,90],to:[420,250],tone:"ink"},{kind:"line",from:[180,50],to:[500,210],tone:"muted"},{kind:"point",at:[260,170],label:"point",tone:"ink",labelOffset:[-55,20]},{kind:"line",from:[260,170],to:[310,70],tone:"accent"},{kind:"point",at:[310,70],label:"gradient (1,2)",tone:"accent",labelOffset:[15,0]},{kind:"label",at:[400,265],text:"constant f"},{kind:"label",at:[480,190],text:"larger f"}]},
 sidebars:[{heading:"A useful sufficient condition",body:"Continuous first partial derivatives near a point imply differentiability there. One can split a small displacement into coordinate steps and apply the one-variable mean value theorem to each. Continuity lets the slopes at the intermediate points approach the slopes at the original point, so the remaining error is smaller than the displacement scale. The theorem is sufficient, not necessary."}],sources:[multivariable]
 };
+chapter.sidebars.push({
+  heading: "The Jacobian is the derivative, with more input directions",
+  body: String.raw`For one input, the derivative converts a small input change into a predicted output change. For a map $F(x,y)$ with two outputs, each input direction can affect each output, so the same information needs a matrix:
+$$F(q+\delta q)\approx F(q)+J(q)\delta q.$$
+Column j of J is the output change per unit change along input direction j. This is the “action on a basis” interpretation from linear maps.
+
+Take the map from polar to Cartesian coordinates, $F(r,\theta)=(r\cos\theta,r\sin\theta)$. Its Jacobian is
+$$J=\begin{pmatrix}\cos\theta&-r\sin\theta\\\sin\theta&r\cos\theta\end{pmatrix}.$$
+The first column is a unit radial displacement. The second is a tangential displacement of length r per radian. The unequal sizes are geometry, not an arbitrary feature of the notation.
+
+The chain rule follows by composing these local maps. If G acts on F’s output, then a small change first becomes $J_F\delta q$ and then $J_GJ_F\delta q$. Matrix multiplication appears because the two stages act in sequence.
+
+At r=0, the angular column vanishes: changing angle there does not move the Cartesian point. This explains both the singular Jacobian and the failure of a unique polar angle at the origin. Later integration will use the determinant of this same derivative to measure local area change. Rates, coordinate geometry and volume conversion are different uses of one object.`,
+});
+
 export default chapter;

@@ -520,4 +520,17 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Why an exact gradient has no circulation—and where the converse fails",
+  body: String.raw`Walk around a closed polygon and sum the changes of a single-valued potential. Each vertex value appears once positively and once negatively, leaving zero. Shrinking the segments into a smooth path gives $\oint\nabla U\cdot dr=0$. Stokes’ theorem expresses the same statement locally as $\nabla\times\nabla U=0$, with suitable differentiability.
+
+The reason is cancellation, just as internal fluxes cancelled in the divergence theorem. Here the shared pieces are edges rather than faces. Both theorems relate a derivative inside a region to a measurement along its boundary.
+
+The converse needs more care. On the plane with the origin removed, take $F=(-y/r^2,x/r^2)$, where $r^2=x^2+y^2$. Its curl is zero at every point of the domain. Around a circle of radius R, however, $F$ has tangential magnitude $1/R$, so
+$$\oint F\cdot dr=(1/R)(2\pi R)=2\pi.$$
+Why does Stokes not force zero? The disk spanning that circle includes the removed origin, where the field is undefined. The hypotheses fail on that surface.
+
+Local information can therefore miss an obstruction created by the domain. The connection to inverse functions is useful: an angle can be chosen smoothly in a small patch, just as an inverse branch can be chosen locally, but those choices need not combine into one global function.`,
+});
+
 export default chapter;

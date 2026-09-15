@@ -541,4 +541,19 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "How cancellation turns a local balance into a conservation law",
+  body: String.raw`Imagine a pipe split into many short compartments. Let $Q_j$ be the amount of fluid in compartment j, and let $J_j$ be the flow rate across its right boundary, positive to the right. With no leaks or sources, the compartment obeys
+$$\frac{dQ_j}{dt}=J_{j-1}-J_j.$$
+This equation is bookkeeping: what enters increases the stored amount, and what leaves decreases it.
+
+Add the equations for all compartments. The flow across any shared boundary occurs once with a minus sign and once with a plus sign. Every internal contribution cancels, leaving
+$$\frac{d}{dt}\sum_{j=1}^nQ_j=J_0-J_n.$$
+The total changes only through the two outer ends, even though fluid may be moving vigorously inside.
+
+As compartments become short, their sum becomes an integral of an amount per unit length. The same balance then relates the rate of change of that integral to boundary flows. A distributed source would add its own integral; cancellation does not make real production disappear.
+
+This is the physical counterpart of the fundamental theorem: adding local changes leaves an endpoint difference. Later the divergence theorem will use the same cancellation in three dimensions. The essential idea is already visible here, before any vector calculus. Conservation does not say “nothing moves.” It says that internal transfers cannot change the total, provided the model has accounted for all sources and boundary exchanges.`,
+});
+
 export default chapter;

@@ -755,4 +755,17 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Preserving a form unites the algebra without equating the physics",
+  body: String.raw`A change of quantum coordinates U preserves inner products when $U^\dagger U=I$. A Lorentz transformation $\Lambda$ preserves the spacetime interval when $\Lambda^T\eta\Lambda=\eta$, with $\eta=\operatorname{diag}(-1,1,1,1)$. Both equations say that a transformation preserves a specified comparison rule.
+
+To see the local structure, consider a small transformation $T=I+\varepsilon A+O(\varepsilon^2)$. For real vectors with metric G, substitute into $T^TGT=G$. The first-order terms give
+$$A^TG+GA=0.$$
+For Euclidean G=I, this requires an antisymmetric generator. It produces rotations. In the time–space plane with $G=\operatorname{diag}(-1,1)$, the matrix $A=\begin{pmatrix}0&1\\1&0\end{pmatrix}$ instead satisfies the condition. Since $A^2=I$, its exponential contains hyperbolic cosine and sine, yielding a boost rather than a circular rotation.
+
+For complex quantum coordinates, the corresponding condition is $A^\dagger+A=0$. With a time-independent Hermitian Hamiltonian H, $A=-iH/\hbar$ generates norm-preserving evolution. The sign structure and conjugation matter: the algebraic analogy does not make quantum probabilities into spacetime lengths.
+
+The chain now reaches back through the whole course: differentiate an invariance condition, obtain a linear constraint on a generator, and exponentiate it to recover finite transformations. Each physical theory supplies its own preserved form and interpretation. Understanding the shared construction helps identify exactly where those theories agree mathematically and where their meanings diverge.`,
+});
+
 export default chapter;

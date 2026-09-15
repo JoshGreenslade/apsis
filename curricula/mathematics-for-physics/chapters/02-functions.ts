@@ -598,4 +598,15 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "When an inverse magnifies a small measurement error",
+  body: String.raw`Suppose a detector reports $y=x^2$ and we know $x\geq0$. Restricting the domain gives a unique inverse $x=\sqrt y$. Does that make the reconstruction reliable? Uniqueness answers whether there is one answer; reliability asks how much that answer changes when the measurement changes.
+
+Take a true input $x=0.1$, so $y=0.01$. A reading of $0.0101$ reconstructs approximately $0.100499$: an output error of $0.0001$ produces an input error about five times as large. We can see the mechanism without calculus. Rationalising the difference gives
+$$\sqrt{y+\delta}-\sqrt y=\frac{\delta}{\sqrt{y+\delta}+\sqrt y}.$$
+When $\delta$ is small compared with positive $y$, the denominator is about $2\sqrt y$. Near zero that denominator becomes small, so the inverse amplifies absolute errors strongly.
+
+At $y=0$ we must use the exact square-root expression: the linear estimate would divide by zero. A negative noisy reading has no real inverse at all. The model therefore needs both a branch choice and a statement about measurement accuracy. This distinction returns in matrix inversion: a system can have a unique solution while small errors in the data produce large errors in the answer.`,
+});
+
 export default chapter;

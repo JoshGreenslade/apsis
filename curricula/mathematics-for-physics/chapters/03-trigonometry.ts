@@ -542,4 +542,15 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "When two oscillations reinforce—and when they cancel",
+  body: String.raw`Two identical sources produce displacements $A\cos\theta$ and $A\cos(\theta+\phi)$ at one point. Assume the displacements add; this is physical input about the system. The angle-addition identities then give
+$$A\cos\theta+A\cos(\theta+\phi)=2A\cos(\phi/2)\cos(\theta+\phi/2).$$
+The right-hand side separates two jobs. The second cosine describes the continuing oscillation. The factor in front determines its amplitude, whose nonnegative magnitude is $2A|\cos(\phi/2)|$.
+
+For $\phi=0$ the sources reinforce and the amplitude doubles. For $\phi=\pi$ they cancel at every instant. Both sources can be active while their combined displacement is zero: amplitude is a signed, phase-sensitive contribution before we take its magnitude.
+
+Now change the assumption that the frequencies match. Write the phases as $\omega_1t$ and $\omega_2t$. The sum becomes $2A\cos((\omega_1-\omega_2)t/2)\cos((\omega_1+\omega_2)t/2)$. Nearby frequencies produce a slowly varying envelope around a rapid oscillation—the origin of beats. Nothing new was added to the algebra; a fixed phase difference became a changing one. Later, complex amplitudes and normal modes will make this same separation easier to manage. The physical requirement that the responses add must still be checked.`,
+});
+
 export default chapter;

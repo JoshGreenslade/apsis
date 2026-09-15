@@ -724,4 +724,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Nondimensionalisation connects the pendulum’s ingredients to its dynamics",
+  body: String.raw`Return to the damped pendulum,
+$$\ddot\theta+2\gamma\dot\theta+(g/\ell)\sin\theta=0.$$
+The opening chapter constructed $t_0=\sqrt{\ell/g}$ from dimensions. Put $\tau=t/t_0$. The chain rule gives $\dot\theta=\theta_\tau/t_0$ and $\ddot\theta=\theta_{\tau\tau}/t_0^2$, so
+$$\theta_{\tau\tau}+2\Gamma\theta_\tau+\sin\theta=0,\qquad\Gamma=\gamma\sqrt{\ell/g}.$$
+The dimensionless group predicted by the nullspace calculation has become the coefficient that actually controls the rescaled equation.
+
+Two pendulums with different lengths and damping rates have identical dimensionless trajectories if they have the same $\Gamma$ and the same dimensionless initial angle and velocity. Equal release angles alone are insufficient when one is also given an initial push.
+
+For small angles, replacing sine by its linear term yields characteristic roots $-\Gamma\pm\sqrt{\Gamma^2-1}$. Oscillation requires $\Gamma<1$ in this linear model, with dimensionless frequency $\sqrt{1-\Gamma^2}$. Thus the dimensional form permits a period function, while dynamics determines both its value and the regime in which oscillation exists.
+
+For larger angles, a constant period need not describe the decaying motion. Numerical work should then distinguish the nonlinear model from its linear approximation, and distinguish both from the numerical discretisation. This one equation joins Buckingham scaling, the chain rule, local approximation, eigenvalue-like characteristic roots and the interpretation of simulation error.`,
+});
+
 export default chapter;

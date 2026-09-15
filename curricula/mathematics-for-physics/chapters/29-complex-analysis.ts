@@ -564,5 +564,22 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Complex differentiability restricts the local Jacobian",
+  body: String.raw`A map from the plane to itself, $f(x+iy)=u(x,y)+iv(x,y)$, has a real derivative described by a two-by-two Jacobian. Complex differentiability asks for something stronger: one complex number c must describe the local change $f(z+h)-f(z)\approx ch$ for every small complex direction h.
+
+Write $c=a+ib$. Multiplication by c corresponds to
+$$\begin{pmatrix}a&-b\\b&a\end{pmatrix}.$$
+Therefore the real Jacobian must have this special form:
+$$u_x=v_y,\qquad u_y=-v_x.$$
+These are the Cauchy–Riemann equations. Under suitable regularity, such as continuous first partial derivatives nearby, they express that the local map is a rotation and uniform scaling, rather than an arbitrary shear or unequal stretching.
+
+For $f(z)=\bar z$, the real Jacobian is $\operatorname{diag}(1,-1)$. The map is smooth as a real function but reflects one axis, so it cannot be multiplication by a single complex number. Quotients along real and imaginary increments give incompatible complex derivatives.
+
+For $f(z)=z^2$, the derivative is $2z$. Away from zero the local scaling and rotation are well defined; at zero the derivative vanishes and the first-order map collapses, so angle-preservation conclusions need qualification there.
+
+Complex analysis is thus connected directly to the earlier local-linear-map idea. Its stronger conclusions begin with a much more restrictive class of allowed local matrices. Smoothness in two real variables alone does not supply that structure.`,
+});
+
 export default chapter;
 

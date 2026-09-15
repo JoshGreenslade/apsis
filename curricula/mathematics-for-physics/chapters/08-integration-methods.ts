@@ -869,4 +869,19 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "Why a boundary term can contain the physical answer",
+  body: String.raw`Integration by parts comes from adding the product rule over an interval:
+$$\int_a^b u\,v'\,dx=[uv]_a^b-\int_a^b u'v\,dx.$$
+The endpoint term is sometimes treated as an inconvenience. In physical arguments it often records what the surroundings are doing.
+
+Take a smooth real function y on $[0,L]$ and choose $u=y$, $v'=y''$. Then
+$$\int_0^L y\,y''\,dx=[yy']_0^L-\int_0^L(y')^2\,dx.$$
+If y vanishes at both endpoints, the boundary term is zero. The remaining expression is nonpositive because it is minus an integral of a square. We have learned a sign without evaluating an antiderivative.
+
+This sign becomes useful when curvature drives evolution, as in diffusion: it can show that a measure of nonuniformity decreases. But change the endpoints and the conclusion needs revisiting. Nonzero boundary values and slopes can contribute through $[yy']_0^L$; an environment that continually supplies heat need not allow the same decay statement.
+
+Try y=x. Its second derivative is zero, so the left side is zero. On the right, the boundary term is L and the integral is also L. Dropping the boundary term would give a false answer. Integration by parts therefore does more than move a derivative: it exposes the boundary assumptions on which an apparently general conclusion depends.`,
+});
+
 export default chapter;

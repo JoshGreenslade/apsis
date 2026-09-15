@@ -1213,4 +1213,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "One spatial eigenbasis, two different laws of time evolution",
+  body: String.raw`Consider a rod or string on $0<x<L$ with zero endpoint values. The functions $\phi_n(x)=\sin(n\pi x/L)$ satisfy
+$$-\phi_n''=k_n^2\phi_n,\qquad k_n=n\pi/L.$$
+These are eigenvectors of a differential operator, with boundary conditions helping specify which functions are allowed.
+
+For the heat equation $u_t=D u_{xx}$, insert $u=a_n(t)\phi_n(x)$. Cancelling the spatial factor gives $\dot a_n=-Dk_n^2a_n$. Each mode decays exponentially, and short-wavelength modes decay fastest.
+
+For the wave equation $u_{tt}=c^2u_{xx}$, the same substitution gives $\ddot a_n=-c^2k_n^2a_n$. Each mode oscillates instead. The spatial geometry is shared; the order and form of the time derivative determine a different evolution.
+
+This explains why smooth temperature profiles emerge while an ideal string can keep vibrating. It also tells us what data are required: heat evolution needs each initial amplitude, while wave evolution needs each initial amplitude and its velocity.
+
+The method combines the eigenvector chapter, exponential and oscillator equations, and Fourier projection of initial data. It is not just a recipe for separating symbols. Boundary conditions choose the spatial operator’s domain; the physical law tells its modal coefficients how to evolve. Different boundaries or nonlinear couplings can change which part of this simplification survives.`,
+});
+
 export default chapter;

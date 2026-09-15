@@ -21,4 +21,17 @@ retrievalProblems:[choice("r-family","What does an initial condition do?",["Chan
 diagram:{title:"Euler follows a tangent, not the whole decay curve",caption:"For y = exp(−t), the tangent at t = 0 meets y = 0 at t = 1, while the exact curve remains positive. Horizontal scale: 180 units per time; vertical scale: 180 units per y.",viewBox:[0,0,600,320],elements:[{kind:"line",from:[60,260],to:[530,260],tone:"muted"},{kind:"line",from:[60,260],to:[60,40],tone:"muted"},{kind:"line",from:[60,80],to:[240,260],tone:"ink"},{kind:"line",from:[60,80],to:[150,151],tone:"accent"},{kind:"line",from:[150,151],to:[240,194],tone:"accent"},{kind:"line",from:[240,194],to:[330,220],tone:"accent"},{kind:"line",from:[330,220],to:[420,236],tone:"accent"},{kind:"point",at:[240,194],label:"exact: e⁻¹",tone:"accent",labelOffset:[12,-12]},{kind:"label",at:[265,285],text:"Euler: 0 at t = 1"},{kind:"label",at:[440,250],text:"time"}]},
 sidebars:[{heading:"A rate law that permits waiting",body:"For $y'=2\\sqrt{|y|}$ with $y(0)=0$, both the identically zero function and the function that is zero until a chosen time a ≥ 0 and then equals $(t-a)^2$ solve the equation for t ≥ 0. At departure, both derivatives are zero. The rate law is continuous but is not locally Lipschitz in y at zero. This example explains why a uniqueness theorem needs more than continuity."}],sources:[differential,calculus]
 };
+chapter.sidebars.push({
+  heading: "Local derivatives decide the fate of nearby states",
+  body: String.raw`An autonomous rate law $\dot x=f(x)$ has an equilibrium at $x_*$ when $f(x_*)=0$. To investigate whether a small disturbance grows, write $x=x_*+\delta$. The derivative chapter gives
+$$f(x_*+\delta)=f(x_*)+f'(x_*)\delta+\text{smaller terms}.$$
+Keeping the leading term yields $\dot\delta\approx f'(x_*)\delta$, so $\delta(t)\approx\delta(0)e^{f'(x_*)t}$. A negative slope pushes disturbances back toward equilibrium; a positive slope amplifies them.
+
+For $\dot x=rx(1-x/K)$ with r and K positive, the equilibria are zero and K. The slopes are r and −r respectively. A small positive population grows away from zero, while a small deviation from K decays. One derivative has turned a nonlinear model into the exponential model already studied.
+
+If the slope is zero, this test is silent. Both $\dot x=-x^3$ and $\dot x=x^3$ have zero slope at zero, but the first points toward equilibrium and the second away from it. The terms discarded by linearisation now decide the answer.
+
+With several state variables, the scalar derivative becomes a Jacobian matrix. Its eigenvectors describe disturbance patterns and its eigenvalues describe their linear evolution. Thus local stability joins the derivative, exponential and eigenvector chapters. The approximation describes nearby trajectories while the neglected nonlinear terms remain small; it is not a global solution of the original system.`,
+});
+
 export default chapter;

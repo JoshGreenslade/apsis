@@ -616,5 +616,20 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "A Green function is the continuous counterpart of an inverse matrix",
+  body: String.raw`For an invertible matrix A, the solution of $Au=f$ is $u=A^{-1}f$. Write the input as $f=\sum_j f_je_j$. Linearity gives
+$$u=\sum_j f_j(A^{-1}e_j).$$
+Each column of the inverse is the response to one basis input. An arbitrary response is assembled by weighting those columns.
+
+A Green function repeats this construction for a differential operator L. The unit input at position y is a delta distribution, and the response $G(x,y)$ obeys $L_xG(x,y)=\delta(x-y)$ with the chosen boundary conditions. The corresponding solution is
+$$u(x)=\int G(x,y)f(y)\,dy.$$
+The integral replaces the sum, and the source location y replaces the column index. This is the same linear-algebra operation.
+
+The inverse need not exist. For example, the operator $-d^2/dx^2$ on $[0,L]$ with zero-derivative boundary conditions sends every constant to zero. Integrating $-u''=f$ shows that $\int_0^L f\,dx$ must be zero. Even then, adding a constant to a solution gives another solution.
+
+This is the nullspace and range story from linear maps: some inputs are incompatible, and an invisible direction prevents uniqueness. A Green-function construction must handle that freedom, for example by fixing the mean and restricting admissible sources. “Find the response to a point source” is powerful only after the boundary conditions and solvability conditions are settled.`,
+});
+
 export default chapter;
 

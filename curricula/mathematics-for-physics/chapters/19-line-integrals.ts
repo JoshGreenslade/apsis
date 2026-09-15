@@ -511,4 +511,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Potential differences and the freedom to choose a zero",
+  body: String.raw`Suppose a force is $F=-\nabla U$. Along a smooth path r(t), the multivariable chain rule gives
+$$\frac{d}{dt}U(r(t))=\nabla U\cdot\dot r.$$
+Integrating immediately yields
+$$\int F\cdot dr=U(\text{start})-U(\text{end}).$$
+Path independence is therefore the chain rule followed by the fundamental theorem. It does not come from a fortunate cancellation in one specially chosen path.
+
+Now replace U by $U+C$, with C constant. Its gradient is unchanged, and so are all potential differences and work predictions. Choosing the zero of potential energy is a freedom in description, not a change in the force.
+
+But allow a position-dependent addition h and the force generally changes by $-\nabla h$. The freedom has precise limits. Calling something “just a choice of potential” is justified only after checking which observables it preserves.
+
+There is also a global question. The angular field around a missing origin can locally look like the gradient of an angle, yet an angle increases by $2\pi$ after one circuit. No single-valued potential represents that circulation globally. The chain-rule argument remains valid wherever a single-valued smooth U exists; it does not prove that such a U exists on every domain. This is the connection between calculus, invariance under a constant shift, and the topology encountered in Stokes’ theorem.`,
+});
+
 export default chapter;

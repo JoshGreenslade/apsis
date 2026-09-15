@@ -498,4 +498,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Why oblique coordinates change the dot-product formula",
+  body: String.raw`Choose basis vectors $e_1=(1,0)$ and $e_2=(1,1)$ in an ordinary Euclidean plane. They are independent but neither perpendicular nor both unit length. The vector with coefficients $(a,b)$ is
+$$v=ae_1+be_2=(a+b,b).$$
+Its squared physical length is $(a+b)^2+b^2=a^2+2ab+2b^2$. It is not $a^2+b^2$. The familiar sum of component squares relied on an orthonormal basis.
+
+The cross term has a geometric origin: the basis directions overlap in their projections. Collect their comparisons in a matrix $G_{ij}=e_i\cdot e_j$. Here
+$$G=\begin{pmatrix}1&1\\1&2\end{pmatrix},\qquad |v|^2=(a,b)G(a,b)^T.$$
+G records the geometry of the coordinate directions. It does not represent an extra physical force or a deformation of the vector.
+
+As a check, coefficients $(1,-1)$ produce the Cartesian vector $(0,-1)$, whose length is one. The expanded formula gives $1-2+2=1$; blindly adding coefficient squares gives two.
+
+This example is the beginning of metric thinking. Later, tensor and curved-coordinate formulas will keep track of the same distinction between components and geometry. You can change the component list by choosing a different basis while preserving the physical length. To do that consistently, you must also change the rule used to compare those components.`,
+});
+
 export default chapter;

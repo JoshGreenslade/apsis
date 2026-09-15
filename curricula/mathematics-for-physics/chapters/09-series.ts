@@ -544,4 +544,17 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "A small error can become large after enough time",
+  body: String.raw`Suppose an oscillator has exact motion $\cos((1+\varepsilon)t)$ in dimensionless time, with $|\varepsilon|\ll1$. Replacing its frequency by one gives $\cos t$. Is the approximation good simply because the frequency error is small?
+
+Expand in the frequency change while holding t fixed:
+$$\cos((1+\varepsilon)t)=\cos t-\varepsilon t\sin t+O((\varepsilon t)^2).$$
+The correction contains $\varepsilon t$, not just $\varepsilon$. For times of order one, it is small. For times of order $1/|\varepsilon|$, the phase difference is of order one and the two oscillations may disagree strongly, despite having the same amplitude.
+
+This is a different failure from an amplitude blowing up. Both exact and approximate motions stay between minus one and one. Their timing drifts. A graph over a few cycles can hide the problem because it has not run long enough to expose the accumulated phase error.
+
+The better expression, when the corrected frequency is known, keeps it inside the cosine. Expanding every part of an answer is not always the most useful way to approximate it. In later numerical mechanics, a method may conserve energy quite well and still develop phase error. A trustworthy approximation must therefore specify both a small parameter and the interval over which its error is controlled.`,
+});
+
 export default chapter;

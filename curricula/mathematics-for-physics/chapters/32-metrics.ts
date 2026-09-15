@@ -696,4 +696,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "A position-dependent metric need not mean curved space",
+  body: String.raw`In the Euclidean plane, the squared length of a small displacement is $ds^2=dx^2+dy^2$. Write $x=r\cos\theta$, $y=r\sin\theta$. Differentiating and adding the squares gives
+$$ds^2=dr^2+r^2d\theta^2.$$
+The cross terms cancel. The metric components in polar coordinates are therefore $G=\operatorname{diag}(1,r^2)$, even though the plane is flat.
+
+This is the Jacobian construction in another form: $G=J^TJ$ when the original Cartesian metric is the identity. The factor r that appeared in area integration reappears as $\sqrt{\det G}$. Length measurement and volume measurement are consequences of the same local geometry.
+
+The metric varies with position because one radian spans a longer arc at larger radius. This change in the coordinate ruler does not create intrinsic curvature. A straight path may nevertheless have changing polar coordinate rates because the basis directions change along it.
+
+At r=0, the angular coordinate fails and the determinant vanishes. The physical plane is regular there; the coordinate chart is not. That is the same singularity identified in the multivariable Jacobian.
+
+In curved geometry, no coordinate choice makes the geometry globally Euclidean. To distinguish that situation from polar coordinates on a plane, one needs curvature information, not merely variable metric entries or nonzero connection coefficients. This example ties together derivatives, basis changes, integration and the distinction between a coordinate defect and a geometric property.`,
+});
+
 export default chapter;

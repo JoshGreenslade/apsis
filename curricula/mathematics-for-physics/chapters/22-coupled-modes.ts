@@ -556,4 +556,19 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "Unequal masses reveal the metric inside the mode problem",
+  body: String.raw`For small motions of a conservative mechanical system, write the kinetic and potential energies as $T=\tfrac12\dot q^TM\dot q$ and $U=\tfrac12q^TKq$. The mass matrix M is positive definite, and K is symmetric. A mode $q=v\cos(\omega t)$ obeys
+$$Kv=\omega^2Mv.$$
+When masses differ, this is not the ordinary eigenproblem $Kv=\omega^2v$. Inertia determines how strongly each coordinate resists acceleration.
+
+For diagonal positive M, set $z=M^{1/2}q$. Multiplying the equation of motion by $M^{-1/2}$ gives
+$$\ddot z+(M^{-1/2}KM^{-1/2})z=0.$$
+The new matrix is symmetric, so its eigenvectors can be chosen perpendicular in z coordinates. Returning to q coordinates, the corresponding orthogonality is $v_i^TMv_j=0$, not necessarily $v_i^Tv_j=0$.
+
+This is the inner-product lesson from vectors with a physical interpretation. The mass matrix supplies the geometry appropriate to kinetic energy. “Independent directions” must be compared using the structure relevant to the problem.
+
+With positive stiffness eigenvalues the modes oscillate; a negative one gives an unstable direction, and a zero one can represent free motion. The calculation therefore connects energy curvature, metric-weighted orthogonality and stability. Equal-mass examples conceal this structure because M is then only a scalar multiple of the identity.`,
+});
+
 export default chapter;

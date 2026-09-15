@@ -559,4 +559,15 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "A limit can exist while convergence becomes impractically slow",
+  body: String.raw`Consider the dimensionless family $f_n(x)=x^n$ on $0\leq x\leq1$. At any fixed $x<1$, repeatedly multiplying by a number smaller than one eventually makes the result approach zero. At $x=1$, every member of the family equals one. Thus the limiting function is zero below one and one at the endpoint.
+
+Each finite-$n$ graph is continuous. How can its limit have a jump? The crucial words are “at any fixed x.” The number of repetitions needed to get close to zero depends on how close x is to one. For a tolerance $\varepsilon$ between zero and one, $x^n<\varepsilon$ requires $n>\ln(\varepsilon)/\ln(x)$ when $0<x<1$. As x approaches one, the required n grows without bound.
+
+You can also choose a different point for each n: $x_n=2^{-1/n}$. These points approach one, yet $f_n(x_n)=1/2$ for every n. There is always a narrow region where the graph has not settled close to zero.
+
+This example explains why a statement about every fixed point does not automatically give one accuracy guarantee across a whole interval. In physics, a small-parameter approximation may work throughout most of a region and fail near a boundary. Before replacing a family by its limit, ask where the error is controlled and whether the point of observation is changing too.`,
+});
+
 export default chapter;

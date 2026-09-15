@@ -1281,4 +1281,18 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "The same operator explains smoothing, energy decay and steady response",
+  body: String.raw`Take $u_t=D u_{xx}$ on $[0,L]$, with D positive and u zero at both endpoints. Define the squared-amplitude measure $E=\tfrac12\int_0^L u^2\,dx$. Differentiate and use integration by parts:
+$$\frac{dE}{dt}=D\int_0^L u\,u_{xx}\,dx
+=D[uu_x]_0^L-D\int_0^L(u_x)^2\,dx\leq0.$$
+The boundary term vanishes because of the imposed endpoint values. Spatial variation makes E decrease.
+
+Now describe the same result spectrally. Sine modes have wave numbers $k_n=n\pi/L$, and their amplitudes decay as $e^{-Dk_n^2t}$. Orthogonality makes E a sum of squared modal amplitudes. Larger k means both greater gradient cost and faster decay. The integral argument and the mode argument are two views of the same positive operator $-\partial_x^2$.
+
+For the steady forced problem $-D u_{xx}=f$, the coefficient of each forcing mode is instead divided by $Dk_n^2$. The Green function represents this inverse response in physical space. Time decay, quadratic forms and inverse operators are therefore closely connected.
+
+Do not interpret E automatically as total heat. With insulated rather than fixed-temperature boundaries, $\int u\,dx$ can be conserved while the nonuniform part decays. The boundary conditions decide which mode, including a possible constant mode, survives. This is where conservation, dissipation and the operator’s nullspace must be distinguished.`,
+});
+
 export default chapter;

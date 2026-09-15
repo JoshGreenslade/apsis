@@ -759,4 +759,17 @@ const chapter: Chapter = {
     }
   ]
 };
+chapter.sidebars.push({
+  heading: "What survives when the fractional growth rate changes",
+  body: String.raw`A constant fractional rate means that over a short duration $\Delta t$, a quantity is multiplied approximately by $1+k\Delta t$. Repeating the same multiplication leads to an exponential. Now suppose the rate is a function of time. Over successive intervals the multipliers differ:
+$$N(t)\approx N(0)\prod_j[1+k(t_j)\Delta t_j].$$
+Taking a logarithm turns this product into a sum. When each interval is small, $\ln(1+u)\approx u$, so the sum approaches the accumulated fractional rate. In the integral notation developed shortly,
+$$N(t)=N(0)\exp\!\left(\int_0^t k(s)\,ds\right).$$
+Every term in the exponent is dimensionless: a rate multiplied by a time.
+
+Consider growth at rate a for a duration T, followed by decay at rate a for the same duration. The exact continuous model multiplies by $e^{aT}$ and then $e^{-aT}$, returning to the original amount. By contrast, a 10% increase followed by a 10% decrease multiplies by $1.1\times0.9=0.99$. Equal signed percentages applied to different starting amounts do not undo each other.
+
+The log of a ratio records the accumulated fractional change and makes such comparisons additive. Later, an exponential solution to an equation will be meaningful because it encodes a rate law. A straight-looking growth curve alone does not establish that the fractional rate is constant.`,
+});
+
 export default chapter;

@@ -520,4 +520,30 @@ const chapter: Chapter = {
     },
   ],
 };
+chapter.sidebars.push({
+  heading: "An invertible map can still lose practical information",
+  body: String.raw`Consider the map $A(x,y)=(x,\varepsilon y)$, with $0<\varepsilon\ll1$. Its determinant is $\varepsilon$, so it has an inverse: if the measured output is $(p,q)$, then $(x,y)=(p,q/\varepsilon)$. Algebraically, nothing has been lost.
+
+Now suppose q has measurement error $\delta$. The reconstructed y has error $\delta/\varepsilon$. With $\varepsilon=0.001$, an output error of $0.0001$ becomes an input error of $0.1$. The map compresses one direction so strongly that differences along it become difficult to distinguish.
+
+At $\varepsilon=0$ the distinction becomes exact: every y produces the same second output, and that direction belongs to the nullspace. For small nonzero $\varepsilon$, it is not in the nullspace, but it is nearly invisible to a measuring device with finite resolution.
+
+This is why solving equations requires more than checking that a determinant is nonzero. The size and direction of data errors matter too. More accurate arithmetic cannot recover information that the measurement never resolved. Later, inverse field problems and parameter fitting will face the same issue: a unique mathematical answer can be very sensitive to tiny changes in the evidence. The geometric question is which input directions the map strongly suppresses.`,
+});
+
+chapter.sidebars.push({
+  heading: "Returning to Buckingham: dimensionless groups form a nullspace",
+  body: String.raw`In chapter 1, dimensional analysis required a product of physical quantities to have zero net powers of the base units. We can now name the construction precisely. A dimension matrix D maps a vector of chosen powers p to the dimensions of the resulting product. Dimensionless products correspond to $Dp=0$.
+
+For $(P,\ell,g,\gamma)$, using rows for length and time,
+$$D=\begin{pmatrix}0&1&1&0\\1&0&-2&-1\end{pmatrix}.$$
+Its two rows are independent, so the rank is two. With four exponent coordinates, rank–nullity gives a two-dimensional nullspace. Two independent vectors in it are
+$$p_1=(1,-1/2,1/2,0)^T,\qquad p_2=(0,1/2,-1/2,1)^T.$$
+Check them by multiplication: both outputs are zero. They produce $\Pi_1=P\sqrt{g/\ell}$ and $\Pi_2=\gamma\sqrt{\ell/g}$.
+
+Every exponent vector $\alpha p_1+\beta p_2$ produces the product $\Pi_1^\alpha\Pi_2^\beta$. Thus choosing a different nullspace basis changes how we write the independent groups without changing the dimensional information. The multiplication of physical products corresponds to addition in exponent space.
+
+This is Buckingham’s count of dimensionless groups, with a concrete meaning for both rank and nullity. Rank counts independent dimensional constraints. Nullity counts independent ways to combine ingredients without leaving a unit behind. The later constraint chapter will use the same nullspace language for motions that leave a constraint unchanged. Linear algebra unifies these examples because it describes what an operation detects and what it cannot detect.`,
+});
+
 export default chapter;
