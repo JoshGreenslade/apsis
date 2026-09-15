@@ -167,6 +167,30 @@ export const syllabus: LessonPlan[] = [
     "scope": "Partial derivatives, directional derivative gradient dot direction, differentiabilitynotguaranteedbypartials, multivarchainrule, Hessian preview."
   },
   {
+    "id": "trajectories",
+    "title": "Bring ideas together: trajectories and changing directions",
+    "unit": "06 · Work in several dimensions",
+    "prerequisites": ["vectors", "multivariable"],
+    "outcome": "Derive velocity and acceleration along a curve, including changing polar basis directions.",
+    "scope": "Path versus clock, arc length, curvature, polar acceleration and a covariant-derivative bridge."
+  },
+  {
+    "id": "two-body",
+    "title": "Bring ideas together: the two-body problem",
+    "unit": "06 · Work in several dimensions",
+    "prerequisites": ["trajectories", "first-order-odes", "integrals"],
+    "outcome": "Reduce two interacting bodies to relative motion and connect angular momentum, effective potentials and orbital geometry.",
+    "scope": "Reduced mass, central-force polar equations, radial energy, circular stability and conic trajectories."
+  },
+  {
+    "id": "perturbation",
+    "title": "Go deeper: perturbation theory through the pendulum",
+    "unit": "06 · Work in several dimensions",
+    "prerequisites": ["two-body", "series", "oscillators"],
+    "outcome": "Build a controlled small-amplitude correction, diagnose secular error and explain how a corrected frequency repairs the approximation.",
+    "scope": "Pendulum expansion, resonant secular terms, Lindstedt frequency correction, period and long-time validity."
+  },
+  {
     "id": "multiple-integrals",
     "title": "Integration and coordinates in several dimensions",
     "unit": "06 · Work in several dimensions",
@@ -222,6 +246,14 @@ export const syllabus: LessonPlan[] = [
     "scope": "Smallrectangle derivecurl, orientationright-handrule, Stokes and Greenplanar, curl-free notglobalpotential puncturedplane example; no singularsurface misuse."
   },
   {
+    "id": "coordinate-fields",
+    "title": "Bring ideas together: fields in changing coordinates",
+    "unit": "07 · Connect local fields to whole regions",
+    "prerequisites": ["trajectories", "divergence", "curl-stokes", "multiple-integrals"],
+    "outcome": "Reconstruct gradient, divergence, curl and the Laplacian from coordinate geometry.",
+    "scope": "Polar wedge derivations, scalar Laplacian, spherical radial flux and coordinate singularities."
+  },
+  {
     "id": "coupled-modes",
     "title": "Coupled oscillators and normal modes",
     "unit": "08 · Let patterns do the work",
@@ -256,6 +288,22 @@ export const syllabus: LessonPlan[] = [
     "scope": "Derivewavefromstringforce smallslope andheatfromconservationconstitutivelaw, separationeigenmodes, Dirichlet examples, initialdata heatone/wavetwo; Laplace stationarybridge."
   },
   {
+    "id": "vibrating-string",
+    "title": "Bring ideas together: a vibrating string",
+    "unit": "08 · Let patterns do the work",
+    "prerequisites": ["pdes", "coupled-modes", "fourier"],
+    "outcome": "Connect discrete coupled masses to a continuous wave field and use modes to understand energy transport and resonance.",
+    "scope": "Continuum scaling, normal modes, Fourier amplitudes, energy flux and driven resonance."
+  },
+  {
+    "id": "transport-trajectories",
+    "title": "Bring ideas together: following a field along its trajectories",
+    "unit": "08 · Let patterns do the work",
+    "prerequisites": ["first-order-odes", "divergence", "pdes", "trajectories", "coordinate-fields"],
+    "outcome": "Solve transport by characteristics and distinguish advected scalars from conserved densities.",
+    "scope": "Material derivative, expanding flow, inflow data, flow-map Jacobian and continuity."
+  },
+  {
     "id": "green-functions",
     "title": "Convolution, impulses and Green functions",
     "unit": "09 · Responses and uncertainty",
@@ -265,6 +313,14 @@ export const syllabus: LessonPlan[] = [
     ],
     "outcome": "Build a response to distributed forcing from responses to simple localized inputs.",
     "scope": "Convolution derive via impulseresponse, delta as distribution notinfiniteordinaryfunction, causalfirstorderGreen, boundaryoperatorandconditionsdetermineGreen; no productofdelta."
+  },
+  {
+    "id": "electrostatic-boundaries",
+    "title": "Bring ideas together: an electrostatic boundary problem",
+    "unit": "09 · Responses and uncertainty",
+    "prerequisites": ["green-functions", "coordinate-fields", "line-integrals"],
+    "outcome": "Build a potential from sources and boundary data, recover its field and explain why the stated solution is unique.",
+    "scope": "Poisson and Laplace equations, boundary construction, uniqueness through energy and the Green-function viewpoint."
   },
   {
     "id": "probability",
@@ -287,6 +343,22 @@ export const syllabus: LessonPlan[] = [
     ],
     "outcome": "Explain Gaussian normalization, error propagation and when averaging reduces uncertainty.",
     "scope": "Gaussianintegralsquarepolar, moments, CLTconditionsfinitevarianceindependence qualifications; linearerrorpropagation covariance, correlations vs1/sqrtN; notuniversalityallnoise."
+  },
+  {
+    "id": "random-walk-diffusion",
+    "title": "Bring ideas together: diffusion from a random walk",
+    "unit": "09 · Responses and uncertainty",
+    "prerequisites": ["gaussian", "pdes", "transport-trajectories"],
+    "outcome": "Derive macroscopic diffusion from microscopic steps and connect variance, probability flux and Gaussian spreading.",
+    "scope": "Lattice balance, diffusive scaling, heat kernel, variance growth and drift versus diffusion."
+  },
+  {
+    "id": "least-squares",
+    "title": "Bring ideas together: least squares and inverse problems",
+    "unit": "09 · Responses and uncertainty",
+    "prerequisites": ["linear-maps", "probability", "gaussian"],
+    "outcome": "Reconstruct model parameters through projection while diagnosing missing information, sensitivity and uncertainty.",
+    "scope": "Residual orthogonality, normal equations, rank and conditioning, covariance weighting and regularisation bias."
   },
   {
     "id": "variation",
@@ -394,4 +466,3 @@ export const syllabus: LessonPlan[] = [
     "scope": "Two separate worked miniinvestigations unitary2x2rotation norms Bornprob versus Lorentzboost Minkowskiinterval. ExplicitnotunificationnotEuclideannormboost. Capstoneindependenttasksandhonestreadiness nextphysics."
   }
 ];
-

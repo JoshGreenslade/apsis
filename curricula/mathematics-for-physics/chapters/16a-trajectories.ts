@@ -1,0 +1,533 @@
+import type { Chapter } from "../chapter";
+const chapter: Chapter = {
+  "id": "trajectories",
+  "theoreticalMinimum": {
+    "coreIdea": "A trajectory combines a geometric curve with a clock. Differentiating its velocity separates changes of speed from changes of direction, and coordinate calculations must differentiate the moving basis as well as its components.",
+    "widerConnection": "The product and chain rules now explain curvature, centripetal acceleration and angular-momentum conservation. The same path derivative will become the material derivative used to follow a changing field and reconstruct transport equations."
+  },
+  "intuition": {
+    "body": "A car can accelerate while its speedometer stays fixed. A satellite can change direction continuously while keeping the same orbital speed. These observations reveal that a velocity has both a size and a direction.\n\nWe will follow one particle in two descriptions: first through the geometry of its path, then through radial and angular coordinates. Deriving the acceleration both ways will explain the circular-motion formula and the terms that appear when the radius also changes. Finally, a moving sensor will turn the same trajectory into a way of measuring a field.\n\nThis chapter brings together vectors, differentiation, integration and multivariable chain rules. Keep a sketch beside the calculation. Every derivative should have a visible job: changing a length, changing a direction, or changing the value sampled along the route.",
+    "thoughtExperiments": [
+      "Can two particles follow exactly the same curve with different accelerations?",
+      "If radial and tangential velocity components are constant, must the velocity vector be constant?"
+    ]
+  },
+  "theory": [
+    {
+      "heading": "1. A curve is a route; a trajectory also supplies a clock",
+      "body": "Imagine a camera recording a bead moving around a circular wire. A photograph of the wire tells us where the bead can go. A sequence of timed photographs tells us how it moves. Those are different kinds of information. Write a curve as r(u), where u labels points. Only when u is time does dr/du directly represent velocity.\n\nIf u=u(t), the chain rule gives $\\dot{\\mathbf r}=(d\\mathbf r/du)\\dot u$. The tangent direction comes from the curve, while the factor $\\dot u$ determines how quickly we traverse it. For example, $(R\\cos u,R\\sin u)$ traces the same circle whether u=t or u=t², but the second choice starts with zero speed and then accelerates. Here variables are scaled so the phase is dimensionless.\n\nThe length travelled along a regular curve is\n$$s(u)=\\int_{u_0}^{u}\\left|\\frac{d\\mathbf r}{d\\xi}\\right|d\\xi.$$\nThis integral turns the arbitrary label into distance. Where the speed is nonzero, define the unit tangent $\\mathbf T=d\\mathbf r/ds$. Then velocity takes the especially revealing form $\\mathbf v=v\\mathbf T$, where $v=ds/dt$ is speed along the direction of travel.\n\nChanging a curve parameter changes coordinate rates; it does not change the geometric path length. This is our first application of the distinction between object and representation to motion. At a moment of rest, the trajectory's unit tangent defined by velocity may be unavailable even when the underlying path is smooth. We must not divide by zero speed simply to preserve a formula.\n\nA rate along a path also samples the surrounding environment. For a stationary temperature field f, the chain rule says $df/dt=\\nabla f\\cdot\\mathbf v$. The dot product picks the part of motion that crosses temperature contours. Tangential motion along a contour can be fast while producing no temperature change. Later we will use the same observation to follow quantities carried by a fluid."
+    },
+    {
+      "heading": "2. Acceleration changes speed or turns the direction of motion",
+      "body": "Differentiate $\\mathbf v=v\\mathbf T$ using the product rule:\n$$\\mathbf a=\\dot v\\,\\mathbf T+v\\dot{\\mathbf T}.$$\nThe first term changes speed. To understand the second, differentiate $\\mathbf T\\cdot\\mathbf T=1$. This gives $\\mathbf T\\cdot\\dot{\\mathbf T}=0$, so a change of a unit tangent must point perpendicular to the tangent. Direction changes cannot contain a first-order change of the tangent's length.\n\nDefine curvature $\\kappa=|d\\mathbf T/ds|$. Where it is nonzero, let $\\mathbf N$ point along $d\\mathbf T/ds$. The chain rule gives $\\dot{\\mathbf T}=v\\kappa\\mathbf N$, hence\n$$\\mathbf a=\\dot v\\,\\mathbf T+v^2\\kappa\\mathbf N.$$\nThis formula separates the clock from the shape of the route. A tight turn has large curvature; traversing it faster requires a quadratically larger normal acceleration.\n\nFor a circle of radius R, advancing arc length ds turns the tangent through angle ds/R. Consequently $\\kappa=1/R$, and constant-speed circular motion has inward acceleration $v^2/R$. No force law was used in deriving that kinematic requirement. A physical model must supply a force capable of producing it.\n\nThe dot product provides another check. Since the normal part is perpendicular to velocity,\n$$\\mathbf v\\cdot\\mathbf a=v\\dot v=\\frac{d}{dt}(v^2/2).$$\nFor a particle of constant mass, a purely normal force therefore changes direction without doing work. Geometry explains why a force can be nonzero while kinetic energy remains constant.\n\nCurvature vanishes on a straight segment, where the normal direction is not uniquely determined by this construction. The vector expression $v\\,\\dot{\\mathbf T}$ still makes sense when the motion is regular. We introduced the unit normal to interpret the geometry, not to force a singular choice where the path does not turn."
+    },
+    {
+      "heading": "3. Polar acceleration comes from differentiating the basis too",
+      "body": "A radial unit vector points away from the origin, so it turns as the particle moves around the origin. In Cartesian components,\n$$\\mathbf e_r=(\\cos\\theta,\\sin\\theta),\\qquad\n\\mathbf e_\\theta=(-\\sin\\theta,\\cos\\theta).$$\nDifferentiate these expressions rather than treating them as fixed labels:\n$$\\dot{\\mathbf e}_r=\\dot\\theta\\,\\mathbf e_\\theta,\\qquad\n\\dot{\\mathbf e}_\\theta=-\\dot\\theta\\,\\mathbf e_r.$$\nThe second minus sign expresses a second quarter-turn pointing inward.\n\nPosition is $\\mathbf r=r\\mathbf e_r$. One product rule gives\n$$\\mathbf v=\\dot r\\,\\mathbf e_r+r\\dot\\theta\\,\\mathbf e_\\theta.$$\nAngular velocity is not tangential speed; the radius supplies the conversion. Differentiating both terms again gives\n$$\\mathbf a=(\\ddot r-r\\dot\\theta^2)\\mathbf e_r+\n(r\\ddot\\theta+2\\dot r\\dot\\theta)\\mathbf e_\\theta.$$\nEach extra term has an identifiable origin. The inward term comes from differentiating the tangential basis. One contribution to $2\\dot r\\dot\\theta$ comes from the changing radial basis; the other comes from the changing size of tangential velocity.\n\nCheck two limits. At fixed angle, the formula reduces to straight radial motion. At fixed radius and constant angular speed, it gives inward circular acceleration. The coordinate components of velocity can be constant in the second example while the velocity vector changes continuously.\n\nThis is the elementary beginning of a covariant derivative: a derivative that includes how the chosen basis varies. No curved space was required. On a flat plane, polar coordinates alone created the extra bookkeeping.\n\nFor a central force the tangential acceleration is zero. Multiplying its equation by r gives $d(r^2\\dot\\theta)/dt=0$. Thus the conserved angular momentum per unit mass emerges directly from changing-basis kinematics and the absence of tangential force. This prepares the later symmetry explanation of the same conservation law."
+    }
+  ],
+  "teaching": {
+    "question": "How does motion change when both speed and coordinate directions can change?",
+    "why": "The product rule explains turning motion and the extra terms in polar coordinates.",
+    "outcomes": [
+      "Separate a path from its time parametrisation.",
+      "Derive tangential and normal acceleration.",
+      "Compute polar acceleration by differentiating the basis."
+    ],
+    "checkpoints": [
+      {
+        "bridge": "Give a geometric path a clock.",
+        "meaning": "The path determines directions; the clock determines how quickly they are traversed.",
+        "question": "Does reparametrising a circle change its length?",
+        "answer": "No; derivative and integration measure change together.",
+        "further": [
+          {
+            "question": "What does arc length measure?",
+            "answer": "Accumulated distance along the curve."
+          },
+          {
+            "question": "When does the velocity-defined tangent fail?",
+            "answer": "At zero speed."
+          },
+          {
+            "question": "What does gradient dotted with velocity measure?",
+            "answer": "The change of a stationary field along the trajectory per unit time."
+          }
+        ]
+      },
+      {
+        "bridge": "Differentiate speed times a unit tangent.",
+        "meaning": "A unit direction changes perpendicular to itself to first order.",
+        "question": "Why can constant speed coexist with acceleration?",
+        "answer": "The tangent can turn.",
+        "further": [
+          {
+            "question": "What is a circle's curvature?",
+            "answer": "One divided by its radius."
+          },
+          {
+            "question": "What does doubling speed do to normal acceleration?",
+            "answer": "Multiplies it by four on the same curve."
+          },
+          {
+            "question": "Why does a normal force do no instantaneous work?",
+            "answer": "It is perpendicular to velocity."
+          }
+        ]
+      },
+      {
+        "bridge": "Differentiate the polar basis too.",
+        "meaning": "Changing directions supply terms missing from component derivatives.",
+        "question": "Where do the two radial-speed times angular-speed terms come from?",
+        "answer": "One from the changing radial basis; one from the changing radius factor in tangential velocity.",
+        "further": [
+          {
+            "question": "What remains in uniform circular motion?",
+            "answer": "Inward acceleration of radius times angular speed squared."
+          },
+          {
+            "question": "What remains at fixed angle?",
+            "answer": "Pure radial acceleration."
+          },
+          {
+            "question": "Why is radius squared times angular speed conserved under central force?",
+            "answer": "Its derivative is radius times tangential acceleration, which vanishes."
+          }
+        ]
+      }
+    ],
+    "takeaway": "A component multiplies a direction. Derivatives must account for both.",
+    "nextConnection": "Coordinate derivatives of fields reuse changing directions; transport equations reuse derivatives along trajectories."
+  },
+  "workedExample": {
+    "title": "A bead spirals outward",
+    "problem": "A prescribed motion has r(t)=1 m+(1 m/s)t and θ(t)=(1 rad/s)t. Find velocity and acceleration at t=1 s, then test whether the force can be purely central.",
+    "steps": [
+      {
+        "title": "Find coordinate rates",
+        "body": "At one second r=2 m, radial speed is 1 m/s, angular speed is 1 per second, and both coordinate second derivatives vanish.",
+        "reason": "Constant coordinate rates do not imply constant vector velocity.",
+        "trap": "Angular speed is not tangential speed."
+      },
+      {
+        "title": "Build velocity",
+        "body": "$\\mathbf v=\\mathbf e_r+2\\mathbf e_\\theta$ m/s, with speed $\\sqrt5$ m/s.",
+        "reason": "The unit directions are perpendicular.",
+        "trap": "Include radius in the angular contribution."
+      },
+      {
+        "title": "Differentiate the basis",
+        "body": "$\\mathbf a=-2\\mathbf e_r+2\\mathbf e_\\theta$ m/s².",
+        "reason": "Both changing-basis terms survive.",
+        "trap": "Zero coordinate second derivatives do not imply zero acceleration."
+      },
+      {
+        "title": "Check energy and force direction",
+        "body": "$\\mathbf v\\cdot\\mathbf a=2$ m²/s³. Independently, differentiating $v^2=1+r^2$ in these numerical units gives the same kinetic-energy rate per unit mass. Nonzero tangential acceleration rules out purely central force.",
+        "reason": "Independent scalar and vector checks agree.",
+        "trap": "A prescribed path does not establish its force law."
+      }
+    ]
+  },
+  "diagram": {
+    "title": "A turning tangent",
+    "caption": "At the right-hand point of a circle, velocity points upward while normal acceleration points toward the centre.",
+    "viewBox": [
+      0,
+      0,
+      600,
+      320
+    ],
+    "elements": [
+      {
+        "kind": "line",
+        "from": [
+          160,
+          220
+        ],
+        "to": [
+          380,
+          220
+        ],
+        "tone": "muted"
+      },
+      {
+        "kind": "line",
+        "from": [
+          380,
+          220
+        ],
+        "to": [
+          380,
+          80
+        ],
+        "tone": "accent"
+      },
+      {
+        "kind": "line",
+        "from": [
+          380,
+          220
+        ],
+        "to": [
+          240,
+          220
+        ],
+        "tone": "ink"
+      },
+      {
+        "kind": "point",
+        "at": [
+          160,
+          220
+        ],
+        "label": "centre",
+        "tone": "muted"
+      },
+      {
+        "kind": "point",
+        "at": [
+          380,
+          220
+        ],
+        "label": "particle",
+        "tone": "ink",
+        "labelOffset": [
+          8,
+          25
+        ]
+      },
+      {
+        "kind": "label",
+        "at": [
+          395,
+          100
+        ],
+        "text": "tangent velocity"
+      },
+      {
+        "kind": "label",
+        "at": [
+          230,
+          195
+        ],
+        "text": "inward acceleration"
+      }
+    ]
+  },
+  "sidebars": [
+    {
+      "heading": "From a moving basis to a covariant derivative",
+      "body": "Write a vector as $\\mathbf V=V^i\\mathbf e_i$. Its path derivative is $\\dot V^i\\mathbf e_i+V^i\\dot{\\mathbf e}_i$. In a coordinate basis in the plane, write $\\partial_j\\mathbf e_i=\\Gamma^k{}_{ji}\\mathbf e_k$, summing repeated indices. The derivative's coefficient along $\\mathbf e_k$ is then $\\dot V^k+\\Gamma^k{}_{ji}\\dot q^jV^i$. The symbols Γ record basis change.\n\nPolar coordinate basis vectors are $\\partial_r\\mathbf r=\\mathbf e_r$ and $\\partial_\\theta\\mathbf r=r\\mathbf e_\\theta$. The nonzero coefficients are $\\Gamma^r{}_{\\theta\\theta}=-r$ and $\\Gamma^\\theta{}_{r\\theta}=\\Gamma^\\theta{}_{\\theta r}=1/r$. Applied to velocity components $(\\dot r,\\dot\\theta)$, they reproduce polar acceleration. The angular coordinate coefficient must be multiplied by r to express it along a unit tangential direction.\n\nOn a curved surface, comparing tangent vectors at different points requires a connection; the later metric chapter explains the measuring structure used to choose one. Here the essential point is already visible without curvature: differentiating components alone generally does not differentiate the represented vector."
+    }
+  ],
+  "diagnostics": [
+    {
+      "id": "d-dot",
+      "prompt": "Dot (1,2) with (3,4). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 11,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "3+8=11.",
+      "hint": "Multiply matching components.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Multiply matching components.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "vectors"
+    },
+    {
+      "id": "d-chain",
+      "prompt": "Which gives a stationary field's reading rate along a path?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Gradient dotted with velocity"
+          },
+          {
+            "id": "1",
+            "label": "Gradient magnitude"
+          },
+          {
+            "id": "2",
+            "label": "Position dotted with velocity"
+          }
+        ]
+      },
+      "solution": "Apply the chain rule.",
+      "hint": "Track changing inputs.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Track changing inputs.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "multivariable"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "At an instant r=3 m, radial speed 2 m/s, radial acceleration zero, angular speed 2 per second and angular acceleration zero.",
+    "supplied": [
+      {
+        "heading": "Polar acceleration",
+        "body": "Use $\\mathbf a=(\\ddot r-r\\dot\\theta^2)\\mathbf e_r+(r\\ddot\\theta+2\\dot r\\dot\\theta)\\mathbf e_\\theta$."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-v",
+        "prompt": "Find tangential speed.",
+        "answer": {
+          "kind": "numeric",
+          "value": 6,
+          "unit": "m/s",
+          "acceptedUnits": [
+            "m/s"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "3×2=6.",
+        "hint": "Include radius.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Include radius.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-ar",
+        "prompt": "Find signed radial acceleration.",
+        "answer": {
+          "kind": "numeric",
+          "value": -12,
+          "unit": "m/s^2",
+          "acceptedUnits": [
+            "m/s^2"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "−3×4=−12.",
+        "hint": "Inward is negative radial.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Inward is negative radial.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-at",
+        "prompt": "Find tangential acceleration.",
+        "answer": {
+          "kind": "numeric",
+          "value": 8,
+          "unit": "m/s^2",
+          "acceptedUnits": [
+            "m/s^2"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "2×2×2=8.",
+        "hint": "Both product-rule terms count.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Both product-rule terms count.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-speed",
+        "prompt": "Velocity components are (2,6). Find speed.",
+        "answer": {
+          "kind": "numeric",
+          "value": 6.324555320336759,
+          "unit": "m/s",
+          "acceptedUnits": [
+            "m/s"
+          ],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Square root of 4+36.",
+        "hint": "Use the orthonormal unit basis.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Use the orthonormal unit basis.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-normal",
+      "prompt": "Speed is 6 m/s on a circle of radius 3 m. Find normal acceleration.",
+      "answer": {
+        "kind": "numeric",
+        "value": 12,
+        "unit": "m/s^2",
+        "acceptedUnits": [
+          "m/s^2"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "36/3=12.",
+      "hint": "Speed squared divided by radius.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Speed squared divided by radius.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-rest",
+      "prompt": "At zero speed, what fails in velocity divided by speed?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Position"
+          },
+          {
+            "id": "1",
+            "label": "Division by zero"
+          },
+          {
+            "id": "2",
+            "label": "The path must end"
+          }
+        ]
+      },
+      "solution": "The normalisation is undefined.",
+      "hint": "Separate path and motion.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate path and motion.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-work",
+      "prompt": "A force perpendicular to velocity does what instantaneously?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Changes kinetic energy"
+          },
+          {
+            "id": "1",
+            "label": "Does zero work per unit time"
+          },
+          {
+            "id": "2",
+            "label": "Must vanish"
+          }
+        ]
+      },
+      "solution": "Their dot product is zero.",
+      "hint": "Use work rate.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use work rate.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-curvature",
+      "prompt": "Find curvature of a circle of radius 4 m.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.25,
+        "unit": "1/m",
+        "acceptedUnits": [
+          "1/m"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "1/4 per metre.",
+      "hint": "Inverse radius.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Inverse radius.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-central",
+      "prompt": "Which is conserved by a central force for constant mass?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Radius"
+          },
+          {
+            "id": "1",
+            "label": "Speed"
+          },
+          {
+            "id": "2",
+            "label": "Radius squared times angular speed"
+          }
+        ]
+      },
+      "solution": "Its derivative is radius times tangential acceleration.",
+      "hint": "Differentiate the product.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Differentiate the product.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-field",
+      "prompt": "Dot gradient (3,4) with velocity (2,−1). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "1",
+        "acceptedUnits": [
+          "1"
+        ],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "6−4=2.",
+      "hint": "Apply the chain rule.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Apply the chain rule.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    }
+  ]
+};
+export default chapter;
+

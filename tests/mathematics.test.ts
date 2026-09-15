@@ -4,6 +4,15 @@ import mathematics from "../curricula/mathematics-for-physics";
 import { syllabus } from "../curricula/mathematics-for-physics/syllabus";
 
 const completed = new Set([
+  "trajectories",
+  "coordinate-fields",
+  "transport-trajectories",
+  "two-body",
+  "perturbation",
+  "vibrating-string",
+  "electrostatic-boundaries",
+  "random-walk-diffusion",
+  "least-squares",
   "series",
   "vectors",
   "linear-maps",
@@ -22,6 +31,29 @@ const completed = new Set([
 ]);
 
 test("the maths syllabus contains real content in every chapter", () => {
+  assert.equal(mathematics.topics.length, 45);
+  for (const [earlier, later] of [
+    ["multivariable", "trajectories"],
+    ["trajectories", "two-body"],
+    ["two-body", "perturbation"],
+    ["perturbation", "multiple-integrals"],
+    ["curl-stokes", "coordinate-fields"],
+    ["coordinate-fields", "coupled-modes"],
+    ["pdes", "vibrating-string"],
+    ["vibrating-string", "transport-trajectories"],
+    ["transport-trajectories", "green-functions"],
+    ["green-functions", "electrostatic-boundaries"],
+    ["electrostatic-boundaries", "probability"],
+    ["gaussian", "random-walk-diffusion"],
+    ["random-walk-diffusion", "least-squares"],
+    ["least-squares", "variation"],
+  ]) {
+    assert.equal(
+      mathematics.topics.findIndex(t => t.id === later),
+      mathematics.topics.findIndex(t => t.id === earlier) + 1,
+      `${earlier} should lead into ${later}`,
+    );
+  }
   assert.deepEqual(
     mathematics.topics.map((topic) => topic.id),
     syllabus.map((plan) => plan.id),

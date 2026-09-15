@@ -2,7 +2,7 @@ import type { CurriculumPack } from "@/types/curriculum";
 
 export const overview: NonNullable<CurriculumPack["overview"]> = {
   headline: "Understand the mathematics. See the physics it makes possible.",
-  introduction: "A derivative is a way to describe change locally. An eigenvector reveals a pattern that a transformation preserves. A field equation relates what happens in a small region to what happens throughout a system. In this course we develop those ideas from familiar measurements and pictures, explain why the calculations work, and return to the same physical problems as our mathematical tools become stronger. The 36 chapters form 12 connected parts; they are chapters to work through patiently, not brief summaries to skim. Read every explanation and solution freely, and use the questions whenever you want to test your understanding.",
+  introduction: "A derivative is a way to describe change locally. An eigenvector reveals a pattern that a transformation preserves. A field equation relates what happens in a small region to what happens throughout a system. In this course we develop those ideas from familiar measurements and pictures, explain why the calculations work, and return to the same physical problems as our mathematical tools become stronger. The 45 chapters form 12 connected parts. Nine intermediate synthesis chapters let you use several ideas together before the final investigations: follow trajectories, reconstruct an orbit, correct a pendulum approximation, derive coordinate field operators, study a vibrating string, track transport, solve an electrostatic boundary problem, build diffusion from random walks, and infer parameters from measurements. Read every explanation and solution freely, and use the questions whenever you want to test your understanding.",
   startingPoint: "Begin with ordinary arithmetic and a willingness to draw pictures and work through examples. The first three chapters refresh units, algebra, functions and trigonometry; their optional diagnostics help you decide what to revisit. No prior calculus or university physics is assumed. The first nine chapters establish calculus and approximation; vectors and linear algebra then open the route to differential equations, fields and waves. Later branches develop probability, variation, complex methods and the mathematical language of quantum mechanics and relativity. Proofs appear when they reveal why something works; harder formal details are optional.",
   outcomes: [
     { title: "Reconstruct a calculation", description: "Explain a derivative, integral or approximation through its underlying meaning, keep units and assumptions straight, and estimate whether an answer is plausible." },
@@ -18,34 +18,39 @@ export const overview: NonNullable<CurriculumPack["overview"]> = {
   },
   throughlines: [
     {
+      title: "Put several ideas to work",
+      description: "These chapters pause the introduction of separate tools and combine them in substantial physical or mathematical problems. Follow one calculation through its geometry, its governing law and its checks, so that a technique becomes something you can recognise and use in a new setting.",
+      topicIds: ["trajectories", "two-body", "perturbation", "coordinate-fields", "vibrating-string", "transport-trajectories", "electrostatic-boundaries", "random-walk-diffusion", "least-squares"],
+    },
+    {
       title: "Local approximation",
       description:
         "A difficult curve becomes a line when viewed closely. Limits make that statement precise; derivatives measure the line; Taylor series expose the error; numerical methods and uncertainty propagation use the same local model.",
-      topicIds: ["limits", "derivatives", "series", "first-order-odes", "gaussian"],
+      topicIds: ["limits", "derivatives", "series", "first-order-odes", "trajectories", "perturbation", "gaussian"],
     },
     {
       title: "Linearity and superposition",
       description:
         "When a system responds linearly, complicated inputs can be assembled from simple ones. The idea moves from linear maps to normal modes, Fourier components, Green functions and finite quantum state transformations.",
-      topicIds: ["linear-maps", "eigenvectors", "coupled-modes", "fourier", "green-functions", "quantum-vectors"],
+      topicIds: ["linear-maps", "eigenvectors", "coupled-modes", "fourier", "vibrating-string", "green-functions", "least-squares", "quantum-vectors"],
     },
     {
       title: "Invariants and conservation",
       description:
         "A useful calculation preserves something that the description is not allowed to change: dimensions, inner products, flux balances, energy, probability or a spacetime interval. Each chapter names the preserved structure before manipulating it.",
-      topicIds: ["quantities", "vectors", "divergence", "oscillators", "probability", "metrics"],
+      topicIds: ["quantities", "vectors", "two-body", "divergence", "oscillators", "transport-trajectories", "probability", "random-walk-diffusion", "metrics"],
     },
     {
       title: "Local law to global consequence",
       description:
         "Derivatives describe what happens in a neighbourhood; integrals assemble those local contributions into a whole path, surface or region. Boundary conditions and topology decide which global conclusions are actually permitted.",
-      topicIds: ["integrals", "multiple-integrals", "line-integrals", "curl-stokes", "pdes", "green-functions"],
+      topicIds: ["integrals", "multiple-integrals", "line-integrals", "curl-stokes", "coordinate-fields", "pdes", "transport-trajectories", "green-functions"],
     },
     {
       title: "Representation versus object",
       description:
         "Coordinates, components and formulas are ways of recording a mathematical object. Change the basis or frame and the recording changes; the geometric or physical structure should remain checkable. This thread prepares the language of tensors, quantum states and relativity.",
-      topicIds: ["functions", "vectors", "linear-maps", "tensors", "metrics", "quantum-vectors"],
+      topicIds: ["functions", "vectors", "linear-maps", "trajectories", "coordinate-fields", "tensors", "metrics", "quantum-vectors"],
     },
   ],
 };

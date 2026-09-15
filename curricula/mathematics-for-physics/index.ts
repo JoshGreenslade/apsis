@@ -39,6 +39,15 @@ import chapter33 from "./chapters/33-symmetry";
 import chapter34 from "./chapters/34-mechanics-synthesis";
 import chapter35 from "./chapters/35-fields-synthesis";
 import chapter36 from "./chapters/36-quantum-relativity-synthesis";
+import trajectories from "./chapters/16a-trajectories";
+import coordinateFields from "./chapters/21a-coordinate-fields";
+import transportTrajectories from "./chapters/24a-transport-trajectories";
+import twoBody from "./chapters/16b-two-body";
+import perturbation from "./chapters/16c-perturbation";
+import vibratingString from "./chapters/24b-vibrating-string";
+import electrostaticBoundaries from "./chapters/25a-electrostatic-boundaries";
+import randomWalkDiffusion from "./chapters/27a-random-walk-diffusion";
+import leastSquares from "./chapters/27b-least-squares";
 const chapters = [chapter1, chapter2, chapter3, chapter4, chapter5, chapter6, chapter7, chapter8, chapter9, chapter10, chapter11, chapter12, chapter13, chapter14, chapter15, chapter16, chapter17, chapter18, chapter19, chapter20, chapter21, chapter22, chapter23, chapter24, chapter25, chapter26, chapter27, chapter28, chapter29, chapter30, chapter31, chapter32, chapter33, chapter34, chapter35, chapter36];
 type MathematicsMinimum = NonNullable<CurriculumTopic["theoreticalMinimum"]>;
 type MathematicsMinimumOverrides = Pick<
@@ -346,9 +355,12 @@ const transferNotes: Record<string, { heading: string; body: string }> = {
     body: "The quantum and spacetime investigations are deliberately separate. Their useful common lesson is methodological: declare the transformation, identify the invariant, check the limiting or inverse case, and do not confuse a changed representation with a changed physical state. A positive probability norm and an indefinite spacetime interval are not the same object. The analogy earns its place only because it sharpens how to recognise preserved structure without erasing the theories' different assumptions.",
   },
 };
+const synthesisChapters = [trajectories, coordinateFields, transportTrajectories, twoBody, perturbation, vibratingString, electrostaticBoundaries, randomWalkDiffusion, leastSquares];
+const synthesisIds = new Set(synthesisChapters.map(chapter => chapter.id));
+const chaptersById = new Map([...chapters, ...synthesisChapters].map(chapter => [chapter.id, chapter]));
 const topics = syllabus.map((plan, i) => {
-  const chapter = chapters[i];
-  if (chapter.id !== plan.id) throw new Error("Mathematics chapter order mismatch: " + plan.id);
+  const chapter = chaptersById.get(plan.id);
+  if (!chapter) throw new Error("Missing mathematics chapter: " + plan.id);
   const depth = transferNotes[plan.id];
   // These bridges are part of the chapter's teaching sequence, rather than
   // overview metadata: learners meet the connection immediately after the
@@ -395,7 +407,7 @@ const topics = syllabus.map((plan, i) => {
     practiceTemplates: mathematicsPractice[plan.id] ?? chapter.practiceTemplates,
     title: plan.title, description: plan.outcome, domain: "Mathematics for physics",
     unit: plan.unit, prerequisites: plan.prerequisites,
-    minutes: i < 3 ? 45 : i >= 33 ? 90 : 60,
+    minutes: i < 3 ? 45 : plan.unit.startsWith("12") || synthesisIds.has(plan.id) ? 90 : 60,
     theoreticalMinimum: chapter.theoreticalMinimum ?? mathematicsTheoreticalMinimum(plan),
     transferProblems: transferProblems[plan.id],
     sidebars: transferNotes[plan.id]
