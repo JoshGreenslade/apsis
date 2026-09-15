@@ -94,7 +94,7 @@ const chapter: Chapter = {
       }
     ],
     "takeaway": "A linear response is an integral of elementary responses; its kernel includes the conditions that make the solution meaningful.",
-    "nextConnection": "We next treat integrals as weighted averages over possible outcomes, introducing probability and uncertainty."
+    "nextConnection": "We next solve an electrostatic boundary problem and compare its modal solution with the Green-function description, including the boundary data that determine the inverse."
   },
   "diagnostics": [
     {

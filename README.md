@@ -94,6 +94,8 @@ New lessons follow [docs/TEACHING_STANDARD.md](docs/TEACHING_STANDARD.md), which
 
 Additional checks: `npm run test:labs` tests the offline harness and evaluator; `npm run test:agents-browser` visits all 15 agent-course chapters, verifies optional labs and questions, downloads the lab kit and checks mobile layout. Browser smoke tests use installed Microsoft Edge by default.
 
+After building with `PAGES_BASE_PATH=/apsis`, `npm run test:maths-browser` serves the static export locally and checks all nine intermediate mathematics synthesis chapters, including navigation, theory, worked examples, diagrams and optional deeper sections. It checks that all 45 chapters are exposed without answering questions.
+
 Use `String.raw` template literals for LaTeX and normal paragraph breaks. Use `$...$` for inline math and `$$...$$` for display equations. Raw HTML is disabled. Diagrams contain only validated coordinate primitives. Practice formulas use a bounded arithmetic tree with named variables and explicit operators; they are never JavaScript strings to execute.
 
 The astrodynamics pack covers two-body energy and vis-viva; all six elements and Kepler's equation; Hohmann burns, phasing, and plane changes; and extensions on J₂ and patched conics. Numerical assumptions include Earth μ = 398600.4418 km³/s² and reference Earth radius = 6378 km. Model limitations are described with the calculations.

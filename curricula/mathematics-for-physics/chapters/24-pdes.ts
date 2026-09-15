@@ -111,7 +111,7 @@ const chapter: Chapter = {
     takeaway:
       "A PDE prediction needs a physical law, boundary conditions and the correct number of initial functions.",
     nextConnection:
-      "Green functions will assemble responses to localized inputs; the final rod investigation will test a full diffusion solution.",
+      "A vibrating string will combine the continuum limit, modal projection, energy transport and resonance; we will then solve transport equations by following their trajectories.",
   },
   diagnostics: [
     {

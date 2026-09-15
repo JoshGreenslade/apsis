@@ -13,6 +13,7 @@
     "test": "tsx --test tests/*.test.ts",
     "test:browser": "tsx tests/browser-smoke.ts",
     "test:agents-browser": "tsx tests/agents-smoke.ts",
+    "test:maths-browser": "tsx tests/mathematics-browser-smoke.ts",
     "test:labs": "node --test public/agent-labs/harness.test.mjs public/agent-labs/evaluate.test.mjs",
     "format": "prettier --write ."
   },

@@ -107,7 +107,7 @@ const chapter: Chapter = {
     takeaway:
       "Match boundary and surface orientation, and check the whole spanning surface before replacing circulation with curl flux.",
     nextConnection:
-      "Normal modes and Fourier analysis will organize evolving fields; the domain lesson will return in complex contour reasoning.",
+      "We now reconstruct these operators in polar coordinates, deriving their radius factors from physical lengths and areas before returning to modes and evolving fields.",
   },
   diagnostics: [
     {

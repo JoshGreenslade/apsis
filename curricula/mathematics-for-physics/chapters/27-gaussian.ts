@@ -94,7 +94,7 @@ const chapter: Chapter = {
       }
     ],
     "takeaway": "Gaussian normalization is exact mathematics; Gaussian modeling, independent averaging and linear propagation require distinct assumptions.",
-    "nextConnection": "We now apply controlled changes to entire paths, using integration by parts to derive equations of motion."
+    "nextConnection": "Random walks will turn accumulated uncertainty into a diffusion equation; least squares will then use projection and covariance to infer parameters from imperfect measurements."
   },
   "diagnostics": [
     {
