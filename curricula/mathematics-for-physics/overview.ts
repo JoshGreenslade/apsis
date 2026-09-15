@@ -16,4 +16,36 @@ export const overview: NonNullable<CurriculumPack["overview"]> = {
     title: "Reconstruct three pieces of physics",
     description: "Develop a pendulum model and test its small-angle approximation; solve heat flow on a finite rod using conservation and modes; then compare norm preservation in a two-state quantum example with interval preservation under a Lorentz transformation. Each investigation includes a worked route and a rubric for checking your own reasoning. The last comparison connects mathematical habits, not a claim to unify quantum mechanics and relativity.",
   },
+  throughlines: [
+    {
+      title: "Local approximation",
+      description:
+        "A difficult curve becomes a line when viewed closely. Limits make that statement precise; derivatives measure the line; Taylor series expose the error; numerical methods and uncertainty propagation use the same local model.",
+      topicIds: ["limits", "derivatives", "series", "first-order-odes", "gaussian"],
+    },
+    {
+      title: "Linearity and superposition",
+      description:
+        "When a system responds linearly, complicated inputs can be assembled from simple ones. The idea moves from linear maps to normal modes, Fourier components, Green functions and finite quantum state transformations.",
+      topicIds: ["linear-maps", "eigenvectors", "coupled-modes", "fourier", "green-functions", "quantum-vectors"],
+    },
+    {
+      title: "Invariants and conservation",
+      description:
+        "A useful calculation preserves something that the description is not allowed to change: dimensions, inner products, flux balances, energy, probability or a spacetime interval. Each chapter names the preserved structure before manipulating it.",
+      topicIds: ["quantities", "vectors", "divergence", "oscillators", "probability", "metrics"],
+    },
+    {
+      title: "Local law to global consequence",
+      description:
+        "Derivatives describe what happens in a neighbourhood; integrals assemble those local contributions into a whole path, surface or region. Boundary conditions and topology decide which global conclusions are actually permitted.",
+      topicIds: ["integrals", "multiple-integrals", "line-integrals", "curl-stokes", "pdes", "green-functions"],
+    },
+    {
+      title: "Representation versus object",
+      description:
+        "Coordinates, components and formulas are ways of recording a mathematical object. Change the basis or frame and the recording changes; the geometric or physical structure should remain checkable. This thread prepares the language of tensors, quantum states and relativity.",
+      topicIds: ["functions", "vectors", "linear-maps", "tensors", "metrics", "quantum-vectors"],
+    },
+  ],
 };

@@ -124,6 +124,15 @@ export const OverviewSchema = z.object({
   outcomes: z.array(z.object({ title: text, description: text })).min(1),
   startingPoint: text,
   capstone: z.object({ title: text, description: text }),
+  throughlines: z
+    .array(
+      z.object({
+        title: text,
+        description: text,
+        topicIds: z.array(text).min(2),
+      }),
+    )
+    .optional(),
 });
 const point = z.tuple([z.number().finite(), z.number().finite()]);
 export const DiagramSchema = z.object({

@@ -38,6 +38,17 @@ test("the maths syllabus contains real content in every chapter", () => {
   }
 });
 
+test("the mathematics overview makes recurring cross-discipline structures explicit", () => {
+  const threads = mathematics.overview?.throughlines ?? [];
+  assert.ok(threads.length >= 5);
+  for (const thread of threads) {
+    assert.ok(thread.description.length > 180, thread.title);
+    assert.ok(thread.topicIds.length >= 4, thread.title);
+    for (const id of thread.topicIds)
+      assert.ok(mathematics.topics.some((topic) => topic.id === id), `${thread.title}/${id}`);
+  }
+});
+
 test("unit boundaries include cumulative transfer practice", () => {
   const boundaryIds = [
     "trigonometry",

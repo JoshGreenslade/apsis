@@ -493,6 +493,40 @@ export default function TeachingWorkspace({
                 ))}
               </div>
             </section>
+            {overview?.throughlines && (
+              <section className="throughlines-section">
+                <div className="section-heading">
+                  <div>
+                    <div className="eyebrow">THE IDEAS THAT KEEP RETURNING</div>
+                    <h2>Build depth through repetition</h2>
+                  </div>
+                  <span>Follow a thread across the course</span>
+                </div>
+                <div className="throughline-grid">
+                  {overview.throughlines.map((thread) => (
+                    <article className="throughline-card" key={thread.title}>
+                      <h3>{thread.title}</h3>
+                      <p>{thread.description}</p>
+                      <div className="throughline-links">
+                        {thread.topicIds.map((id) => {
+                          const target = pack.topics.find((t) => t.id === id);
+                          return target ? (
+                            <button
+                              className="text-button"
+                              key={id}
+                              onClick={() => selectTopic(id)}
+                            >
+                              {target.title}
+                              <ArrowRight size={14} />
+                            </button>
+                          ) : null;
+                        })}
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
             <div className="overview-bottom">
               <section>
                 <div className="eyebrow">ONE IDEA BUILDS ON ANOTHER</div>
