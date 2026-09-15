@@ -349,8 +349,49 @@ const transferNotes: Record<string, { heading: string; body: string }> = {
 const topics = syllabus.map((plan, i) => {
   const chapter = chapters[i];
   if (chapter.id !== plan.id) throw new Error("Mathematics chapter order mismatch: " + plan.id);
+  const depth = transferNotes[plan.id];
+  // These bridges are part of the chapter's teaching sequence, rather than
+  // overview metadata: learners meet the connection immediately after the
+  // chapter's core theory and can test whether they can transfer it.
+  const chapterWithDepth = depth
+    ? {
+        ...chapter,
+        theory: [
+          ...chapter.theory,
+          { heading: depth.heading, body: depth.body },
+        ],
+        teaching: chapter.teaching
+          ? {
+              ...chapter.teaching,
+              checkpoints: [
+                ...chapter.teaching.checkpoints,
+                {
+                  bridge: "Carry the chapter's structure into the next physical setting.",
+                  meaning: "A chapter idea becomes more useful when you can recognise the same structure in a new physical setting.",
+                  question: `What is the main transfer lesson in the section “${depth.heading}”?`,
+                  answer: "The section makes the chapter's central structure explicit, then shows how the same structure reappears in a later physical model.",
+                  further: [
+                    {
+                      question: "Which assumption makes this transfer valid?",
+                      answer: "The transfer is conditional on the chapter's stated model, definitions, and validity checks; it is a structural analogy, not a license to ignore those assumptions.",
+                    },
+                    {
+                      question: "What should you check before using the idea in a new problem?",
+                      answer: "Check the objects, units or domains, boundary or initial data, and the limiting case that defines the approximation.",
+                    },
+                    {
+                      question: "Why is this connection worth remembering?",
+                      answer: "It turns an isolated technique into a reusable way of organising a derivation and testing whether its conclusion is trustworthy.",
+                    },
+                  ],
+                },
+              ],
+            }
+          : chapter.teaching,
+      }
+    : chapter;
   return {
-    ...chapter,
+    ...chapterWithDepth,
     practiceTemplates: mathematicsPractice[plan.id] ?? chapter.practiceTemplates,
     title: plan.title, description: plan.outcome, domain: "Mathematics for physics",
     unit: plan.unit, prerequisites: plan.prerequisites,
