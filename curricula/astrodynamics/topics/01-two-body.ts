@@ -147,6 +147,8 @@ const topic: CurriculumTopic = {
       "Next we need a language for that orbit: how big it is, how stretched it is, where its plane points, and where the spacecraft sits.",
   },
   theoreticalMinimum: {
+    coreIdea: "An unpowered orbit is a continuous exchange between kinetic and gravitational potential energy, constrained by energy and angular momentum. The spacecraft does not stop falling; its sideways velocity and the curvature of the gravitational field make the fall continually miss the body it is orbiting.",
+    widerConnection: "This two-body model supplies the invariants, speed relation, and model boundary used by every later transfer, perturbation, and patched-conic calculation. The later lessons change the orbit, add timing or geometry, and relax assumptions, but they remain intelligible only if this ideal reference problem stays visible.",
     primitives: [
       "Relative position $\\mathbf r$ and velocity $\\mathbf v=\\dot{\\mathbf r}$",
       "Radius $r=|\\mathbf r|$, gravitational parameter $\\mu$, and specific energy $\\varepsilon$",

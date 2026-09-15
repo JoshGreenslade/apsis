@@ -33,8 +33,8 @@ test("the maths syllabus contains real content in every chapter", () => {
       topic.id,
     );
     assert.ok(topic.theoreticalMinimum, topic.id);
-    assert.ok(topic.theoreticalMinimum.invariant.length > 0, topic.id);
-    assert.ok(topic.theoreticalMinimum.validity.length > 0, topic.id);
+    assert.ok(topic.theoreticalMinimum.coreIdea.length > 120, topic.id);
+    assert.ok(topic.theoreticalMinimum.widerConnection.length > 120, topic.id);
   }
 });
 

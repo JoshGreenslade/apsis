@@ -277,6 +277,8 @@ function agenticTheoreticalMinimum(lesson: Lesson): AgenticMinimum {
   const override = agenticMinimumOverrides[lesson.id];
   if (!override) throw new Error(`Missing theoretical minimum for ${lesson.id}`);
   return {
+    coreIdea: `${lesson.outcome} The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.`,
+    widerConnection: `${lesson.nextConnection} This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.`,
     primitives: [
       `The lesson's target: ${lesson.outcome}`,
       "The model, agent, harness, tool, context, memory, or orchestration layer under examination",

@@ -146,6 +146,8 @@ const topic: CurriculumTopic = {
       "Once the path is right, ask whether the timing and plane are right. Those mismatches need different maneuvers.",
   },
   theoreticalMinimum: {
+    coreIdea: "A Hohmann transfer works because two endpoint radii determine one transfer ellipse and two tangential impulses change its apsides. The burns are not arbitrary speed adjustments: the first creates the transfer geometry, and the second changes the far end of that ellipse into the destination circular orbit.",
+    widerConnection: "It is the baseline maneuver against which phasing, plane changes, escape, and more realistic mission designs are compared. Its assumptions also provide a useful control case for asking what changes when timing, inclination, finite burns, or additional bodies enter the problem.",
     primitives: [
       "Initial and final circular radii $r_1$ and $r_2$",
       "Transfer ellipse semimajor axis $a_t$ and endpoint speeds",

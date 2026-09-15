@@ -136,6 +136,8 @@ const topic: CurriculumTopic = {
       "Even without burns, real orbital planes drift. The next lesson shows why Earth’s shape can turn a plane over time.",
   },
   theoreticalMinimum: {
+    coreIdea: "Rendezvous is a coupled position-and-time problem, while a plane change is a velocity-vector problem at a common node. Reaching the same radius is therefore only one condition: the target must be in the right place at the right time, and the spacecraft velocity must be compatible with the intended encounter.",
+    widerConnection: "These distinctions prevent scalar burn arithmetic from hiding the timing, frame, and geometry constraints of real maneuvers. Phasing also extends the earlier transfer logic by making time a design variable rather than treating a trajectory as a path through radius alone.",
     primitives: [
       "Mean motion $n$, phase angle, and synodic period",
       "Temporary phasing orbit period $T_p$ and semimajor axis $a_p$",

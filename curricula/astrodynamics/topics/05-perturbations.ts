@@ -147,6 +147,8 @@ const topic: CurriculumTopic = {
       "The final lesson changes the dominant attracting body itself, and shows how to join local models without mixing reference frames.",
   },
   theoreticalMinimum: {
+    coreIdea: "A small nonspherical correction can create a measurable long-term drift when its short-period effects are averaged over many orbits. The important move is to distinguish the instantaneous osculating state from the slow secular trend, because a small force can accumulate into a large operational effect.",
+    widerConnection: "The lesson introduces the model hierarchy between ideal invariants and higher-fidelity numerical mission analysis. It is the point where the course stops asking only whether a formula is correct and begins asking which approximation is adequate for the timescale and decision at hand.",
     primitives: [
       "The spherical potential, Earth radius $R$, and dimensionless coefficient $J_2$",
       "Mean motion $n$, semilatus rectum $p$, inclination $i$, and orbital elements",

@@ -87,6 +87,8 @@ function mathematicsTheoreticalMinimum(plan: (typeof syllabus)[number]): Mathema
   const override = minimumOverrides[plan.id];
   if (!override) throw new Error(`Missing mathematical theoretical minimum for ${plan.id}`);
   return {
+    coreIdea: plan.outcome,
+    widerConnection: `This chapter's ${plan.scope} becomes a reusable structure for the later physics chapters and synthesis investigations.`,
     primitives: [plan.outcome, `Core structures: ${plan.scope}`, "A derivation, representation, or physical prediction that can be checked"],
     assumptions: ["Definitions and notation are fixed before manipulating the object.", "The stated physical or mathematical model is narrower than every possible application.", "Intermediate steps preserve the relevant units, domains, orientation, or transformation rules."],
     governingLaw: `The chapter's central structure is ${plan.scope}.`,
@@ -353,7 +355,7 @@ const topics = syllabus.map((plan, i) => {
     title: plan.title, description: plan.outcome, domain: "Mathematics for physics",
     unit: plan.unit, prerequisites: plan.prerequisites,
     minutes: i < 3 ? 45 : i >= 33 ? 90 : 60,
-    theoreticalMinimum: mathematicsTheoreticalMinimum(plan),
+    theoreticalMinimum: chapter.theoreticalMinimum ?? mathematicsTheoreticalMinimum(plan),
     transferProblems: transferProblems[plan.id],
     sidebars: transferNotes[plan.id]
       ? [...chapter.sidebars, transferNotes[plan.id]]

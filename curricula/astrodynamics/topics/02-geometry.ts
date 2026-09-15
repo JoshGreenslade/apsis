@@ -168,6 +168,8 @@ const topic: CurriculumTopic = {
       "A maneuver changes these properties. Start with the cleanest case: changing the size of a circular orbit while keeping its plane fixed.",
   },
   theoreticalMinimum: {
+    coreIdea: "Orbital elements are a coordinate language that reconstructs one position-velocity state from size, shape, orientation, and timing. They are not six unrelated labels: each element answers a different geometric question, and the frame, epoch, and central body are part of the meaning.",
+    widerConnection: "The representation makes later burns, phase conditions, and perturbation-driven element drift expressible without losing the underlying state. It also teaches the broader modelling habit of separating a physical state from the coordinates chosen to describe it, including the singular cases where classical elements become undefined.",
     primitives: [
       "The six Keplerian elements $a,e,i,\\Omega,\\omega,\\nu$",
       "The perifocal frame $PQW$, inertial frame, and epoch",

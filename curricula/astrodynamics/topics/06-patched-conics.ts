@@ -152,6 +152,8 @@ const topic: CurriculumTopic = {
       "Return to the course challenge: explain a lunar-distance journey in words, attach a first burn and time estimate, and list what a real mission analysis must add.",
   },
   theoreticalMinimum: {
+    coreIdea: "Patched conics estimate a multi-body journey by joining local two-body arcs while keeping velocity vectors and reference frames explicit. The approximation is useful precisely because it separates a difficult mission into understandable local problems, provided the joins are treated as modelling boundaries rather than physical discontinuities.",
+    widerConnection: "It turns the earlier energy, transfer, and timing ideas into a mission-level estimate and makes the omitted physics visible. The final capstone asks the learner to preserve that honesty while combining calculations into a defensible preliminary design rather than mistaking a first estimate for a flight-ready trajectory.",
     primitives: [
       "Specific energy, hyperbolic excess speed $v_\\infty$, and characteristic energy $C_3$",
       "Planet-relative and heliocentric velocity vectors",
