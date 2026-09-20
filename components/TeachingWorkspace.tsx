@@ -32,6 +32,7 @@ import { Diagram } from "./Diagram";
 import FadedExercise, { ProblemInput } from "./FadedExercise";
 import ExtraPractice from "./ExtraPractice";
 import MathematicsExplorer from "./MathematicsExplorer";
+import LessonContent from "./LessonContent";
 import { applyBrowserAction, readBrowserState } from "@/lib/browser-store";
 const empty: LearnerState = { topics: {}, scratchpads: {} };
 type Screen = "overview" | "lesson" | "review";
@@ -71,6 +72,49 @@ function topicOutcomes(t: CurriculumTopic) {
     ]
   );
 }
+function LessonCompletion({
+  read,
+  busy,
+  ready,
+  onToggle,
+  nextTitle,
+  hasNext,
+  onNext,
+}: {
+  read: boolean;
+  busy: boolean;
+  ready: boolean;
+  onToggle: () => void;
+  nextTitle: string;
+  hasNext: boolean;
+  onNext: () => void;
+}) {
+  return (
+    <>
+      <div className="reading-complete">
+        <button
+          className={read ? "secondary" : "primary"}
+          disabled={busy || !ready}
+          onClick={onToggle}
+        >
+          {read ? <Check size={17} /> : <BookOpen size={17} />}{" "}
+          {read ? "Marked as read" : "Mark lesson as read"}
+        </button>
+        <p>Reading progress is separate from knowledge checks.</p>
+      </div>
+      <div className="next-lesson">
+        <span>{hasNext ? "UP NEXT" : "BACK TO THE BIG PICTURE"}</span>
+        <h3>{nextTitle}</h3>
+        <button className="text-button" onClick={onNext}>
+          {hasNext
+            ? "Continue to the next lesson"
+            : "Revisit your learning path"}
+          <ArrowRight size={16} />
+        </button>
+      </div>
+    </>
+  );
+}
 export default function TeachingWorkspace({
   packs,
   staticMode = false,
@@ -104,7 +148,12 @@ export default function TeachingWorkspace({
     read = pack.topics.filter((t) => state.topics[t.id]?.read).length;
   const noteKey = `${packId}:${topicId}`,
     scratch = drafts[noteKey] ?? state.scratchpads[topicId] ?? "",
-    noteSaved = scratch === (state.scratchpads[topicId] ?? "");
+    noteSaved = scratch === (state.scratchpads[topicId] ?? ""),
+    lessonNavigation =
+      topic.content?.sections.map((section) => ({
+        id: section.id,
+        label: section.navLabel ?? section.title,
+      })) ?? sections.map(([id, label]) => ({ id, label }));
   useEffect(() => {
     if (staticMode) {
       setState(readBrowserState(pack));
@@ -141,11 +190,13 @@ export default function TeachingWorkspace({
         if (staticMode) {
           const result = applyBrowserAction(pack, action);
           setState(result.state);
-          return result.feedback ?? {
-            correct: true,
-            category: null,
-            message: "Saved",
-          };
+          return (
+            result.feedback ?? {
+              correct: true,
+              category: null,
+              message: "Saved",
+            }
+          );
         }
         const r = await fetch("/api/progress", {
           method: "POST",
@@ -210,7 +261,10 @@ export default function TeachingWorkspace({
       const k = e.key.toLowerCase();
       if (!["j", "k"].includes(k)) return;
       e.preventDefault();
-      const nodes = sections.map(([id]) => document.getElementById(id)!);
+      const nodes = lessonNavigation
+        .map(({ id }) => document.getElementById(id))
+        .filter((node): node is HTMLElement => Boolean(node));
+      if (!nodes.length) return;
       const current = Math.max(
         0,
         nodes.findLastIndex((n) => n.getBoundingClientRect().top < 180),
@@ -221,7 +275,7 @@ export default function TeachingWorkspace({
     }
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
-  }, [screen]);
+  }, [lessonNavigation, screen]);
   useEffect(() => {
     const ctx = (
       document as Document & {
@@ -630,7 +684,7 @@ export default function TeachingWorkspace({
               </div>
             </div>
             <nav className="lesson-jumps" aria-label="Within this lesson">
-              {sections.map(([id, label], i) => (
+              {lessonNavigation.map(({ id, label }, i) => (
                 <a key={id} href={`#${id}`}>
                   <span>{i + 1}</span>
                   {label}
@@ -641,212 +695,253 @@ export default function TeachingWorkspace({
               className={`teaching-layout ${practiceOpen ? "" : "reading-only"}`}
             >
               <article className="lesson-reading" key={topicId}>
-                <section id="story" className="lesson-section">
-                  <div className="section-kicker">
-                    01 / START WITH A PICTURE IN YOUR HEAD
-                  </div>
-                  <h2>The big idea</h2>
-                  <MathText>{topic.intuition.body}</MathText>
-                  <div className="lesson-outcomes">
-                    <h3>By the end of this lesson, you can…</h3>
-                    <ul>
-                      {topicOutcomes(topic).map((o) => (
-                        <li key={o}>
-                          <Check size={16} />
-                          <span>{o}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="pause-card">
-                    <div className="eyebrow">
-                      <Lightbulb size={16} />
-                      PAUSE & PREDICT
-                    </div>
-                    {topic.intuition.thoughtExperiments.map((q) => (
-                      <p key={q}><InlineMathText>{q}</InlineMathText></p>
-                    ))}
-                    <small>
-                      No answer box required. Say it aloud or jot down your
-                      prediction.
-                    </small>
-                  </div>
-                </section>
-                <section id="reasoning" className="lesson-section">
-                  <div className="section-kicker">
-                    02 / LET’S MAKE THAT IDEA PRECISE
-                  </div>
-                  <h2>Build the reasoning</h2>
-                  <Diagram data={topic.diagram} />
-                  {topic.theory.map((s, i) => {
-                    const checkpoint = topic.teaching?.checkpoints[i];
-                    return (
-                      <section className="reasoning-step" key={s.heading}>
-                        <h3>{s.heading}</h3>
-                        {checkpoint && (
-                          <p className="teaching-bridge"><InlineMathText>{checkpoint.bridge}</InlineMathText></p>
-                        )}
-                        <div className="formal-theory">
-                          <MathText>{s.body}</MathText>
-                          <FormulaCopies text={s.body} />
-                        </div>
-                        {checkpoint && (
-                          <>
-                            <div className="meaning">
-                              <h4>What this is really saying</h4>
-                              <p><InlineMathText>{checkpoint.meaning}</InlineMathText></p>
-                            </div>
-                            <Reflection
-                              question={checkpoint.question}
-                              answer={checkpoint.answer}
-                            />
-                            {checkpoint.further?.map((r) => (
-                              <Reflection
-                                key={r.question}
-                                question={r.question}
-                                answer={r.answer}
-                              />
-                            ))}
-                          </>
-                        )}
+                {topic.content ? (
+                  <>
+                    <LessonContent content={topic.content} />
+                    {pack.id === "mathematics-for-physics" && (
+                      <MathematicsExplorer topicId={topic.id} />
+                    )}
+                    {topic.theoreticalMinimum && (
+                      <section
+                        className="theoretical-minimum"
+                        aria-labelledby="theoretical-minimum-heading"
+                      >
+                        <h2 id="theoretical-minimum-heading">
+                          Theoretical minimum
+                        </h2>
+                        <MathText>{topic.theoreticalMinimum.coreIdea}</MathText>
+                        <MathText>
+                          {topic.theoreticalMinimum.widerConnection}
+                        </MathText>
                       </section>
-                    );
-                  })}
-                  {pack.id === "mathematics-for-physics" && <MathematicsExplorer topicId={topic.id} />}
-                  <div className="deeper-heading">
-                    Curious about the details?
-                  </div>
-                  {topic.sidebars.map((s) => (
-                    <details className="deep-dive" key={s.heading}>
-                      <summary>{s.heading}</summary>
-                      <MathText>{s.body}</MathText>
-                    </details>
-                  ))}
-                </section>
-                <section id="example" className="lesson-section">
-                  <div className="section-kicker">
-                    03 / WATCH THE METHOD AT WORK
-                  </div>
-                  <h2>{topic.workedExample.title}</h2>
-                  <div className="example-brief">
-                    <MathText>{topic.workedExample.problem}</MathText>
-                  </div>
-                  {topic.workedExample.steps.map((s, i) => (
-                    <section className="worked-step" key={s.title}>
-                      <span className="step-index">{i + 1}</span>
-                      <div>
-                        <h3>{s.title}</h3>
-                        <div className="reason">
-                          <strong>Why this step?</strong>
-                          <MathText>{s.reason}</MathText>
-                        </div>
-                        <MathText>{s.body}</MathText>
-                        <div className="trap">
-                          <strong>A common wrong turn</strong>
-                          <MathText>{s.trap}</MathText>
-                        </div>
-                      </div>
-                    </section>
-                  ))}
-                  <button
-                    className="secondary"
-                    onClick={() => {
-                      setPracticeOpen(true);
-                      setPracticeTab("guided");
-                      requestAnimationFrame(() =>
-                        document
-                          .getElementById("practice-panel")
-                          ?.scrollIntoView({ block: "start" }),
-                      );
-                    }}
-                  >
-                    Try a similar problem with support
-                    <ArrowRight size={16} />
-                  </button>
-                </section>
-                <section id="takeaway" className="lesson-section">
-                  {topic.practical && (
-                    <div className="practical-lab">
-                      <div className="section-kicker">
-                        PUT IT TO WORK · {topic.practical.minutes} MIN ·
-                        OPTIONAL LAB
-                      </div>
-                      <h2>{topic.practical.title}</h2>
-                      <MathText>{topic.practical.brief}</MathText>
-                      <ol>
-                        {topic.practical.steps.map((step) => (
-                          <li key={step}>
-                            <MathText>{step}</MathText>
-                          </li>
-                        ))}
-                      </ol>
-                      <h3>What to produce</h3>
-                      <ul>
-                        {topic.practical.deliverables.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                      <details className="deep-dive">
-                        <summary>Compare with the review guide</summary>
-                        <MathText>{topic.practical.review}</MathText>
-                      </details>
-                      <p className="muted">
-                        Use your notebook below to keep your reasoning. Labs are
-                        self-reviewed and do not affect knowledge-check scores.
-                      </p>
-                    </div>
-                  )}
-                  <div className="section-kicker">
-                    04 / THE IDEA TO TAKE WITH YOU
-                  </div>
-                  <h2>Bring it together</h2>
-                  <p className="takeaway">
-                    {topic.teaching?.takeaway ?? topic.description}
-                  </p>
-                  <p>
-                    {topic.teaching?.nextConnection ??
-                      "Try explaining the worked example without looking at its solution, then test the method on a new problem."}
-                  </p>
-                  {topic.theoreticalMinimum && (
-                    <section className="theoretical-minimum" aria-labelledby="theoretical-minimum-heading">
-                      <h2 id="theoretical-minimum-heading">Theoretical minimum</h2>
-                      <MathText>{topic.theoreticalMinimum.coreIdea}</MathText>
-                      <MathText>{topic.theoreticalMinimum.widerConnection}</MathText>
-                    </section>
-                  )}
-                  <div className="reading-complete">
-                    <button
-                      className={progress.read ? "secondary" : "primary"}
-                      disabled={busy || !ready}
-                      onClick={() =>
+                    )}
+                    <LessonCompletion
+                      read={Boolean(progress.read)}
+                      busy={busy}
+                      ready={ready}
+                      onToggle={() =>
                         act({ type: "read", topicId, read: !progress.read })
                       }
-                    >
-                      {progress.read ? (
-                        <Check size={17} />
-                      ) : (
-                        <BookOpen size={17} />
-                      )}{" "}
-                      {progress.read ? "Marked as read" : "Mark lesson as read"}
-                    </button>
-                    <p>Reading progress is separate from knowledge checks.</p>
-                  </div>
-                  <div className="next-lesson">
-                    <span>{next ? "UP NEXT" : "BACK TO THE BIG PICTURE"}</span>
-                    <h3>{next?.title ?? pack.title}</h3>
-                    <button
-                      className="text-button"
-                      onClick={() =>
+                      nextTitle={next?.title ?? pack.title}
+                      hasNext={Boolean(next)}
+                      onNext={() =>
                         next ? selectTopic(next.id) : setScreen("overview")
                       }
-                    >
-                      {next
-                        ? "Continue to the next lesson"
-                        : "Revisit your learning path"}
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
-                </section>
+                    />
+                  </>
+                ) : (
+                  <>
+                    <section id="story" className="lesson-section">
+                      <div className="section-kicker">
+                        01 / START WITH A PICTURE IN YOUR HEAD
+                      </div>
+                      <h2>The big idea</h2>
+                      <MathText>{topic.intuition.body}</MathText>
+                      <div className="lesson-outcomes">
+                        <h3>By the end of this lesson, you can…</h3>
+                        <ul>
+                          {topicOutcomes(topic).map((o) => (
+                            <li key={o}>
+                              <Check size={16} />
+                              <span>{o}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="pause-card">
+                        <div className="eyebrow">
+                          <Lightbulb size={16} />
+                          PAUSE & PREDICT
+                        </div>
+                        {topic.intuition.thoughtExperiments.map((q) => (
+                          <p key={q}>
+                            <InlineMathText>{q}</InlineMathText>
+                          </p>
+                        ))}
+                        <small>
+                          No answer box required. Say it aloud or jot down your
+                          prediction.
+                        </small>
+                      </div>
+                    </section>
+                    <section id="reasoning" className="lesson-section">
+                      <div className="section-kicker">
+                        02 / LET’S MAKE THAT IDEA PRECISE
+                      </div>
+                      <h2>Build the reasoning</h2>
+                      <Diagram data={topic.diagram} />
+                      {topic.theory.map((s, i) => {
+                        const checkpoint = topic.teaching?.checkpoints[i];
+                        return (
+                          <section className="reasoning-step" key={s.heading}>
+                            <h3>{s.heading}</h3>
+                            {checkpoint && (
+                              <p className="teaching-bridge">
+                                <InlineMathText>
+                                  {checkpoint.bridge}
+                                </InlineMathText>
+                              </p>
+                            )}
+                            <div className="formal-theory">
+                              <MathText>{s.body}</MathText>
+                              <FormulaCopies text={s.body} />
+                            </div>
+                            {checkpoint && (
+                              <>
+                                <div className="meaning">
+                                  <h4>What this is really saying</h4>
+                                  <p>
+                                    <InlineMathText>
+                                      {checkpoint.meaning}
+                                    </InlineMathText>
+                                  </p>
+                                </div>
+                                <Reflection
+                                  question={checkpoint.question}
+                                  answer={checkpoint.answer}
+                                />
+                                {checkpoint.further?.map((r) => (
+                                  <Reflection
+                                    key={r.question}
+                                    question={r.question}
+                                    answer={r.answer}
+                                  />
+                                ))}
+                              </>
+                            )}
+                          </section>
+                        );
+                      })}
+                      {pack.id === "mathematics-for-physics" && (
+                        <MathematicsExplorer topicId={topic.id} />
+                      )}
+                      <div className="deeper-heading">
+                        Curious about the details?
+                      </div>
+                      {topic.sidebars.map((s) => (
+                        <details className="deep-dive" key={s.heading}>
+                          <summary>{s.heading}</summary>
+                          <MathText>{s.body}</MathText>
+                        </details>
+                      ))}
+                    </section>
+                    <section id="example" className="lesson-section">
+                      <div className="section-kicker">
+                        03 / WATCH THE METHOD AT WORK
+                      </div>
+                      <h2>{topic.workedExample.title}</h2>
+                      <div className="example-brief">
+                        <MathText>{topic.workedExample.problem}</MathText>
+                      </div>
+                      {topic.workedExample.steps.map((s, i) => (
+                        <section className="worked-step" key={s.title}>
+                          <span className="step-index">{i + 1}</span>
+                          <div>
+                            <h3>{s.title}</h3>
+                            <div className="reason">
+                              <strong>Why this step?</strong>
+                              <MathText>{s.reason}</MathText>
+                            </div>
+                            <MathText>{s.body}</MathText>
+                            <div className="trap">
+                              <strong>A common wrong turn</strong>
+                              <MathText>{s.trap}</MathText>
+                            </div>
+                          </div>
+                        </section>
+                      ))}
+                      <button
+                        className="secondary"
+                        onClick={() => {
+                          setPracticeOpen(true);
+                          setPracticeTab("guided");
+                          requestAnimationFrame(() =>
+                            document
+                              .getElementById("practice-panel")
+                              ?.scrollIntoView({ block: "start" }),
+                          );
+                        }}
+                      >
+                        Try a similar problem with support
+                        <ArrowRight size={16} />
+                      </button>
+                    </section>
+                    <section id="takeaway" className="lesson-section">
+                      {topic.practical && (
+                        <div className="practical-lab">
+                          <div className="section-kicker">
+                            PUT IT TO WORK · {topic.practical.minutes} MIN ·
+                            OPTIONAL LAB
+                          </div>
+                          <h2>{topic.practical.title}</h2>
+                          <MathText>{topic.practical.brief}</MathText>
+                          <ol>
+                            {topic.practical.steps.map((step) => (
+                              <li key={step}>
+                                <MathText>{step}</MathText>
+                              </li>
+                            ))}
+                          </ol>
+                          <h3>What to produce</h3>
+                          <ul>
+                            {topic.practical.deliverables.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                          <details className="deep-dive">
+                            <summary>Compare with the review guide</summary>
+                            <MathText>{topic.practical.review}</MathText>
+                          </details>
+                          <p className="muted">
+                            Use your notebook below to keep your reasoning. Labs
+                            are self-reviewed and do not affect knowledge-check
+                            scores.
+                          </p>
+                        </div>
+                      )}
+                      <div className="section-kicker">
+                        04 / THE IDEA TO TAKE WITH YOU
+                      </div>
+                      <h2>Bring it together</h2>
+                      <p className="takeaway">
+                        {topic.teaching?.takeaway ?? topic.description}
+                      </p>
+                      <p>
+                        {topic.teaching?.nextConnection ??
+                          "Try explaining the worked example without looking at its solution, then test the method on a new problem."}
+                      </p>
+                      {topic.theoreticalMinimum && (
+                        <section
+                          className="theoretical-minimum"
+                          aria-labelledby="theoretical-minimum-heading"
+                        >
+                          <h2 id="theoretical-minimum-heading">
+                            Theoretical minimum
+                          </h2>
+                          <MathText>
+                            {topic.theoreticalMinimum.coreIdea}
+                          </MathText>
+                          <MathText>
+                            {topic.theoreticalMinimum.widerConnection}
+                          </MathText>
+                        </section>
+                      )}
+                      <LessonCompletion
+                        read={Boolean(progress.read)}
+                        busy={busy}
+                        ready={ready}
+                        onToggle={() =>
+                          act({ type: "read", topicId, read: !progress.read })
+                        }
+                        nextTitle={next?.title ?? pack.title}
+                        hasNext={Boolean(next)}
+                        onNext={() =>
+                          next ? selectTopic(next.id) : setScreen("overview")
+                        }
+                      />
+                    </section>
+                  </>
+                )}
                 <footer className="lesson-references">
                   <details>
                     <summary>Assumptions, units & sources</summary>
@@ -978,8 +1073,9 @@ export default function TeachingWorkspace({
                       <>
                         <h3>Transfer across the spine</h3>
                         <p className="muted">
-                          Recognise the same structure in a different mathematical
-                          setting. These questions are practice, not a mastery gate.
+                          Recognise the same structure in a different
+                          mathematical setting. These questions are practice,
+                          not a mastery gate.
                         </p>
                         {topic.transferProblems.map((p) => (
                           <ProblemInput

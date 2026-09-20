@@ -1,4 +1,5 @@
 import type { Lesson } from "../lesson";
+
 export const unit01BuildTheMentalModel: Lesson[] = [
   {
     id: "models",
@@ -6,114 +7,60 @@ export const unit01BuildTheMentalModel: Lesson[] = [
     unit: "01 · Build the mental model",
     question: "Why can a model explain a bug but fail to fix it?",
     outcome:
-      "Separate a model’s inference from the product that gives it context, tools and a place to act.",
+      "Separate a model's inference from the product that gives it context, tools and a place to act.",
     intro:
-      "Imagine you are stuck with a broken-down car, and you call a friend who happens to know a great deal about engines. Over the phone, you describe the noise it is making, and your friend correctly diagnoses the problem: a belt has worn down and is slipping, three bolts back from the front of the engine. This is genuinely useful. Your friend has done real, skilled work — turning a vague complaint (“it’s making a weird noise”) into a precise, checkable claim (“it’s this belt, right here”). But your car is still broken. Nothing has changed under the hood. If you want the belt actually replaced, someone still has to open the car, remove the old belt and put a new one on, and that is a different kind of activity from the diagnosis, even though the diagnosis was a necessary step toward it.\n\nNow replace the friend with a coding assistant, and the car with a piece of software. You paste a failing test into a chat window, and the assistant’s answer is exactly right: it tells you that a loop runs one iteration too many, that this is a classic off-by-one error, and that changing a particular comparison on a particular line would fix it. This is exactly as useful as the phone call about the belt. And then, just as with the belt, you ask the assistant to go ahead and actually make the change — and nothing happens. The file on disk is untouched. The test still fails. The line reads exactly as it did before.\n\nIt is tempting, at this point, to feel a little cheated: surely if it knew the answer, it should have simply gone and fixed it? But notice that we did not feel this way about the friend on the phone. We understood, without having to think about it, that correctly figuring out what is wrong and physically fixing it are two different jobs, done by two different processes, even when the very same person could in principle do both. Somewhere along the way — perhaps because the “friend” became a chat window instead of a person on the other end of a phone line — we quietly lost track of that distinction. It is worth getting it back, because a great many confusing moments in this course, every time an agent “should have known better,” trace back to blurring these two different jobs together.\n\nSo here is the idea, stated as plainly as we can manage. A model does not act on the world. A model takes in some representation of a situation and produces an output, and that output — no matter how confident, detailed or technically correct it is — is still just more representation: a sentence, a suggested edit, a description of what ought to happen. It is not the same kind of thing as the change actually happening. Whether that output ever becomes a real change to a real file depends entirely on some other piece of software, one we have not even discussed yet, that has to read the model’s output and decide, on its own, whether and how to act on it.\n\nThis distinction — between producing an output and taking an action — is the single most useful thing to carry with you through this course, and we will return to it constantly. For now, hold onto its shape: there is the part of the system that works out what should happen, and there is the part that makes it happen, and, exactly as with the friend and the mechanic, these do not have to be the same thing at all, even when it feels like they should be.",
+      "A retry-service test is failing. You paste the failure into a chat window, and the assistant gives a convincing diagnosis: a request is being counted as complete before the retry backoff has finished. The explanation is precise enough to guide a fix. Then you ask the assistant to apply it. You look at the file. Nothing has changed.\n\nThe assistant may have been right. It still did not perform the repair.\n\nThat gap is the first distinction in this course. A model produces an answer from the information it receives. A separate system has to turn that answer into an action on a real repository, under real permissions, and then report what happened. When those jobs are blurred together, every failure looks like a failure of intelligence. When they are separated, the next question becomes clearer: did the model reason badly, did it receive the wrong evidence, or did nothing execute its suggestion?",
     sections: [
       [
-        "What happens during inference",
-        "Let’s make this more precise, because “a model produces an output from a representation” is still fairly abstract, and it will help to have a slightly more mechanical picture in your head.\n\nThere are two very different things going on here, happening at very different times, and conflating them is a common source of confusion. The first is training: an offline, extremely expensive process, carried out once — or occasionally again, when a new version is released — in which a model’s internal parameters (think of them as an enormous number of adjustable dials) are tuned against a huge body of data, until the model becomes good at a certain kind of prediction: given some text, what is a plausible way to continue it? Crucially, this is not something that happens while you are using the model. By the time you are typing into a chat window, training is long finished and those dials are frozen in place.\n\nThe second thing — the one that happens every single time you actually use the model — is called inference. During inference, those frozen dials are combined with whatever you currently put in front of the model, usually called its context: the conversation so far, any files it has been shown, any instructions it was given. Together these produce an output. For the kind of language model this course is mostly about, that output is typically built one small piece at a time, called a token — roughly a word or word-fragment — with each new token chosen based on everything that came before it. It is a strange thing to sit with: an impressively sophisticated piece of reasoning, capable of explaining a subtle bug buried deep in a large codebase, is, mechanically, built up one small predicted fragment after another. But however it is built, notice what this process still does not include, no matter how good the model becomes at it: at no point does the model reach out and touch your actual working tree of files. If your prompt happens to mention a file path, that path is, to the model, simply a string of characters — text, exactly as much as the rest of your prompt is text. It becomes a real file, sitting on a real disk, only once some other program reads that string, goes looking on the filesystem for something with that name, and does something with what it finds there.\n\nThis becomes even more important once you start using a model that is allowed to “think” before it answers: one that spends some extra computation quietly working through a chain of reasoning before committing to a final response. That extra thinking time is genuinely useful — given the same starting evidence, a model that reasons more carefully and for longer will often reach a better conclusion than one that answers immediately. But, and this is worth sitting with for a moment, it is still reasoning about the evidence it was actually given. No amount of additional thinking can conjure evidence that was never supplied in the first place. If you hand a model a bug report with the one crucial log line missing, and then tell it to think harder, you are asking it to reason more carefully about an incomplete picture. You are not asking it to somehow perceive the missing line. So the next time a diagnosis goes wrong, try not to reach immediately for “was the model smart enough?” Hiding behind that question are almost always three much sharper, much more useful ones: did this failure need more computation, did it need better evidence, or did it need someone — or something — to actually go and do something?",
+        "The model produces an output",
+        "Training and use are different moments. During training, a model's parameters are adjusted using large collections of examples. During inference, those parameters are fixed. The model receives current input - its context - and produces an output.\n\nThat output might be prose, a proposed patch, structured data or a tool-shaped request. However impressive it is, it is still an output. If the model writes read_file for src/retry.ts, it has not read the file. It has described a request that another program may understand and execute.\n\nThis is also why more reasoning cannot replace missing evidence. If the failure report omits the stack trace, asking the model to think longer may help it organise the information it has, but it cannot make the absent stack trace appear.",
       ],
       [
-        "Choose a capability for a job",
-        "Once this distinction settles — between what a model does and what happens to its output afterward — a second, related confusion tends to unravel almost on its own: the question of whether one model is simply “better” than another, as though every model could be lined up on a single ladder running from worse to best.\n\nIn practice, it is far more useful to think of a broad, general-purpose model and a narrower, specialised one as representing different trade-offs suited to different jobs, rather than different rungs on the same ladder. Picture a small, cheap classifier that has been tuned specifically to recognise a handful of familiar categories of incident — “this looks like a timeout,” “this looks like a bad deploy.” On the routine cases it was built for, it may be faster, cheaper and just as accurate as a vastly larger general-purpose model. But hand that same small classifier an unfamiliar failure that crosses two services in a way nobody anticipated when it was built, and it may do far worse than a model built for broad, general reasoning would. Calling a model “specialised” tells you what kind of task it was shaped for. It does not tell you that it is better at every task that merely sounds like it belongs to that same general area. The only honest way to find out which model actually suits your job is to measure both of them on the specific inputs you care about, and see what happens.\n\nThere is one more layer of confusion worth clearing up here, and it is probably the most common one in everyday use: the thing you are actually interacting with is very rarely just a model. Wrapped around it, usually invisibly, is a whole apparatus — retrieval that decides which documents or files the model even gets to see, instructions that shape how it is supposed to respond, tools it is permitted to call, permissions that limit what those tools can actually do, an interface that shapes how you interact with all of this, and sometimes an invisible router that quietly switches between several different underlying models depending on what you asked. So if you notice that two different products behave differently on what looks like the same task, the underlying model is only one of many possible explanations for that difference, and often not the right one.\n\nThis has a very concrete, practical consequence, worth stating outright: get into the habit of writing down, separately, which model you used and which surrounding configuration it was running inside of. Treat these as two different facts, not one blurred impression. If you do not, you risk a particular mistake that is easy to make and hard to notice: one day someone quietly improves the repository search that feeds context to the model, the model’s answers get noticeably better as a result, and you find yourself writing an excited note about how much smarter the model has become — when, in fact, nothing about the model itself changed at all.",
+        "A product is more than its model",
+        "The thing people call an assistant is usually a bundle of parts: a model, instructions, retrieval, context assembly, tools, permissions, an interface and sometimes a router that chooses between models.\n\nIf two systems use the same underlying model but one sees the current source file while the other sees a stale generated copy, their different results do not prove that the models differ. They show that the systems supplied different evidence.\n\nWhen a result is poor, ask three questions: did the system have the evidence it needed, did the model have a suitable inference setup, and did the surrounding system have a working way to act and observe the result? Those are different failure surfaces.",
       ],
     ],
     checkpoints: [
       {
         bridge:
-          "Before separating capability from configuration, look at the one operation a model actually performs: turning an input representation into an output. Everything else in this course sits on top of that fact.",
+          "Start with the smallest thing the model actually does: transform supplied context into an output.",
         meaning:
-          "Inference produces text or a structured request; it does not touch your disk on its own. A tool request is a proposal until something executes it. Extra “thinking” can change which proposal is chosen; it cannot supply an observation the model was never given.",
+          "A model can propose a file read or a patch, but the proposal is not the file read or the patch.",
         question:
-          "A reasoning-capable model is asked to think longer about a bug report that omits the actual stack trace. Will more thinking time recover the missing evidence?",
+          "A model is asked to think longer about a bug report that omits the stack trace. Will more thinking recover the missing evidence?",
         answer:
-          "No. Additional computation can improve how well the model uses what it already has, but it cannot manufacture an observation it was never supplied. The fix is to supply the stack trace, not to request more reasoning time.",
-        further: [
-          {
-            question:
-              "A model is given the exact same context twice and asked to produce a tool request each time. Could it legitimately return two different requests?",
-            answer:
-              "Yes. Inference is generally a probabilistic process; the same context does not guarantee an identical output unless sampling is made fully deterministic, and even then subtle context differences can change the result.",
-          },
-          {
-            question:
-              "If a harness silently retried a failed tool call before the model ever saw the failure, would the model's own context reflect what actually happened?",
-            answer:
-              "No. The model would only see the eventually reported result, missing the fact that a retry occurred. Anything a harness does invisibly falls outside what the model's context can ever describe.",
-          },
-        ],
+          "No. More computation can improve the use of existing evidence, but it cannot create an observation that was never supplied.",
       },
       {
         bridge:
-          "Once you accept that a model only reasons over what it is given, product comparisons stop being about “which AI is smarter” and start being about which configuration supplied better context.",
+          "Once output and execution are separate, comparisons need to keep the model separate from the product around it.",
         meaning:
-          "A product bundles a model with retrieval, instructions, tools and permissions. Two products showing different results may differ in any of these layers, not necessarily in the underlying model. Record model and configuration separately so you know which one actually changed.",
+          "Different context, retrieval, tools or permissions can produce different results even when the underlying model is the same.",
         question:
-          "Two products use the same underlying model, yet one investigates correctly and the other reads a stale generated file. What does this show about the two models’ capability?",
+          "Two products use the same named model, but only one reads the current implementation. What does their different result establish?",
         answer:
-          "Very little on its own. It is evidence about the surrounding product — retrieval, tool wiring or context assembly — not proof that the underlying models differ in ability.",
-        further: [
-          {
-            question:
-              "A team swaps their assistant's underlying model but keeps the same product, instructions and tools. Performance changes. What can this comparison conclude?",
-            answer:
-              "That the model is a plausible cause, since it was the one thing deliberately varied while everything else stayed fixed — a cleaner attribution than is typically available.",
-          },
-          {
-            question:
-              "Why can recording 'model' and 'configuration' as two separate facts be harder in practice than it sounds?",
-            answer:
-              "A product update can silently change context assembly, tool wiring, or default instructions at the same time it changes, or doesn't change, the underlying model. Both often ship in one release note, so teasing apart which change caused an observed difference takes deliberate effort.",
-          },
-        ],
+          "It establishes that their overall configurations differ in a relevant way. It does not, by itself, establish that the underlying models differ in capability.",
       },
-    ],
-    moreChecks: [
-      [
-        "A model's context window is described as 'large.' What does this establish on its own?",
-        [
-          "Every included item will be used correctly",
-          "Only an upper bound on how much can be supplied at once",
-          "That the model is more capable than a smaller-window model",
-        ],
-        1,
-        "Window size is a capacity limit, not a guarantee about relevance or correct use of what's inside it.",
-      ],
-      [
-        "Two coding products report different bug-fix success rates using the same named model. Which explanation should you check first?",
-        [
-          "The model secretly changed itself between runs",
-          "Differences in context, tools, or harness configuration",
-          "The bug reports were different lengths",
-        ],
-        1,
-        "Surrounding product configuration is the most common source of behavioral differences between products sharing one model name.",
-      ],
-      [
-        "A reasoning model spends much longer 'thinking' about a task with complete, correct evidence already in context. What is the most likely benefit?",
-        [
-          "It can recover missing evidence it wasn't given",
-          "It may reach a better conclusion from the evidence already present",
-          "It gains permission to execute tools directly",
-        ],
-        1,
-        "More computation helps use existing evidence better; it does not conjure missing evidence or grant new capabilities.",
-      ],
     ],
     example: [
       "A retry bug is diagnosed correctly in chat but the delegated run edits the wrong file.",
       [
-        "Inspect the supplied evidence",
-        "Compare the chat excerpt with the files actually read by the agent. The delegated run read an old generated client; the chat used the current implementation.",
+        "Compare the evidence",
+        "The chat used the current implementation and failing test. The delegated run read an old generated client because its search returned a stale match.",
         "The apparent capability difference may be an input difference.",
-        "Immediately choosing a more expensive model leaves the wrong file in context.",
+        "Choosing a more expensive model before checking which file was supplied.",
       ],
       [
-        "Repeat with one controlled change",
-        "Keep the model fixed and point the run to the current source and failing test. Check the resulting diff and test output.",
-        "Changing one factor lets the result teach you something.",
-        "A fluent explanation of the fix is not evidence that the patch was applied.",
+        "Change one factor",
+        "Keep the model and task fixed. Point the run at the current source, then inspect the requested path and resulting diff.",
+        "A controlled change lets the result tell you whether context caused the failure.",
+        "Treating a fluent explanation as proof that the correct file was changed.",
+      ],
+      [
+        "Check the result",
+        "Run the focused regression test against the final workspace, not against the model's description of what it intended to do.",
+        "The accepted result is the observed change plus evidence that it works.",
+        "Stopping at the assistant's statement that the fix is complete.",
       ],
     ],
     checks: [
@@ -121,27 +68,27 @@ export const unit01BuildTheMentalModel: Lesson[] = [
         "Which event proves that a file changed?",
         [
           "The model describes a patch",
-          "A tool applies it and the file/diff is observed",
+          "A tool applies it and the file or diff is observed",
           "The model says it has write access",
         ],
         1,
         "A model output is a proposal. Execution and an observed file state establish the change.",
       ],
       [
-        "Two products use the same model but achieve different results. What follows?",
+        "Two products use the same model but achieve different results. What should you investigate?",
         [
-          "The comparison must be invalid",
-          "One secretly trained the model during the task",
-          "Investigate context, tools and harness configuration",
+          "Only the model's training data",
+          "Context, tools and surrounding configuration",
+          "Whether the longer answer is automatically better",
         ],
-        2,
-        "The surrounding product changes what the model can observe and execute.",
+        1,
+        "The surrounding product changes what the model can see and what its output can do.",
       ],
       [
-        "A model invents a missing log line. What should you improve first?",
+        "A model invents a missing log line. What should improve first?",
         [
           "Retrieve the actual log",
-          "Increase answer length",
+          "Increase the requested answer length",
           "Add more specialist vocabulary",
         ],
         0,
@@ -149,131 +96,77 @@ export const unit01BuildTheMentalModel: Lesson[] = [
       ],
     ],
     takeaway:
-      "A model produces outputs from context. A product determines what context it sees and what its outputs can do.",
+      "A model produces outputs from context. A product determines what context it sees and what those outputs can do.",
     nextConnection:
-      "Once you can separate a model’s output from what happens to it, ask what has to exist for that output to become an action: an agent loop that observes and reacts.",
+      "Once a model's output is separate from execution, the next question is how a system can let it choose actions, observe their results and continue from the evidence.",
     source: ["tools", "codex"],
     flow: [
       "Context supplied to the model",
       "Inference produces an output",
-      "Product interprets that output",
-      "Tool may change the environment",
+      "A surrounding system interprets it",
+      "A tool may change the environment",
+      "The result becomes new evidence",
     ],
   },
   {
     id: "agents",
-    title: "Agents: close the action–observation loop",
+    title: "Agents: close the action-observation loop",
     unit: "01 · Build the mental model",
     question: "What changes when the assistant can try its own suggestion?",
     outcome:
-      "Identify an agent loop and choose how much independent action a task should permit.",
+      "Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions.",
     intro:
-      "Go back to the friend on the phone, diagnosing your car by ear. Suppose your friend says something different this time: “Let me come over, and if I’m wrong about the belt, I’ll try the next thing.” Now your friend does not just deliver a single verdict from a distance. Your friend walks over, opens the hood, loosens a bolt, listens to the engine again, and revises the diagnosis if the noise is still there. This is a substantial change, even though the same underlying expertise is being applied. Each attempt produces some new fact, and each new fact can change what your friend decides to try next.\n\nCarry this back to software. Picture an assistant that proposes running the failing retry test. In a plain chat window, you are the one who actually copies that command, runs it yourself, and pastes the result back in — you are standing in as the mechanic, carrying messages back and forth between yourself and the diagnosis. Now imagine that loop closed: some piece of software runs the command automatically and hands the result straight back to the model, with no you in the middle. The model can look at that result and decide what to try next, using evidence that, a moment before, it simply did not have.\n\nThat closed loop — decide, act, observe, decide again — is the entire operational content of the word “agent.” It has nothing to do with how confident the system sounds, or how long and elaborate its instructions are. An agent is not a personality; it is a system in which a decision can select an action, that action produces an observation, and that observation feeds back into the next decision. Strip away everything else, and this loop is what is actually left.",
+      "A chat assistant can suggest where the retry counter is wrong. An agent can ask to open the file, inspect the surrounding code, run the focused test and use the result to decide what to do next.\n\nThat is a real change, but it is not magic. The agent has gained a loop around the model: propose an action, execute it, return an observation, then make another decision.\n\nThe loop makes the system capable of adapting to evidence. It also creates new responsibilities: which actions are allowed, which observations are trustworthy, and what counts as a legitimate stopping point?",
     sections: [
       [
-        "Trace one complete cycle",
-        "To see this loop clearly, it helps to walk through one concrete pass around it rather than talk about it in the abstract. Give the system a goal: reproduce the duplicate-retry bug, and fix it. The model’s first move might be to request that the retry test actually be run. Some executor — the piece of software standing in for you, the mechanic — carries out that request and reports back what happened: say, an assertion failure, on a particular line, with a particular message. The model reads that observation and makes its next decision, perhaps asking to inspect a source file that now looks relevant. Notice that this second action was only possible because the first one produced a genuinely new fact. Nothing about the code changed between these two steps, and yet the evidence available to the system did change, and that alone is enough to move the investigation forward.\n\nNow consider what happens if that first request does not actually succeed — if, say, the environment does not even have Node.js installed, and the command fails before any test runs at all. This case is easy to get wrong, and getting it wrong matters: a tool request is not automatically the same thing as an observation. If the executor pretends the test ran when it did not, or quietly swallows the failure, the model has been handed a false premise, and everything it decides next will be built on top of that false premise. The honest thing to return is exactly what happened — the command failed to start, for this reason. An agent that cannot tell “the test failed” apart from “the test never had the chance to run” will confidently investigate the wrong problem, and it will do so with just as much apparent conviction as if it had gotten things right.",
+        "The basic loop",
+        "A useful abstract loop has four steps:\n\n1. Start with a goal and the evidence currently available.\n2. Ask the model to choose the next action.\n3. Execute that action through a controlled tool.\n4. Return the result as an observation and repeat.\n\nFor the retry incident, the first action might be reading the failing test. The next might be reading the retry implementation. A later action might run the test after a proposed edit. The model chooses among operations that the surrounding system exposes; it does not directly become the filesystem or shell.\n\nWithout the observation step, this is only repeated suggestion. The model cannot adapt to a test result it never receives.",
       ],
       [
-        "Autonomy needs a boundary and an ending",
-        "Once this loop is in view, a further question becomes unavoidable: how much should the system be allowed to do with it on its own, before you step back in? It helps to think of this as a spectrum of responsibility rather than a single switch. At one end, plain autocomplete proposes a small, local continuation of what you are already typing, and nothing more. A step further, an assistant can discuss a task with you, offering suggestions you remain free to accept or reject one at a time. Further still, a delegated agent can select and carry out several actions in a row in pursuit of some larger outcome, checking back with you only once it is done, or stuck. And at the far end, an unattended workflow can launch a whole run of this kind on its own initiative, triggered by some event, with no human deciding in the moment that this particular run should happen at all. None of these positions is simply “better” than the others; they are different amounts of responsibility, suited to different situations, and choosing badly among them is its own kind of mistake, in either direction.\n\nWherever you land on that spectrum, one thing has to be settled in advance, and it is easy to skip past: what, exactly, counts as being finished? It is tempting to let the model’s own closing remarks answer this — if it says “done,” perhaps that is good enough. Resist this. Define completion independently of whatever the model happens to say about itself: the required tests actually pass, the intended behaviour is actually present, and the change actually stays within the scope you asked for. Alongside that, define what a blocked ending looks like, and what a budget-exhausted ending looks like, because a long-running task will not always end in success. A limit on the number of turns a model may take is a guard against a runaway process, not a definition of success. A run can burn through every one of its allotted turns without making any real progress at all, just as easily as it can finish correctly with turns to spare — the number of turns used tells you almost nothing, on its own, about whether the work is actually done.",
+        "Observations and stopping states",
+        "The loop only helps if observations describe what happened. A denied request, an environment failure and a failing test are different observations and should lead to different next actions.\n\nA run also needs more than a turn limit. It needs explicit outcomes such as complete, blocked and exhausted. A turn limit is a resource boundary, not a definition of success. Completion should be established by acceptance evidence such as a passing regression test and an inspected diff.\n\nA blocked result is meaningful. If the required fixture, permission or runtime is unavailable, the responsible outcome may be a precise report of the blocker rather than another uninformative retry. A good agent loop knows how to stop honestly.",
       ],
     ],
     checkpoints: [
       {
         bridge:
-          "Return to the retry bug. In chat you were the one who ran the command and reported the result back — you were the loop. Automate exactly that role, and you have an agent.",
+          "Follow the retry investigation through one complete cycle: choose an action, execute it and return what happened.",
         meaning:
-          "An action and its resulting observation are two different events. A tool request that never actually executed is not an observation of anything; treating a bare request as if it had happened invites the next decision to reason from a false premise.",
-        question:
-          "The harness cannot start Node.js and returns an error before any test runs. Should the next step be to investigate the retry logic itself?",
+          "The action-observation loop is what lets the model adapt. A tool-shaped message without execution is still just a proposal.",
+        question: "What closes an agent loop?",
         answer:
-          "No. The observation reports that no test executed at all. Investigating retry logic now would test a hypothesis with no supporting evidence; the environment blocker must be resolved or reported first.",
-        further: [
-          {
-            question:
-              "An agent's tool call returns a result, but the harness omits which command produced it. What problem does this create for the next decision?",
-            answer:
-              "The model can't tell whether the observation actually answers the question it just asked, or is stale evidence from an earlier request — undermining its ability to reason about what its own action just changed.",
-          },
-          {
-            question:
-              "Could an agent loop technically satisfy the decide-act-observe-decide pattern while still being useless? What would that look like?",
-            answer:
-              "Yes. If chosen actions never actually change the available evidence, such as rereading the same unchanged file repeatedly, the loop mechanically closes but produces no genuine progress. Closing the loop does not guarantee the decisions inside it are good ones.",
-          },
-        ],
+          "The result of an executed action is returned as an observation that informs the next decision.",
       },
       {
         bridge:
-          "Not every task deserves the same amount of independence. Before granting it, decide what “done” means and what should happen if the budget runs out first.",
+          "A system that can act also needs a clear and honest way to stop.",
         meaning:
-          "A turn limit is a resource boundary, not a definition of success. A run can exhaust its budget having made no real progress, or finish correctly with turns to spare — the limit only says when it must stop, never whether it succeeded.",
+          "Budgets constrain resource use, while acceptance evidence determines success. They must not be treated as the same thing.",
         question:
-          "An agent uses all 20 of its allotted turns and then reports “complete.” Does the turn count support that claim?",
+          "An agent uses all 20 allotted turns and reports complete. Does the turn count support that claim?",
         answer:
-          "No. The turn count only shows the run used its full budget. Only independent acceptance evidence, such as a passing regression test, can support a claim of completion.",
-        further: [
-          {
-            question:
-              "Why is 'the agent stopped because it ran out of turns' not, by itself, informative about whether the task succeeded?",
-            answer:
-              "A turn limit describes a resource exhaustion event, not an evaluation of the work done. Success has to be checked against acceptance criteria independently of why the run stopped.",
-          },
-          {
-            question:
-              "A task has no test suite and a genuinely disputed definition of 'correct behavior.' Does raising the turn budget help an agent working on it?",
-            answer:
-              "Not really. A bigger budget lets the agent do more work, but with no way to check whether that work is correct, more turns just produce more unverifiable output. The bottleneck here is verification, not compute.",
-          },
-        ],
+          "No. The run is budget-exhausted unless independent acceptance evidence shows that the task was completed before the limit.",
       },
-    ],
-    moreChecks: [
-      [
-        "An agent requests a shell command; the shell returns ‘permission denied.’ What has been observed?",
-        [
-          "A successful command execution",
-          "A denied request, which is itself useful information",
-          "Nothing, since the model must retry silently",
-        ],
-        1,
-        "A denial is a valid, informative observation distinct from both success and a malformed request.",
-      ],
-      [
-        "Which best distinguishes autocomplete from a full agent loop?",
-        [
-          "Autocomplete never touches a keyboard",
-          "Autocomplete proposes a local continuation with no action–observation cycle",
-          "Autocomplete requires more turns",
-        ],
-        1,
-        "Autocomplete lacks the closed action–observation loop that defines an agent.",
-      ],
-      [
-        "A long-running agent's final message is confident and detailed. Is this sufficient evidence of successful completion?",
-        [
-          "Yes, confidence correlates with correctness",
-          "No, completion needs independent acceptance evidence",
-          "Yes, if the message is long enough",
-        ],
-        1,
-        "Prose confidence is not a substitute for checking the actual required outcome.",
-      ],
     ],
     example: [
       "The agent runs the same failing command three times.",
       [
-        "Classify the repeated observation",
-        "The command reports a missing environment variable before loading tests. Record this as an environment blocker.",
-        "The result contains no evidence about retry logic.",
-        "Interpreting every nonzero exit as a code defect.",
+        "Classify the observation",
+        "The command reports a missing environment variable before loading the tests. Record an environment blocker, not a retry-logic failure.",
+        "The result contains no evidence about the application behaviour.",
+        "Interpreting every nonzero exit code as a defect in the code under investigation.",
       ],
       [
-        "Choose a justified next action",
-        "Read the test setup instructions and supply the documented non-secret fixture configuration. If unavailable, return a blocked report with the exact requirement.",
-        "Another action should change the evidence or resolve the blocker.",
-        "An arbitrary fourth retry consumes budget without a new hypothesis.",
+        "Choose a new action",
+        "Read the test setup instructions and look for the documented fixture configuration. If it is unavailable, stop with a blocked report.",
+        "The next action should change the evidence or resolve the blocker.",
+        "Issuing a fourth identical command simply because turns remain.",
+      ],
+      [
+        "Verify the stopping state",
+        "If the test runs, continue from its actual assertion. If it cannot run, preserve the command, environment and error as the reason for stopping.",
+        "A useful run leaves behind a reconstructable account of what happened.",
+        "Calling the run complete because the model produced a confident summary.",
       ],
     ],
     checks: [
@@ -282,42 +175,43 @@ export const unit01BuildTheMentalModel: Lesson[] = [
         [
           "Returning the tool result for the next decision",
           "Adding the word agent to the prompt",
-          "Always running unattended",
+          "Running without a human watching",
         ],
         0,
-        "The next action can adapt only if execution results feed back into the decision.",
+        "The next action can adapt only when execution results feed back into the decision.",
       ],
       [
         "A run reaches its turn cap. What status is justified?",
         [
           "Successful by persistence",
-          "Budget exhausted unless completion was independently verified",
-          "The model has learned the task permanently",
+          "Budget-exhausted unless completion was verified",
+          "Permanently improved for the next task",
         ],
         1,
         "A resource limit describes why execution stopped, not whether the goal was achieved.",
       ],
       [
-        "A production migration has no rollback or reliable verification. What is the best initial autonomy?",
+        "A tool returns permission denied. What is that result?",
         [
-          "Unattended write access",
-          "Many parallel writers",
-          "Human-led investigation with bounded read-only assistance",
+          "Useful evidence about the execution boundary",
+          "Proof that the model is unintelligent",
+          "Nothing until the command is retried",
         ],
-        2,
-        "Uncertainty about acceptable outcomes calls for investigation before delegating consequential execution.",
+        0,
+        "A denied action is an observation that should influence the next decision.",
       ],
     ],
     takeaway:
-      "Useful autonomy is permission to select evidence-producing actions within a goal, budget and stopping contract.",
+      "An agent is a model inside a bounded action-observation loop. Autonomy requires goals, allowed actions, observations, budgets and stopping rules.",
     nextConnection:
-      "Knowing what an agent loop is does not yet explain who actually executes the tool call it proposes. That machinery is the harness.",
+      "The loop describes the behaviour we want. The next lesson asks which machinery validates requests, runs tools, assembles context and enforces the boundary around that behaviour.",
     source: ["tools", "security"],
     flow: [
       "Goal and stopping contract",
       "Model selects an action",
       "Executor returns an observation",
       "Model updates its next decision",
+      "Acceptance evidence decides the outcome",
     ],
   },
   {
@@ -328,120 +222,66 @@ export const unit01BuildTheMentalModel: Lesson[] = [
     outcome:
       "Locate loop control, tool execution, context selection and permission enforcement in a harness.",
     intro:
-      "Suppose you have two equally skilled mechanics — genuinely the same level of skill, perhaps even trained by the same person — and you give them the same car with the same fault. Send one of them to a well-organised workshop: the right tools are on the wall in the right place, the lift works, the diagnostic computer is plugged in and calibrated. Send the other to a workshop where the tools are scattered across three benches, half of them mislabeled, and the lift needs to be checked before anyone trusts it. It should not surprise you that the first mechanic fixes the car in twenty minutes while the second spends the morning just finding the right wrench. Nobody would conclude from this that the second mechanic is less skilled. The difference lies entirely in the workshop.\n\nThe same thing happens with coding agents, and it is one of the easiest things to get backwards. Give two engineers access to the very same underlying model. One agent finds the flaky test, edits three lines, and verifies the fix within a couple of minutes. The other spends ten minutes running directory listings that go nowhere. Before concluding that one run simply got luckier, or that the model behaved inconsistently, look at the machinery surrounding it — because that machinery, and not the model itself, is very often where the real difference actually lives.\n\nThat machinery has a name: the harness. A harness is the program that turns a model’s raw outputs into an actual operating agent. It builds the requests sent to the model, interprets whatever tool calls come back, decides whether and how to execute them, feeds the resulting observations back in, and decides when the whole run should end. It is worth keeping two words apart here, because people use them interchangeably and it causes real confusion: “agent” describes the working system, or the behaviour you observe; “harness” names the actual piece of software that makes that behaviour possible in the first place. The mechanic’s skill is the model. The workshop is the harness.",
+      "Give two mechanics the same car and the same diagnosis. Put one in a well-organised workshop, with working tools, a clear job card and a checked lift. Put the other in a room where the tools are scattered and nobody knows which version of the job is current. Their results will differ, even if their technical ability is the same.\n\nCoding agents have workshops too. The harness is the machinery around the model: it builds model requests, interprets tool calls, decides whether they may run, executes them, returns observations and decides when the run ends.\n\nThe model supplies judgement inside the loop. The harness supplies the operating boundary. Keeping those responsibilities distinct gives us somewhere concrete to look when the agent behaves strangely.",
     sections: [
       [
-        "Follow a tool request across the boundary",
-        "To make this concrete, follow one tool request all the way across the boundary between the model and the world. Suppose the model asks to read_file, with some particular path attached. Before anything is actually read, the harness has several jobs to do, none of which the model can do on its own: it must check that the request is even shaped correctly, resolve the path against the real filesystem, check whether that path is one this run is actually allowed to touch, read the bytes if it is, and then decide how to package the result before handing it back as the next piece of context. None of this happens simply because the model was instructed to “behave.” An instruction is a sentence; a permission check is code that runs, whether or not anyone asked it nicely to do so.\n\nThis separation turns out to be extremely useful when something goes wrong, because it gives you several distinct places to look rather than one vague suspect. A request that is malformed is a different problem from a request that was valid but denied by policy, and both are different again from a request that succeeded but returned stale content. It is worth logging which of these three things actually happened, for every tool call — without, of course, letting anything secret leak into that log.",
+        "Follow one request across the boundary",
+        "Suppose the model requests read_file for src/retry.ts. Before the file contents reach the model, the harness may validate the request shape, resolve the path inside the assigned workspace, check access policy, read the bytes, attach the tool-call identity and package the result as new context.\n\nThe model cannot enforce these steps merely by being instructed to behave well. A prompt can say stay inside the repository; executable path checks are what make that boundary real.\n\nUseful failure categories include malformed request, policy denial, execution failure, stale or incorrect result, and successful observation. A harness that reports all of them as tool succeeded destroys the information needed to debug the run.",
       ],
       [
         "Configure before replacing",
-        "Once you understand what a harness does, a tempting next step is to build your own — and sometimes that really is the right call, but it is worth resisting the urge until you have actually earned it. A stock harness that ships with a product may already let you configure repository instructions, register new tools, control what enters context, and set execution limits, all through ordinary settings rather than new code. If the problem you are facing can be solved by turning one of those existing knobs, turn the knob. Reach for a custom harness only once you need some enforceable behaviour that the existing product genuinely cannot express — for instance, a rule that every write must pass through a particular transaction service with its own audit trail, where no amount of instruction-writing will make that happen on its own.\n\nThe reason to be cautious here is not laziness; it is that owning a harness means owning far more than the happy path. It means owning cancellation when a run needs to stop early, retries when a request fails transiently, the inevitable day a provider changes its response format under you, and the ongoing job of actually observing what the system is doing in production. A small demo loop, built over a weekend, can look deceptively complete, precisely because its happy path is the only path it has ever been asked to walk. Before you write a replacement loop, write down the specific requirement your current setup cannot satisfy, in concrete and checkable terms, and only then decide whether a new harness is the proportionate answer to it.",
+        "A harness can enforce that a command is allowed, set a timeout and record its result. It cannot, by those controls alone, establish that the model chose the right hypothesis or that the task was well specified.\n\nIt also decides what survives into the next model request. A perfectly executed file read is of little use if the result is dropped. Retaining every log line can bury the evidence that matters.\n\nA custom harness is justified when the current system cannot enforce a requirement that matters - for example, when every write must pass through a domain-specific transaction service with its own audit trail. Even then, include the ongoing cost of cancellation, retries, provider changes, schema evolution and recovery.",
       ],
     ],
     checkpoints: [
       {
         bridge:
-          "Take one tool request and follow it past the model’s boundary, into the code that actually acts on it.",
+          "Take the model's request to read a file and follow it into the code that actually acts on the request.",
         meaning:
-          "Validating shape, resolving a path, checking access and executing are separate operations performed by the harness, not by the model. A confidently worded instruction cannot substitute for any of these checks actually running in code.",
+          "Validation, path resolution, access checks and execution are harness responsibilities. A model's instruction cannot enforce them by itself.",
         question:
-          "A tool call is syntactically well-formed but requests a path outside the repository. Who is responsible for rejecting it?",
+          "A tool request is valid JSON but points outside the assigned repository. Who should reject it?",
         answer:
-          "The harness’s execution layer, through its access checks — not the model’s own judgement, which the harness cannot verify or enforce by itself.",
-        further: [
-          {
-            question:
-              "A harness logs 'tool call succeeded' for every request regardless of outcome. What debugging capability does this destroy?",
-            answer:
-              "The ability to tell malformed requests, policy denials and stale successful reads apart from each other — collapsing three different categories into one uninformative label.",
-          },
-          {
-            question:
-              "Could a well-written system prompt alone enforce that an agent never reads outside its assigned directory?",
-            answer:
-              "No. A prompt can request this behavior, but only code-level path resolution and access checks in the harness can actually enforce it. An instruction is advisory, not a technical control.",
-          },
-        ],
+          "The harness validation and access-control layer should reject it before execution.",
       },
       {
         bridge:
-          "Most failures do not require writing a new harness. Before reaching for one, check what the existing machinery already lets you configure.",
+          "Before building a replacement, identify the concrete boundary your current setup cannot enforce.",
         meaning:
-          "A custom harness is justified by a concrete missing capability — such as an enforceable transaction rule — weighed against the ongoing cost of owning cancellation, retries and observability yourself. “It feels more advanced” is not that justification.",
+          "Custom harness ownership includes the unhappy paths as well as the happy path. A missing enforceable requirement can justify it; preference alone cannot.",
         question:
-          "A team wants every model-proposed write to pass through a domain-specific audit service that the stock harness cannot express. Is building custom harness machinery reasonable here?",
+          "A team needs every write to pass through an audit service that the stock product cannot express. Is custom harness work potentially justified?",
         answer:
-          "Potentially, yes — this is a concrete, unmet requirement, not a preference. The team should still weigh the resulting maintenance burden against configuring the existing product first.",
-        further: [
-          {
-            question:
-              "A team wants stricter logging of every tool call. Is this generally a reason to replace the harness?",
-            answer:
-              "Usually not. Logging is a common configurable capability in most stock harnesses; check existing observability settings before concluding a custom harness is required.",
-          },
-          {
-            question:
-              "What ongoing cost does a team take on the day they commit to a custom harness, beyond the initial build?",
-            answer:
-              "Ownership of cancellation, retries, provider format changes, schema evolution and observability, indefinitely — obligations a maintained stock product would otherwise absorb.",
-          },
-        ],
+          "Yes, potentially. This is a concrete missing capability, although the team still needs to weigh implementation and maintenance cost.",
       },
-    ],
-    moreChecks: [
-      [
-        "A tool request has correct JSON syntax but references a path outside the repository. Whose job is it to reject this?",
-        [
-          "The model, by reasoning more carefully",
-          "The harness’s validation and access-control layer",
-          "The end user, after reviewing the output",
-        ],
-        1,
-        "Syntax validity and semantic/permission validity are different checks, and only the harness enforces the latter.",
-      ],
-      [
-        "Which is a legitimate reason to build a custom harness?",
-        [
-          "A required enforceable behavior the current product cannot express",
-          "The team prefers writing their own code",
-          "A demo loop was easy to build over a weekend",
-        ],
-        0,
-        "Custom machinery should be justified by a concrete missing capability, not preference or a deceptively simple prototype.",
-      ],
-      [
-        "The same model succeeds locally but fails in CI. What should be compared first?",
-        [
-          "The two models’ training data",
-          "The working directory, checkout state and available commands",
-          "The user’s typing speed",
-        ],
-        1,
-        "Environment differences are the first place to look before suspecting the model itself.",
-      ],
     ],
     example: [
       "The same model succeeds locally but fails in CI.",
       [
-        "Compare the environments",
-        "Record checkout SHA, working directory, available commands and tool outputs. CI starts one directory above the package.",
+        "Compare the execution environments",
+        "Record the checkout revision, working directory, available commands, environment inputs and tool outputs. CI starts one directory above the package.",
         "The harness supplies the working environment, so model identity does not control it.",
-        "Changing prompts to compensate for an accidental directory mismatch.",
+        "Changing the prompt to compensate for an accidental directory mismatch.",
       ],
       [
-        "Correct and verify the harness input",
-        "Set the job’s working directory and repeat the same task. Retain the original model for the comparison.",
-        "A controlled rerun separates environment effects from model effects.",
-        "Declaring a custom harness necessary before trying supported configuration.",
+        "Make one supported correction",
+        "Set the job's working directory and repeat the same task with the same model and instructions.",
+        "A controlled rerun separates an environment effect from a reasoning effect.",
+        "Declaring a custom harness necessary before checking existing configuration.",
+      ],
+      [
+        "Inspect the final evidence",
+        "Compare the command result, resulting diff and final test output. Keep the original failure so the change is attributable.",
+        "A useful harness makes both action and observation reconstructable.",
+        "Keeping only the final success message.",
       ],
     ],
     checks: [
       [
         "Who must enforce a file-write boundary?",
         [
-          "The model’s internal reasoning",
-          "The harness/tool layer and underlying environment",
+          "The model's internal reasoning",
+          "The harness and underlying execution environment",
           "The final reviewer alone",
         ],
         1,
@@ -451,33 +291,34 @@ export const unit01BuildTheMentalModel: Lesson[] = [
         "What is a good reason to build a custom harness?",
         [
           "The word custom sounds more advanced",
-          "You have not read the existing configuration",
-          "A required enforceable transaction rule is unavailable in the product",
+          "The team has not read the existing configuration",
+          "A required enforceable rule is unavailable in the product",
         ],
         2,
-        "Custom machinery is justified by a concrete missing capability, weighed against its maintenance cost.",
+        "Custom machinery should answer a concrete missing capability and its maintenance cost.",
       ],
       [
-        "The tool returned the correct file but the next request omitted it. Which layer should you inspect?",
+        "The tool returned the correct file but the next request omitted it. What should you inspect?",
         [
           "Context assembly in the harness",
-          "The repository language",
-          "The issue author’s typing speed",
+          "The issue author's writing style",
+          "The model's training data first",
         ],
         0,
-        "Evidence can be lost between execution and the next model input.",
+        "The action succeeded, but its observation was lost before the next decision.",
       ],
     ],
     takeaway:
-      "The harness owns the loop’s mechanics. Debug its evidence, policy and environment separately from the model.",
+      "The harness owns the loop's mechanics. Debug its evidence, policy and environment separately from the model.",
     nextConnection:
-      "The harness executes what is in front of it. What decides that something should run at all, and when, belongs to a layer further out: orchestration.",
-    source: ["tools", "engines"],
+      "The harness can run a task once it receives one. The next lesson moves outward to the system that decides when a task should run, where it should go and what happens after it finishes.",
+    source: ["tools", "security"],
     flow: [
-      "Harness assembles context",
-      "Model requests read_file",
-      "Harness validates and executes",
-      "Harness selects the next context",
+      "Model requests an action",
+      "Harness validates policy",
+      "Environment performs or denies it",
+      "Harness records the observation",
+      "Context assembly prepares the next turn",
     ],
   },
   {
@@ -486,119 +327,69 @@ export const unit01BuildTheMentalModel: Lesson[] = [
     unit: "01 · Build the mental model",
     question: "Who decides that the agent should run at all?",
     outcome:
-      "Draw the responsibilities of GitHub events, gh-aw, a coding-agent engine and its model.",
+      "Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model.",
     intro:
-      "It is two in the morning, and a pull request has just failed its CI checks. Nobody is awake to see it. If nothing else exists in the system beyond the model and its harness, then quite literally nothing happens next: the model has not been asked anything, the harness has nothing to run, and the failure will simply sit there, waiting for a human to notice it over coffee. The agent’s own inner loop — decide, act, observe, decide again — cannot explain who or what decided that this particular moment was one worth acting on. That loop has not even started yet, and something outside of it has to be the reason it starts at all.\n\nThat something outside is orchestration, and it is worth thinking of it as an entirely separate job from the one the agent itself does. Orchestration decides when work should begin, which worker should receive it, how the results of one stage travel to the next, and what ought to happen once everything is finished. None of this replaces the agent’s own inner loop of choosing actions once it has been handed a task; it simply exists a level above it, deciding when and whether that inner loop gets to run in the first place. Keeping these as two separate control loops, rather than folding them into one blurry idea of “the AI,” is what makes the whole architecture something you can actually reason about and change later.",
+      "It is two in the morning and a pull request has just failed its retry-service checks. If the only thing in the system is an agent loop waiting for a task, nothing happens. The model has not been invoked. The harness has no run to manage. The failure simply waits for somebody to notice it.\n\nSomething outside the inner loop has to decide that this event matters, start a job, choose its permissions and carry the result somewhere useful. That outer layer is orchestration.\n\nOrchestration does not replace the agent's reasoning loop. It surrounds it. It decides when work begins, which bounded worker receives it, how stages hand work to one another and what happens when the result is complete, blocked or irrelevant.",
     sections: [
       [
-        "Separate a workflow from a reasoning loop",
-        "GitHub Actions is a good place to start, because it already gives you a vocabulary for the outer loop, quite independently of anything resembling a model. It reacts to events — a pull request opened, a schedule reached — and runs jobs in response. GitHub Agentic Workflows, usually invoked through a tool called gh-aw, lets you author that kind of agentic work in Markdown, alongside configuration, and compiles the whole thing down into an ordinary Actions workflow. Inside that compiled workflow, some selected engine is the thing that actually runs the coding agent, and that engine, in turn, is the thing that calls a model to make its moment-to-moment decisions.\n\nIt is worth drawing this out as a chain of concrete responsibilities, rather than reaching for brand names, because brand names blur exactly the distinction we are trying to keep sharp. GitHub supplies the triggering event and somewhere to run a job. The compiled workflow decides which job gets started and with what permissions. The engine, together with its harness, manages the back-and-forth of tools and model calls within that job. The model itself only ever proposes the next action. Review and publication, if they exist at all, are further downstream stages again. Neither a particular chat product nor a particular model brand is another name for gh-aw; each occupies a different, specific box in this chain, and it pays to know which box is which.",
+        "Separate the two control loops",
+        "The inner loop is local to one task: the model proposes an action, the harness executes it and an observation comes back.\n\nThe outer loop reacts to an event or schedule, creates a run, supplies an environment, selects an engine and routes the result to review, publication or a no-action outcome.\n\nA useful chain is: external event, workflow job, agent engine and harness, model and tools, then result and review. GitHub Actions can provide the event and job runtime. GitHub Agentic Workflows can provide a structured way to author the workflow. An engine runs the agent. The harness manages the inner loop. The model proposes the next action. These names describe different boxes.",
       ],
       [
-        "Assistance, delegation and automation",
-        "Given that chain, a further set of questions becomes unavoidable: who initiates each run, and how much do they trust it to proceed without them? In assistance, you remain the one directly steering things in the moment — you are present, and you are the one deciding what happens next. In delegation, you hand over some bounded task and go do something else, coming back later to inspect what was produced. In automation, on top of delegation, you add a repeatable trigger and a standing policy for how to respond to it, so the whole cycle can recur without you deciding, each time, that it should. It is worth noticing what automation actually multiplies: if the underlying delegated task is not yet reliable, automating it does not fix that unreliability, it simply repeats the same failure, over and over, without you there to catch it each time.\n\nA sensible way to build up to this is to start smaller than you might expect. Begin with a manually triggered investigator: something that produces useful evidence about a problem, on demand, whenever you choose to run it. Only once that output is genuinely useful should you start layering on event filtering, protection against duplicate runs, and a clearly defined “nothing to report” result. A newly automated workflow does not have to create an issue every single time it wakes up. “Nothing relevant changed since last time” is not a failure of the system; it is one of the legitimate things the system is allowed to conclude.",
+        "Automation adds repetition, not reliability",
+        "Assistance means a person is present and steering. Delegation means a person hands over a bounded task and returns to inspect the result. Automation adds a repeatable trigger and a standing policy, so the cycle can begin without a person deciding each time.\n\nThat extra reach is useful only when the delegated task is already understandable and reasonably reliable. Automating an unreliable investigator does not repair it. It repeats the same failure, often at a larger scale and with less supervision.\n\nStart with a manually triggered investigator. Then add event filtering, stable run identity, duplicate handling, resource limits and a constrained output stage. A no-action result should be normal: if nothing relevant changed, the workflow should be able to say so.",
       ],
     ],
     checkpoints: [
       {
         bridge:
-          "A failing pull request at 02:00 does not investigate itself. Something outside the agent’s own loop has to notice the event and start the work.",
+          "A failing pull request does not investigate itself. Identify the layer that notices the event and starts the work.",
         meaning:
-          "GitHub supplies the event and a place to run; a compiled workflow selects a job and permissions; the engine and its model make in-task decisions. Attributing all of that to “the model” collapses several distinct responsibilities into one.",
+          "The outer workflow selects and routes a task; the inner agent loop chooses actions after it has been started.",
         question:
-          "A nightly job silently stops running two months after being set up. Which layer most likely owns that failure?",
+          "A nightly job silently stops running two months after setup. Which layer should you inspect first?",
         answer:
-          "Most likely the outer workflow or its trigger configuration, not the model — the model never runs unless the outer scheduling and event layer starts a job in the first place.",
-        further: [
-          {
-            question:
-              "If a workflow's compiled permissions are broader than the task actually needs, what specific risk does this create?",
-            answer:
-              "It expands the blast radius of any bug or injection in the agent's behavior — the workflow could take actions it never actually needed, purely because the permission happened to be available.",
-          },
-          {
-            question:
-              "A workflow's trigger fires, but the engine that is supposed to run never starts. Whose responsibility was that?",
-            answer:
-              "The outer workflow/orchestration layer's, or whatever job-scheduling infrastructure launches the engine — not the model, which was never invoked, and not the harness, which needs the engine running to exist at all.",
-          },
-        ],
+          "The outer workflow, trigger or scheduling configuration. The model cannot fail to reason about a run that was never started.",
       },
       {
         bridge:
-          "Not every task needs the same amount of standing independence. Assistance, delegation and automation trade supervision for reach in different amounts.",
+          "Different operating modes trade supervision for reach. Automation is the last step, not the definition of an agent.",
         meaning:
-          "Automating a task before its delegated version is reliable just repeats the same mistakes on a schedule, without you present to notice. A legitimate output of an investigation can be “nothing relevant happened” — that is not a failure to report.",
+          "Assistance, delegation and automation differ in who initiates and supervises the work. More independence does not make an unreliable task reliable.",
         question:
-          "Should a newly automated investigator create an issue on every scheduled run, even when it finds nothing actionable?",
+          "Should a newly automated investigator create an issue on every scheduled run?",
         answer:
-          "No. Requiring an issue every run rewards noise over honesty; a no-action result should be a normal, supported outcome of the workflow.",
-        further: [
-          {
-            question:
-              "A team automates a delegated task the day after first trying it successfully once. What's the risk in moving that fast?",
-            answer:
-              "One success doesn't establish reliability. Automating immediately risks repeating an uncharacterized failure mode at scale, without the human oversight that caught problems during the single manual trial.",
-          },
-          {
-            question:
-              "Why might 'no action taken' be a harder outcome for a workflow to implement correctly than 'action taken'?",
-            answer:
-              "It requires the workflow to positively conclude that nothing relevant changed and to resist a bias toward always producing visible output; without deliberate design, a workflow can drift toward manufacturing busywork just to appear active.",
-          },
-        ],
+          "No. It should publish an issue only when its contract and evidence justify one. An explicit no-action result is a legitimate outcome.",
       },
     ],
-    moreChecks: [
-      [
-        "Which component actually decides that a CI failure is worth investigating right now?",
-        ["The model", "The outer workflow/orchestration layer", "The harness’s tool executor"],
-        1,
-        "Selecting and triggering work is an orchestration responsibility, separate from the inner agent loop.",
-      ],
-      [
-        "A workflow is compiled with write access to the whole repository, though the task only ever reads logs. What is the concern?",
-        [
-          "None, broader access is always safer",
-          "Unused permission still expands what a bug or injection could do",
-          "Write access always improves performance",
-        ],
-        1,
-        "Permissions should match the task's actual needs; unused scope is unnecessary risk.",
-      ],
-      [
-        "What is a legitimate output for an unattended investigation to produce?",
-        [
-          "Always an issue, regardless of findings",
-          "An explicit 'no action needed' result when appropriate",
-          "Silence with no logged outcome at all",
-        ],
-        1,
-        "A defined no-action result is a legitimate, auditable outcome distinct from silent failure.",
-      ],
-    ],
     example: [
-      "Draw a nightly flaky-test report using gh-aw, Copilot and a GPT model.",
+      "Design a nightly flaky-test investigation using a repository event, an agent engine and a model.",
       [
         "Assign the owners",
-        "A schedule starts an Actions run. The compiled workflow configures a Copilot engine. That agent harness supplies tools and sends inference requests to its configured model.",
-        "A brand may span several layers; label the role it plays in this run.",
-        "Putting GPT in charge of the schedule because it writes the report.",
+        "A schedule starts the workflow. The workflow creates a job and supplies permissions. The engine runs the harness, which sends the task to the model and executes allowed tools.",
+        "Each layer owns a different transition; product names should not hide those boundaries.",
+        "Putting the model in charge of the schedule because it writes the final report.",
       ],
       [
         "Define the handoff",
-        "The investigation emits failure evidence or a no-action result. A constrained output stage publishes the approved report shape.",
-        "Selection, investigation and publication require different contracts.",
-        "Giving every investigative tool unrestricted publication rights.",
+        "The investigator returns evidence, uncertainty and either a supported finding or an explicit no-action result. A constrained output stage decides what may be published.",
+        "Investigation and publication have different contracts and should not share unrestricted authority.",
+        "Giving every investigative tool permission to create or edit public issues.",
+      ],
+      [
+        "Test the negative path",
+        "Deliver the same event twice and run it when no relevant failure has changed. Confirm that identity prevents duplicate work and that no-action is recorded honestly.",
+        "A workflow is reliable only when its ordinary non-action and failure paths are meaningful.",
+        "Testing only the happy path that produces a report.",
       ],
     ],
     checks: [
       [
         "Which responsibility belongs to outer orchestration?",
         [
-          "Predicting the next token",
+          "Predicting the next model output",
           "Selecting a workflow when CI fails",
-          "Parsing a source file’s syntax",
+          "Parsing a source file's syntax",
         ],
         1,
         "The workflow decides when and where agent work begins.",
@@ -614,7 +405,7 @@ export const unit01BuildTheMentalModel: Lesson[] = [
         "Automation repeats the behaviour you have, including its mistakes.",
       ],
       [
-        "An investigation finds no actionable change. What output should be supported?",
+        "An investigation finds no actionable change. What should it support?",
         [
           "An explicit no-action result",
           "A fabricated issue to prove it ran",
@@ -625,16 +416,16 @@ export const unit01BuildTheMentalModel: Lesson[] = [
       ],
     ],
     takeaway:
-      "The inner loop chooses actions. The outer workflow chooses work and manages its lifecycle.",
+      "The inner loop chooses actions. The outer workflow chooses work, manages identity and controls the lifecycle around that loop.",
     nextConnection:
-      "You now have vocabulary for the inner loop and the outer workflow. The next unit asks a related but separate question: with all these layers wired up, what information should actually reach the model at each step?",
+      "The foundation is now in place: a model proposes, an agent loops, a harness enforces and an orchestrator starts and routes work. Next we ask what information should actually reach the model at each step.",
     source: ["aw", "engines", "outputs"],
     flow: [
-      "GitHub event or schedule",
-      "gh-aw / Actions workflow",
-      "Coding-agent engine and harness",
-      "Model → tool → observation loop",
-      "Constrained result and review",
+      "External event or schedule",
+      "Workflow creates a bounded run",
+      "Engine and harness start the agent",
+      "Model chooses tool actions",
+      "Evidence becomes a reviewed result",
     ],
     practical: {
       title: "Lab 1 · Draw the stack",
@@ -643,15 +434,15 @@ export const unit01BuildTheMentalModel: Lesson[] = [
         "Sketch a workflow that investigates a failed CI run and recommends a next action. No account or API key is needed.",
       steps: [
         "Draw the event, workflow, harness, model, tools and output as separate boxes.",
-        "Label who owns the checkout, token permissions, timeout and success criterion.",
-        "Replace Copilot with another engine. Circle the contracts you expect to remain stable.",
+        "Label who owns the checkout, permissions, timeout, event identity and success criterion.",
+        "Replace the engine with another one. Circle the contracts you expect to remain stable and the configuration you expect to change.",
       ],
       deliverables: [
         "One annotated architecture diagram",
         "A responsibility table and one failure example per layer",
       ],
       review:
-        "A sound design places the event and job lifecycle outside the agent loop. The harness executes tools; the model selects requests. GitHub permissions constrain API operations. Engine replacement may change supported tools, authentication and context behaviour even when the outer task remains unchanged.",
+        "A sound design places the event and job lifecycle outside the agent loop. The harness executes tools; the model selects requests. Permissions constrain operations. Engine replacement may change supported tools, authentication and context behaviour even when the outer task remains unchanged.",
     },
   },
 ];

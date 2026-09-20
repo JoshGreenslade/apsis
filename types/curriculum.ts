@@ -118,6 +118,15 @@ export const TeachingSchema = z.object({
   nextConnection: text,
 });
 export type Teaching = z.infer<typeof TeachingSchema>;
+const practicalSchema = z.object({
+  title: text,
+  minutes: z.number().int().positive(),
+  brief: text,
+  steps: z.array(text).min(1),
+  deliverables: z.array(text).min(1),
+  review: text,
+});
+export type Practical = z.infer<typeof practicalSchema>;
 export const OverviewSchema = z.object({
   headline: text,
   introduction: text,
@@ -174,6 +183,69 @@ export const DiagramSchema = z.object({
     )
     .min(1),
 });
+const lessonStepSchema = z.object({
+  title: text,
+  body: text,
+  reason: text.optional(),
+  trap: text.optional(),
+});
+const lessonBlockSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("prose"), title: text.optional(), body: text }),
+  z.object({
+    kind: z.literal("callout"),
+    title: text,
+    body: text,
+    tone: z.enum(["idea", "warning", "question", "definition"]).optional(),
+  }),
+  z.object({
+    kind: z.literal("list"),
+    title: text.optional(),
+    items: z.array(text).min(1),
+  }),
+  z.object({
+    kind: z.literal("steps"),
+    title: text,
+    steps: z.array(lessonStepSchema).min(1),
+  }),
+  z.object({ kind: z.literal("diagram"), data: DiagramSchema }),
+  z.object({
+    kind: z.literal("checkpoint"),
+    bridge: text.optional(),
+    meaning: text.optional(),
+    question: text,
+    answer: text,
+    further: z.array(z.object({ question: text, answer: text })).optional(),
+  }),
+  z.object({
+    kind: z.literal("example"),
+    title: text,
+    problem: text,
+    steps: z.array(lessonStepSchema).min(1),
+  }),
+  z.object({ kind: z.literal("sidebar"), heading: text, body: text }),
+  z.object({ kind: z.literal("lab"), data: practicalSchema }),
+  z.object({
+    kind: z.literal("takeaway"),
+    body: text,
+    nextConnection: text.optional(),
+  }),
+]);
+export type LessonBlock = z.infer<typeof lessonBlockSchema>;
+const lessonSectionSchema = z.object({
+  id: text,
+  title: text,
+  kicker: text.optional(),
+  navLabel: text.optional(),
+  role: z
+    .enum(["story", "reasoning", "example", "takeaway", "custom"])
+    .optional(),
+  blocks: z.array(lessonBlockSchema).min(1),
+});
+export type LessonSection = z.infer<typeof lessonSectionSchema>;
+export const LessonContentSchema = z.object({
+  sections: z.array(lessonSectionSchema).min(1),
+});
+export type LessonContent = z.infer<typeof LessonContentSchema>;
 export const CurriculumTopicSchema = z.object({
   id: text,
   title: text,
@@ -199,16 +271,7 @@ export const CurriculumTopicSchema = z.object({
     })
     .optional(),
   practiceTemplates: z.array(PracticeTemplateSchema).optional(),
-  practical: z
-    .object({
-      title: text,
-      minutes: z.number().int().positive(),
-      brief: text,
-      steps: z.array(text).min(1),
-      deliverables: z.array(text).min(1),
-      review: text,
-    })
-    .optional(),
+  practical: practicalSchema.optional(),
   diagnostics: z.array(ProblemSchema).min(1),
   intuition: z.object({ body: text, thoughtExperiments: z.array(text).min(1) }),
   theory: z.array(exposition).min(1),
@@ -229,6 +292,7 @@ export const CurriculumTopicSchema = z.object({
   retrievalProblems: z.array(ProblemSchema).min(2),
   transferProblems: z.array(ProblemSchema).optional(),
   sources: z.array(z.object({ title: text, url: z.url() })).min(1),
+  content: LessonContentSchema.optional(),
 });
 export type CurriculumTopic = z.infer<typeof CurriculumTopicSchema>;
 export const CurriculumPackSchema = z.object({
