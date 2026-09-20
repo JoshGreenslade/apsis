@@ -9,7 +9,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
     outcome:
       "Distinguish capacity from useful context and assemble the smallest trustworthy bundle for the next decision.",
     intro:
-      "A detective's desk can be covered in case files and still hide the one ticket stub that matters. An agent has the same problem. A forty-thousand-line CI log, a whole README, and three old issue threads may all fit in the context window, yet the useful assertion is now a needle in a haystack.",
+      "The CI log contains a database timeout, a failed retry assertion and thousands of lines of successful setup. The agent blames the database. Then you notice that the timeout came from a different job.\n\nNothing was missing from the context window. The evidence had been presented in a way that made unrelated events look like one story. Before adding more context, we need to help the agent see which observation belongs to which execution.",
     sections: [
       [
         "Capacity is not attention",
@@ -17,7 +17,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
       ],
       [
         "Build a causal bundle",
-        "Start with the next decision, then collect only the evidence that can change it. Keep pointers to the source, because a short excerpt without provenance is hard to challenge. Do not confuse trimming with quality: remove noise, but keep setup, versions and surrounding lines when they explain what the evidence means.",
+        "For the retry failure, start with the assertion and the command that produced it. Include the revision and enough surrounding output to establish whether the test actually reached the retry code. A message about a missing fixture would change the investigation completely.\n\nThe full log can stay in an artifact with a link. The agent should be able to return to it if the first explanation fails. An excerpt is a useful starting point, not a verdict about which other details can never matter.\n\nCounting tokens saved is a poor test of context quality. Removing repeated setup output may help; removing the line that says the test was skipped makes a shorter and much less useful prompt.",
       ],
     ],
     checkpoints: [
@@ -111,7 +111,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
     outcome:
       "Write a working state that preserves evidence, uncertainty and the next experiment.",
     intro:
-      "A shift handover has a narrow target. The incoming nurse needs the patient's current state, the important observations, what has already been ruled out and what must happen next. 'Quiet night' is too vague; a verbatim eight-hour transcript is too much. An agent needs the same kind of handover when its conversation gets shortened.",
+      "Halfway through the investigation, the conversation is shortened to make room for more work. The new summary says: 'Investigated retry timing. Continue fixing the race.'\n\nThat sounds like progress. But was a race observed, or merely suspected? Which timing experiment ran? Did it fail to reproduce the bug, or fail to start? Unless those distinctions survive, the next session may repeat the investigation or build on a conclusion nobody established.",
     sections: [
       [
         "Summarise the investigation, not the chat",
@@ -119,7 +119,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
       ],
       [
         "Treat compaction as lossy",
-        "Something must be discarded when history is shortened, so protect high-value constraints and links to raw evidence. Then test the checkpoint: give it to a fresh session and ask for the next experiment. A vague checkpoint causes repeated work; a dogmatic one prevents correction when new evidence disagrees.",
+        "Hand the checkpoint to a fresh session without the conversation that produced it. Can that session explain why the next experiment is worth running? Can it find the failed command and tell which conclusions remain tentative?\n\nIf it repeats the fixed-clock experiment, the checkpoint probably lost a useful result. If it refuses to reconsider timing after the code changes, the checkpoint may have made that result sound universal. 'Clock skew did not explain this failure at abc123' is more useful than either 'timing investigated' or 'not a clock problem'.\n\nKeep the task's constraints as well. A session that remembers the diagnosis but forgets 'do not change retry limits' has not resumed the same task.",
       ],
     ],
     checkpoints: [
@@ -181,7 +181,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
     sections: [
       [
         "Separate state by lifetime",
-        "Working context is what the current inference sees. Durable state lives elsewhere: a task file, issue, database row, commit or retrieval index. Make records small and structured with a topic, evidence pointer, revision, timestamp and status. Keep a temporary fact such as 'this branch fails test X' separate from a stable convention such as 'tests require a fake clock.' Different lifetimes need different review rules.",
+        "Working context is what the model can see on this turn. A note in a task file, issue or database is durable state, but it has no effect until something loads it.\n\nConsider two discoveries. 'The retry tests require a fake clock' belongs near the repository's test instructions, where future work can find it. 'This branch still fails the exhaustion case' belongs to the current task and revision. Putting both into permanent global guidance would make a temporary failure look like a lasting property of the project.\n\nA useful record says what it concerns, where the evidence lives and which revision it describes. A timestamp and a status such as provisional, confirmed or superseded help later readers judge whether it still applies.",
       ],
       [
         "Make memory correctable",
@@ -232,7 +232,7 @@ export const unit02MakeInformationUsable: Lesson[] = [
     takeaway:
       "Memory is durable state plus a retrieval and correction policy. A file on disk alone does not provide continuity.",
     nextConnection:
-      "With context, checkpoints and memory in place, the next unit turns to the operating ground: choosing where an agent should work and how much autonomy the task deserves.",
+      "The investigation can now survive a handoff. Next, we turn that shared understanding into a task another agent can carry out and a result an engineer can check.",
     source: ["instructions", "mcp"],
     practical: {
       title: "Lab 2 · Recover a forgotten investigation",

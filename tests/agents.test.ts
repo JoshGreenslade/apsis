@@ -58,6 +58,11 @@ test("content-first topics compile without duplicating legacy teaching fields", 
     topics: [topic],
   });
   assert.equal(pack.topics[0].content?.sections[0].id, "opening");
+  assert.deepEqual(topic.retrievalProblems, []);
+  assert.deepEqual(topic.diagnostics, []);
+  assert.deepEqual(topic.fadedExercise.steps, []);
+  assert.deepEqual(topic.workedExample.steps, []);
+  assert.equal(topic.diagram, undefined);
 });
 
 test("content sections stay unique and agentic chapters retain structure", () => {
@@ -69,14 +74,13 @@ test("content sections stay unique and agentic chapters retain structure", () =>
       ],
     }),
   );
-  assert.equal(
-    pack.topics.every((topic) =>
-      topic.content?.sections.some((section) =>
-        section.blocks.some((block) => block.kind === "diagram"),
-      ),
-    ),
-    true,
-  );
+  for (const topic of pack.topics) {
+    const sections = topic.content!.sections;
+    assert.equal(new Set(sections.map(s => s.navLabel ?? s.title)).size, sections.length);
+    const blocks = sections.flatMap(s => s.blocks);
+    const steps = blocks.flatMap(b => b.kind === "example" ? b.steps : []);
+    assert.deepEqual(steps, topic.workedExample.steps);
+  }
   assert.ok(
     new Set(
       pack.topics

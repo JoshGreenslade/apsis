@@ -36,7 +36,7 @@ async function main() {
         .getByRole("heading", { name: topic.teaching!.question, exact: true })
         .waitFor();
       assert.equal(
-        await page.locator(".reasoning-step").count(),
+        await page.locator(".content-prose h3").count(),
         topic.theory.length,
         topic.id,
       );
@@ -68,7 +68,7 @@ async function main() {
     await page
       .getByRole("button", { name: "Focus on reading", exact: true })
       .click();
-    await page.getByRole("link", { name: /Bring it together/ }).click();
+    await page.locator(".lesson-jumps a").last().click();
     await page.locator(".practical-lab summary").click();
     await page
       .getByRole("link", { name: "the lab kit", exact: true })
@@ -125,7 +125,7 @@ async function main() {
         data.parameters.accepted,
     );
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.getByRole("link", { name: /Bring it together/ }).click();
+    await page.locator(".lesson-jumps a").last().click();
     assert.ok(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

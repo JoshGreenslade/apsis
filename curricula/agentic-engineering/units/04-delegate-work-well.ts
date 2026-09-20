@@ -9,11 +9,11 @@ export const unit04DelegateWorkWell: Lesson[] = [
     outcome:
       "Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point.",
     intro:
-      "A mechanic can understand 'make the brakes better' and still not know whether to shorten stopping distance, remove a squeak or improve pedal feel. Agentic tasks fail in the same gap between a sensible intention and a testable result. The agent fills missing decisions with assumptions, and a polished patch can be wrong without looking broken.",
+      "'Make retries more robust' sounds like a task until two engineers start implementing it. One increases the attempt limit. The other keeps the limit but changes which failures are retried. Both can defend their choice.\n\nAn agent faces the same ambiguity, except that it may quietly choose an interpretation and return a finished-looking patch. The brief needs to settle the decisions that affect correctness, while leaving room for the implementer to choose how to achieve them.",
     sections: [
       [
         "Specify the observable result",
-        "A useful brief names the current behaviour, desired behaviour, boundaries and evidence of success. 'Fix retries' becomes 'when an attempt times out, wait with bounded backoff, stop after three attempts, preserve the original error, and prove it with deterministic tests.' The point is not to dictate every line of code. It is to remove the ambiguities that would make two reasonable engineers choose different outcomes.",
+        "A useful retry brief might read:\n\n> The service currently retries every exception. Change it to retry only transient timeouts. Allow three attempts in total, including the first call. Wait between attempts using the existing delay policy, capped at one second. If all three fail, return the first timeout error unchanged. Other errors must fail immediately. Keep the public API unchanged.\n\nNow there are decisions a reviewer can check. 'Three attempts' cannot accidentally become one initial call plus three retries. 'Original error' names a particular error, rather than leaving the agent to choose the first or last one.\n\nPair the brief with deterministic cases: success on attempt two, exhaustion after three, and a non-timeout error on the first call. The brief describes the desired behaviour; the tests give the implementation a way to demonstrate it. Neither needs to dictate the internal function layout.",
       ],
       [
         "Make the stopping point explicit",
@@ -68,7 +68,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
     outcome:
       "Shape code, tests and documentation so that the next useful action is easy to discover and verify.",
     intro:
-      "Imagine arriving in a workshop where every drawer has a label, every tool has a familiar place and a machine gives a clear warning before it can hurt you. That workshop does not make skill unnecessary, but it makes good work easier. A repository can offer the same affordances: obvious entry points, local instructions, deterministic tests, small commands and failures that explain what to inspect next.",
+      "The agent has a clear brief. Its next problem is finding out how this repository works. There are three test scripts, one obsolete setup guide and a generated file with the same name as the implementation. Before it can reason about retries, it must work out which of these to trust.\n\nMaking a repository agent-friendly is largely the same work that helps a new colleague: make the real entry points easy to find and give changes fast, informative feedback.",
     sections: [
       [
         "Turn conventions into affordances",
@@ -76,7 +76,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
       ],
       [
         "Design feedback for diagnosis",
-        "A failing command should identify the subject, expectation and useful evidence. Prefer stable fixtures over tests that depend on the clock, network or incidental ordering. Keep local guidance close to the code it governs, and make the shortest trustworthy verification command discoverable. These changes compound: every future task starts with less guesswork.",
+        "Compare two failures: 'test failed' and 'expected 3 attempts, observed 4 after the final timeout'. The second gives the agent a reason to inspect the loop boundary. It also helps a human distinguish an off-by-one error from a missing fixture.\n\nUse a fake clock when testing backoff so the test can advance time deliberately instead of waiting and hoping the scheduler behaves. Keep unrelated network calls out of that focused check. A failure should usually mean that the behaviour changed, not that today's network was slow.\n\nPut the command next to the code's local guidance, with any setup it requires. Each future task can then begin by asking the code a useful question instead of rediscovering how to run it.",
       ],
     ],
     checkpoints: [
@@ -127,7 +127,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
     outcome:
       "Classify failures by cause and choose a targeted recovery instead of repeating the same prompt.",
     intro:
-      "When a parcel does not arrive, 'send it again' is not a diagnosis. The address may be wrong, the depot may be closed, the label may be unreadable or the courier may have made a mistake. Agentic failures have the same variety. A plausible-looking patch can come from a vague request, missing context, a broken tool, a weak test or a reasoning mistake. Recovery starts by naming which layer failed.",
+      "The patch looks reasonable, but it does not fix the reported failure. Before writing a sterner prompt, find the earliest point where the run went wrong.\n\nDid the agent solve a different interpretation of the task? Read the wrong file? Fail to start the tests? Or did it have the right evidence and draw the wrong conclusion? These failures can produce similar final answers, but repeating the request will not repair all of them.",
     sections: [
       [
         "Separate the layers",
@@ -135,7 +135,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
       ],
       [
         "Change one thing that could explain the miss",
-        "If the task is ambiguous, rewrite the acceptance criteria. If evidence is missing, retrieve the exact artifact. If the environment is broken, repair or replace the tool path. If reasoning is the problem, ask for a smaller discriminating step. If verification is weak, add the missing test. Re-running an unchanged prompt is not a recovery strategy; it is another sample from the same failure condition.",
+        "Suppose the agent changes the retry delay, but the failing assertion concerns the number of attempts. First inspect what it saw. If the assertion was absent, supply it. If the assertion was present but misunderstood, ask for a trace of the counter through the three attempts before requesting another patch. If the wrong patch passed its checks, add a case that would expose it.\n\nKeep the failed run and change one relevant condition. Otherwise, if a new model, a new prompt and a repaired environment all arrive together, you will not know what helped.\n\nAn unchanged rerun can sometimes succeed because outputs vary. That is useful when measuring variability, but it is weak evidence that you have repaired the cause. For routine recovery, make a change you can explain and check whether the expected effect follows.",
       ],
     ],
     checkpoints: [
@@ -178,7 +178,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
     nextConnection: "The delegation loop now has a brief, an executable repository and a diagnosis step. The next chapter asks how to measure whether the resulting work is actually accepted and useful.",
     source: ["tools", "engines", "security"],
     practical: {
-      title: "Lab 4 · Build a recovery loop",
+      title: "Lab 3 · Build a recovery loop",
       minutes: 30,
       brief:
         "Give an agent an intentionally underspecified maintenance task, observe the miss, classify it and improve exactly one layer at a time.",

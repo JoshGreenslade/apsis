@@ -19,7 +19,7 @@ export const overview: NonNullable<CurriculumPack["overview"]> = {
     {
       title: "Operate a useful workflow",
       description:
-        "Configure gh-aw, add an external capability through MCP and use multiple agents only when the coordination earns its cost.",
+        "Design an unattended repository workflow, define an external capability's trust boundary and judge when multiple agents are worth the coordination.",
     },
     {
       title: "Evaluate and build",
@@ -30,6 +30,6 @@ export const overview: NonNullable<CurriculumPack["overview"]> = {
   capstone: {
     title: "A repository workflow that earns its place",
     description:
-      "Route a GitHub event through investigation, implementation, independent review and human approval. Explain every boundary, test failure paths and compare accepted outcomes, active human time and total cost with a manual baseline. The graduation criterion is a functioning system and a defensible keep/change/stop decision.",
+      "Choose one recurring engineering task and pilot a bounded workflow for it. Explain what it may do, inspect failure paths and compare accepted outcomes, human effort and cost with the current approach. Finish with a defensible decision to keep, narrow, redesign or retire it, and name what remains unproven.",
   },
 };

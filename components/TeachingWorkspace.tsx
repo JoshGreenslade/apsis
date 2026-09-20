@@ -769,7 +769,7 @@ export default function TeachingWorkspace({
                         02 / LET’S MAKE THAT IDEA PRECISE
                       </div>
                       <h2>Build the reasoning</h2>
-                      <Diagram data={topic.diagram} />
+                      {topic.diagram && <Diagram data={topic.diagram} />}
                       {topic.theory.map((s, i) => {
                         const checkpoint = topic.teaching?.checkpoints[i];
                         return (
@@ -995,6 +995,7 @@ export default function TeachingWorkspace({
                     key={`${topicId}:${practiceTab}`}
                   >
                     {practiceTab === "warmup" ? (
+                      topic.diagnostics.length === 0 ? <p>No warm-up questions are assigned to this lesson.</p> :
                       <>
                         <h3>Recall the building blocks</h3>
                         <p className="muted">
@@ -1027,6 +1028,7 @@ export default function TeachingWorkspace({
                         ))}
                       </>
                     ) : practiceTab === "guided" ? (
+                      topic.fadedExercise.steps.length === 0 ? <p>No guided exercise is assigned to this lesson.</p> :
                       <>
                         <h3>Keep a little scaffolding</h3>
                         <p className="muted">
@@ -1041,6 +1043,7 @@ export default function TeachingWorkspace({
                         />
                       </>
                     ) : practiceTab === "check" ? (
+                      topic.retrievalProblems.length === 0 ? <p>This lesson has no graded knowledge check. You can still mark it as read and keep notes.</p> :
                       <>
                         <h3>Can you use the idea yourself?</h3>
                         <p className="muted">

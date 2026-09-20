@@ -36,9 +36,9 @@ export const unit05EngineerUnattendedWorkflows: Lesson[] = [
     outcome:
       "Use execution controls to limit cost and blast radius without mistaking them for proof of correctness.",
     intro:
-      "A kitchen timer can stop an oven, but it cannot tell you whether the cake is baked. Agent controls have the same boundary. Time limits, token budgets, retry caps and concurrency limits protect resources. They do not prove that the intended change was made or that a green-looking output is safe.",
+      "A workflow finishes in nine minutes, within its ten-minute limit, and returns a patch. Its resource controls worked. Whether the patch fixes the bug is a separate question.\n\nNow suppose the next run reaches the limit after finding the cause but before making a change. That run is incomplete, yet its evidence may still be useful. Keep those two descriptions available: why execution stopped, and what the task actually achieved.",
     sections: [
-      ["Control the run", "Set a maximum duration, retry policy, spend ceiling, tool-call budget and concurrency limit appropriate to the task. Decide what happens when each is reached: stop, save a checkpoint, ask for approval or produce a partial report. A budget without a recovery policy turns a limit into a confusing failure."],
+      ["Control the run", "Choose limits for the work you can afford to lose or repeat. A read-only investigation might have a short wall-clock limit, a small retry allowance for transient tool failures and a cap on simultaneous runs. A write-capable job also needs a clear account of what may already have changed when it stops.\n\nEnforce limits in the executor or scheduler, not only in the prompt. If a subprocess keeps running after the agent stops, the wall-clock limit has not bounded the whole job. Reserve time for cancellation and saving evidence rather than expecting cleanup to happen after resources are gone.\n\nOn exhaustion, return the last verified state, any partial artifacts and the reason for stopping. Do not automatically reset the budget and resume forever; that would make the limit cosmetic."],
       ["Prove the result separately", "Success criteria belong to the task: tests, invariants, review checks and output completeness. A run can finish under budget and still be wrong; it can also exceed a budget while discovering useful evidence. Record operational status and task status separately."],
     ],
     checkpoints: [
@@ -63,7 +63,7 @@ export const unit05EngineerUnattendedWorkflows: Lesson[] = [
     outcome:
       "Choose customisation by a clear contract, measurable benefit and manageable maintenance burden.",
     intro:
-      "A custom tool can fit a hand perfectly, but it also becomes one more tool to sharpen, document and repair. Harness customisation is worthwhile when the default loses an important invariant, hides a necessary observation or makes a repeated workflow unnecessarily costly. It is not worthwhile merely because a local abstraction feels more elegant.",
+      "Your team requires every write to go through an audited transaction service. The current agent can edit files directly, but its supported configuration cannot route writes through that service. There is a specific gap worth addressing.\n\nCompare that with replacing a harness because its internal API is not how you would have designed it. Both projects can produce satisfying code. Only the first starts with a requirement the current system cannot meet. Customisation is easiest to justify when you can name that requirement and test it.",
     sections: [
       ["Start with the unmet contract", "Name the failure of the current harness: missing repository state, unsafe permissions, poor output, no resume path or an untestable side effect. Then define the smallest addition that fixes it. Preserve familiar interfaces where possible so the custom piece reduces cognitive load instead of adding a private dialect."],
       ["Measure the trade", "A custom harness has acquisition cost, maintenance cost and migration risk. Compare those with the recurring cost of the problem it solves. Keep configuration explicit, test failure paths and provide a fallback or removal plan if the underlying platform changes."],
@@ -93,7 +93,7 @@ export const unit05EngineerUnattendedWorkflows: Lesson[] = [
       "Most useful automation is deliberately boring. It notices a known event, gathers bounded evidence, produces a familiar artefact and asks for the next decision in a predictable place. Patterns help teams recognise that shape instead of inventing a new control model for every job.",
     sections: [
       ["Choose the shape before the implementation", "A proposal workflow reads inputs and creates a draft. A review workflow gathers evidence around a change. A scheduled maintenance workflow checks for drift and opens a bounded issue or patch. A gated release workflow carries a reviewed result across an approval boundary. The pattern determines where state, evidence and authority should live."],
-      ["Compose with explicit handoffs", "Keep the transitions visible: trigger to investigation, investigation to artifact, artifact to review, review to apply and apply to verification. Use idempotency keys, stable identifiers and status reporting so retries do not create duplicate work or ambiguous outcomes."],
+      ["Compose with explicit handoffs", "Imagine a scheduled investigator opens an issue, then loses its connection before recording success. The scheduler retries. If the second run simply opens another issue, a successful action has become a duplicate.\n\nGive the logical operation a stable identity, such as the repository, failing check and revision. Before publishing again, use that identity to reconcile the existing output. If the destination supports an idempotency key, repeated requests can refer to the same operation. Otherwise the workflow needs its own durable record and a way to check an uncertain result.\n\nA lookup followed by a write can still race when two runs overlap. Use a suitable lock, uniqueness constraint or destination guarantee where needed. The important handoff includes not just the report, but enough identity and status to distinguish 'not attempted' from 'may already have happened'."],
     ],
     checkpoints: [
       { bridge: "A workflow pattern is a control shape, not a branded recipe.", meaning: "Choose it by the kind of effect and decision the workflow needs to support.", question: "Which pattern fits a nightly scan that should propose dependency updates for review?", answer: "Scheduled maintenance producing a bounded proposal or issue, with merge and release kept behind review.", further: [{ question: "What is a proposal workflow for?", answer: "Turning an investigation into a reviewable artifact without applying the consequential change automatically." }, { question: "What makes a release workflow gated?", answer: "The reviewed result crosses an explicit approval boundary before external or production effect." }] },
@@ -109,7 +109,7 @@ export const unit05EngineerUnattendedWorkflows: Lesson[] = [
     nextConnection: "These workflows can use external capabilities deliberately. The next unit introduces tools, MCP and skills as controlled extensions of the harness.",
     source: ["aw", "outputs"],
     practical: {
-      title: "Lab 5 · Design an unattended workflow",
+      title: "Lab 6 · Design an unattended workflow",
       minutes: 35,
       brief:
         "Choose a recurring repository event and design the smallest workflow that can investigate, produce evidence and stop safely.",

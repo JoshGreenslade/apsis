@@ -61,7 +61,7 @@ export function validatePack(input: unknown): CurriculumPack {
         throw new Error("Canonical unit must be accepted");
     }
     for (const prerequisite of t.prerequisites)
-      if (!t.diagnostics.some((p) => p.prerequisiteId === prerequisite))
+      if (!t.content && !t.diagnostics.some((p) => p.prerequisiteId === prerequisite))
         throw new Error(`Missing diagnostic for ${prerequisite}`);
   }
   return pack;
@@ -261,6 +261,7 @@ export function applyAction(
     }
   } else if (
     !p.mastered &&
+    topic.retrievalProblems.length > 0 &&
     topic.retrievalProblems.every((x) => p.passed.includes(x.id))
   ) {
     p.stage = "complete";

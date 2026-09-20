@@ -9,10 +9,10 @@ export const unit03ChooseAndOperate: Lesson[] = [
     outcome:
       "Compare agentic setups by the work they support, the evidence they expose and the control they retain.",
     intro:
-      "Choosing an agent from a feature list is like choosing a vehicle by counting cup holders. The useful question is what journey you need to make, what terrain you will cross and how much control you need when conditions change. Models, harnesses and operating practices are separate choices, even when a product presents them as one package.",
+      "A coding assistant in your editor, a background worker on an isolated checkout and a scheduled repository job can all use the same model. They still offer very different ways of working.\n\nIn the editor, you can correct a misunderstanding immediately. A background worker needs a brief it can carry without that conversation. A scheduled job needs a standing rule for when to act and what it may publish. Start with that operating choice, then compare the products that can support it.",
     sections: [
       ["Name the layer you are choosing", "A model supplies inference. A harness supplies tools, context handling, permissions and state. A workflow supplies the rhythm of planning, execution, review and approval. Changing one layer does not automatically improve the others. A strong model in a weak harness may be less useful than a modest model with clear tools, narrow permissions and excellent feedback."],
-      ["Compare by evidence and control", "Evaluate a setup against a representative task: how quickly does it reach useful evidence, how well can you inspect its decisions, what happens when a tool fails, and how easy is it to stop or resume? Cost and speed matter, but so do reversibility, auditability and the quality of the boundary around the work."],
+      ["Compare by evidence and control", "Try a task that resembles the work you intend to delegate, using the same starting revision and brief for each setup. Watch what happens between the prompt and the final answer. Does the system find the implementation? Can you see the commands it ran? When a test fails to start, does it distinguish that from an assertion failure?\n\nInclude an interruption. Stop the run after an edit and inspect what remains: a recoverable patch and useful status, or an uncertain workspace? Resume it and check whether it knows which evidence is stale.\n\nUse the acceptance and cost measures from the preceding chapters. A fast demonstration is interesting, but the operating decision also depends on whether you can review, stop and recover the work."],
     ],
     checkpoints: [
       { bridge: "Before comparing products, identify which layer is limiting the work.", meaning: "Model capability, harness capability and workflow design are different levers.", question: "A strong model cannot run the repository's tests. What kind of improvement is needed first?", answer: "A harness or environment improvement. More model capability cannot substitute for a missing tool path.", further: [{ question: "What does a model contribute?", answer: "Inference and generation from the context it receives." }, { question: "What does a harness contribute?", answer: "Tool access, state, permissions, context handling and the ability to observe or constrain actions." }] },
@@ -36,7 +36,7 @@ export const unit03ChooseAndOperate: Lesson[] = [
     outcome:
       "Define an environment contract covering identity, tools, state, permissions, network and verification.",
     intro:
-      "Giving someone a key to a workshop does not tell them whether the lights work, the right tools are installed or the material on the bench is the right version. Repository access is similarly incomplete. An agent needs a known checkout, commands it can run, dependencies it can resolve, permissions that match the task and a way to tell whether its evidence is current.",
+      "'It has repository access' leaves several questions unanswered. Which revision? Are dependencies installed? Does the test command need a service that is unavailable in this environment? Can the agent write only to its checkout, or also to shared data?\n\nIf these details are left implicit, the investigation begins with setup surprises. Worse, the agent may mistake a broken test environment for evidence about the application.",
     sections: [
       ["Write the environment contract", "Record the revision, runtime, package manager, required services, test commands, network assumptions, secrets policy and writable paths. Make the contract executable where possible: a setup check should report which prerequisite is missing rather than letting the agent discover it halfway through a change."],
       ["Constrain the blast radius", "Use the narrowest permissions and network access that allow the task. Keep changes reversible through branches, worktrees or patches. Separate credentials for reading from credentials for publishing, and make destructive actions require an explicit boundary. A reproducible workplace is also a safer workplace."],
@@ -63,9 +63,9 @@ export const unit03ChooseAndOperate: Lesson[] = [
     outcome:
       "Break extended work into resumable experiments with explicit state, gates and evidence.",
     intro:
-      "A long journey is not made reliable by driving faster for longer. It needs landmarks, fuel checks and decisions about when to stop. Long-running agent work is similar. The danger is not simply context length; it is that an agent can spend hours producing activity while losing the original question, repeating failed paths or crossing a boundary nobody meant to cross.",
+      "The agent has been busy for two hours. It has read dozens of files, tried several patches and produced a long status report. What do we know now that we did not know at the start?\n\nIf that question is difficult to answer, more runtime may just buy more activity. Long tasks need intermediate results that can be checked and carried forward, especially when the work changes direction or moves to a fresh session.",
     sections: [
-      ["Make progress legible", "Turn a broad goal into stages with an outcome, evidence and stopping condition for each. At the end of a stage, write what changed, what was learned, what remains uncertain and what the next stage is allowed to do. This creates a trail a person can inspect and a fresh run can resume."],
+      ["Make progress legible", "For a retry repair, the first stage might end with a deterministic reproduction, not a patch. The second ends with a candidate change and evidence that the reproduction now passes. The third checks surrounding behaviour and prepares the result for review.\n\nThese stages need not take equal time. Their value is that each answers a different question: can we reproduce it, does the change address it, and what else might the change affect?\n\nAfter each stage, keep a short record of the revision, commands, findings and unresolved questions. If reproduction proves impossible without production access, stop there and report the missing evidence. Do not quietly replace the task with a plausible-looking cleanup."],
       ["Use gates, not hope", "Pause before expensive, risky or irreversible transitions. A gate can ask whether the hypothesis still fits, whether the tests are trustworthy and whether the next action remains inside scope. Long-horizon autonomy should be a sequence of bounded commitments, not one large permission slip."],
     ],
     checkpoints: [
@@ -92,7 +92,7 @@ export const unit03ChooseAndOperate: Lesson[] = [
     intro:
       "Autonomy is not a trophy. It is a setting. A human should not hand over a task simply because an agent can attempt it, just as a team should not manually repeat a safe, well-specified check that a machine can perform reliably. The useful choice depends on uncertainty, consequence, reversibility and the quality of available evidence.",
     sections: [
-      ["Use a risk-adjusted decision", "Automate when the task is bounded, feedback is fast and mistakes are easy to detect or undo. Add review when the work affects users, data, money or public behaviour. Keep a human in the loop when the objective is contested, the evidence is weak or the action is difficult to reverse. Review effort is part of the cost, not a footnote."],
+      ["Use a risk-adjusted decision", "Reading a CI log and drafting an explanation has a different risk from merging the proposed fix. The investigation can often run unattended while the merge still requires a reviewer. Autonomy does not have to be granted to the whole workflow at once.\n\nAsk where an error would be noticed and how it would be undone. A patch on an isolated branch is relatively easy to inspect and discard. A public message, data migration or production change may be harder to reverse even when the command itself is simple.\n\nPut review at the transition where it can change the outcome. Approval after an irreversible action is only an audit. If the objective itself is disputed or the evidence cannot support a decision, bring a person in before implementation begins."],
       ["Prefer a smaller promise you can prove", "A modest agent that produces a reviewable patch may beat a powerful agent that takes broad action with opaque evidence. Start with the narrowest autonomy that could deliver value, measure the result and expand only when the failure modes are understood."],
     ],
     checkpoints: [
@@ -109,7 +109,7 @@ export const unit03ChooseAndOperate: Lesson[] = [
     nextConnection: "With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries.",
     source: ["copilot", "codex", "engines"],
     practical: {
-      title: "Lab 3 · Choose an autonomy boundary",
+      title: "Lab 5 · Choose an autonomy boundary",
       minutes: 30,
       brief:
         "Take one real engineering task and decide which actions an agent may inspect, propose, apply and publish.",

@@ -1,6 +1,7 @@
 import type {
   CurriculumTopic,
   LessonContent,
+  LessonBlock,
   Problem,
 } from "@/types/curriculum";
 import {
@@ -10,6 +11,7 @@ import {
   pointFlow,
 } from "@/curriculum-support/authoring";
 import { sources } from "./sources";
+import { lessonLayouts, lessonReferences } from "./layouts";
 export type Check = [
   prompt: string,
   options: string[],
@@ -472,124 +474,43 @@ function agenticTheoreticalMinimum(lesson: Lesson): AgenticMinimum {
 }
 
 function authoredLessonContent(lesson: Lesson): LessonContent {
-  const exampleSteps = lesson.example.slice(1) as [
-    string,
-    string,
-    string,
-    string,
-  ][];
-  return {
-    sections: [
-      {
-        id: `${lesson.id}-story`,
-        title: "The big idea",
-        role: "story",
-        blocks: [
-          { kind: "prose", body: lesson.intro },
-          {
-            kind: "callout",
-            title: "The question",
-            body: lesson.question,
-            tone: "question",
-          },
-          {
-            kind: "list",
-            title: "By the end of this lesson",
-            items: [lesson.outcome],
-          },
-        ],
-      },
-      {
-        id: `${lesson.id}-reasoning`,
-        title: "Build the reasoning",
-        role: "reasoning",
-        blocks: [
-          ...(lesson.flow
-            ? [
-                {
-                  kind: "callout" as const,
-                  title: "Keep this path in view",
-                  body: lesson.flow.join(" -> "),
-                  tone: "definition" as const,
-                },
-              ]
-            : []),
-          ...lesson.sections.flatMap(([heading, body], index) => [
-            { kind: "prose" as const, title: heading, body },
-            {
-              kind: "checkpoint" as const,
-              ...lesson.checkpoints[index],
-            },
-          ]),
-        ],
-      },
-      {
-        id: `${lesson.id}-example`,
-        title: "See it in action",
-        role: "example",
-        blocks: [
-          {
-            kind: "example",
-            title: "Work through a concrete case",
-            problem: lesson.example[0],
-            steps: exampleSteps.map(([title, body, reason, trap]) => ({
-              title,
-              body,
-              reason,
-              trap,
-            })),
-          },
-        ],
-      },
-      {
-        id: `${lesson.id}-map`,
-        title: "See the structure",
-        role: "custom",
-        blocks: [
-          {
-            kind: "diagram",
-            data: flowDiagram(
-              `${lesson.title} · the operating path`,
-              "Follow the evidence from the starting condition to the decision or verified result.",
-              lesson.flow ?? [
-                "Observe the concrete failure",
-                "Choose the responsible layer",
-                "Change one thing and verify",
-              ],
-            ),
-          },
-          {
-            kind: "sidebar",
-            heading: "Keep the boundary visible",
-            body:
-              "Examples and numbers are instructional scenarios. In a real workflow, record the installed versions, source revision, permissions and evidence that support the result." +
-              (lesson.id === "gh-aw"
-                ? " For a production reference, compare this with [GitHub Agentic Workflows' architecture](https://github.github.com/gh-aw/introduction/architecture/) and [how workflows are compiled and run](https://github.github.com/gh-aw/introduction/how-they-work/)."
-                : lesson.id === "mcp"
-                  ? " For the protocol's canonical component model, see the [Model Context Protocol architecture](https://modelcontextprotocol.io/specification/2025-03-26/architecture)."
-                  : lesson.id === "tiny-harness"
-                    ? " The runnable companion is the [Apsis harness lab guide](/agent-labs/README.md)."
-                    : ""),
-          },
-        ],
-      },
-      {
-        id: `${lesson.id}-takeaway`,
-        title: "Bring it together",
-        role: "takeaway",
-        blocks: [
-          ...(lesson.practical
-            ? [{ kind: "lab" as const, data: lesson.practical }]
-            : []),
-          {
-            kind: "takeaway" as const,
-            body: lesson.takeaway,
-            nextConnection: lesson.nextConnection,
-          },
-        ],
-      },
-    ],
-  };
+  const exampleSteps = lesson.example.slice(1) as [string, string, string, string][];
+  const plan = lessonLayouts[lesson.id];
+  if (!plan) throw new Error(`Missing editorial layout for ${lesson.id}`);
+  const blocks: LessonBlock[] = plan.flatMap((item): LessonBlock[] => {
+    if (typeof item === "number") {
+      const section = lesson.sections[item];
+      const checkpoint = lesson.checkpoints[item];
+      if (!section || !checkpoint) throw new Error(`Missing section ${item} in ${lesson.id}`);
+      return [
+        { kind: "prose", title: section[0], body: section[1] },
+        { kind: "checkpoint", ...checkpoint },
+      ];
+    }
+    switch (item) {
+      case "opening": return [{ kind: "prose", body: lesson.intro }];
+      case "case": return [{
+        kind: "example", title: lesson.example[0],
+        problem: lesson.example[0],
+        steps: exampleSteps.map(([title, body, reason, trap]) => ({ title, body, reason, trap })),
+      }];
+      case "map": return lesson.flow ? [{
+        kind: "diagram",
+        data: flowDiagram(lesson.title, "Read each handoff in order; the surrounding case explains who owns it.", lesson.flow),
+      }] : [];
+      case "lab": return lesson.practical ? [{ kind: "lab", data: lesson.practical }] : [];
+      case "close": return [{ kind: "takeaway", body: lesson.takeaway, nextConnection: lesson.nextConnection }];
+      case "reference": {
+        const reference = lessonReferences[lesson.id];
+        return reference ? [{ kind: "sidebar", heading: reference.title, body: reference.body }] : [];
+      }
+    }
+  });
+  return { sections: [{
+    id: lesson.id, title: lesson.title,
+    navLabel: lesson.title.split(":")[0],
+    blocks,
+  }] };
 }
 
 export function buildTopic(lesson: Lesson, previous?: Lesson): CurriculumTopic {
@@ -712,17 +633,14 @@ export function consolidateTopics(
       id: prefix(part, problem.id),
       ...(problem.prerequisiteId ? { prerequisiteId: undefined } : {}),
     });
-    const diagnostics = parts.flatMap((part) =>
-      part.diagnostics.map((problem) => renameProblem(part, problem)),
-    );
     const prior = groupIndex ? groups[groupIndex - 1][0] : undefined;
-    if (prior) {
-      const firstDiagnostic = diagnostics[0];
-      diagnostics[0] = {
-        ...firstDiagnostic,
-        prerequisiteId: prior,
-      };
-    }
+    const previousPart = groupIndex ? byId.get(groups[groupIndex - 1].at(-1)!) : undefined;
+    const previousCheck = previousPart?.retrievalProblems[0];
+    const diagnostics = previousPart && previousCheck ? [{
+      ...previousCheck,
+      id: `warmup-${previousPart.id}-${previousCheck.id}`,
+      prerequisiteId: prior,
+    }] : [];
     const sections = parts.flatMap((part) =>
       part.theory.map((section) => ({
         heading: `${part.title} · ${section.heading}`,
@@ -732,15 +650,7 @@ export function consolidateTopics(
     const checkpoints = parts.flatMap(
       (part) => part.teaching?.checkpoints ?? [],
     );
-    const examples = parts.flatMap((part) => [
-      {
-        title: part.workedExample.title,
-        body: part.workedExample.problem,
-        reason: "This is the concrete case for the chapter's next idea.",
-        trap: "Do not skip the assumptions: a locally correct step can still answer the wrong question.",
-      },
-      ...part.workedExample.steps,
-    ]);
+    const examples = parts.flatMap(part => part.workedExample.steps);
     const practicalParts = parts.flatMap((part) =>
       part.practical ? [part.practical] : [],
     );
@@ -755,27 +665,10 @@ export function consolidateTopics(
         }
       : undefined;
     const content = {
-      sections: parts.flatMap((part) =>
-        contentFromCurriculumTopic(part).sections.map((section) => ({
+      sections: parts.flatMap(part =>
+        contentFromCurriculumTopic(part).sections.map(section => ({
           ...section,
-          id: `${part.id}-${section.id}`,
-          blocks: section.blocks.map((block) =>
-            block.kind === "example"
-              ? {
-                  ...block,
-                  steps: [
-                    {
-                      title: part.title,
-                      body: part.workedExample.problem,
-                      reason:
-                        "This is the concrete case that begins this lesson.",
-                      trap: "Do not treat a new problem statement as evidence that the previous lesson's result transfers unchanged.",
-                    },
-                    ...block.steps,
-                  ],
-                }
-              : block,
-          ),
+          id: `${part.id}--${section.id}`,
         })),
       ),
     };
@@ -837,8 +730,8 @@ export function consolidateTopics(
       theory: sections,
       workedExample: {
         title: "One connected case, examined in stages",
-        problem: examples[0].body,
-        steps: examples.slice(1).map((step) => ({
+        problem: first.workedExample.problem,
+        steps: examples.map((step) => ({
           title: step.title,
           body: step.body,
           reason: step.reason,

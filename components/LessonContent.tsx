@@ -121,9 +121,11 @@ function LessonBlockView({
       return (
         <div className="content-example">
           <h3>{block.title}</h3>
-          <div className="example-brief">
-            <MathText>{block.problem}</MathText>
-          </div>
+          {block.problem !== block.title && (
+            <div className="example-brief">
+              <MathText>{block.problem}</MathText>
+            </div>
+          )}
           {block.steps.map((step, index) => (
             <section className="worked-step" key={`${step.title}-${index}`}>
               <span className="step-index">{index + 1}</span>

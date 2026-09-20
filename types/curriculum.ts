@@ -322,27 +322,41 @@ export const CurriculumTopicSchema = z.object({
     .optional(),
   practiceTemplates: z.array(PracticeTemplateSchema).optional(),
   practical: practicalSchema.optional(),
-  diagnostics: z.array(ProblemSchema).min(1),
-  intuition: z.object({ body: text, thoughtExperiments: z.array(text).min(1) }),
-  theory: z.array(exposition).min(1),
-  diagram: DiagramSchema,
+  diagnostics: z.array(ProblemSchema),
+  intuition: z.object({ body: z.string(), thoughtExperiments: z.array(text) }),
+  theory: z.array(exposition),
+  diagram: DiagramSchema.optional(),
   sidebars: z.array(exposition),
   workedExample: z.object({
-    title: text,
-    problem: text,
+    title: z.string(),
+    problem: z.string(),
     steps: z
       .array(z.object({ title: text, body: text, reason: text, trap: text }))
-      .min(2),
+      ,
   }),
   fadedExercise: z.object({
-    prompt: text,
-    supplied: z.array(exposition).min(1),
-    steps: z.array(ProblemSchema).min(1),
+    prompt: z.string(),
+    supplied: z.array(exposition),
+    steps: z.array(ProblemSchema),
   }),
-  retrievalProblems: z.array(ProblemSchema).min(2),
+  retrievalProblems: z.array(ProblemSchema),
   transferProblems: z.array(ProblemSchema).optional(),
   sources: z.array(z.object({ title: text, url: z.url() })).min(1),
   content: LessonContentSchema.optional(),
+}).superRefine((topic, ctx) => {
+  if (topic.content) return;
+  const required = {
+    intuition: topic.intuition.body.length > 0 && topic.intuition.thoughtExperiments.length > 0,
+    theory: topic.theory.length > 0,
+    diagram: Boolean(topic.diagram),
+    workedExample: Boolean(topic.workedExample.title && topic.workedExample.problem) && topic.workedExample.steps.length >= 2,
+    diagnostics: topic.diagnostics.length > 0,
+    fadedExercise: Boolean(topic.fadedExercise.prompt) && topic.fadedExercise.supplied.length > 0 && topic.fadedExercise.steps.length > 0,
+    retrievalProblems: topic.retrievalProblems.length >= 2,
+  };
+  for (const [field, valid] of Object.entries(required)) {
+    if (!valid) ctx.addIssue({ code: "custom", path: [field], message: "Legacy topics require complete teaching and assessment fields" });
+  }
 });
 export type CurriculumTopic = z.infer<typeof CurriculumTopicSchema>;
 export const CurriculumPackSchema = z.object({

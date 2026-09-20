@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { Diagram as DiagramData } from "@/types/curriculum";
 export function Diagram({ data }: { data: DiagramData }) {
+  const markerId = useId().replace(/:/g, "");
   const [labels, setLabels] = useState(true),
     [construction, setConstruction] = useState(true);
   return (
     <figure className="diagram">
-      <div className="eyebrow">Geometric model</div>
+      <div className="eyebrow">{data.title}</div>
       <div className="diagram-controls">
         <label>
           <input
@@ -34,7 +35,7 @@ export function Diagram({ data }: { data: DiagramData }) {
           {(["accent", "muted", "ink"] as const).map((tone) => (
             <marker
               key={tone}
-              id={`arrow-${tone}`}
+              id={`${markerId}-arrow-${tone}`}
               markerWidth="8"
               markerHeight="8"
               refX="7"
@@ -117,7 +118,7 @@ export function Diagram({ data }: { data: DiagramData }) {
                   stroke={stroke}
                   strokeWidth="2"
                   strokeDasharray={el.dashed ? "5 6" : undefined}
-                  markerEnd={`url(#arrow-${el.tone})`}
+                  markerEnd={`url(#${markerId}-arrow-${el.tone})`}
                 />
                 {labels && el.label && (
                   <text
@@ -139,7 +140,13 @@ export function Diagram({ data }: { data: DiagramData }) {
                 : el.tone === "muted"
                   ? "var(--diagram-muted)"
                   : "var(--ink)";
-            const lines = el.label.match(/.{1,25}(?:\s+|$)/g) ?? [el.label];
+            const lines: string[] = [];
+            for (const word of el.label.split(/\s+/)) {
+              const last = lines.length - 1;
+              if (last >= 0 && lines[last].length + word.length + 1 <= 25)
+                lines[last] += ` ${word}`;
+              else lines.push(word);
+            }
             const lineHeight = 17;
             const startY =
               el.center[1] - ((lines.length - 1) * lineHeight) / 2 + 5;
@@ -151,7 +158,7 @@ export function Diagram({ data }: { data: DiagramData }) {
                   width={el.width}
                   height={el.height}
                   rx="10"
-                  fill="var(--surface)"
+                  fill="white"
                   stroke={stroke}
                   strokeWidth="2"
                 />

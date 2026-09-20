@@ -1,5 +1,15 @@
 # Curriculum authoring
 
+## Editorial judgement
+
+The original agentic lessons were too dense. Preserve the readability of the rewrite when repairing omissions; do not bring back compressed explanations.
+
+Write naturally. There is no required opening, paragraph rhythm, or definition-example-warning sequence. Choose the shape of each lesson for what it teaches. Give difficult ideas room, explain unfamiliar terms when needed, and retain examples, runnable exercises and qualifications that help the reader understand. Shorter is not automatically clearer.
+
+Read the course as a learner before polishing its machinery. Look for advice that names a technique without explaining how to use it, repeated analogies and examples that never reach an actual decision. Improve those passages directly. Do not turn this advice into a requirement that every lesson begin with an incident or contain the same kind of example. Tests can catch missing blocks; they cannot establish that the prose is worth reading.
+
+Use diagrams only when they explain something the prose cannot show as well. A well-chosen, attributed external diagram can be better than a generic flowchart. Check the rendered lesson and its actual neighbours, not just the source file.
+
 Curriculum topics have two layers:
 
 - the validated runtime contract, which supplies metadata, practice and compatibility fields;
@@ -74,4 +84,10 @@ const topic = defineCurriculumTopic({
 });
 ```
 
-The compiler derives the compatibility teaching fields, worked example, diagram and fallback reflection checks. Supply `retrievalProblems`, `diagnostics` and `fadedExercise` when the course needs authored assessment rather than generated reflection checks. This keeps the reader structure independent from the assessment model while retaining the validated runtime contract.
+The compiler supplies empty compatibility containers, not invented teaching material. It does not generate diagrams, examples or graded questions from prose or checkpoints. Supply `retrievalProblems`, `diagnostics` and `fadedExercise` explicitly when needed. Checkpoints remain ungraded reflections.
+
+Content-first lessons can declare prerequisites without assigning diagnostics. Any supplied diagnostic must refer to a declared prerequisite. Without retrieval questions, a lesson can be marked as read but cannot earn mastery or enter scheduled review merely by answering a warm-up.
+
+Legacy lessons retain their stricter requirements. `contentFromCurriculumTopic` preserves their diagrams, thought experiments, checkpoints, examples and sidebars during migration. Consolidation must not turn example introductions into artificial solution steps. Warm-ups must match the actual chapter order.
+
+Course-specific reading orders belong with that course, not in the shared renderer. Reusable blocks are a vocabulary, not a required checklist. Test content-only lessons, mixed legacy content, explicit assessments and rendered navigation when extending the model.
