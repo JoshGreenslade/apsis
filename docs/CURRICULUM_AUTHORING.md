@@ -46,3 +46,32 @@ Available blocks are `prose`, `callout`, `list`, `steps`, `diagram`, `checkpoint
 Keep domain-specific assessment data separate. Numeric answers, units, tolerances, choice options and retrieval scheduling belong in the typed practice fields, not in a generic prose block.
 
 Topics without `content` continue to use the existing presentation. Agentic lessons now emit this content model through their builder, while older maths and astrodynamics topics remain compatible during migration.
+
+For a new course, compile a content-first topic with `defineCurriculumTopic`:
+
+```ts
+import { defineCurriculumTopic } from "@/curriculum-support/authoring";
+
+const topic = defineCurriculumTopic({
+  id: "first-lesson",
+  title: "A lesson with its own shape",
+  description: "State the capability the learner should leave with.",
+  domain: "Example course",
+  unit: "01 · Begin",
+  prerequisites: [],
+  minutes: 20,
+  content: {
+    sections: [
+      {
+        id: "opening",
+        title: "Start with the situation",
+        role: "story",
+        blocks: [{ kind: "prose", body: "Begin with a concrete case." }],
+      },
+    ],
+  },
+  sources: [{ title: "Course notes", url: "https://example.com/notes" }],
+});
+```
+
+The compiler derives the compatibility teaching fields, worked example, diagram and fallback reflection checks. Supply `retrievalProblems`, `diagnostics` and `fadedExercise` when the course needs authored assessment rather than generated reflection checks. This keeps the reader structure independent from the assessment model while retaining the validated runtime contract.

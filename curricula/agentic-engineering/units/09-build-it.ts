@@ -33,19 +33,24 @@ export const unit09BuildIt: Lesson[] = [
     nextConnection: "A working harness is not the finish line. Graduation means deciding where it belongs, what it may do and how you will know it remains worth keeping.",
     source: ["tools", "mcp", "engines"],
     practical: {
-      title: "Lab 9 · Build the smallest trustworthy loop",
-      minutes: 50,
+      title: "Lab 9 · Extend the tiny harness through v1–v9",
+      minutes: 120,
       brief:
-        "Build or sketch a harness for one bounded repository task, with explicit state, two tools, controls and a verification report.",
+        "Download [the lab kit](/agent-labs/agent-labs.zip) or use public/agent-labs in the source checkout. The [lab guide](/agent-labs/README.md) provides commands, extension milestones and failure cases. Work in a disposable directory with Node.js 24 or newer.",
       steps: [
-        "Define the task, revision, context bundle, allowed tools and stopping condition.",
-        "Implement or diagram the loop and log each tool request and result.",
-        "Add validation, output bounds, timeout, retry and checkpoint behaviour.",
-        "Run a happy path, an invalid request and a verification failure.",
+        "Run node --test harness.test.mjs, node demo.mjs, node demo.mjs false-success and node demo.mjs exhausted. Inspect the trace, tool policy and final verification gate.",
+        "Rebuild the core loop in your own words or code, then implement v1–v3: one named action, file reads and writes, and explicit stop, timeout and verification behaviour.",
+        "Implement v4–v7: context selection, compaction, persistent resume with workspace identity checks, and a hypothesis ledger that separates observations from explanations.",
+        "Implement v8–v9: a read-only worker with a bounded return schema and an outer controller that classifies events, deduplicates event IDs and routes results to review.",
+        "Optionally connect a live model through a provider adapter. Record its model and adapter versions and keep offline harness tests separate from live-agent evaluation.",
       ],
-      deliverables: ["A harness loop or executable design", "A run trace", "A failure and recovery report"],
+      deliverables: [
+        "A working loop and inspectable trace",
+        "Nine milestone notes, each naming the code that owns the new responsibility",
+        "Evidence for traversal rejection, false-success rejection, exhaustion, resume, worker failure and duplicate-event handling",
+      ],
       review:
-        "The harness should make it possible to answer what the agent knew, what it did, what happened and why it stopped. Extra features do not compensate for missing evidence.",
+        "A complete submission can explain every transition. The lab's scriptedModel is a deterministic test double: it validates harness execution, not a real model's reasoning. Compaction must preserve constraints and evidence pointers; resume must check workspace identity; the worker must have a bounded contract; and the outer controller must not process the same event twice. Use only the disposable fixture unless you have added stronger isolation.",
     },
   },
 ];

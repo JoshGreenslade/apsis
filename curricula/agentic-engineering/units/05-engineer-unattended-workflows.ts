@@ -106,7 +106,7 @@ export const unit05EngineerUnattendedWorkflows: Lesson[] = [
       ["What belongs behind release approval?", ["An external or production effect", "A read-only scan", "A local draft"], 0, "Consequential transitions deserve an explicit gate."],
     ],
     takeaway: "Choose a workflow shape that makes evidence, handoffs, retries and approval boundaries predictable.",
-    nextConnection: "These workflows can run with one agent, but some problems benefit from deliberate division of labour. The next unit explores multiple agents and the coordination cost they introduce.",
+    nextConnection: "These workflows can use external capabilities deliberately. The next unit introduces tools, MCP and skills as controlled extensions of the harness.",
     source: ["aw", "outputs"],
     practical: {
       title: "Lab 5 · Design an unattended workflow",

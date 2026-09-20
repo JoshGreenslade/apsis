@@ -106,7 +106,7 @@ export const unit03ChooseAndOperate: Lesson[] = [
       ["When might a human be the best agent?", ["When the objective is contested or the action irreversible", "For every spelling fix", "Only when no model exists"], 0, "Some decisions need accountable judgment and cannot yet be delegated safely."],
     ],
     takeaway: "Buy the amount of autonomy you can supervise, verify and recover from; expand only when evidence earns it.",
-    nextConnection: "With operating choices made, the course can add capabilities deliberately. The next unit introduces tools, MCP and skills as controlled extensions of the harness.",
+    nextConnection: "With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries.",
     source: ["copilot", "codex", "engines"],
     practical: {
       title: "Lab 3 · Choose an autonomy boundary",

@@ -179,6 +179,23 @@ export const DiagramSchema = z.object({
           tone: z.enum(["accent", "muted", "ink"]),
         }),
         z.object({ kind: z.literal("label"), at: point, text: text }),
+        z.object({
+          kind: z.literal("box"),
+          center: point,
+          width: z.number().positive(),
+          height: z.number().positive(),
+          label: text,
+          detail: text.optional(),
+          tone: z.enum(["accent", "muted", "ink"]),
+        }),
+        z.object({
+          kind: z.literal("arrow"),
+          from: point,
+          to: point,
+          tone: z.enum(["accent", "muted", "ink"]),
+          dashed: z.boolean().optional(),
+          label: text.optional(),
+        }),
       ]),
     )
     .min(1),
@@ -244,8 +261,41 @@ const lessonSectionSchema = z.object({
 export type LessonSection = z.infer<typeof lessonSectionSchema>;
 export const LessonContentSchema = z.object({
   sections: z.array(lessonSectionSchema).min(1),
+}).superRefine((content, ctx) => {
+  const ids = content.sections.map((section) => section.id);
+  if (new Set(ids).size !== ids.length) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["sections"],
+      message: "Lesson section IDs must be unique within a lesson",
+    });
+  }
 });
 export type LessonContent = z.infer<typeof LessonContentSchema>;
+export type CurriculumTopicDraft = {
+  id: string;
+  title: string;
+  description: string;
+  domain: string;
+  unit: string;
+  prerequisites: string[];
+  minutes: number;
+  content: LessonContent;
+  sources: { title: string; url: string }[];
+  practical?: Practical;
+  theoreticalMinimum?: NonNullable<
+    z.infer<typeof CurriculumTopicSchema>["theoreticalMinimum"]
+  >;
+  practiceTemplates?: PracticeTemplate[];
+  diagnostics?: Problem[];
+  retrievalProblems?: Problem[];
+  fadedExercise?: {
+    prompt: string;
+    supplied: { heading: string; body: string }[];
+    steps: Problem[];
+  };
+  transferProblems?: Problem[];
+};
 export const CurriculumTopicSchema = z.object({
   id: text,
   title: text,

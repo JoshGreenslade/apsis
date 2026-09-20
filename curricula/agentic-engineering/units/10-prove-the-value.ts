@@ -20,14 +20,14 @@ export const unit10ProveTheValue: Lesson[] = [
     ],
     example: ["A team wants to keep its automated dependency-update workflow.", ["State the promise", "The workflow scans weekly, proposes low-risk updates, runs focused and full checks, produces a diff and never publishes without approval.", "The boundary is understandable and testable.", "Describing it as 'an autonomous maintenance bot.'"], ["Review the evidence", "After four weeks, compare accepted proposals, review minutes, escaped defects, cost and correct refusals with the manual baseline.", "The keep, narrow or retire decision has a basis.", "Expanding to production releases because the first proposal merged cleanly."]],
     checks: [
-      ["What is graduation?", ["A bounded workflow with an operating and evidence story", "Unsupervised action by default", "A product demo"], 0, "The system earns a place through clarity and repeated evidence."],
-      ["Who owns the workflow?", ["A named team or person", "Nobody after launch", "The model alone"], 0, "Ownership is required for maintenance and boundary decisions."],
-      ["What should mixed pilot results cause?", ["Inspection and a narrower next trial", "Automatic expansion", "Hidden reporting"], 0, "Learning should change the operating design."],
+      ["What is graduation?", ["Unsupervised action by default", "A bounded workflow with an operating and evidence story", "A product demo"], 1, "The system earns a place through clarity and repeated evidence."],
+      ["Who owns the workflow?", ["Nobody after launch", "The model alone", "A named team or person"], 2, "Ownership is required for maintenance and boundary decisions."],
+      ["What should mixed pilot results cause?", ["Automatic expansion", "Inspection and a narrower next trial", "Hidden reporting"], 1, "Learning should change the operating design."],
     ],
     moreChecks: [
-      ["What should a launch-ready workflow state?", ["Scope, authority, evidence and recovery", "Only its schedule", "A promise of autonomy"], 0, "An operating model makes the workflow governable."],
-      ["What is a credible baseline?", ["The current way the work is done", "A perfect imagined alternative", "No comparison"], 0, "Value is relative to a real alternative."],
-      ["When should a workflow narrow?", ["When evidence shows its current boundary is too risky or costly", "Never", "Whenever the output is short"], 0, "Boundaries should follow operating evidence."],
+      ["What should a launch-ready workflow state?", ["Only its schedule", "Scope, authority, evidence and recovery", "A promise of autonomy"], 1, "An operating model makes the workflow governable."],
+      ["What is a credible baseline?", ["A perfect imagined alternative", "No comparison", "The current way the work is done"], 2, "Value is relative to a real alternative."],
+      ["When should a workflow narrow?", ["Never", "Whenever the output is short", "When evidence shows its current boundary is too risky or costly"], 2, "Boundaries should follow operating evidence."],
     ],
     takeaway: "Keep an agentic workflow only when its scope, controls, evidence, cost and ownership make a credible promise to the team.",
     nextConnection:

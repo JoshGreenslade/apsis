@@ -3,7 +3,12 @@ import type {
   LessonContent,
   Problem,
 } from "@/types/curriculum";
-import { choice, pointFlow } from "@/curriculum-support/authoring";
+import {
+  choice,
+  contentFromCurriculumTopic,
+  flowDiagram,
+  pointFlow,
+} from "@/curriculum-support/authoring";
 import { sources } from "./sources";
 export type Check = [
   prompt: string,
@@ -537,6 +542,38 @@ function authoredLessonContent(lesson: Lesson): LessonContent {
         ],
       },
       {
+        id: `${lesson.id}-map`,
+        title: "See the structure",
+        role: "custom",
+        blocks: [
+          {
+            kind: "diagram",
+            data: flowDiagram(
+              `${lesson.title} · the operating path`,
+              "Follow the evidence from the starting condition to the decision or verified result.",
+              lesson.flow ?? [
+                "Observe the concrete failure",
+                "Choose the responsible layer",
+                "Change one thing and verify",
+              ],
+            ),
+          },
+          {
+            kind: "sidebar",
+            heading: "Keep the boundary visible",
+            body:
+              "Examples and numbers are instructional scenarios. In a real workflow, record the installed versions, source revision, permissions and evidence that support the result." +
+              (lesson.id === "gh-aw"
+                ? " For a production reference, compare this with [GitHub Agentic Workflows' architecture](https://github.github.com/gh-aw/introduction/architecture/) and [how workflows are compiled and run](https://github.github.com/gh-aw/introduction/how-they-work/)."
+                : lesson.id === "mcp"
+                  ? " For the protocol's canonical component model, see the [Model Context Protocol architecture](https://modelcontextprotocol.io/specification/2025-03-26/architecture)."
+                  : lesson.id === "tiny-harness"
+                    ? " The runnable companion is the [Apsis harness lab guide](/agent-labs/README.md)."
+                    : ""),
+          },
+        ],
+      },
+      {
         id: `${lesson.id}-takeaway`,
         title: "Bring it together",
         role: "takeaway",
@@ -717,32 +754,31 @@ export function consolidateTopics(
           review: practicalParts.map((p) => p.review).join("\n\n"),
         }
       : undefined;
-    const content = parts.some((part) => part.content)
-      ? {
-          sections: parts.flatMap((part, partIndex) =>
-            (part.content?.sections ?? []).map((section) => ({
-              ...section,
-              blocks: section.blocks.map((block) =>
-                partIndex > 0 && block.kind === "example"
-                  ? {
-                      ...block,
-                      steps: [
-                        {
-                          title: part.title,
-                          body: part.workedExample.problem,
-                          reason:
-                            "This is the concrete case that begins this lesson.",
-                          trap: "Do not treat a new problem statement as evidence that the previous lesson's result transfers unchanged.",
-                        },
-                        ...block.steps,
-                      ],
-                    }
-                  : block,
-              ),
-            })),
+    const content = {
+      sections: parts.flatMap((part) =>
+        contentFromCurriculumTopic(part).sections.map((section) => ({
+          ...section,
+          id: `${part.id}-${section.id}`,
+          blocks: section.blocks.map((block) =>
+            block.kind === "example"
+              ? {
+                  ...block,
+                  steps: [
+                    {
+                      title: part.title,
+                      body: part.workedExample.problem,
+                      reason:
+                        "This is the concrete case that begins this lesson.",
+                      trap: "Do not treat a new problem statement as evidence that the previous lesson's result transfers unchanged.",
+                    },
+                    ...block.steps,
+                  ],
+                }
+              : block,
           ),
-        }
-      : undefined;
+        })),
+      ),
+    };
     const minimums = parts.flatMap((part) =>
       part.theoreticalMinimum ? [part.theoreticalMinimum] : [],
     );

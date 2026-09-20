@@ -175,7 +175,7 @@ export const unit04DelegateWorkWell: Lesson[] = [
       ["The test suite passes without exercising the changed path. What failed?", ["Verification", "The model's vocabulary", "The repository name"], 0, "A weak check can certify the wrong result."],
     ],
     takeaway: "Classify the failure, change the condition that caused it and preserve the evidence from the recovery.",
-    nextConnection: "The delegation loop now has a brief, an executable repository and a diagnosis step. The next unit zooms out to the environment and operating choices around that loop.",
+    nextConnection: "The delegation loop now has a brief, an executable repository and a diagnosis step. The next chapter asks how to measure whether the resulting work is actually accepted and useful.",
     source: ["tools", "engines", "security"],
     practical: {
       title: "Lab 4 · Build a recovery loop",

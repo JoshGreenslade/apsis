@@ -557,6 +557,14 @@ a {
   color: var(--accent);
   font-size: 0.7rem;
 }
+.diagram-edge-label,
+.diagram-detail {
+  fill: var(--muted);
+  font-size: 11px;
+}
+.diagram-detail {
+  font-size: 10px;
+}
 .teaching-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.65fr) minmax(330px, 1fr);
