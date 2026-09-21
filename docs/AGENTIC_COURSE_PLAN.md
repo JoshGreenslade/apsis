@@ -292,3 +292,22 @@ commands in the lab environment. Proposed comparisons are not performance claims
 Batch sizes follow new machinery and prose, not a chapter quota. Review the
 chapter map before drafting the course. Finish each bounded writing batch and
 verify its exercises before moving to the next.
+
+## Next-session handoff
+
+The user approved this curriculum. Proceed to batch 2; do not restart curriculum
+design or draft lessons yet.
+
+- Create a provisional chapter map. For each chapter, identify its central
+  question, prerequisites, practical activity and observable result. These are
+  planning fields, not mandatory headings for the eventual prose.
+- Check that models, harnesses, tools, MCP, skills, gh-aw, organisational lifecycle
+  and both scales of orchestration have meaningful coverage. Split chapters
+  where too much new machinery arrives at once; impose no chapter count.
+- Start feasibility with the repository investigator: select a minimal service
+  fixture and one bounded investigation that exposes a useful agent trace.
+  Record candidate runtime versions, access requirements and unresolved choices.
+- Keep proposed, source-checked and actually executed labs clearly distinguished.
+  Do not provision paid services or publish live workflow effects for a spike.
+
+The next deliverable is the chapter map with feasibility notes, not lesson text.
