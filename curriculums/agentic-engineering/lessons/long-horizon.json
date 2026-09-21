@@ -4,213 +4,93 @@
   "description": "Break extended work into resumable experiments with explicit state, gates and evidence. Match autonomy, cost and review effort to task risk, uncertainty and reversibility.",
   "domain": "Agentic engineering",
   "unit": "08 · Choose and operate",
-  "prerequisites": ["landscape"],
+  "prerequisites": [
+    "landscape"
+  ],
   "minutes": 25,
   "content": {
     "sections": [
       {
         "id": "long-horizon--long-horizon",
-        "title": "Long-horizon work: accumulate evidence, not elapsed time",
-        "navLabel": "Long-horizon work",
+        "title": "A task grows beyond one sitting",
+        "navLabel": "Progress across stages",
         "blocks": [
           {
             "kind": "content",
-            "body": "The agent has been busy for two hours. It has read dozens of files, tried several patches and produced a long status report. What do we know now that we did not know at the start?\n\nIf that question is difficult to answer, more runtime may just buy more activity. Long tasks need intermediate results that can be checked and carried forward, especially when the work changes direction or moves to a fresh session."
-          },
-          {
-            "kind": "example",
-            "title": "A migration task may run across several sessions.",
-            "problem": "A migration task may run across several sessions.",
-            "steps": [
-              {
-                "title": "Divide the route",
-                "body": "Stage one maps callers, stage two adds compatibility, stage three migrates one path, and stage four removes the old path only after evidence.",
-                "reason": "Each stage has a smaller proof and a safe stopping point.",
-                "trap": "Giving one prompt permission to rewrite every caller and delete the old API."
-              },
-              {
-                "title": "Resume from state",
-                "body": "After each stage, record the revision, tests, unresolved questions and next gate.",
-                "reason": "A fresh run can continue without replaying the whole investigation.",
-                "trap": "Relying on the transcript as the only memory."
-              }
-            ]
-          },
+            "body": "The retry helper now behaves as intended. A larger change follows: the team wants to replace its old configuration interface across several packages. Some callers use defaults, some pass explicit limits, and one service wraps the helper to translate errors.\n\nAn instruction to 'migrate all callers and remove the old interface' hides several decisions. We first need to understand which behaviours callers depend on. We then need a way to introduce the new interface without leaving the repository unusable halfway through. Finally, we need evidence that removing the old path will not strand a caller we missed.\n\nA longer conversation does not settle those decisions. Neither does dividing the task into equal chunks of time. The useful stages follow the questions the work must answer.\n\nThe first stage can end with a caller map and a statement of the behaviour each group depends on. The next can introduce a compatibility path and show that existing callers still work. Another can migrate one representative caller and exercise it. Only after the remaining callers have been addressed does deleting the old interface become a well-supported next action.\n\nThis sequence is provisional. The wrapper may reveal an undocumented dependency on error identity. That discovery changes the plan: investigate and agree on the required behaviour before spreading the migration further. A stage is valuable partly because it creates a place for new evidence to change what happens next."
+          }
+        ]
+      },
+      {
+        "id": "migration-case",
+        "title": "What should tomorrow's session inherit?",
+        "navLabel": "Continuing the migration",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Make progress legible",
-            "body": "For a retry repair, the first stage might end with a deterministic reproduction, not a patch. The second ends with a candidate change and evidence that the reproduction now passes. The third checks surrounding behaviour and prepares the result for review.\n\nThese stages need not take equal time. Their value is that each answers a different question: can we reproduce it, does the change address it, and what else might the change affect?\n\nAfter each stage, keep a short record of the revision, commands, findings and unresolved questions. If reproduction proves impossible without production access, stop there and report the missing evidence. Do not quietly replace the task with a plausible-looking cleanup."
+            "body": "**Worked Example**\n\nThe agent has added the compatibility path and migrated one package. Its focused tests pass. It is late, and the process is about to stop. 'Migration progressing well; continue with the remaining packages' would leave tomorrow's session with most of the investigation still to reconstruct.\n\nA useful handoff names the current revision and any uncommitted changes, points to the caller map, and records which package was migrated. It includes the exact checks that ran and the limitation: the service wrapper has not been exercised because its integration fixture is unavailable. The next proposed action is to inspect that wrapper before deleting any compatibility code.\n\nNotice what this preserves. The next session knows a completed change, the evidence for it and an unresolved dependency. It can distinguish 'not yet migrated' from 'migrated but unverified'. It also knows why the apparently tidy next step of deleting the old path would be premature.\n\nOn restart, the session checks the workspace before following the note. Suppose a colleague has changed the wrapper in the meantime. The saved observation still describes the earlier revision, but it no longer establishes what the wrapper does now. Reinspect the affected part and update the plan. There is no need to throw away every result merely because one file changed; there is a need to identify which conclusions depended on it.\n\nChapter three introduced checkpoints as a way to preserve an investigation. Here the checkpoint also coordinates changes to artifacts. Keep the actual patch and relevant logs retrievable alongside the note. A summary saying 'package migrated' cannot restore a lost edit or prove which source a passing test exercised.\n\nWhen work resumes, it should be able to explain its next action from that state. If it immediately repeats the completed caller survey, something useful was lost. If it refuses to revisit the changed wrapper, something tentative was made too permanent."
           },
           {
             "kind": "question",
-            "bridge": "Elapsed time is not evidence of progress.",
-            "meaning": "A long task needs observable stage outcomes and resumable state.",
-            "question": "An agent has edited twenty files but cannot say which hypothesis the changes test. What is missing?",
-            "answer": "A progress contract: the task was not broken into stages with a decision, evidence and stopping condition.",
-            "further": [
-              {
-                "question": "What should a stage record?",
-                "answer": "The goal, changed artifacts, observations, uncertainty and the next permitted experiment."
-              },
-              {
-                "question": "Why record rejected paths?",
-                "answer": "They stop a resumed run from repeating work that already failed to explain the problem."
-              }
-            ]
-          },
+            "question": "A checkpoint records a passing test, but the resumed workspace contains a later edit to the tested helper. What should the resumed run do?",
+            "answer": "Inspect what changed and re-establish the relevant behaviour before relying on the old result. The recorded pass remains evidence about the earlier state. Preserve unrelated findings that still apply, while checking the conclusions affected by the edit."
+          }
+        ]
+      },
+      {
+        "id": "stalled-work",
+        "title": "Recognise when more time is not helping",
+        "navLabel": "When progress stalls",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Use gates, not hope",
-            "body": "Pause before expensive, risky or irreversible transitions. A gate can ask whether the hypothesis still fits, whether the tests are trustworthy and whether the next action remains inside scope. Long-horizon autonomy should be a sequence of bounded commitments, not one large permission slip."
-          },
-          {
-            "kind": "question",
-            "bridge": "Long-horizon work needs moments where autonomy narrows before risk rises.",
-            "meaning": "Gates preserve human control at transitions where the next action changes cost, scope or reversibility.",
-            "question": "When should a human approval gate appear?",
-            "answer": "Before a consequential transition such as publishing, changing production configuration or committing to a broad refactor.",
-            "further": [
-              {
-                "question": "What makes a gate useful?",
-                "answer": "It has a clear question and evidence to inspect, rather than asking for a vague feeling of confidence."
-              },
-              {
-                "question": "Should every small action need approval?",
-                "answer": "No. Excessive gates destroy the benefit of delegation; use them where risk or irreversibility changes."
-              }
-            ]
-          },
-          {
-            "kind": "takeaway",
-            "body": "Long-horizon work is a chain of bounded experiments, each leaving enough evidence for the next one.",
-            "nextConnection": "The final lesson in this unit asks the harder question: given the task, environment and horizon, how much autonomy should you buy?"
+            "body": "A long run can spend its budget while staying in the same place. It retries a command, reformats nearby code, or writes a new plan without resolving the uncertainty that blocked the old one.\n\nAsk what observation changed since the last stage. Finding a missing fixture is progress because it explains why a test cannot run. Obtaining that fixture enables a new experiment. Running the same command repeatedly without changing the setup usually adds little. Repetition may be justified for a flaky failure, but then it should be a deliberate experiment with a stopping condition and a record of outcomes.\n\nMake the unfinished question visible. For the wrapper, it might be whether callers rely on receiving the first timeout object. If local evidence cannot establish that, the next useful action could be a question to the service owner. Giving the agent another hour without access to the necessary evidence will not answer it.\n\nBudgets help contain such runs, but they should leave a useful stopping state. Record the findings, remaining changes and reason for stopping before the limit is reached where possible. An interrupted migration may contain a useful intermediate patch without being complete. Keep that distinction in the handoff.\n\nRecovery also depends on the kind of action underway. Reading a file can usually be repeated. A request to publish a result may have succeeded even if its response was lost. Before repeating an uncertain external action, check its recorded identity and destination. The next chapter will develop this problem for unattended jobs."
           }
         ]
       },
       {
         "id": "choosing--choosing",
-        "title": "Choosing an agent: buy the right amount of autonomy",
-        "navLabel": "Choosing an agent",
+        "title": "Grant autonomy to parts of the work",
+        "navLabel": "Where review belongs",
         "blocks": [
           {
             "kind": "content",
-            "body": "Autonomy is not a trophy. It is a setting. A human should not hand over a task simply because an agent can attempt it, just as a team should not manually repeat a safe, well-specified check that a machine can perform reliably. The useful choice depends on uncertainty, consequence, reversibility and the quality of available evidence."
-          },
-          {
-            "kind": "content",
-            "title": "Use a risk-adjusted decision",
-            "body": "Reading a CI log and drafting an explanation has a different risk from merging the proposed fix. The investigation can often run unattended while the merge still requires a reviewer. Autonomy does not have to be granted to the whole workflow at once.\n\nAsk where an error would be noticed and how it would be undone. A patch on an isolated branch is relatively easy to inspect and discard. A public message, data migration or production change may be harder to reverse even when the command itself is simple.\n\nPut review at the transition where it can change the outcome. Approval after an irreversible action is only an audit. If the objective itself is disputed or the evidence cannot support a decision, bring a person in before implementation begins."
+            "body": "For our migration, an agent can often survey callers, draft a patch and run local tests under an agreed scope. Changing a public interface or deploying the migrated service may require a separate decision. The workflow therefore has several degrees of autonomy within it.\n\nConsider uncertainty, consequence and recovery together. A large local search can be inexpensive to redo. A one-line configuration change can redirect live traffic. Counting files or tool calls will not tell you which needs a closer decision.\n\nPlace review before a consequential transition and give the reviewer something specific to decide. 'Proceed?' beside an enormous transcript is a weak gate. 'The remaining callers use the new interface; these checks ran; the integration fixture is still unavailable; should removal wait for that check?' presents a decision and its evidence.\n\nDo not require approval for every small read merely because a later action is consequential. Frequent low-value approvals consume attention and can encourage automatic acceptance. The aim is to give people a chance to settle questions that need their judgement while allowing the agreed work to proceed.\n\nThe enforcement must agree with this design. If publication requires approval, a credential available earlier in the run should not already permit the agent to publish through another path. The environment from chapter seven is what makes the intended division of responsibility real."
           },
           {
             "kind": "question",
-            "bridge": "The best agent is the one whose level of autonomy matches the task, not the one with the most impressive demo.",
-            "meaning": "Risk, uncertainty and reversibility determine how much delegation is sensible.",
-            "question": "Which task is the better first candidate for autonomy: formatting a known set of files or deleting production data?",
-            "answer": "Formatting the known files. It is bounded, observable and reversible; production deletion demands a much stronger approval boundary.",
-            "further": [
-              {
-                "question": "Why does reversibility matter?",
-                "answer": "It reduces the cost of a wrong action and makes experimentation safer."
-              },
-              {
-                "question": "When is a human the right choice?",
-                "answer": "When the objective or evidence requires judgment that cannot be made legible enough for safe delegation, especially before irreversible consequences."
-              }
-            ]
-          },
-          {
-            "kind": "example",
-            "title": "A team wants an agent to own a dependency upgrade.",
-            "problem": "A team wants an agent to own a dependency upgrade.",
-            "steps": [
-              {
-                "title": "Start at a safe boundary",
-                "body": "Let it inspect the dependency, propose the version change, run the focused tests and produce a diff.",
-                "reason": "The team gets useful work with a clear review point.",
-                "trap": "Allowing an automatic publish on the first trial."
-              },
-              {
-                "title": "Expand by evidence",
-                "body": "After repeated successful trials, consider automatic branch creation or merge checks, while keeping release changes gated.",
-                "reason": "Autonomy grows with demonstrated control.",
-                "trap": "Treating a high benchmark score as permission for production actions."
-              }
-            ]
-          },
+            "question": "A migration can prepare and test a patch, but publishing requires review. When does that review lose its intended effect?",
+            "answer": "When publication can already occur through the tools or credentials available before approval, or when approval happens after publication. A meaningful gate precedes the action and controls whether that action can execute."
+          }
+        ]
+      },
+      {
+        "id": "trial",
+        "title": "Let the trial change the scope",
+        "navLabel": "Trying a boundary",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Prefer a smaller promise you can prove",
-            "body": "A modest agent that produces a reviewable patch may beat a powerful agent that takes broad action with opaque evidence. Start with the narrowest autonomy that could deliver value, measure the result and expand only when the failure modes are understood."
-          },
-          {
-            "kind": "question",
-            "bridge": "Autonomy should expand from evidence, not optimism.",
-            "meaning": "Start with a narrow promise, measure the outcome and use what you learn to set the next boundary.",
-            "question": "What should a team measure before increasing autonomy?",
-            "answer": "Task success, defect escape, review effort, recovery time, cost and the quality of evidence accompanying decisions.",
-            "further": [
-              {
-                "question": "Why include review effort?",
-                "answer": "A result that takes longer to verify than to produce may not be an efficiency gain."
-              },
-              {
-                "question": "What is a good expansion rule?",
-                "answer": "Increase scope only when the existing scope has reliable checks and known recovery paths."
-              }
-            ]
+            "body": "A dependency upgrade offers a smaller place to practise this judgement. Let an agent inspect the proposed version, make a local change and produce the relevant test evidence. Keep the release decision with the existing owner while you learn what reviewing those outputs requires.\n\nSeveral accepted patches may justify continuing that arrangement. They do not necessarily justify automatic releases: the trial has not exercised every release consequence. A useful expansion targets a particular remaining cost and comes with evidence about it. Creating a review branch automatically may remove routine handling without also granting permission to merge.\n\nMeasure failures and human effort as well as accepted outcomes. If the reviewer spends most of the time reconstructing what ran, improve the evidence handoff before expanding authority. If ambiguous upgrades regularly need product decisions, route those cases for discussion instead of treating every interruption as a defect in the agent.\n\nTry the lab below with a task you know well enough to judge. Your conclusion may be to keep the present scope, reduce it, or permit one additional action. A narrow result can still save meaningful work.\n\nWe can now describe a task that progresses through stages and stops at intelligible boundaries. To make it recur unattended, something must select the right events, create the right environment and account for each outcome. That is where the next chapter begins."
           },
           {
             "kind": "lab",
             "data": {
               "title": "Lab 5 · Choose an autonomy boundary",
               "minutes": 30,
-              "brief": "Take one real engineering task and decide which actions an agent may inspect, propose, apply and publish.",
+              "brief": "Choose a real task that could span several sessions. Design a small trial that reveals where the agent can proceed and where another decision is needed.",
               "steps": [
-                "Describe the task's uncertainty, consequence, reversibility and available checks.",
-                "Draw four boundaries: read, propose, apply and publish.",
-                "Run a narrow trial and record success, review effort, recovery and escaped defects.",
-                "Use the evidence to keep, narrow or expand one boundary."
+                "Identify intermediate results that would establish progress, and the uncertainty each stage should resolve.",
+                "Record the environment and actions permitted during the trial, including any separate publication decision.",
+                "Stop after a useful intermediate result. Resume from a checkpoint, then change one relevant fact and inspect how the continuation responds.",
+                "Compare the result and review effort with the current approach. Keep, narrow or expand one part of the scope, explaining what the evidence supports."
               ],
               "deliverables": [
                 "An environment contract",
                 "An autonomy boundary map",
                 "A trial report with an expansion decision"
               ],
-              "review": "A good decision explains why each boundary matches the task's risk and names the evidence that would justify changing it. 'The agent seemed capable' is not enough."
-            }
-          },
-          {
-            "kind": "takeaway",
-            "body": "Buy the amount of autonomy you can supervise, verify and recover from; expand only when evidence earns it.",
-            "nextConnection": "With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries."
-          },
-          {
-            "kind": "summary",
-            "data": {
-              "coreIdea": "Break extended work into resumable experiments with explicit state, gates and evidence. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Match autonomy, cost and review effort to task risk, uncertainty and reversibility. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
-              "widerConnection": "The final lesson in this unit asks the harder question: given the task, environment and horizon, how much autonomy should you buy? This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
-              "primitives": [
-                "The lesson's target: Break extended work into resumable experiments with explicit state, gates and evidence.",
-                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
-                "An observable outcome and the evidence needed to accept it",
-                "The lesson's target: Match autonomy, cost and review effort to task risk, uncertainty and reversibility."
-              ],
-              "assumptions": [
-                "The task boundary and acceptance condition are explicit before execution begins.",
-                "Claims are kept separate from observations produced by the environment or verifier.",
-                "Authority is limited to the actions required by the stated task."
-              ],
-              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
-              "checks": [
-                "What observation would distinguish the intended explanation from its nearest alternative?",
-                "Which action, state transition, or evidence boundary does the system own?",
-                "What would still be unknown after the stated check passes?"
-              ],
-              "governingLaw": "Long-horizon work requires explicit state, checkpoints, bounded progress, and recovery rather than one uninterrupted context. The right autonomy level is the least powerful arrangement that can meet the task's evidence and risk requirements.",
-              "invariant": "A resumed run must re-establish task identity and evidence before continuing from a checkpoint. Escalation changes authority only when the acceptance test and rollback path remain explicit.",
-              "limitingCase": "For a one-step task, checkpointing costs more than it saves and adds no recovery value. When the task is ambiguous or irreversible, supervised assistance can be the maximum justified autonomy.",
-              "counterexample": "More turns do not imply more progress when the agent repeats an action without changing its hypothesis. Automating a frequent task can reduce throughput if review, recovery, and maintenance cost exceed the saved effort.",
-              "validity": "Long-horizon reliability depends on recoverable state and measurable progress, not on context length alone. An autonomy choice is valid only for the named task, environment, risk tolerance, and evidence contract."
+              "review": "Look for continuity of evidence and a meaningful decision at each review point. A short trial can reveal repeated work or a missing check; it cannot establish a rate of rare production failures. Keeping the current scope is a legitimate outcome."
             }
           }
         ]
@@ -462,8 +342,8 @@
       "url": "https://github.github.io/gh-aw/reference/engines/"
     }
   ],
-  "heading": "How can an agent work for longer without losing the thread?",
-  "lead": "Break extended work into resumable experiments with explicit state, gates and evidence. Match autonomy, cost and review effort to task risk, uncertainty and reversibility.",
+  "heading": "How can a long task keep making progress?",
+  "lead": "Follow a migration across several sessions, decide what each stage must establish, and place review where it can still change the outcome.",
   "outcomes": [
     "Break extended work into resumable experiments with explicit state, gates and evidence.",
     "Match autonomy, cost and review effort to task risk, uncertainty and reversibility."

@@ -4,194 +4,74 @@
   "description": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. Define an environment contract covering identity, tools, state, permissions, network and verification.",
   "domain": "Agentic engineering",
   "unit": "07 · Choose and operate",
-  "prerequisites": ["verification"],
+  "prerequisites": [
+    "verification"
+  ],
   "minutes": 25,
   "content": {
     "sections": [
       {
         "id": "landscape--landscape",
-        "title": "The landscape: compare operating modes",
-        "navLabel": "The landscape",
+        "title": "The same model can mean different work for you",
+        "navLabel": "Choosing a setup",
         "blocks": [
           {
             "kind": "content",
-            "body": "A coding assistant in your editor, a background worker on an isolated checkout and a scheduled repository job can all use the same model. They still offer very different ways of working.\n\nIn the editor, you can correct a misunderstanding immediately. A background worker needs a brief it can carry without that conversation. A scheduled job needs a standing rule for when to act and what it may publish. Start with that operating choice, then compare the products that can support it."
-          },
+            "body": "You have a retry bug, a failing test and a clear acceptance condition. Two retries should allow the initial call and two further attempts. Chapter six gave us a way to check the repair. Now we need somewhere to do the work.\n\nIn an editor, you might keep the assistant beside you while you inspect the loop. You can answer a question immediately or notice that it has opened a generated file. In a background job, the agent must make those decisions with the brief and tools it receives. A scheduled job goes further: it also needs a standing rule for which failures deserve investigation and where the result should appear.\n\nEach arrangement puts different work on the person using it. A chat interface may be enough to explain a trace, even if you copy the relevant code into it yourself. If you want a reviewed patch by the morning, manually transferring every command and result defeats much of that purpose. Conversely, a background job that cannot ask a necessary question may spend an hour implementing the wrong interpretation.\n\nStart by describing the handoff you want. What will you give the system, what should come back, and what decisions will you still make along the way? That description turns a product comparison into a smaller question: which setup can support this particular collaboration?\n\nThe model, harness and workflow remain useful distinctions. The model interprets the evidence and proposes actions. The harness makes tools and observations available. The workflow determines when work starts and how it reaches review. A product may package all three, so a better result does not automatically tell us which part made the difference."
+          }
+        ]
+      },
+      {
+        "id": "comparison",
+        "title": "Watch a task travel through both setups",
+        "navLabel": "A comparison that teaches you something",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Name the layer you are choosing",
-            "body": "A model supplies inference. A harness supplies tools, context handling, permissions and state. A workflow supplies the rhythm of planning, execution, review and approval. Changing one layer does not automatically improve the others. A strong model in a weak harness may be less useful than a modest model with clear tools, narrow permissions and excellent feedback."
+            "body": "**Worked Example**\n\nSuppose a team is comparing its usual chat assistant with a repository-connected worker. The task is the retry repair from the preceding chapters. Both start from the same source revision and receive the same behavioural brief. The chat assistant relies on an engineer to supply files and run commands; the worker can search, edit and test within its checkout.\n\nThe chat produces a plausible fix quickly. The engineer then finds the relevant test command, applies the suggestion and brings the failure back into the conversation. The worker spends longer finding the implementation, but returns a diff and the command it ran. Which has saved work is still open. The chat's early answer may have hidden several minutes of human effort; the worker's report may take longer to untangle.\n\nFollow both results to the same acceptance point. Record the engineer's interventions as well as elapsed time, and inspect the delivered changes using the same relevant checks. A system that needs help is not disqualified. That help is part of the operating arrangement being compared.\n\nNow interrupt the worker after it has edited the file. Can you identify the changes it left behind? On resume, does it inspect the workspace before relying on an earlier passing test? This exposes a capability that a polished demonstration can easily hide: how much work you inherit when a run ends somewhere inconvenient.\n\nIf one setup cannot run the tests because a service is missing, name that limitation. It is a real limitation of the proposed setup, but it is not evidence that its model cannot reason about the bug. You might repair the environment and repeat the trial, or decide that the repair costs too much for this use.\n\nKeep those two conclusions separate. An end-to-end trial can tell you which arrangement currently helps your team. Establishing why one wins requires a more controlled comparison. Changing the model, its tools and its inputs together cannot isolate a model effect."
           },
           {
             "kind": "question",
-            "bridge": "Before comparing products, identify which layer is limiting the work.",
-            "meaning": "Model capability, harness capability and workflow design are different levers.",
-            "question": "A strong model cannot run the repository's tests. What kind of improvement is needed first?",
-            "answer": "A harness or environment improvement. More model capability cannot substitute for a missing tool path.",
-            "further": [
-              {
-                "question": "What does a model contribute?",
-                "answer": "Inference and generation from the context it receives."
-              },
-              {
-                "question": "What does a harness contribute?",
-                "answer": "Tool access, state, permissions, context handling and the ability to observe or constrain actions."
-              }
-            ]
-          },
-          {
-            "kind": "content",
-            "title": "Compare by evidence and control",
-            "body": "Try a task that resembles the work you intend to delegate, using the same starting revision and brief for each setup. Watch what happens between the prompt and the final answer. Does the system find the implementation? Can you see the commands it ran? When a test fails to start, does it distinguish that from an assertion failure?\n\nInclude an interruption. Stop the run after an edit and inspect what remains: a recoverable patch and useful status, or an uncertain workspace? Resume it and check whether it knows which evidence is stale.\n\nUse the acceptance and cost measures from the preceding chapters. A fast demonstration is interesting, but the operating decision also depends on whether you can review, stop and recover the work."
-          },
-          {
-            "kind": "question",
-            "bridge": "A comparison becomes meaningful only when it uses the work you actually need to do.",
-            "meaning": "The best setup is task-relative, and should be judged by evidence and control rather than a generic leaderboard.",
-            "question": "Why run a representative task when comparing two agent setups?",
-            "answer": "Because the setup's usefulness depends on the tools, context, verification and failure recovery the real task demands.",
-            "further": [
-              {
-                "question": "Why include reversibility in the comparison?",
-                "answer": "A fast system that is hard to stop or undo can create more operational risk than it removes."
-              },
-              {
-                "question": "What does auditability buy you?",
-                "answer": "It lets a reviewer understand what happened and distinguish a reliable result from a lucky one."
-              }
-            ]
-          },
-          {
-            "kind": "example",
-            "title": "A team is choosing between a polished chat interface and a repository-connected harness.",
-            "problem": "A team is choosing between a polished chat interface and a repository-connected harness.",
-            "steps": [
-              {
-                "title": "Map the task",
-                "body": "The task needs search, edits, tests, resumable state and reviewable diffs. Score each setup against those needs.",
-                "reason": "The comparison reflects the work rather than the product's feature names.",
-                "trap": "Choosing the chat interface because its demo answer sounded fluent."
-              },
-              {
-                "title": "Run a small trial",
-                "body": "Use the same retry bug and record time to first useful evidence, failed-tool recovery, verification quality and reviewer effort.",
-                "reason": "The decision has observable evidence.",
-                "trap": "Measuring only first-response latency."
-              }
-            ]
-          },
-          {
-            "kind": "takeaway",
-            "body": "Choose a model, harness and workflow against the evidence and control your real work requires.",
-            "nextConnection": "A promising operating mode still needs a workplace. The next lesson turns the abstract idea of repository access into a concrete environment contract."
+            "question": "One setup produces an answer sooner, but the engineer spends longer transferring files, applying edits and checking it. Has the faster setup won?",
+            "answer": "Only if first-answer speed was the outcome you needed. For a repair, compare the work through acceptance, including the engineer's active effort and the quality of the delivered result. The early answer alone does not settle that comparison."
           }
         ]
       },
       {
         "id": "environment--environment",
-        "title": "The environment: give the agent a reproducible workplace",
-        "navLabel": "The environment",
+        "title": "A checkout is only part of the workplace",
+        "navLabel": "Making the environment usable",
         "blocks": [
           {
             "kind": "content",
-            "body": "'It has repository access' leaves several questions unanswered. Which revision? Are dependencies installed? Does the test command need a service that is unavailable in this environment? Can the agent write only to its checkout, or also to shared data?\n\nIf these details are left implicit, the investigation begins with setup surprises. Worse, the agent may mistake a broken test environment for evidence about the application."
-          },
-          {
-            "kind": "example",
-            "title": "An agent is asked to fix a failing service in a fresh checkout.",
-            "problem": "An agent is asked to fix a failing service in a fresh checkout.",
-            "steps": [
-              {
-                "title": "Probe first",
-                "body": "Check the revision, runtime, dependency install, service stubs, test command and writable directories before editing.",
-                "reason": "The agent knows whether later evidence will be trustworthy.",
-                "trap": "Starting implementation and discovering halfway through that the test service is unavailable."
-              },
-              {
-                "title": "Keep the change contained",
-                "body": "Work on a branch with read-only external access, then produce a diff and test report for review.",
-                "reason": "The task remains reversible and inspectable.",
-                "trap": "Giving the agent production credentials to avoid a local setup step."
-              }
-            ]
-          },
+            "body": "The worker's missing service deserves a closer look. Source access lets it read a test that depends on a local service; it does not make that service exist. Likewise, a shell tool can be present while every useful command fails because the runtime or dependencies are wrong.\n\nBefore investigating the application, establish that the environment can answer the question you intend to ask. Identify the checkout and any local changes. Use the repository's documented runtime, package manager and dependency setup. Find the narrow test command and the fixtures or services it needs. Check which external connections are expected, and which inputs can be supplied locally.\n\nFor the retry helper, the focused test may need only a fake clock and scripted timeout responses. If so, production access would add little to this investigation. If the task instead concerns an integration service's behaviour, a local unit test leaves that part unresolved. The environment is ready for some claims and not others; report the distinction rather than calling the whole workspace either usable or useless.\n\nAn environment contract records these conditions so a new run can establish them without guessing. Some parts can be executable: a setup check can report an unsupported runtime or a missing fixture before the agent starts editing. Other parts belong in guidance, such as which service can be simulated and which integration claim requires a separate check.\n\nKeep the contract connected to the repository's actual setup. A long inventory copied into every prompt will become stale. A short instruction that points to maintained setup scripts, names the working directory and explains a relevant limitation is often easier to use and repair."
+          }
+        ]
+      },
+      {
+        "id": "isolation",
+        "title": "Separate a reviewable change from permission to act",
+        "navLabel": "What the environment permits",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Write the environment contract",
-            "body": "Record the revision, runtime, package manager, required services, test commands, network assumptions, secrets policy and writable paths. Make the contract executable where possible: a setup check should report which prerequisite is missing rather than letting the agent discover it halfway through a change."
+            "body": "A branch or worktree makes a patch easier to compare, review and discard. It does not confine a process. A command running there may still reach other directories, use inherited credentials or contact external services. Version-control isolation and execution permissions solve different problems.\n\nFor a local retry repair, give the worker the capabilities required to inspect and modify its assigned checkout and run the relevant checks. Publishing a release is a separate operation with a different reason for existing. If the worker inherits a broad token simply because it was available on the machine, its possible effects now exceed the task you meant to delegate.\n\nApply the boundary where actions happen: the tool executor, filesystem permissions, credential scope and network configuration. Instructions help the agent choose appropriate actions, but an instruction to stay inside the checkout does not enforce that restriction.\n\nAlso consider the code the tools execute. A test command can run repository-controlled scripts. Calling the agent 'read-only' because it cannot use an edit tool would be misleading if its shell can execute code with write access. Describe the effective capabilities of the environment, including subprocesses.\n\nYou do not need to solve every deployment problem before running a local experiment. You do need to understand what that experiment can affect. A disposable fixture with limited access is a useful place to learn; successful work there should not silently become authority over a live system."
           },
           {
             "kind": "question",
-            "bridge": "Access is a capability, not a guarantee of usable evidence.",
-            "meaning": "The agent must know what it is looking at, what it can run and which actions are permitted.",
-            "question": "An agent can read the repository but cannot install dependencies or run tests. Is the environment ready?",
-            "answer": "No. It has source access but not a complete verification path. The missing capability should be surfaced before implementation begins.",
-            "further": [
-              {
-                "question": "Why record the revision?",
-                "answer": "A result tied to an unknown or moving revision is hard to reproduce and may describe code nobody is reviewing."
-              },
-              {
-                "question": "What should a setup check do?",
-                "answer": "Report prerequisites and fail clearly before the agent spends time on an investigation it cannot complete."
-              }
-            ]
-          },
+            "question": "An agent works on its own branch but runs with the developer's normal credentials. What does the branch protect, and what does it leave exposed?",
+            "answer": "The branch separates the versioned patch for review. It does not restrict the process's filesystem, network or account permissions. Commands may still affect anything those credentials and the execution environment allow."
+          }
+        ]
+      },
+      {
+        "id": "operating-choice",
+        "title": "Choose with the remaining work in view",
+        "navLabel": "Making the decision",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Constrain the blast radius",
-            "body": "Use the narrowest permissions and network access that allow the task. Keep changes reversible through branches, worktrees or patches. Separate credentials for reading from credentials for publishing, and make destructive actions require an explicit boundary. A reproducible workplace is also a safer workplace."
-          },
-          {
-            "kind": "question",
-            "bridge": "The same environment that enables progress can also enable damaging actions.",
-            "meaning": "Least privilege, reversibility and explicit publish boundaries turn autonomy into a controlled capability.",
-            "question": "Why separate read credentials from publish credentials?",
-            "answer": "Most investigations need to inspect more than they need to release. Separating them limits the consequences of a mistaken or compromised action.",
-            "further": [
-              {
-                "question": "Why use a worktree or branch?",
-                "answer": "It isolates changes, makes review straightforward and provides a clear path to discard or compare the result."
-              },
-              {
-                "question": "What belongs behind an approval boundary?",
-                "answer": "Actions with external, destructive or irreversible effects, such as publishing, deleting data or changing production configuration."
-              }
-            ]
-          },
-          {
-            "kind": "takeaway",
-            "body": "Treat the environment as part of the task: make prerequisites visible, permissions narrow and changes reversible.",
-            "nextConnection": "Some tasks fit one short loop; others span hours or days. The next lesson shows how to keep long-horizon work moving without confusing elapsed time for progress."
-          },
-          {
-            "kind": "summary",
-            "data": {
-              "coreIdea": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Define an environment contract covering identity, tools, state, permissions, network and verification. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
-              "widerConnection": "A promising operating mode still needs a workplace. The next lesson turns the abstract idea of repository access into a concrete environment contract. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Some tasks fit one short loop; others span hours or days. The next lesson shows how to keep long-horizon work moving without confusing elapsed time for progress. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
-              "primitives": [
-                "The lesson's target: Compare agentic setups by the work they support, the evidence they expose and the control they retain.",
-                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
-                "An observable outcome and the evidence needed to accept it",
-                "The lesson's target: Define an environment contract covering identity, tools, state, permissions, network and verification."
-              ],
-              "assumptions": [
-                "The task boundary and acceptance condition are explicit before execution begins.",
-                "Claims are kept separate from observations produced by the environment or verifier.",
-                "Authority is limited to the actions required by the stated task."
-              ],
-              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
-              "checks": [
-                "What observation would distinguish the intended explanation from its nearest alternative?",
-                "Which action, state transition, or evidence boundary does the system own?",
-                "What would still be unknown after the stated check passes?"
-              ],
-              "governingLaw": "A capability choice is a fit problem between task requirements, evidence needs, cost, and operational constraints. Agent reliability is a property of the model, environment, tools, permissions, and verification together.",
-              "invariant": "A named model or product is not a complete experimental treatment; configuration and task distribution matter. The environment presented during evaluation must match the environment in which the result will be accepted.",
-              "limitingCase": "For a task with no meaningful quality difference, the cheapest adequate capability dominates. A fully deterministic fixture removes environmental variance but cannot establish production robustness by itself.",
-              "counterexample": "A benchmark winner can lose on the team's actual workload because its measured distribution is different. A workflow that succeeds in a clean fixture can fail in a repository with generated files, permissions, or stale state.",
-              "validity": "Capability comparisons are local claims about a defined workload, not permanent universal rankings. Environment controls bound reproducibility; they do not make an unverified claim trustworthy."
-            }
+            "body": "At the end of the trial, a useful conclusion names the work that remains with you. Perhaps the editor assistant is effective for investigations where requirements evolve during conversation, while a background worker handles well-specified local repairs with less active supervision. Those can both be good choices.\n\nThe evidence may also suggest a cheaper improvement than changing products. If both systems lose time finding the test entry point, fix the repository guidance. If both produce correct patches but confusing reports, improve the handoff you ask for. If adequate evidence reaches the model and it repeatedly misinterprets the contract, then a model comparison has a clearer purpose.\n\nRecord the conditions under which the choice made sense: the task sample, model and product configuration, environment, review effort and unresolved failures. Repeat the comparison when a meaningful condition changes. A product name alone cannot preserve that conclusion.\n\nSo far, our repair fits into a relatively short investigation. The next chapter follows work that spans several stages or sessions. The environment will still matter, but now we must also decide what progress survives an interruption and how much authority to grant at each stage."
           }
         ]
       }
@@ -442,8 +322,8 @@
       "url": "https://learn.chatgpt.com/docs/security"
     }
   ],
-  "heading": "Are you choosing a model, a harness or a way of working?",
-  "lead": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. Define an environment contract covering identity, tools, state, permissions, network and verification.",
+  "heading": "Which setup can carry this task through?",
+  "lead": "Choose a way of working, follow a representative task through it, and inspect the environment that makes its results possible.",
   "outcomes": [
     "Compare agentic setups by the work they support, the evidence they expose and the control they retain.",
     "Define an environment contract covering identity, tools, state, permissions, network and verification."
