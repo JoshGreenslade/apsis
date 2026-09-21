@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
-import pack from "../curricula/astrodynamics";
+import pack from "../curriculums/astrodynamics";
 async function main() {
   const base = process.env.TEST_BASE_URL ?? "http://127.0.0.1:3000";
   const browser = await chromium.launch({ channel: "msedge", headless: true });
@@ -64,7 +64,7 @@ async function main() {
   await page.getByLabel("Labels", { exact: true }).uncheck();
   assert.equal(await page.locator(".diagram svg text").count(), 0);
   await page.getByLabel("Labels", { exact: true }).check();
-  await page.getByRole("link", { name: /See it in action/ }).click();
+  await page.locator('.lesson-jumps a[href="#example"]').click();
   await page
     .getByRole("heading", { name: "A circular low-Earth orbit", exact: true })
     .waitFor();
@@ -83,7 +83,11 @@ async function main() {
     .fill(String(second.answer.value));
   await guided.nth(1).getByLabel("Answer unit").fill("km/s");
   await guided.nth(1).getByLabel("Answer unit").press("Control+Enter");
-  await page.locator(".faded-step").nth(1).getByText(`Step 2 / ${pack.topics[0].fadedExercise.steps.length}`).waitFor();
+  await page
+    .locator(".faded-step")
+    .nth(1)
+    .getByText(`Step 2 / ${pack.topics[0].fadedExercise.steps.length}`)
+    .waitFor();
   await page.getByRole("button", { name: "Self-check", exact: true }).click();
   assert.equal(
     await page.getByRole("button", { name: "Need a hint?" }).count(),

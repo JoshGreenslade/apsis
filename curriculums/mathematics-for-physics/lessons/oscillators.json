@@ -1,0 +1,698 @@
+{
+  "id": "oscillators",
+  "diagnostics": [
+    {
+      "id": "d-state",
+      "prompt": "For y' = −y, what selects a trajectory?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "One initial value"
+          },
+          {
+            "id": "1",
+            "label": "An arbitrary force"
+          },
+          {
+            "id": "2",
+            "label": "Only its final slope"
+          }
+        ]
+      },
+      "solution": "A first-order rate law takes one initial state.",
+      "hint": "Recall the initial-value problem.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the initial-value problem.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "first-order-odes"
+    },
+    {
+      "id": "d-i",
+      "prompt": "What is (2i)²? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": -4,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "4i² = −4.",
+      "hint": "Use i² = −1.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "complex-numbers"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "A different undamped oscillator has m = 1 kg, k = 4 N/m, x(0) = 0 and v(0) = 2 m/s.",
+    "supplied": [
+      {
+        "heading": "Relations",
+        "body": "Use $x=A\\cos\\omega_0t+B\\sin\\omega_0t$ and $E=mv^2/2+kx^2/2$."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-frequency",
+        "prompt": "Find ω₀.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "rad/s",
+          "acceptedUnits": ["rad/s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "√(4/1) = 2.",
+        "hint": "Take the square root of k/m.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-cos",
+        "prompt": "What is A?",
+        "answer": {
+          "kind": "numeric",
+          "value": 0,
+          "unit": "m",
+          "acceptedUnits": ["m"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "A equals x(0).",
+        "hint": "Evaluate at zero.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-sin",
+        "prompt": "Given ω₀ = 2 rad/s, find B.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "m",
+          "acceptedUnits": ["m"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "B = v(0)/ω₀ = 2/2.",
+        "hint": "Differentiate the sine term.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-energy",
+        "prompt": "Find the conserved energy from the supplied initial data.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "J",
+          "acceptedUnits": ["J"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Initially x = 0, so E = 1 × 2²/2 = 2 J.",
+        "hint": "Use either initial data or the turning-point amplitude.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-frequency",
+      "prompt": "For m = 4 kg and k = 16 N/m, find ω₀.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "rad/s",
+        "acceptedUnits": ["rad/s"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "√(16/4) = 2.",
+      "hint": "Use the natural-frequency definition.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-center",
+      "prompt": "At x = 0 in undamped spring motion, which must vanish?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Velocity"
+          },
+          {
+            "id": "1",
+            "label": "Kinetic energy"
+          },
+          {
+            "id": "2",
+            "label": "Spring force"
+          }
+        ]
+      },
+      "solution": "The force −kx vanishes; velocity can be maximal.",
+      "hint": "Separate force from motion.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate force from motion.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-critical",
+      "prompt": "For γ = ω₀, which second solution accompanies exp(−γt)?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "t exp(−γt)"
+          },
+          {
+            "id": "1",
+            "label": "exp(+γt)"
+          },
+          {
+            "id": "2",
+            "label": "cos(γt)"
+          }
+        ]
+      },
+      "solution": "A repeated characteristic root requires the t factor.",
+      "hint": "Recall repeated roots.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall repeated roots.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-damped",
+      "prompt": "For ω₀ = 5 and γ = 3 per second, find ωd.",
+      "answer": {
+        "kind": "numeric",
+        "value": 4,
+        "unit": "rad/s",
+        "acceptedUnits": ["rad/s"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "√(25 − 9) = 4.",
+      "hint": "Use the imaginary part of the roots.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-resonant",
+      "prompt": "At Ω = ω₀ = 2 rad/s, F₀ = 6 N and b = 3 kg/s, find the steady amplitude.",
+      "answer": {
+        "kind": "numeric",
+        "value": 1,
+        "unit": "m",
+        "acceptedUnits": ["m"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "F₀/(bω₀) = 6/6 = 1.",
+      "hint": "At this frequency stiffness and inertia cancel in the real denominator.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-transfer",
+      "prompt": "With positive damping, what happens to dependence on initial data at late times?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "It grows without bound"
+          },
+          {
+            "id": "1",
+            "label": "The free transient decays"
+          },
+          {
+            "id": "2",
+            "label": "It fixes the driving frequency"
+          }
+        ]
+      },
+      "solution": "The homogeneous damped solution decays, leaving the particular response.",
+      "hint": "Separate transient and steady motion.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate transient and steady motion.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Differential Equations",
+      "url": "https://www.ocw.mit.edu/courses/18-03-differential-equations-spring-2010/pages/lecture-notes/"
+    },
+    {
+      "title": "David Tong · Dynamics and Relativity",
+      "url": "https://davidtong.org/teaching/dynamics-and-relativity/"
+    }
+  ],
+  "practiceTemplates": [
+    {
+      "id": "oscillation-period",
+      "title": "The period of an ideal spring oscillator",
+      "prompt": "An ideal undamped spring oscillator has mass {{mass}} kg and spring constant {{stiffness}} N/m. Find its period.",
+      "variables": [
+        {
+          "name": "mass",
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "name": "stiffness",
+          "min": 4,
+          "max": 36,
+          "step": 4
+        }
+      ],
+      "formula": {
+        "op": "multiply",
+        "args": [
+          6.283185307179586,
+          {
+            "op": "sqrt",
+            "args": [
+              {
+                "op": "divide",
+                "args": [
+                  {
+                    "variable": "mass"
+                  },
+                  {
+                    "variable": "stiffness"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "unit": "s",
+      "hint": "The angular frequency is √(k/m); a complete cycle advances the phase by 2π.",
+      "solution": "The period is 2π√({{mass}}/{{stiffness}}) = {{answer}} s. This assumes a linear spring and negligible damping."
+    }
+  ],
+  "title": "Oscillators, damping and resonance",
+  "description": "Explain a second-order system through restoring force, damping and response to forcing.",
+  "domain": "Mathematics for physics",
+  "unit": "05 · Describe evolving systems",
+  "prerequisites": ["first-order-odes", "complex-numbers"],
+  "minutes": 60,
+  "transferProblems": [
+    {
+      "id": "transfer-complex-decay",
+      "prompt": "A damped oscillator has complex characteristic roots. What do the real and imaginary parts control?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Exponential amplitude change and oscillation frequency"
+          },
+          {
+            "id": "1",
+            "label": "Only the equilibrium position"
+          },
+          {
+            "id": "2",
+            "label": "The units of the mass and spring constant"
+          }
+        ]
+      },
+      "solution": "The real part sets exponential growth or decay, while the imaginary part sets oscillatory phase rate.",
+      "hint": "Relate $e^{(\\alpha+i\\beta)t}$ to its magnitude and phase.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Relate $e^{(\\alpha+i\\beta)t}$ to its magnitude and phase.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "transfer-resonance-model",
+      "prompt": "A forced oscillator responds strongly near a natural frequency. Which earlier mathematical habit prevents overclaiming?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "State the damping and linearity assumptions before extending the result"
+          },
+          {
+            "id": "1",
+            "label": "Treat the resonance peak as infinitely sharp in every system"
+          },
+          {
+            "id": "2",
+            "label": "Ignore the forcing frequency after solving once"
+          }
+        ]
+      },
+      "solution": "The ideal resonance picture depends on the model; damping and nonlinearities change the response.",
+      "hint": "A derived response is conditional on its governing equation.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "A derived response is conditional on its governing equation.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "heading": "How do inertia, loss and timed forcing shape the same oscillator?",
+  "lead": "One second-order model explains initial motion, decaying transients and frequency-dependent response.",
+  "outcomes": [
+    "Use position and velocity to determine free motion.",
+    "Classify damping and interpret a driven response with its limitations."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Pull a mass attached to a spring, hold it still and release it. The spring accelerates the mass toward its resting position, but reaching that position does not stop the mass: it has acquired velocity. It continues past the center, stretches the spring in the opposite direction and is pulled back. Oscillation comes from restoring acceleration together with inertia. A rule saying only that the mass moves toward the center would miss the overshoot.\n\nWe will assume a spring force proportional to displacement and opposite in direction, together with Newton's law that force equals mass times acceleration. These are physical assumptions. They turn the geometric story into a second-order differential equation. Because acceleration is prescribed, both initial position and initial velocity are required to select the motion.\n\nReal oscillators also lose energy and may receive periodic pushes. The same mathematical framework explains whether they ring, return without ringing, or respond strongly to a selected driving frequency. The spectacular phrase resonance needs qualifications: damping limits the steady response, and the largest displacement response does not always occur at the undamped natural frequency."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How do inertia, loss and timed forcing shape the same oscillator?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "One second-order model explains initial motion, decaying transients and frequency-dependent response."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Use position and velocity to determine free motion.",
+              "Classify damping and interpret a driven response with its limitations."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "At the spring's relaxed position its force is zero. Why need the mass not stop there?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If friction increases gradually, will the observed oscillation frequency stay unchanged until motion suddenly stops?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Energy trades between speed and displacement",
+              "caption": "For an undamped oscillator, x divided by amplitude and v divided by ω₀ times amplitude lie on a unit circle. The same plot in unscaled x and v coordinates is an ellipse.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "ellipse",
+                  "center": [270, 160],
+                  "rx": 105,
+                  "ry": 105,
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [100, 160],
+                  "to": [450, 160],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [270, 295],
+                  "to": [270, 25],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "point",
+                  "at": [375, 160],
+                  "label": "turn: v = 0",
+                  "tone": "accent",
+                  "labelOffset": [15, -15]
+                },
+                {
+                  "kind": "point",
+                  "at": [270, 55],
+                  "label": "x = 0: greatest speed",
+                  "tone": "ink",
+                  "labelOffset": [15, -15]
+                },
+                {
+                  "kind": "label",
+                  "at": [410, 190],
+                  "text": "x / amplitude"
+                },
+                {
+                  "kind": "label",
+                  "at": [85, 25],
+                  "text": "v / (ω₀ amplitude)"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Restoring force creates a second-order equation",
+            "body": "Let x measure displacement from equilibrium, positive to the right, and assume the spring exerts force $-kx$ with stiffness $k>0$. For a mass $m>0$, Newton's law gives $m\\ddot x=-kx$, where dots mean time derivatives. Dividing by mass defines $\\omega_0=\\sqrt{k/m}$ and gives $\\ddot x+\\omega_0^2x=0$. The quantity $\\omega_0$ is the natural angular frequency, in radians per unit time. Since k has units force per length, k/m has units inverse time squared.\n\nThe complex exponential trial $z=e^{rt}$ turns differentiation into multiplication by r. Substitution gives $r^2+\\omega_0^2=0$, with roots $r=\\pm i\\omega_0$. Taking real combinations gives $x(t)=A\\cos\\omega_0t+B\\sin\\omega_0t$. This is not simply a curve that resembles a spring motion: differentiating twice verifies the equation. The two independent constants match the two initial data. At time zero, $x(0)=A$ and $\\dot x(0)=\\omega_0B$, so $B=v_0/\\omega_0$.\n\nPosition alone is insufficient. At the same x the mass might be moving left, right, or momentarily resting, each leading to a different future. A second-order equation can also be written as two first-order equations, $\\dot x=v$ and $\\dot v=-\\omega_0^2x$. The state is the pair $(x,v)$; the rate law now assigns a direction to every point in this state plane.\n\nThere is a second way to understand the same motion. Define the kinetic energy $mv^2/2$ and spring potential energy $kx^2/2$. The total $E=mv^2/2+kx^2/2$ has derivative $\\dot E=v(m\\dot v+kx)=0$. Thus energy transfers between motion and spring deformation while its sum stays fixed. At a turning point velocity is zero; at equilibrium potential energy is zero and speed is greatest. Energy conservation explains why zero force at the center does not imply zero motion."
+          },
+          {
+            "kind": "question",
+            "bridge": "Follow a displaced spring mass.",
+            "meaning": "Restoring acceleration and inertia produce overshoot.",
+            "question": "Why are two initial numbers needed?",
+            "answer": "The law gives acceleration; both position and velocity are needed to determine the state.",
+            "further": [
+              {
+                "question": "What is B for x = A cos(ω₀t) + B sin(ω₀t)?",
+                "answer": "Initial velocity divided by ω₀."
+              },
+              {
+                "question": "Where is speed largest in the undamped motion?",
+                "answer": "At equilibrium, where all mechanical energy is kinetic."
+              },
+              {
+                "question": "If mass quadruples at fixed stiffness, what happens to frequency?",
+                "answer": "It halves because ω₀ = √(k/m)."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. Damping changes the roots and the energy balance",
+            "body": "Assume an additional resistive force $-b\\dot x$ with $b\\ge0$. This linear drag model is an idealization whose suitability depends on the regime. The free equation becomes $m\\ddot x+b\\dot x+kx=0$. Define $\\gamma=b/(2m)$; then $\\ddot x+2\\gamma\\dot x+\\omega_0^2x=0$. Trying an exponential again gives roots\n$$r=-\\gamma\\pm\\sqrt{\\gamma^2-\\omega_0^2}.$$\nThe character of the roots tells us whether oscillations remain.\n\nIf $0\\le\\gamma<\\omega_0$, the roots have imaginary parts and the real motion is $x=e^{-\\gamma t}(A\\cos\\omega_dt+B\\sin\\omega_dt)$, where $\\omega_d=\\sqrt{\\omega_0^2-\\gamma^2}$. This is **underdamping**. The exponential is an envelope for amplitude; the oscillation frequency is reduced by damping. Initial velocity is $-\\gamma A+\\omega_dB$, so damping must be included when recovering B.\n\nAt $\\gamma=\\omega_0$, the root repeats and the two independent solutions are $e^{-\\gamma t}$ and $te^{-\\gamma t}$. This is critical damping. When $\\gamma>\\omega_0$, both roots are real and negative, giving a sum of two decaying exponentials: overdamping. Neither case has sustained alternating oscillations, although a particular initial velocity can still make the mass cross equilibrium. 'No oscillation' does not mean every trajectory approaches monotonically from its starting side.\n\nDifferentiate the same mechanical energy as before. The equation now gives $\\dot E=-b\\dot x^2\\le0$. Energy is transferred out of the mechanical model, for example into thermal motion. The sign is a strong test: positive b must not make free motion gain energy. For underdamping the amplitude envelope is exponential, but the instantaneous energy is not generally a pure exponential because displacement and velocity contain phase-dependent factors. An average over cycles approximately decays with the squared envelope when damping is weak.\n\nCritical damping is often described as a rapid return without ringing. That useful design intuition should not be promoted to a universal optimization theorem for every initial condition and every measure of settling time. The equation and chosen performance criterion decide such comparisons."
+          },
+          {
+            "kind": "question",
+            "bridge": "Add a force opposing velocity.",
+            "meaning": "Root structure distinguishes ringing from nonoscillatory decay.",
+            "question": "What defines underdamping?",
+            "answer": "γ < ω₀, giving complex roots and an oscillating decaying solution.",
+            "further": [
+              {
+                "question": "What is special about critical damping?",
+                "answer": "The characteristic root repeats, and a second solution is t exp(−γt)."
+              },
+              {
+                "question": "Can overdamped motion cross equilibrium?",
+                "answer": "Yes for suitable initial velocity, despite lacking repeated sinusoidal ringing."
+              },
+              {
+                "question": "How can energy check the damping sign?",
+                "answer": "Its derivative must be −b v² ≤ 0 when no force drives the system."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. A periodic push selects amplitude and phase",
+            "body": "Now assume a harmonic external force $F_0\\cos\\Omega t$, with positive driving angular frequency $\\Omega$. The equation is $m\\ddot x+b\\dot x+kx=F_0\\cos\\Omega t$. The complete solution is a particular driven motion plus a free transient. When b is positive the transient decays, leaving a steady periodic response. For zero damping, the transient does not automatically disappear.\n\nUse the complex force $F_0e^{i\\Omega t}$ and seek a complex displacement $Xe^{i\\Omega t}$. Because the equation has real coefficients and is linear, taking the real part gives a physical solution. Substitution yields\n$$(k-m\\Omega^2+ib\\Omega)X=F_0,\\qquad |X|=\\frac{F_0}{\\sqrt{(k-m\\Omega^2)^2+(b\\Omega)^2}}.$$\nThe complex denominator encodes both the amplitude and phase. At very low frequency the response is close to the static displacement $F_0/k$. At high frequency inertia dominates and the amplitude falls approximately as $F_0/(m\\Omega^2)$; the displacement is nearly opposite in phase to the force.\n\nWrite the steady motion as $|X|\\cos(\\Omega t-\\delta)$. For positive b and $\\Omega$, the phase lag $\\delta$ is the angle of $k-m\\Omega^2+ib\\Omega$, chosen in the correct quadrant. At $\\Omega=\\omega_0$ the real part of the denominator vanishes. The lag is $\\pi/2$ and the amplitude is $F_0/(b\\omega_0)$, finite whenever damping is positive.\n\nThe largest displacement amplitude occurs where the denominator is smallest. Differentiating its square gives a nonzero-frequency peak at $\\Omega_{\\mathrm{peak}}=\\sqrt{\\omega_0^2-2\\gamma^2}$, provided $\\gamma<\\omega_0/\\sqrt2$. With stronger damping there is no positive-frequency displacement peak of this kind. Thus natural frequency, damped free frequency and displacement-resonance frequency are distinct quantities, though they are close when damping is weak.\n\nFor b = 0 and $\\Omega=\\omega_0$, the proposed constant-amplitude particular solution fails because its denominator vanishes. A valid resonant particular solution is $x_p=F_0t\\sin(\\omega_0t)/(2m\\omega_0)$. Its envelope grows with time in this ideal model. It is not an infinite displacement reached instantly. Real losses or nonlinearities eventually modify the ideal prediction. The mathematics tells us both why repeated well-timed pushes build motion and which assumptions keep that growth unbounded."
+          },
+          {
+            "kind": "question",
+            "bridge": "Drive the mass repeatedly.",
+            "meaning": "The steady response has both an amplitude and a phase, and differs from the initial transient.",
+            "question": "Is displacement resonance always exactly at ω₀?",
+            "answer": "No. A positive-frequency amplitude peak lies at √(ω₀² − 2γ²) when it exists.",
+            "further": [
+              {
+                "question": "What is the phase lag at Ω = ω₀ with b > 0?",
+                "answer": "π/2, because the response denominator is purely positive imaginary."
+              },
+              {
+                "question": "Why is the finite-damping amplitude finite there?",
+                "answer": "The imaginary denominator bω₀ remains nonzero."
+              },
+              {
+                "question": "What grows in ideal undamped resonance?",
+                "answer": "The response envelope grows linearly with time; it is not instantly infinite."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "One model can contain transient, steady and resonant behaviour",
+            "body": "The oscillator makes a useful distinction that will recur throughout physics: initial data create a transient, forcing creates a particular response, and damping decides which part survives. Complex exponentials package amplitude and phase, while energy supplies an independent check on the force law. Coupled oscillators will reuse this structure in several coordinates, and Fourier analysis will treat arbitrary signals as superpositions of similarly simple responses."
+          },
+          {
+            "kind": "question",
+            "bridge": "Carry the chapter's structure into the next physical setting.",
+            "meaning": "A chapter idea becomes more useful when you can recognise the same structure in a new physical setting.",
+            "question": "What is the main transfer lesson in the section “One model can contain transient, steady and resonant behaviour”?",
+            "answer": "The section makes the chapter's central structure explicit, then shows how the same structure reappears in a later physical model.",
+            "further": [
+              {
+                "question": "Which assumption makes this transfer valid?",
+                "answer": "The transfer is conditional on the chapter's stated model, definitions, and validity checks; it is a structural analogy, not a license to ignore those assumptions."
+              },
+              {
+                "question": "What should you check before using the idea in a new problem?",
+                "answer": "Check the objects, units or domains, boundary or initial data, and the limiting case that defines the approximation."
+              },
+              {
+                "question": "Why is this connection worth remembering?",
+                "answer": "It turns an isolated technique into a reusable way of organising a derivation and testing whether its conclusion is trustworthy."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Deriving the displacement peak",
+            "body": "Write the squared response denominator divided by $m^2$ as $D=(\\omega_0^2-\\Omega^2)^2+4\\gamma^2\\Omega^2$. Then $D'=4\\Omega(\\Omega^2-\\omega_0^2+2\\gamma^2)$. A positive stationary frequency exists only if $\\omega_0^2>2\\gamma^2$. There it minimizes D and maximizes displacement amplitude. Peaks of velocity amplitude or absorbed power answer different questions."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "A spring can emerge from the curvature of any smooth potential",
+            "body": "Suppose a particle experiences force $F(x)=-U'(x)$ for a smooth potential energy U. Let $x_*$ be an equilibrium, so $U'(x_*)=0$, and write $\\xi=x-x_*$. A Taylor expansion gives\n$$U(x_*+\\xi)=U(x_*)+\\tfrac12U''(x_*)\\xi^2+\\cdots.$$\nThe first-order term vanished because we expanded at equilibrium. Differentiating gives $F\\approx-U''(x_*)\\xi$, hence\n$$m\\ddot\\xi+U''(x_*)\\xi\\approx0.$$\nWhen $U''(x_*)>0$, the curvature acts as an effective spring constant and the small-oscillation frequency is $\\sqrt{U''(x_*)/m}$.\n\nThe physical system need not contain a literal spring. A pendulum, a molecule near its equilibrium bond length, and a mass in a smooth potential well all share this local mathematical structure. Their nonlinear differences appear in the terms omitted from the expansion.\n\nChange the sign of the curvature and the solution changes character: negative curvature produces exponential departure rather than oscillation. If the curvature is zero, the quadratic model cannot decide. A potential proportional to $\\xi^4$ still confines the particle, but has no nonzero small-oscillation frequency obtained from this formula.\n\nThis is why Taylor series are central to physics. They explain when different systems have the same leading behaviour and identify the coefficient that carries their physical differences. In several coordinates, U’s curvature becomes a Hessian matrix; its modes will replace the single effective spring constant."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "One model can contain transient, steady and resonant behaviour",
+            "body": "The oscillator makes a useful distinction that will recur throughout physics: initial data create a transient, forcing creates a particular response, and damping decides which part survives. Complex exponentials package amplitude and phase, while energy supplies an independent check on the force law. Coupled oscillators will reuse this structure in several coordinates, and Fourier analysis will treat arbitrary signals as superpositions of similarly simple responses."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Release a moving spring mass",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Release a moving spring mass",
+            "problem": "A 2 kg mass has stiffness 18 N/m, no damping, x(0) = 0.10 m and v(0) = 0.60 m/s. Determine its motion and energy.",
+            "steps": [
+              {
+                "title": "Determine frequency",
+                "body": "$\\omega_0=\\sqrt{18/2}=3$ rad/s.",
+                "reason": "The restoring acceleration is stiffness divided by mass times displacement.",
+                "trap": "k/m is frequency squared."
+              },
+              {
+                "title": "Use initial position",
+                "body": "In $x=A\\cos3t+B\\sin3t$, $A=0.10$ m.",
+                "reason": "At zero, cosine is one and sine is zero.",
+                "trap": "A is not necessarily the full amplitude."
+              },
+              {
+                "title": "Use initial velocity",
+                "body": "$B=0.60/3=0.20$ m; hence $x=0.10\\cos3t+0.20\\sin3t$.",
+                "reason": "The derivative at zero is 3B.",
+                "trap": "Initial velocity cannot be substituted directly for B."
+              },
+              {
+                "title": "Check energy and amplitude",
+                "body": "$E=(2)(0.60)^2/2+(18)(0.10)^2/2=0.45$ J. The amplitude is $\\sqrt{0.10^2+0.20^2}=\\sqrt{0.05}$ m.",
+                "reason": "At a turning point k times amplitude squared divided by two equals the same energy.",
+                "trap": "Adding the two coefficients gives the wrong amplitude."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "The force law determines the equation; initial data determine transients, and damping controls how forcing survives.",
+            "nextConnection": "Several-coordinate calculus will describe fields, and later normal modes will apply this oscillator reasoning to coupled motions."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Restoring force, damping, and forcing determine how energy moves between transient motion and sustained response. The characteristic roots describe the free motion, while the driven solution adds a response selected by the forcing frequency and phase.",
+              "widerConnection": "The oscillator is the local model behind normal modes, resonance, Fourier response, and many physical stability questions. It teaches us to separate natural behaviour from imposed behaviour, a distinction that returns whenever a system is driven or observed."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

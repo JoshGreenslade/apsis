@@ -1,0 +1,652 @@
+{
+  "id": "perturbation",
+  "diagnostics": [
+    {
+      "id": "d-orbit",
+      "prompt": "Near a circular orbit, what supplies the squared radial oscillation frequency?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Effective-potential second derivative"
+          },
+          {
+            "id": "1",
+            "label": "Potential value alone"
+          },
+          {
+            "id": "2",
+            "label": "Radius alone"
+          }
+        ]
+      },
+      "solution": "Linearising radial acceleration gives ξ̈=−Veff'' ξ.",
+      "hint": "Recall the circular stability calculation.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the circular stability calculation.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "two-body"
+    },
+    {
+      "id": "d-series",
+      "prompt": "For small dimensionless x, (1+x)⁻¹≈1+c x. Find c. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": -1,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The derivative at zero is −1.",
+      "hint": "Use the first-order Taylor expansion.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "series"
+    },
+    {
+      "id": "d-resonance",
+      "prompt": "What does forcing an undamped linear oscillator at its own frequency produce?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A response with a growing envelope"
+          },
+          {
+            "id": "1",
+            "label": "Instantaneously infinite position"
+          },
+          {
+            "id": "2",
+            "label": "No motion"
+          }
+        ]
+      },
+      "solution": "A resonant particular solution contains time times a sinusoid.",
+      "hint": "Recall the forced oscillator.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the forced oscillator.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "oscillators"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "A pendulum has amplitude 0.2 rad and small-angle period 3 s. Use the leading amplitude correction.",
+    "supplied": [
+      {
+        "heading": "Period relation",
+        "body": "Use $T/T_0\\approx1+A^2/16$ and $\\Omega/\\omega_0\\approx1-A^2/16$."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-small",
+        "prompt": "For amplitude A=0.2 rad, find ε=A². Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.04,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "0.2²=0.04.",
+        "hint": "Square the angle in radians.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-fraction",
+        "prompt": "For amplitude 0.2 rad, find the leading fractional period increase A²/16. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.0025,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "0.04/16=0.0025.",
+        "hint": "Divide the squared amplitude by 16.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-period",
+        "prompt": "For amplitude 0.2 rad and small-angle period 3 s, estimate corrected period.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3.0075,
+          "unit": "s",
+          "acceptedUnits": ["s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "3(1+0.04/16)=3.0075 s.",
+        "hint": "Multiply the reference period by the correction factor.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-delay",
+        "prompt": "If the corrected period is 3.0075 s rather than 3 s, find the delay after 200 actual cycles.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1.5,
+          "unit": "s",
+          "acceptedUnits": ["s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "200×0.0075=1.5 s.",
+        "hint": "Accumulate the per-cycle difference.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-units",
+      "prompt": "Which amplitude belongs in the pendulum correction A²/16?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Amplitude in radians"
+          },
+          {
+            "id": "1",
+            "label": "Amplitude in degrees without conversion"
+          },
+          {
+            "id": "2",
+            "label": "Pendulum length"
+          }
+        ]
+      },
+      "solution": "The sine Taylor series assumes a radian argument.",
+      "hint": "Check the expansion's variable.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Check the expansion's variable.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-alpha",
+      "prompt": "In 1/8+2α=0, find α. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": -0.0625,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "α=−1/16.",
+      "hint": "Cancel resonant forcing.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-growth",
+      "prompt": "The naive perturbation correction grows while the exact conservative pendulum stays bounded. What is the diagnosis?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "The approximation loses uniform validity"
+          },
+          {
+            "id": "1",
+            "label": "Energy conservation has failed"
+          },
+          {
+            "id": "2",
+            "label": "The pendulum must escape"
+          }
+        ]
+      },
+      "solution": "The growing term represents accumulated phase mismatch.",
+      "hint": "Distinguish the solution from its truncated expansion.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Distinguish the solution from its truncated expansion.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-scale",
+      "prompt": "Doubling a sufficiently small amplitude multiplies its leading fractional period correction by what factor? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 4,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The correction is proportional to A².",
+      "hint": "Square the amplitude ratio.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-phase",
+      "prompt": "What does eliminating the leading secular term guarantee?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Removal of that order's resonant growth"
+          },
+          {
+            "id": "1",
+            "label": "Exact motion for all time"
+          },
+          {
+            "id": "2",
+            "label": "Zero waveform correction"
+          }
+        ]
+      },
+      "solution": "Higher-order phase errors remain.",
+      "hint": "Keep the order of approximation explicit.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Keep the order of approximation explicit.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-orbit",
+      "prompt": "For β/h²=0.02, use Δθ≈−πβ/h² to find the orientation shift per radial cycle.",
+      "answer": {
+        "kind": "numeric",
+        "value": -0.06283185307179587,
+        "unit": "rad",
+        "acceptedUnits": ["rad"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "−0.02π rad.",
+      "hint": "The negative sign means retrograde in the stated convention.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Differential Equations",
+      "url": "https://www.ocw.mit.edu/courses/18-03-differential-equations-spring-2010/pages/lecture-notes/"
+    },
+    {
+      "title": "David Tong · Dynamics and Relativity",
+      "url": "https://davidtong.org/teaching/dynamics-and-relativity/"
+    }
+  ],
+  "title": "Go deeper: perturbation theory through the pendulum",
+  "description": "Build a controlled small-amplitude correction, diagnose secular error and explain how a corrected frequency repairs the approximation.",
+  "domain": "Mathematics for physics",
+  "unit": "06 · Work in several dimensions",
+  "prerequisites": ["two-body", "series", "oscillators"],
+  "minutes": 90,
+  "heading": "How can a tiny nonlinear correction change motion after many cycles?",
+  "lead": "The pendulum exposes the distinction between local smallness, accumulated phase error and a useful long-time representation.",
+  "outcomes": [
+    "Identify the dimensionless expansion parameter.",
+    "Interpret and remove a secular term.",
+    "Derive the pendulum period correction and connect frequency shifts to orbital precession."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Two clocks differ by a tiny amount per tick. After one tick they agree almost perfectly; after a thousand ticks the difference may be obvious. A pendulum calculated with the small-angle approximation has exactly this kind of error: its motion remains bounded, but the predicted phase gradually drifts.\n\nPerturbation theory starts with a solvable problem and asks how a small change alters its solution. Its most interesting lesson is that a small change in an equation need not make a uniformly small change in its solution for all time. We will derive the pendulum's first amplitude-dependent period correction and use the derivation to understand when an approximation deserves our trust."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How can a tiny nonlinear correction change motion after many cycles?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "The pendulum exposes the distinction between local smallness, accumulated phase error and a useful long-time representation."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Identify the dimensionless expansion parameter.",
+              "Interpret and remove a secular term.",
+              "Derive the pendulum period correction and connect frequency shifts to orbital precession."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can a bounded oscillator have an approximation that grows without bound?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If a model predicts the correct amplitude but the wrong time of every maximum, in what sense is it accurate?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "A small clock error accumulates",
+              "caption": "Schematic maxima of two oscillations. A slightly longer true period produces an increasing separation from predictions made with the small-angle period.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [60, 100],
+                  "to": [540, 100],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 220],
+                  "to": [540, 220],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "label",
+                  "at": [60, 60],
+                  "text": "small-angle predicted maxima"
+                },
+                {
+                  "kind": "label",
+                  "at": [60, 185],
+                  "text": "slower nonlinear maxima"
+                },
+                {
+                  "kind": "point",
+                  "at": [80, 100],
+                  "label": "0",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "point",
+                  "at": [180, 100],
+                  "label": "T₀",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "point",
+                  "at": [280, 100],
+                  "label": "2T₀",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "point",
+                  "at": [380, 100],
+                  "label": "3T₀",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "point",
+                  "at": [80, 220],
+                  "label": "0",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [200, 220],
+                  "label": "T",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [320, 220],
+                  "label": "2T",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [440, 220],
+                  "label": "3T",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [330, 280],
+                  "text": "timing difference grows each cycle"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Put the small parameter where you can see it",
+            "body": "An ideal pendulum obeys $\\ddot\\theta+\\omega_0^2\\sin\\theta=0$, where $\\omega_0=\\sqrt{g/L}$. Release it from rest at angle A, measured in radians. We assume $0<A\\ll1$ and ignore friction. Introduce the dimensionless time $\\tau=\\omega_0t$ and write $\\theta=A y$. The initial data become $y(0)=1$ and $y'(0)=0$, with primes initially meaning derivatives with respect to $\\tau$.\n\nExpand the sine and divide by A:\n$$y''+y-\\frac{A^2}{6}y^3+\\frac{A^4}{120}y^5-\\cdots=0.$$\nThe small parameter is $\\epsilon=A^2$, not A itself. This matters: doubling a small release angle multiplies the leading fractional correction by four. The leading equation $y''+y=0$ gives $y_0=\\cos\\tau$; it is the familiar oscillator after the physical scale has been removed.\n\nWhy bother scaling first? Without it, saying that the cubic term is small might look like a statement about a coefficient with units or an arbitrary choice of angle unit. Here the ratio of cubic to linear restoring terms is approximately $\\epsilon y^2/6$. For bounded y of order one, its meaning is explicit. Smallness is a comparison within the regime of motion.\n\nWe now seek $y=y_0+\\epsilon y_1+O(\\epsilon^2)$. This is an ordered approximation, not necessarily a convergent infinite series. At each order we demand that substitution leaves a smaller residual. A residual is the amount by which the approximate solution fails to satisfy the equation. A small residual is useful evidence, but does not by itself guarantee small solution error over arbitrarily long times. The differential equation can accumulate that discrepancy.\n\nInitial conditions must also be expanded. Since A was defined as the actual release angle, $y_1(0)=y_1'(0)=0$. Allowing an arbitrary correction at the turning point would quietly change the amplitude whose effect we are trying to measure. Good perturbation theory keeps track of what is fixed as carefully as what is small."
+          },
+          {
+            "kind": "question",
+            "bridge": "Scale the displacement and the clock.",
+            "meaning": "Smallness must compare terms within a stated regime.",
+            "question": "Why is the pendulum expansion parameter A²?",
+            "answer": "After θ=Ay and division by A, the first nonlinear term is −A²y³/6.",
+            "further": [
+              {
+                "question": "What angle unit is required for the sine series?",
+                "answer": "Radians."
+              },
+              {
+                "question": "Why set the first correction to zero initially?",
+                "answer": "A already denotes the actual release angle."
+              },
+              {
+                "question": "Does a small equation residual ensure accuracy forever?",
+                "answer": "No; the error can accumulate with time."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A growing correction can mean that the clock is wrong",
+            "body": "Substitute the expansion into the cubic-order equation. At first order,\n$$y_1''+y_1=\\frac16 y_0^3=\\frac18\\cos\\tau+\\frac1{24}\\cos3\\tau,$$\nusing $\\cos^3\\tau=(3\\cos\\tau+\\cos3\\tau)/4$. The nonlinear term has generated both the original frequency and a third harmonic. This is a first encounter with a general phenomenon: multiplying oscillations mixes their frequencies.\n\nThe third harmonic causes no difficulty. Since $(d^2/d\\tau^2+1)\\cos3\\tau=-8\\cos3\\tau$, its particular response is $-\\cos3\\tau/192$. The forcing at frequency one is different: cosine at that frequency is already a free solution of the left-hand equation. We cannot divide by zero and call the result a large amplitude. Instead, differentiate directly to check that the operator sends $\\tau\\sin\\tau$ to $2\\cos\\tau$. Applying the initial conditions gives\n$$y_1=\\frac{\\tau\\sin\\tau}{16}+\\frac{\\cos\\tau-\\cos3\\tau}{192}.$$\nThe first term grows with time. Such a term is called secular: it accumulates rather than remaining a bounded oscillation.\n\nHas the pendulum become unstable? No. Its conserved energy $\\dot\\theta^2/2+\\omega_0^2(1-\\cos\\theta)$ confines this small oscillation. The approximation is failing to represent a bounded physical motion. To see what it missed, expand a slightly slower cosine:\n$$\\cos[(1-\\epsilon/16)\\tau]=\\cos\\tau+\\frac{\\epsilon\\tau}{16}\\sin\\tau+\\cdots.$$\nThat is exactly the secular correction. The growth is the Taylor expansion of a phase drift around the wrong clock.\n\nFor fixed $\\tau$, the correction is small as $\\epsilon\\to0$. But when $\\epsilon\\tau$ becomes order one, it is no longer small. These are different limits. The leading oscillator can describe shape and energy quite well while losing pointwise timing after many cycles. Asking whether an approximation is 'good' therefore requires stating both the observable and the duration."
+          },
+          {
+            "kind": "question",
+            "bridge": "Inspect the resonant correction.",
+            "meaning": "A growing approximation need not describe physical growth.",
+            "question": "What physical change does the τ sin τ term represent?",
+            "answer": "The first-order expansion of a small frequency shift.",
+            "further": [
+              {
+                "question": "What generates the third harmonic?",
+                "answer": "The cubic term in the restoring force."
+              },
+              {
+                "question": "When does the naive secular correction cease to be small?",
+                "answer": "When A²τ is of order one."
+              },
+              {
+                "question": "What independently rules out growing amplitude here?",
+                "answer": "Conservation of the small pendulum's energy."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Correct the time scale before expanding the shape",
+            "body": "Instead of repeatedly patching the phase error, give the approximation a corrected clock from the start. Introduce $s=\\Omega t$, with\n$$\\Omega=\\omega_0(1+\\alpha\\epsilon+O(\\epsilon^2)),\\qquad y=\\cos s+\\epsilon z(s)+O(\\epsilon^2).$$\nThis is the Lindstedt method. The unknown number $\\alpha$ will be determined by the requirement that z remain periodic. Since $(\\Omega/\\omega_0)^2=1+2\\alpha\\epsilon+O(\\epsilon^2)$, substitution gives\n$$z''+z=\\left(\\frac18+2\\alpha\\right)\\cos s+\\frac1{24}\\cos3s,$$\nwhere primes now mean s derivatives. The extra $2\\alpha\\cos s$ comes from correcting the second time derivative. Every change of clock must affect derivatives as well as function arguments.\n\nA periodic correction cannot support the resonant cosine forcing. Set its coefficient to zero: $\\alpha=-1/16$. The remaining equation has the initial-condition-preserving solution $z=(\\cos s-\\cos3s)/192$. Consequently,\n$$\\theta(t)\\approx A\\left[\\cos s+\\frac{A^2}{192}(\\cos s-\\cos3s)\\right],\\qquad s=\\omega_0(1-A^2/16)t.$$\nAt t=0 the two correction terms cancel, so the turning angle is exactly A to this order. The third harmonic changes the waveform slightly, while the corrected frequency changes the timing. Keeping these effects separate helps interpret what the approximation predicts.\n\nThe period follows by taking the reciprocal, also consistently expanded:\n$$T=\\frac{2\\pi}{\\Omega}=T_0\\left(1+\\frac{A^2}{16}+O(A^4)\\right),\\qquad T_0=2\\pi\\sqrt{L/g}.$$\nA larger swing takes longer. Physically, sine grows less rapidly than its linear approximation as the angle increases, so the restoring force is weaker than the harmonic model predicts.\n\nThe improved expression removes the leading secular error; it does not become exact forever. The omitted frequency correction is order $A^4$, so its phase error can accumulate on a dimensionless time scale of order $A^{-4}$. This is a scale estimate, not a universal error bound. Near the upright separatrix the period becomes very large and a small-A expansion is the wrong starting point altogether."
+          },
+          {
+            "kind": "question",
+            "bridge": "Allow the frequency to change.",
+            "meaning": "The periodicity requirement determines the clock correction.",
+            "question": "Why choose α=−1/16?",
+            "answer": "It removes resonant forcing from the first-order shape equation.",
+            "further": [
+              {
+                "question": "Does the period increase or decrease with small amplitude?",
+                "answer": "It increases by fractional amount A²/16 to leading order."
+              },
+              {
+                "question": "Why retain a homogeneous cosine correction?",
+                "answer": "It restores the prescribed initial amplitude."
+              },
+              {
+                "question": "What error still accumulates at later times?",
+                "answer": "Phase error from the omitted higher-order frequency terms."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "4. The same small-change reasoning predicts orbital precession",
+            "body": "The two-body chapter showed that an inverse-square orbit contains two equal frequencies near a circular orbit: the angular frequency $\\Omega$ and the radial oscillation frequency $\\kappa$. Equality means that one radial cycle accompanies one revolution. A small change in the potential can make their ratio slightly different from one. The orbit then accumulates a slowly changing orientation, just as the approximate pendulum accumulates phase error.\n\nConsider an illustrative central potential per unit mass\n$$V(r)=-\\frac{\\mathcal G}{r}+\\frac{\\beta}{2r^2}.$$\nHere $\\beta$ has the same units as angular momentum per unit mass squared. This is a mathematical force-law example, not an assumed model of any particular planet. The effective potential is $(h^2+\\beta)/(2r^2)-\\mathcal G/r$. For a circular orbit, $r_c=(h^2+\\beta)/\\mathcal G$, provided the numerator is positive.\n\nThe angular frequency is $\\Omega=h/r_c^2$. Differentiating the effective potential twice at its minimum gives $\\kappa^2=\\mathcal G/r_c^3$, so\n$$\\frac{\\Omega}{\\kappa}=\\frac{h}{\\sqrt{h^2+\\beta}}=\\left(1+\\frac{\\beta}{h^2}\\right)^{-1/2}\\approx1-\\frac{\\beta}{2h^2}.$$\nFor positive h, a nearly circular orbit advances $2\\pi\\Omega/\\kappa$ between successive closest approaches. Its orientation shift relative to a full turn is therefore approximately $-\\pi\\beta/h^2$ per radial cycle. Positive $\\beta$ gives a retrograde shift in this convention. The controlling small parameter is $|\\beta|/h^2$, not an unexplained assertion that $\\beta$ is small.\n\nThis calculation uses two approximations with different jobs: small radial excursion justifies linearising about the circle, and small $\\beta/h^2$ justifies expanding the frequency ratio. Neither should be silently replaced by the other. Over many cycles even a tiny per-cycle shift becomes visible, so a fixed ellipse is a poor long-term description while a slowly rotating ellipse can be useful.\n\nThe common lesson is to identify the part of a solution that changes slowly and let it evolve. Amplitude, phase and orbital orientation are often better variables for this purpose than raw position coordinates. Perturbation is therefore more than keeping extra Taylor terms: it is choosing a representation in which those terms stay informative."
+          },
+          {
+            "kind": "question",
+            "bridge": "Compare radial and angular orbital clocks.",
+            "meaning": "A frequency mismatch becomes a slowly moving orientation.",
+            "question": "What two small quantities entered the orbital example?",
+            "answer": "The radial excursion relative to circular radius, and |β|/h².",
+            "further": [
+              {
+                "question": "What determines the angle between closest approaches?",
+                "answer": "Approximately 2πΩ/κ for nearly circular motion."
+              },
+              {
+                "question": "Why can a tiny precession matter?",
+                "answer": "It accumulates over many radial cycles."
+              },
+              {
+                "question": "What makes a rotating ellipse more useful than a fixed one?",
+                "answer": "Its orientation follows the slow change instead of accumulating an unmodelled phase error."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Removing resonance is an orthogonality condition",
+            "body": "Suppose we demand a periodic solution of $z''+z=f(s)$ with period $2\\pi$. Multiply by $\\cos s$ and integrate over a period. Twice integrating the z'' term by parts, with periodic endpoint terms cancelling, gives\n$$\\int_0^{2\\pi}\\cos s\\,(z''+z)\\,ds=0.$$\nTherefore the forcing must satisfy $\\int_0^{2\\pi}f(s)\\cos s\\,ds=0$. The same argument with sine gives a second condition. In our pendulum problem symmetry already removes the sine component; choosing the frequency correction removes the cosine component.\n\nThis is the integral version of the 'do not divide by zero' obstruction. The operator $D^2+1$ sends sine and cosine to zero, so they are directions it cannot invert on periodic functions. The forcing must have no component in those directions. Later, inner products, Fourier projections and nullspaces will make this a general solvability principle. The frequency correction is determined by a geometric compatibility condition in a space of functions, not by an arbitrary trick."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "A pendulum used as a clock",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "A pendulum used as a clock",
+            "problem": "An ideal pendulum has small-angle period 2 s and is released at amplitude 0.4 rad. Estimate its period, its delay after 100 cycles and the size of the expansion parameters.",
+            "steps": [
+              {
+                "title": "Identify the parameter",
+                "body": "$\\epsilon=A^2=0.16$; the leading fractional period correction is $\\epsilon/16=0.01$.",
+                "reason": "The angle is measured in radians and squared after scaling.",
+                "trap": "Using 0.4 directly as the fractional correction misses the derived coefficient."
+              },
+              {
+                "title": "Correct the period",
+                "body": "$T\\approx2(1.01)=2.02$ s.",
+                "reason": "The nonlinear restoring force makes the pendulum slower.",
+                "trap": "Frequency and period corrections have opposite signs."
+              },
+              {
+                "title": "Accumulate the timing difference",
+                "body": "After 100 actual cycles, elapsed time is approximately 202 s instead of 200 s: a delay of 2 s.",
+                "reason": "A small per-cycle error adds across repeated cycles.",
+                "trap": "Specify whether counting actual cycles or sampling at a fixed time."
+              },
+              {
+                "title": "Assess the omitted order",
+                "body": "The next fractional term is order $A^4=0.0256$ multiplied by an as-yet-undetermined coefficient. This is an ordering statement, not a numerical bound of 2.56%.",
+                "reason": "Order notation does not supply its coefficient or certify a tolerance.",
+                "trap": "Do not report all displayed digits as guaranteed accuracy."
+              },
+              {
+                "title": "Check the naive phase scale",
+                "body": "At about 100 cycles, $\\tau\\approx200\\pi$. The leading frequency drift gives $A^2\\tau/16\\approx2\\pi$, so an uncorrected cosine can be roughly a cycle out of phase.",
+                "reason": "The corrected clock matters even while the waveform correction remains small.",
+                "trap": "Small amplitude does not guarantee accurate timing for arbitrarily many cycles."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "A useful approximation expands the right quantities and states the time scale on which its errors stay small.",
+            "nextConnection": "The same resonant solvability condition will reappear when modes, projections and linear operators organise more complicated systems."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "An approximation must control the observable and time scale we care about. Small nonlinear forces can produce slowly accumulating phase changes, so a useful expansion sometimes has to correct its clock as well as its shape.",
+              "widerConnection": "The pendulum's secular term is a resonance of a linear operator. Removing it determines the frequency shift; the same distinction between fast motion and slow accumulated change explains weak orbital precession."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

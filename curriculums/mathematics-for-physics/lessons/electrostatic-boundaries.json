@@ -1,0 +1,659 @@
+{
+  "id": "electrostatic-boundaries",
+  "diagnostics": [
+    {
+      "id": "d-green",
+      "prompt": "What must accompany a differential operator when specifying its Green function?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only its highest derivative"
+          },
+          {
+            "id": "1",
+            "label": "Boundary or initial conditions"
+          },
+          {
+            "id": "2",
+            "label": "Only a unit convention"
+          }
+        ]
+      },
+      "solution": "Different constraints give different inverses.",
+      "hint": "Recall which experiment an impulse response describes.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall which experiment an impulse response describes.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "green-functions"
+    },
+    {
+      "id": "d-coordinate",
+      "prompt": "In Cartesian coordinates φ=x²−y². Find its Laplacian. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The second derivatives are 2 and −2.",
+      "hint": "Add the two second derivatives.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "coordinate-fields"
+    },
+    {
+      "id": "d-line",
+      "prompt": "If E=−grad φ, what is the electric line integral from A to B?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "φ(B)−φ(A)"
+          },
+          {
+            "id": "1",
+            "label": "Always zero"
+          },
+          {
+            "id": "2",
+            "label": "φ(A)−φ(B)"
+          }
+        ]
+      },
+      "solution": "The minus gradient reverses the potential difference.",
+      "hint": "Use the fundamental theorem for line integrals.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the fundamental theorem for line integrals.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "line-integrals"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Use scaled coordinates X=πx/a and Y=πy/a. The box has 0<X<π and 0<Y<ln 2. Its top potential is 3 sin X volts and the other edges are grounded.",
+    "supplied": [
+      {
+        "heading": "Mode solution",
+        "body": "Use φ=A sin X sinh Y; sinh(ln 2)=3/4 and cosh(ln 2)=5/4."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-a",
+        "prompt": "Find A.",
+        "answer": {
+          "kind": "numeric",
+          "value": 4,
+          "unit": "V",
+          "acceptedUnits": ["V"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "A(3/4)=3, so A=4 V.",
+        "hint": "Match the top boundary.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-top",
+        "prompt": "At X=π/2 on the top, find φ.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "V",
+          "acceptedUnits": ["V"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The top sine is one.",
+        "hint": "Substitute into the prescribed boundary.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-derivative",
+        "prompt": "At X=π/2 and Y=ln 2, find ∂φ/∂Y.",
+        "answer": {
+          "kind": "numeric",
+          "value": 5,
+          "unit": "V",
+          "acceptedUnits": ["V"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "4 cosh(ln 2)=5 V, since Y is dimensionless.",
+        "hint": "Differentiate sinh.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-field",
+        "prompt": "For that same point, which is the interior limiting vertical field?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "+5 V/m"
+            },
+            {
+              "id": "1",
+              "label": "−(π/a)×5 V"
+            },
+            {
+              "id": "2",
+              "label": "−5a/π V"
+            }
+          ]
+        },
+        "solution": "The chain rule gives ∂/∂y=(π/a)∂/∂Y, followed by the negative gradient.",
+        "hint": "Convert the scaled derivative into a physical derivative.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Convert the scaled derivative into a physical derivative.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-source",
+      "prompt": "A charge-free region with nonzero boundary potential must have what?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Zero field everywhere"
+          },
+          {
+            "id": "1",
+            "label": "A harmonic potential consistent with the boundary"
+          },
+          {
+            "id": "2",
+            "label": "A constant potential regardless of boundary"
+          }
+        ]
+      },
+      "solution": "Laplace's equation constrains curvature, not the value of the gradient.",
+      "hint": "Separate source and boundary.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate source and boundary.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-depth",
+      "prompt": "Mode n=4 has what penetration depth divided by that of mode n=1 in a tall strip? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.25,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The depth is proportional to 1/n.",
+      "hint": "Compare inverse wavenumbers.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-unique",
+      "prompt": "What makes the uniqueness integral decisive?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A nonnegative integrand has zero integral"
+          },
+          {
+            "id": "1",
+            "label": "Positive and negative energies cancel"
+          },
+          {
+            "id": "2",
+            "label": "The boundary derivative must vanish"
+          }
+        ]
+      },
+      "solution": "A squared gradient cannot cancel itself by signs.",
+      "hint": "Inspect the square.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Inspect the square.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-neumann",
+      "prompt": "What ambiguity can remain with compatible pure Neumann data?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "An arbitrary gradient"
+          },
+          {
+            "id": "1",
+            "label": "An arbitrary charge density"
+          },
+          {
+            "id": "2",
+            "label": "An additive constant potential"
+          }
+        ]
+      },
+      "solution": "A constant has zero gradient and zero normal derivative.",
+      "hint": "Find a null direction.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Find a null direction.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-curvature",
+      "prompt": "For φ=3x²−3y², compute −∇²φ in scaled coordinates. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "−(6−6)=0.",
+      "hint": "Curvatures can cancel without the function being constant.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-kernel",
+      "prompt": "Why can a free-space Green function fail in a grounded box?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Superposition stops working"
+          },
+          {
+            "id": "1",
+            "label": "It need not satisfy the box boundary condition"
+          },
+          {
+            "id": "2",
+            "label": "A box forbids point sources"
+          }
+        ]
+      },
+      "solution": "The operator's inverse includes the boundary constraints.",
+      "hint": "Check the experiment as well as the PDE.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Check the experiment as well as the PDE.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Cambridge · Mathematical Methods II",
+      "url": "https://www.damtp.cam.ac.uk/user/gio10/nst_notes.pdf"
+    },
+    {
+      "title": "MIT OpenCourseWare · Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    }
+  ],
+  "title": "Bring ideas together: an electrostatic boundary problem",
+  "description": "Build a potential from sources and boundary data, recover its field and explain why the stated solution is unique.",
+  "domain": "Mathematics for physics",
+  "unit": "09 · Responses and uncertainty",
+  "prerequisites": ["green-functions", "coordinate-fields", "line-integrals"],
+  "minutes": 90,
+  "heading": "How can an empty region acquire a field, and why does its boundary determine a unique answer?",
+  "lead": "One solved boundary problem connects physical conservation, coordinate derivatives, eigenfunctions and positive quadratic forms.",
+  "outcomes": [
+    "Derive the potential equation from stated field laws.",
+    "Solve and interpret a separated boundary mode.",
+    "Explain uniqueness and the boundary dependence of a Green function."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Imagine an empty rectangular region whose edges are held at prescribed voltages. There is no charge inside. Does that mean there is no electric field? A battery attached to the boundary suggests otherwise: the surroundings can establish a field even where there is no local source.\n\nWe will solve this question all the way through. First we turn two physical assumptions into an equation for a scalar potential. Then we construct a solution for one patterned boundary, check it, and ask whether another solution could satisfy exactly the same conditions. That last question brings an unexpected ally: a positive integral resembling an energy.\n\nThis is a useful meeting point for gradient, divergence, Fourier modes and Green functions. Each has a different job. The gradient converts potential differences into force per charge; divergence measures local sourcing; modes simplify the equation; boundary conditions select the actual experiment. Keeping those jobs visible makes a field calculation much easier to understand."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How can an empty region acquire a field, and why does its boundary determine a unique answer?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "One solved boundary problem connects physical conservation, coordinate derivatives, eigenfunctions and positive quadratic forms."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Derive the potential equation from stated field laws.",
+              "Solve and interpret a separated boundary mode.",
+              "Explain uniqueness and the boundary dependence of a Green function."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can a charge-free region contain a spatially varying potential?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Will a rapidly alternating voltage pattern on an edge penetrate farther into the interior than a broad smooth pattern?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "One boundary mode fades into a grounded box",
+              "caption": "The top is a prescribed sine voltage pattern; the other three edges are grounded. The central field points downward for positive amplitude.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [140, 250],
+                  "to": [460, 250],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 250],
+                  "to": [140, 60],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [460, 250],
+                  "to": [460, 60],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 60],
+                  "to": [460, 60],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [185, 35],
+                  "text": "top: V₀ sin(πx/a)"
+                },
+                {
+                  "kind": "label",
+                  "at": [210, 282],
+                  "text": "bottom: zero potential"
+                },
+                {
+                  "kind": "label",
+                  "at": [66, 166],
+                  "text": "zero"
+                },
+                {
+                  "kind": "label",
+                  "at": [477, 166],
+                  "text": "zero"
+                },
+                {
+                  "kind": "point",
+                  "at": [300, 155],
+                  "label": "centre",
+                  "labelOffset": [12, -8],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [300, 155],
+                  "to": [300, 215],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [315, 210],
+                  "text": "E points down"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. From a force field to a boundary problem",
+            "body": "Assume electrostatics in a homogeneous medium with constant positive permittivity $\\varepsilon$. We take two physical laws as input: the electric field has zero circulation around every contractible closed loop, and the outward electric flux through a closed surface equals enclosed charge divided by $\\varepsilon$. These are physical assumptions, not consequences of vector calculus.\n\nIn a simply connected region, the circulation assumption lets us define a single-valued potential $\\phi$ with $\\mathbf E=-\\nabla\\phi$. The minus sign means a positive test charge is pushed toward decreasing potential. Potential itself has an arbitrary additive constant until we choose a voltage reference; differences determine the work per charge.\n\nApply the divergence theorem to the flux law. If charge has smooth volume density $\\rho$, then every sufficiently small volume satisfies $\\int_V\\nabla\\cdot\\mathbf E\\,dV=\\int_V\\rho/\\varepsilon\\,dV$. Equality for arbitrary volumes gives $\\nabla\\cdot\\mathbf E=\\rho/\\varepsilon$. Substituting the gradient yields Poisson's equation,\n$$-\\nabla^2\\phi=\\rho/\\varepsilon.$$\nWhere $\\rho=0$, this becomes Laplace's equation. Zero divergence means no local source; it does not mean zero field. A uniform field already provides a counterexample.\n\nFor our two-dimensional model, assume no dependence on a third Cartesian coordinate. Take $0<x<a$, $0<y<b$, so $\\nabla^2\\phi=\\phi_{xx}+\\phi_{yy}$. Specify zero potential on the bottom and two sides, and $\\phi(x,b)=V_0\\sin(\\pi x/a)$ on the top. A varying top voltage requires a prescribed array of boundary electrodes or an idealised imposed boundary; it is not one connected equilibrium conductor. The sine vanishes at the corners, making the data compatible there.\n\nThese fixed-potential conditions are called Dirichlet conditions. Prescribing the normal derivative instead would specify a flux, called Neumann data. They define different experiments. The PDE alone cannot choose between them, just as a second-order ODE cannot select one motion without additional data."
+          },
+          {
+            "kind": "question",
+            "bridge": "Translate physical laws into a potential equation.",
+            "meaning": "The source and the boundary carry different information.",
+            "question": "Does zero charge imply zero electric field?",
+            "answer": "No. It gives zero divergence, while the boundary can sustain a nonzero field.",
+            "further": [
+              {
+                "question": "Why introduce a potential?",
+                "answer": "Zero circulation permits work differences to be represented by one scalar in a simply connected region."
+              },
+              {
+                "question": "What assumption allows constant permittivity outside the derivatives?",
+                "answer": "The medium is homogeneous with constant permittivity."
+              },
+              {
+                "question": "Why is the top boundary not one ordinary conductor?",
+                "answer": "A connected equilibrium conductor is equipotential; a varying prescribed voltage requires separate electrodes or an idealisation."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A boundary pattern chooses its own mode",
+            "body": "The sine on the upper edge suggests trying $\\phi(x,y)=\\sin(kx)Y(y)$ with $k=\\pi/a$. This is an informed trial, not a claim that every solution is one product. The sine already satisfies the side conditions, and its second derivative reproduces itself multiplied by $-k^2$. Substitution into Laplace's equation gives\n$$Y''-k^2Y=0.$$\nThe spatial equation in one direction oscillates; the other direction must compensate with positive second derivative. That is why hyperbolic functions appear instead of another sine.\n\nWrite $Y=A\\sinh(ky)+B\\cosh(ky)$. The grounded bottom requires $Y(0)=0$, so $B=0$. The top requires $Y(b)=V_0$, giving\n$$\\phi(x,y)=V_0\\sin(kx)\\frac{\\sinh(ky)}{\\sinh(kb)}.$$\nWe have used each boundary condition for an identifiable purpose. Checking the two second derivatives shows they cancel, and checking all four edges verifies the entire problem. We still owe a reason that this verified solution is the only one.\n\nNow interpret it. Far from the bottom in a tall rectangle, the ratio is approximately $e^{-k(b-y)}$. The disturbance therefore fades over a distance $1/k=a/\\pi$ measured inward from the driven top. For the boundary mode $\\sin(n\\pi x/a)$ the penetration distance is $a/(n\\pi)$. Finer boundary detail disappears more quickly. This is a geometrical smoothing effect of Laplace's equation, not dissipation in time.\n\nFor a general compatible top profile $f(x)$, expand it in sine modes, $f(x)=\\sum_n f_n\\sin(n\\pi x/a)$. Linearity allows the corresponding interior solutions to be added. Each amplitude follows its own hyperbolic profile. Fourier analysis has turned a field problem into independent scalar problems because the boundary-adapted sine functions are eigenfunctions of the horizontal second derivative. The same reason made normal coordinates useful for coupled oscillators: a suitable representation uncouples the action of an operator."
+          },
+          {
+            "kind": "question",
+            "bridge": "Follow one sine pattern into the interior.",
+            "meaning": "An eigenfunction makes one coordinate derivative act as multiplication.",
+            "question": "Why does the vertical equation have exponential solutions?",
+            "answer": "Its positive second derivative must cancel the sine's negative horizontal second derivative.",
+            "further": [
+              {
+                "question": "Which condition removes the cosh term?",
+                "answer": "Zero potential at the bottom."
+              },
+              {
+                "question": "Which pattern penetrates farther?",
+                "answer": "The lower spatial-frequency pattern, whose inverse wavenumber is larger."
+              },
+              {
+                "question": "Why can modes be added?",
+                "answer": "Both the PDE and the prescribed boundary operation are linear."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Why verification is enough: uniqueness and energy",
+            "body": "Suppose two sufficiently smooth potentials satisfy the same Poisson equation and the same fixed potential on the boundary of a bounded connected region. Subtract them and call the difference $u$. Their sources cancel, so $\\nabla^2u=0$ inside, while $u=0$ on the boundary. We want to know whether a nonzero difference could hide inside without leaving any trace at the edge.\n\nUse the product rule in a form suited to the divergence theorem:\n$$\\nabla\\cdot(u\\nabla u)=|\\nabla u|^2+u\\nabla^2u.$$\nIntegrating gives\n$$\\int_\\Omega |\\nabla u|^2\\,dV=\\int_{\\partial\\Omega}u\\,\\partial_nu\\,dS-\\int_\\Omega u\\nabla^2u\\,dV=0.$$\nBoth terms on the right vanish for known reasons. Since the integrand on the left is nonnegative, the gradient is zero throughout the region (with the assumed regularity). Thus $u$ is constant; its zero boundary value forces that constant to be zero. The two solutions coincide.\n\nThis proof teaches more than a certification rule. A nonzero gradient cannot cancel another gradient's squared magnitude in the integral. Positivity removes the possibility of an unseen interior difference. The argument is the continuous counterpart of showing that a quadratic form has no null direction after constraints are imposed.\n\nIn the charge-free case the solution also minimises the field-energy functional $\\mathcal E[\\phi]=(\\varepsilon/2)\\int|\\nabla\\phi|^2dV$ among potentials with the prescribed boundary values. For a competitor $\\phi+u$ with $u=0$ at the boundary, expand the square. The cross term $\\int\\nabla\\phi\\cdot\\nabla u$ vanishes by integration by parts and Laplace's equation. The energy increase is exactly $(\\varepsilon/2)\\int|\\nabla u|^2dV$. This is a precise variational statement about admissible fields, not a story about the system evolving down an energy slope.\n\nFor pure Neumann conditions the same difference argument only fixes $u$ up to a constant. Moreover, total prescribed flux must agree with total charge. Boundaries can remove a nullspace, or leave one behind; this is exactly the solvability question encountered with matrices."
+          },
+          {
+            "kind": "question",
+            "bridge": "Subtract two proposed solutions.",
+            "meaning": "A positive gradient integral rules out a hidden difference.",
+            "question": "Why must a difference with zero gradient vanish here?",
+            "answer": "It is constant on the connected region, and its zero boundary value fixes the constant.",
+            "further": [
+              {
+                "question": "Which boundary assumption kills the surface term?",
+                "answer": "The difference is zero on the boundary."
+              },
+              {
+                "question": "What survives with pure Neumann data?",
+                "answer": "An arbitrary additive constant, when the compatibility condition is met."
+              },
+              {
+                "question": "What does the energy comparison assume?",
+                "answer": "Charge-free interiors and competitors with exactly the same fixed boundary potential."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "4. Modes and Green functions invert the same problem",
+            "body": "A Green function for $L=-\\nabla^2$ with zero Dirichlet boundary conditions solves $L G(\\mathbf x,\\boldsymbol\\xi)=\\delta(\\mathbf x-\\boldsymbol\\xi)$ in its first argument. Its boundary value is zero. For an interior source and a grounded boundary, superposing point responses gives $\\phi(\\mathbf x)=\\int G(\\mathbf x,\\boldsymbol\\xi)\\rho(\\boldsymbol\\xi)/\\varepsilon\\,dV_\\xi$.\n\nOur rectangle has no interior charge, yet its potential is nonzero. Consequently that source integral alone cannot solve it. We must add the harmonic function carrying the nonzero boundary values. More generally split $\\phi=\\phi_{\\mathrm{source}}+\\phi_{\\mathrm{boundary}}$, assigning homogeneous boundary data to the first and the actual boundary values to the second. Linearity makes this decomposition possible; uniqueness makes the reconstructed answer decisive.\n\nThe modal connection is especially concrete. If $L\\psi_j=\\lambda_j\\psi_j$ in an orthonormal set of grounded-boundary modes, then formally $G(\\mathbf x,\\boldsymbol\\xi)=\\sum_j\\psi_j(\\mathbf x)\\psi_j(\\boldsymbol\\xi)/\\lambda_j$ for real modes, interpreted with the convergence appropriate to the problem. Expanding a source and dividing each coefficient by $\\lambda_j$ is the same operation as integrating against this kernel. The kernel is an inverse matrix written with continuously labelled rows and columns.\n\nThis explains why geometry belongs inside the Green function. Changing the boundaries changes the admissible modes and eigenvalues, so it changes the inverse. The free-space inverse describes a different experiment from a grounded box. It also explains why small eigenvalues can create large responses: inversion amplifies modes that the operator acts on weakly. We will meet that same sensitivity when fitting noisy observations.\n\nWe now have three complementary checks: substitution tests the local law, boundary evaluation tests the experiment, and the energy argument establishes uniqueness. Together they turn a plausible formula into an understood solution."
+          },
+          {
+            "kind": "question",
+            "bridge": "Compare two ways of applying an inverse.",
+            "meaning": "A kernel integral and division by eigenvalues represent the same linear response.",
+            "question": "Why does a source-only Green integral miss the rectangle solution?",
+            "answer": "The interior source is zero, while nonzero boundary data supply the entire response.",
+            "further": [
+              {
+                "question": "What changes when boundaries change?",
+                "answer": "The admissible modes and the Green function."
+              },
+              {
+                "question": "Why do small eigenvalues matter?",
+                "answer": "Dividing by them amplifies a source component."
+              },
+              {
+                "question": "What makes verification conclusive?",
+                "answer": "Uniqueness for the specified equation and boundary conditions."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The maximum principle is an averaging statement",
+            "body": "On a small Cartesian grid, approximate the Laplacian by second differences. Laplace's equation says the central value is the average of its four nearest neighbours. A strict interior maximum would exceed every neighbour, contradicting this average. On a connected finite grid, any maximum plateau must propagate until it reaches the boundary.\n\nThe continuous harmonic-function mean-value property is the corresponding exact statement: the value at a point equals its average over sufficiently small surrounding spheres. It implies that a nonconstant harmonic potential has no strict interior maximum or minimum. Our boundary pattern therefore bounds the whole interior potential between zero and V₀ when V₀ is positive. The central value 0.19927 V₀ passes this check.\n\nThis does not say every field component is small, nor that charge-free space has no field. Gradients can be large near closely spaced electrodes. The principle constrains potential values. Discretisation has exposed another link to linear algebra: each grid equation relates one unknown to its neighbours, and fixed boundary values remove the constant ambiguity."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "A voltage pattern in a square",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "A voltage pattern in a square",
+            "problem": "A square has side a. Three edges are grounded and the top is held at V₀ sin(πx/a). Find the central potential and the field direction there.",
+            "steps": [
+              {
+                "title": "Choose the horizontal mode",
+                "body": "The factor sin(πx/a) satisfies both side conditions and reproduces the driven profile.",
+                "reason": "Boundary information suggests a useful eigenfunction.",
+                "trap": "A constant horizontal factor would violate the grounded sides."
+              },
+              {
+                "title": "Fix the vertical factor",
+                "body": "The bottom removes cosh, giving $\\phi=V_0\\sin(\\pi x/a)\\sinh(\\pi y/a)/\\sinh\\pi$.",
+                "reason": "The remaining amplitude enforces the top value.",
+                "trap": "Do not replace the finite-box sinh ratio by an exponential without an approximation."
+              },
+              {
+                "title": "Evaluate at the centre",
+                "body": "At $x=y=a/2$, $\\phi/V_0=\\sinh(\\pi/2)/\\sinh\\pi=1/[2\\cosh(\\pi/2)]\\approx0.19927$.",
+                "reason": "The double-angle identity supplies an independent simplification.",
+                "trap": "The potential is not half the top amplitude."
+              },
+              {
+                "title": "Differentiate and interpret",
+                "body": "At the centre $E_x=0$ and $E_y=-(\\pi V_0/a)\\cosh(\\pi/2)/\\sinh\\pi$. For positive V₀ the field points downward.",
+                "reason": "Symmetry cancels the horizontal component; the field points toward lower potential.",
+                "trap": "Remember the minus sign in minus gradient."
+              },
+              {
+                "title": "Establish completeness",
+                "body": "The formula satisfies Laplace's equation and all edges. The Dirichlet uniqueness argument rules out a second answer.",
+                "reason": "A successful trial becomes a complete solution.",
+                "trap": "Separation of variables alone does not prove uniqueness."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "A field equation becomes a definite prediction only after its boundary data are specified.",
+            "nextConnection": "The same positive quadratic forms and weakly constrained modes reappear in least squares, while the energy argument anticipates variational calculus."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A local field equation and boundary data together determine an electrostatic potential. Separation into modes, Green functions and minimisation of field energy describe the same boundary problem from different directions.",
+              "widerConnection": "The Laplacian connects geometry, conservation and linear algebra. Uniqueness is the statement that the constrained operator has no invisible homogeneous solution."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

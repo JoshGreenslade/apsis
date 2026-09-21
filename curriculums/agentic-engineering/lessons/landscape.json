@@ -1,0 +1,451 @@
+{
+  "id": "landscape",
+  "title": "The landscape · The environment",
+  "description": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. Define an environment contract covering identity, tools, state, permissions, network and verification.",
+  "domain": "Agentic engineering",
+  "unit": "07 · Choose and operate",
+  "prerequisites": ["verification"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "landscape--landscape",
+        "title": "The landscape: compare operating modes",
+        "navLabel": "The landscape",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A coding assistant in your editor, a background worker on an isolated checkout and a scheduled repository job can all use the same model. They still offer very different ways of working.\n\nIn the editor, you can correct a misunderstanding immediately. A background worker needs a brief it can carry without that conversation. A scheduled job needs a standing rule for when to act and what it may publish. Start with that operating choice, then compare the products that can support it."
+          },
+          {
+            "kind": "content",
+            "title": "Name the layer you are choosing",
+            "body": "A model supplies inference. A harness supplies tools, context handling, permissions and state. A workflow supplies the rhythm of planning, execution, review and approval. Changing one layer does not automatically improve the others. A strong model in a weak harness may be less useful than a modest model with clear tools, narrow permissions and excellent feedback."
+          },
+          {
+            "kind": "question",
+            "bridge": "Before comparing products, identify which layer is limiting the work.",
+            "meaning": "Model capability, harness capability and workflow design are different levers.",
+            "question": "A strong model cannot run the repository's tests. What kind of improvement is needed first?",
+            "answer": "A harness or environment improvement. More model capability cannot substitute for a missing tool path.",
+            "further": [
+              {
+                "question": "What does a model contribute?",
+                "answer": "Inference and generation from the context it receives."
+              },
+              {
+                "question": "What does a harness contribute?",
+                "answer": "Tool access, state, permissions, context handling and the ability to observe or constrain actions."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Compare by evidence and control",
+            "body": "Try a task that resembles the work you intend to delegate, using the same starting revision and brief for each setup. Watch what happens between the prompt and the final answer. Does the system find the implementation? Can you see the commands it ran? When a test fails to start, does it distinguish that from an assertion failure?\n\nInclude an interruption. Stop the run after an edit and inspect what remains: a recoverable patch and useful status, or an uncertain workspace? Resume it and check whether it knows which evidence is stale.\n\nUse the acceptance and cost measures from the preceding chapters. A fast demonstration is interesting, but the operating decision also depends on whether you can review, stop and recover the work."
+          },
+          {
+            "kind": "question",
+            "bridge": "A comparison becomes meaningful only when it uses the work you actually need to do.",
+            "meaning": "The best setup is task-relative, and should be judged by evidence and control rather than a generic leaderboard.",
+            "question": "Why run a representative task when comparing two agent setups?",
+            "answer": "Because the setup's usefulness depends on the tools, context, verification and failure recovery the real task demands.",
+            "further": [
+              {
+                "question": "Why include reversibility in the comparison?",
+                "answer": "A fast system that is hard to stop or undo can create more operational risk than it removes."
+              },
+              {
+                "question": "What does auditability buy you?",
+                "answer": "It lets a reviewer understand what happened and distinguish a reliable result from a lucky one."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "A team is choosing between a polished chat interface and a repository-connected harness.",
+            "problem": "A team is choosing between a polished chat interface and a repository-connected harness.",
+            "steps": [
+              {
+                "title": "Map the task",
+                "body": "The task needs search, edits, tests, resumable state and reviewable diffs. Score each setup against those needs.",
+                "reason": "The comparison reflects the work rather than the product's feature names.",
+                "trap": "Choosing the chat interface because its demo answer sounded fluent."
+              },
+              {
+                "title": "Run a small trial",
+                "body": "Use the same retry bug and record time to first useful evidence, failed-tool recovery, verification quality and reviewer effort.",
+                "reason": "The decision has observable evidence.",
+                "trap": "Measuring only first-response latency."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Choose a model, harness and workflow against the evidence and control your real work requires.",
+            "nextConnection": "A promising operating mode still needs a workplace. The next lesson turns the abstract idea of repository access into a concrete environment contract."
+          }
+        ]
+      },
+      {
+        "id": "environment--environment",
+        "title": "The environment: give the agent a reproducible workplace",
+        "navLabel": "The environment",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "'It has repository access' leaves several questions unanswered. Which revision? Are dependencies installed? Does the test command need a service that is unavailable in this environment? Can the agent write only to its checkout, or also to shared data?\n\nIf these details are left implicit, the investigation begins with setup surprises. Worse, the agent may mistake a broken test environment for evidence about the application."
+          },
+          {
+            "kind": "example",
+            "title": "An agent is asked to fix a failing service in a fresh checkout.",
+            "problem": "An agent is asked to fix a failing service in a fresh checkout.",
+            "steps": [
+              {
+                "title": "Probe first",
+                "body": "Check the revision, runtime, dependency install, service stubs, test command and writable directories before editing.",
+                "reason": "The agent knows whether later evidence will be trustworthy.",
+                "trap": "Starting implementation and discovering halfway through that the test service is unavailable."
+              },
+              {
+                "title": "Keep the change contained",
+                "body": "Work on a branch with read-only external access, then produce a diff and test report for review.",
+                "reason": "The task remains reversible and inspectable.",
+                "trap": "Giving the agent production credentials to avoid a local setup step."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Write the environment contract",
+            "body": "Record the revision, runtime, package manager, required services, test commands, network assumptions, secrets policy and writable paths. Make the contract executable where possible: a setup check should report which prerequisite is missing rather than letting the agent discover it halfway through a change."
+          },
+          {
+            "kind": "question",
+            "bridge": "Access is a capability, not a guarantee of usable evidence.",
+            "meaning": "The agent must know what it is looking at, what it can run and which actions are permitted.",
+            "question": "An agent can read the repository but cannot install dependencies or run tests. Is the environment ready?",
+            "answer": "No. It has source access but not a complete verification path. The missing capability should be surfaced before implementation begins.",
+            "further": [
+              {
+                "question": "Why record the revision?",
+                "answer": "A result tied to an unknown or moving revision is hard to reproduce and may describe code nobody is reviewing."
+              },
+              {
+                "question": "What should a setup check do?",
+                "answer": "Report prerequisites and fail clearly before the agent spends time on an investigation it cannot complete."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Constrain the blast radius",
+            "body": "Use the narrowest permissions and network access that allow the task. Keep changes reversible through branches, worktrees or patches. Separate credentials for reading from credentials for publishing, and make destructive actions require an explicit boundary. A reproducible workplace is also a safer workplace."
+          },
+          {
+            "kind": "question",
+            "bridge": "The same environment that enables progress can also enable damaging actions.",
+            "meaning": "Least privilege, reversibility and explicit publish boundaries turn autonomy into a controlled capability.",
+            "question": "Why separate read credentials from publish credentials?",
+            "answer": "Most investigations need to inspect more than they need to release. Separating them limits the consequences of a mistaken or compromised action.",
+            "further": [
+              {
+                "question": "Why use a worktree or branch?",
+                "answer": "It isolates changes, makes review straightforward and provides a clear path to discard or compare the result."
+              },
+              {
+                "question": "What belongs behind an approval boundary?",
+                "answer": "Actions with external, destructive or irreversible effects, such as publishing, deleting data or changing production configuration."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Treat the environment as part of the task: make prerequisites visible, permissions narrow and changes reversible.",
+            "nextConnection": "Some tasks fit one short loop; others span hours or days. The next lesson shows how to keep long-horizon work moving without confusing elapsed time for progress."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Define an environment contract covering identity, tools, state, permissions, network and verification. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "A promising operating mode still needs a workplace. The next lesson turns the abstract idea of repository access into a concrete environment contract. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Some tasks fit one short loop; others span hours or days. The next lesson shows how to keep long-horizon work moving without confusing elapsed time for progress. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Compare agentic setups by the work they support, the evidence they expose and the control they retain.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Define an environment contract covering identity, tools, state, permissions, network and verification."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "A capability choice is a fit problem between task requirements, evidence needs, cost, and operational constraints. Agent reliability is a property of the model, environment, tools, permissions, and verification together.",
+              "invariant": "A named model or product is not a complete experimental treatment; configuration and task distribution matter. The environment presented during evaluation must match the environment in which the result will be accepted.",
+              "limitingCase": "For a task with no meaningful quality difference, the cheapest adequate capability dominates. A fully deterministic fixture removes environmental variance but cannot establish production robustness by itself.",
+              "counterexample": "A benchmark winner can lose on the team's actual workload because its measured distribution is different. A workflow that succeeds in a clean fixture can fail in a repository with generated files, permissions, or stale state.",
+              "validity": "Capability comparisons are local claims about a defined workload, not permanent universal rankings. Environment controls bound reproducibility; they do not make an unverified claim trustworthy."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-economics-check-1",
+      "prompt": "What is the useful denominator?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Accepted outcomes"
+          },
+          {
+            "id": "1",
+            "label": "Tokens generated"
+          },
+          {
+            "id": "2",
+            "label": "Number of prompts"
+          }
+        ]
+      },
+      "solution": "Economics should follow useful work.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "verification"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Choose a model, harness and workflow against the evidence and control your real work requires."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Treat the environment as part of the task: make prerequisites visible, permissions narrow and changes reversible."
+      }
+    ],
+    "steps": [
+      {
+        "id": "landscape-apply",
+        "prompt": "Why score control?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "It makes failures reversible and inspectable"
+            },
+            {
+              "id": "1",
+              "label": "It increases token count"
+            },
+            {
+              "id": "2",
+              "label": "It hides uncertainty"
+            }
+          ]
+        },
+        "solution": "Control is part of usefulness when work can change real systems.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "environment-apply",
+        "prompt": "Why pin a revision?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "To make the result reproducible"
+            },
+            {
+              "id": "1",
+              "label": "To prevent all editing"
+            },
+            {
+              "id": "2",
+              "label": "To increase latency"
+            }
+          ]
+        },
+        "solution": "A known revision anchors the investigation.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "landscape-check-1",
+      "prompt": "Which layer supplies inference?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "The model"
+          },
+          {
+            "id": "1",
+            "label": "The harness"
+          },
+          {
+            "id": "2",
+            "label": "The review policy"
+          }
+        ]
+      },
+      "solution": "Inference is one layer of an agentic setup.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "landscape-check-2",
+      "prompt": "What is the fairest comparison?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "A feature checklist"
+          },
+          {
+            "id": "1",
+            "label": "A representative task with evidence"
+          },
+          {
+            "id": "2",
+            "label": "A marketing demo"
+          }
+        ]
+      },
+      "solution": "Task-relative evidence reveals the trade-offs that matter.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "environment-check-1",
+      "prompt": "Which belongs in an environment contract?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only the repository URL"
+          },
+          {
+            "id": "1",
+            "label": "Revision, tools, permissions and verification"
+          },
+          {
+            "id": "2",
+            "label": "The agent's favourite font"
+          }
+        ]
+      },
+      "solution": "A workplace contract describes the conditions that make evidence trustworthy.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "environment-check-2",
+      "prompt": "What does least privilege reduce?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The number of tests"
+          },
+          {
+            "id": "1",
+            "label": "The blast radius of a mistake"
+          },
+          {
+            "id": "2",
+            "label": "The need for a task"
+          }
+        ]
+      },
+      "solution": "Capabilities should match the work, not exceed it by default.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "GitHub: Copilot cloud agent",
+      "url": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+    },
+    {
+      "title": "Official Codex documentation",
+      "url": "https://learn.chatgpt.com/docs"
+    },
+    {
+      "title": "Anthropic: Claude Code overview",
+      "url": "https://code.claude.com/docs/en/overview"
+    },
+    {
+      "title": "Google: Gemini CLI documentation",
+      "url": "https://geminicli.com/docs/"
+    },
+    {
+      "title": "Codex: security boundaries",
+      "url": "https://learn.chatgpt.com/docs/security"
+    }
+  ],
+  "heading": "Are you choosing a model, a harness or a way of working?",
+  "lead": "Compare agentic setups by the work they support, the evidence they expose and the control they retain. Define an environment contract covering identity, tools, state, permissions, network and verification.",
+  "outcomes": [
+    "Compare agentic setups by the work they support, the evidence they expose and the control they retain.",
+    "Define an environment contract covering identity, tools, state, permissions, network and verification."
+  ]
+}

@@ -157,8 +157,8 @@ export default function FadedExercise({
     <div>
       <MathText>{exercise.prompt}</MathText>
       <div className="supplied">
-        {exercise.supplied.map((s) => (
-          <div key={s.heading}>
+        {exercise.supplied.map((s, index) => (
+          <div key={`${s.heading}-${index}`}>
             <h4>{s.heading}</h4>
             <MathText>{s.body}</MathText>
           </div>

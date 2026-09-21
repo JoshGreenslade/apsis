@@ -1,0 +1,384 @@
+{
+  "id": "tiny-harness",
+  "title": "Build a tiny harness, one responsibility at a time",
+  "description": "Assemble a minimal agent loop with explicit state, tools, checks, limits and a human-readable result.",
+  "domain": "Agentic engineering",
+  "unit": "14 · Build it",
+  "prerequisites": ["coordination"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "tiny-harness--tiny-harness",
+        "title": "Build a tiny harness, one responsibility at a time",
+        "navLabel": "Build a tiny harness, one responsibility at a time",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A small harness is a laboratory, not a miniature platform. Its value is that every part can be seen: the task enters, context is assembled, the agent chooses a tool, the result is observed, a check runs and the loop either continues or stops. Building this small version makes the contracts in the earlier units concrete."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Open the runnable companion",
+            "body": "The [harness lab guide](/agent-labs/README.md) contains the commands and nine extension milestones. Keep it beside this lesson. Its scripted model is a test double for the harness, so successful offline runs do not measure a real model's reasoning."
+          },
+          {
+            "kind": "content",
+            "title": "Watch a failed test become an observation",
+            "body": "Run the normal demo in the lab kit. The fixture has an off-by-one retry limit. Its first test fails; the scripted model reads the implementation, changes the comparison and asks to finish. Follow the trace and match each observation to the call that produced it.\n\nNow run the false-success demo. The model asks to finish before repairing the fixture. The harness must check the workspace as it exists at that moment and return unverified. A passing test from before the final write would be stale evidence. This is the responsibility you are implementing in v1–v3: execute the allowed requests, return their actual results, and distinguish verified completion from a stop caused by a limit."
+          },
+          {
+            "kind": "question",
+            "bridge": "The first implementation should make the loop visible before it makes the loop clever.",
+            "meaning": "Explicit state and narrow responsibilities give each later control somewhere to live.",
+            "question": "What is the minimum useful harness loop?",
+            "answer": "Load a bounded task and context, choose from a small tool set, observe the result, verify the requested outcome and stop with a traceable result.",
+            "further": [
+              {
+                "question": "Why keep state explicit?",
+                "answer": "It makes resumption, debugging and review possible without treating the transcript as hidden program state."
+              },
+              {
+                "question": "Why start with one task?",
+                "answer": "A narrow task exposes the contracts without adding orchestration complexity before the basic loop is trustworthy."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "Build a harness for the retry incident.",
+            "problem": "Build a harness for the retry incident.",
+            "steps": [
+              {
+                "title": "Make the state visible",
+                "body": "Represent task, revision, context bundle, observations, next question, tool budget and status as explicit fields.",
+                "reason": "The run can be inspected and resumed.",
+                "trap": "Keeping all progress in an unstructured assistant message."
+              },
+              {
+                "title": "Close the loop",
+                "body": "Expose read_file and run_test, log calls, cap output, run the focused test and emit a diff plus evidence report.",
+                "reason": "The harness produces a bounded, reviewable outcome.",
+                "trap": "Adding a dozen tools before the first verification path works."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Make a restart expose your assumptions",
+            "body": "For v4–v7, generate a long log, keep the useful failure in context and store the rest as a recoverable artifact. Compact the history into a checkpoint, restart the process, and see whether the next action still follows from the evidence. Change the fixture between saving and resuming: the identity check should detect that the old state no longer describes the workspace.\n\nThe last two milestones add a read-only worker and an event controller. Give the worker a question it could answer with disagreement, then inject a timeout and a report with no evidence. Deliver the same event twice and verify that the controller does not create two independent jobs. These experiments reveal which layer owns each failure; the reference core deliberately leaves these extensions for you to build."
+          },
+          {
+            "kind": "question",
+            "bridge": "Every new capability should answer a failure or evidence need you can name.",
+            "meaning": "Controls become meaningful when they are tied to observable behaviour.",
+            "question": "What should be tested before calling a tiny harness trustworthy?",
+            "answer": "Valid and invalid tool inputs, denied actions, timeouts, bounded retries, checkpoint recovery and verification of the final result.",
+            "further": [
+              {
+                "question": "Why log tool calls?",
+                "answer": "A trace connects the final result to the actions and evidence that produced it."
+              },
+              {
+                "question": "What should happen when verification fails?",
+                "answer": "Stop or escalate with the state and evidence preserved; do not report a successful task because the agent produced a plausible explanation."
+              }
+            ]
+          },
+          {
+            "kind": "lab",
+            "data": {
+              "title": "Lab 9 · Extend the tiny harness through v1–v9",
+              "minutes": 120,
+              "brief": "Download [the lab kit](/agent-labs/agent-labs.zip) or use public/agent-labs in the source checkout. The [lab guide](/agent-labs/README.md) provides commands, extension milestones and failure cases. Work in a disposable directory with Node.js 24 or newer.",
+              "steps": [
+                "Run node --test harness.test.mjs, node demo.mjs, node demo.mjs false-success and node demo.mjs exhausted. Inspect the trace, tool policy and final verification gate.",
+                "Rebuild the core loop in your own words or code, then implement v1–v3: one named action, file reads and writes, and explicit stop, timeout and verification behaviour.",
+                "Implement v4–v7: context selection, compaction, persistent resume with workspace identity checks, and a hypothesis ledger that separates observations from explanations.",
+                "Implement v8–v9: a read-only worker with a bounded return schema and an outer controller that classifies events, deduplicates event IDs and routes results to review.",
+                "Optionally connect a live model through a provider adapter. Record its model and adapter versions and keep offline harness tests separate from live-agent evaluation."
+              ],
+              "deliverables": [
+                "A working loop and inspectable trace",
+                "Nine milestone notes, each naming the code that owns the new responsibility",
+                "Evidence for traversal rejection, false-success rejection, exhaustion, resume, worker failure and duplicate-event handling"
+              ],
+              "review": "A complete submission can explain every transition. The lab's scriptedModel is a deterministic test double: it validates harness execution, not a real model's reasoning. Compaction must preserve constraints and evidence pointers; resume must check workspace identity; the worker must have a bounded contract; and the outer controller must not process the same event twice. Use only the disposable fixture unless you have added stronger isolation."
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "Build the smallest visible loop, then add tools, state, controls and verification only where the evidence demands them.",
+            "nextConnection": "A working harness is not the finish line. Graduation means deciding where it belongs, what it may do and how you will know it remains worth keeping."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Assemble a minimal agent loop with explicit state, tools, checks, limits and a human-readable result. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "A working harness is not the finish line. Graduation means deciding where it belongs, what it may do and how you will know it remains worth keeping. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Assemble a minimal agent loop with explicit state, tools, checks, limits and a human-readable result.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it"
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "A harness turns model requests into bounded execution, observations, state transitions, and verified completion.",
+              "invariant": "Every action is attributable, every authority is bounded, and every final claim is checked against the final workspace.",
+              "limitingCase": "Without a real tool effect, the loop is a simulation and cannot establish execution reliability.",
+              "counterexample": "A model's request to finish immediately after a write is not evidence that the acceptance test now passes.",
+              "validity": "The fixture demonstrates harness behaviour, not the reasoning quality or production reliability of a live model."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-when-not-multi-check-1",
+      "prompt": "When should one agent usually win?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Many independent investigations"
+          },
+          {
+            "id": "1",
+            "label": "Tightly coupled, small work"
+          },
+          {
+            "id": "2",
+            "label": "A need for adversarial review"
+          }
+        ]
+      },
+      "solution": "Coherence can outweigh parallelism.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "coordination"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Build the smallest visible loop, then add tools, state, controls and verification only where the evidence demands them."
+      }
+    ],
+    "steps": [
+      {
+        "id": "tiny-harness-apply",
+        "prompt": "Why add capabilities one at a time?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "To connect each control to a real need"
+            },
+            {
+              "id": "1",
+              "label": "To avoid all testing"
+            },
+            {
+              "id": "2",
+              "label": "To maximize configuration"
+            }
+          ]
+        },
+        "solution": "Incremental construction keeps the trust contract legible.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "tiny-harness-check-1",
+      "prompt": "What should a tiny harness make explicit?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Task state and stopping condition"
+          },
+          {
+            "id": "1",
+            "label": "Only the model name"
+          },
+          {
+            "id": "2",
+            "label": "An unlimited prompt"
+          }
+        ]
+      },
+      "solution": "Explicit state is the foundation of observation and recovery.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "tiny-harness-check-2",
+      "prompt": "What should happen when verification fails?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Report success anyway"
+          },
+          {
+            "id": "1",
+            "label": "Preserve state and stop or escalate"
+          },
+          {
+            "id": "2",
+            "label": "Delete the trace"
+          }
+        ]
+      },
+      "solution": "Failure is useful when it remains visible and actionable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "tiny-harness-check-extra-1",
+      "prompt": "What should a run trace connect?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Actions, observations and the final result"
+          },
+          {
+            "id": "1",
+            "label": "Only the model name"
+          },
+          {
+            "id": "2",
+            "label": "Unrelated history"
+          }
+        ]
+      },
+      "solution": "A trace makes the result inspectable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "tiny-harness-check-extra-2",
+      "prompt": "What is a safe first tool set?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A few typed, bounded tools"
+          },
+          {
+            "id": "1",
+            "label": "Unrestricted shell and production access"
+          },
+          {
+            "id": "2",
+            "label": "No observable tools"
+          }
+        ]
+      },
+      "solution": "The first loop should limit effects while exposing the contract.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "tiny-harness-check-extra-3",
+      "prompt": "What should a checkpoint preserve?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "State, evidence and the next decision"
+          },
+          {
+            "id": "1",
+            "label": "Only a success message"
+          },
+          {
+            "id": "2",
+            "label": "Every token without structure"
+          }
+        ]
+      },
+      "solution": "Resumption needs actionable state rather than a raw transcript.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "MCP: architecture",
+      "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    }
+  ],
+  "heading": "What is the smallest harness that can produce trustworthy progress?",
+  "lead": "Assemble a minimal agent loop with explicit state, tools, checks, limits and a human-readable result.",
+  "outcomes": [
+    "Assemble a minimal agent loop with explicit state, tools, checks, limits and a human-readable result."
+  ]
+}

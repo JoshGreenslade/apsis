@@ -1,0 +1,695 @@
+{
+  "id": "least-squares",
+  "diagnostics": [
+    {
+      "id": "d-null",
+      "prompt": "If A times a nonzero parameter change is zero, what does that change do?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Changes every prediction"
+          },
+          {
+            "id": "1",
+            "label": "Leaves all predictions unchanged"
+          },
+          {
+            "id": "2",
+            "label": "Forces all observations to zero"
+          }
+        ]
+      },
+      "solution": "A nullspace direction is invisible in the outputs.",
+      "hint": "Recall the kernel of a linear map.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the kernel of a linear map.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "linear-maps"
+    },
+    {
+      "id": "d-var",
+      "prompt": "Independent errors each have variance 1. Find the variance of their sum. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Independent variances add: 1+1=2.",
+      "hint": "The covariance term vanishes.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "probability"
+    },
+    {
+      "id": "d-gauss",
+      "prompt": "For Gaussian noise with fixed variance, which residual has the higher probability density?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "The one with larger squared magnitude"
+          },
+          {
+            "id": "1",
+            "label": "Both always have equal density"
+          },
+          {
+            "id": "2",
+            "label": "The one with smaller squared magnitude"
+          }
+        ]
+      },
+      "solution": "The exponent is negative residual squared divided by twice the variance.",
+      "hint": "Inspect the sign in the Gaussian exponent.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Inspect the sign in the Gaussian exponent.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "gaussian"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "At dimensionless inputs −1, 0, 1, dimensionless readings are 2, 2, 5. Fit a+bt using equal weights.",
+    "supplied": [
+      {
+        "heading": "Model geometry",
+        "body": "The intercept column has squared length 3; the slope column has squared length 2; they are perpendicular."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-a",
+        "prompt": "Find the fitted intercept. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The data sum is 9, so the intercept is 9/3=3.",
+        "hint": "Project onto the constant column.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-b",
+        "prompt": "Find the fitted slope. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1.5,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The slope numerator is −2+5=3, divided by 2.",
+        "hint": "Dot the readings with (−1,0,1).",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-centre",
+        "prompt": "For the fit a=3, b=1.5, find the residual at t=0. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": -1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Observed minus predicted is 2−3=−1.",
+        "hint": "The intercept is the central prediction.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-rss",
+        "prompt": "Residuals are (0.5,−1,0.5). Find their squared sum. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1.5,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "0.25+1+0.25=1.5.",
+        "hint": "Square before adding.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-check",
+        "prompt": "Which fact verifies optimality of these residuals?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "They are perpendicular to both model columns"
+            },
+            {
+              "id": "1",
+              "label": "They all have the same sign"
+            },
+            {
+              "id": "2",
+              "label": "Their largest magnitude is below two"
+            }
+          ]
+        },
+        "solution": "Both permitted model adjustments are perpendicular to the remaining error.",
+        "hint": "Use the model plane geometry.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Use the model plane geometry.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-weight",
+      "prompt": "Two independent readings have standard deviations 1 and 2. Find the first reading's precision weight divided by the second's. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 4,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Inverse variances are 1 and 1/4, so the ratio is 4.",
+      "hint": "Weights use variance, not standard deviation.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-rank",
+      "prompt": "All inputs equal 2 in the model a+bt. What is identifiable?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Both a and b separately"
+          },
+          {
+            "id": "1",
+            "label": "Only a"
+          },
+          {
+            "id": "2",
+            "label": "Only the combination a+2b"
+          }
+        ]
+      },
+      "solution": "Every prediction equals the same combination a+2b.",
+      "hint": "Write one row of the design matrix.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Write one row of the design matrix.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-spread",
+      "prompt": "The input spread is halved with noise unchanged in the symmetric three-point experiment. By what factor does slope variance increase? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 4,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Variance scales as inverse spread squared.",
+      "hint": "Square the factor of two.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-correlated",
+      "prompt": "Two sensors share a fluctuating offset. Why avoid treating their errors as independent?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Their agreement may reflect a shared error"
+          },
+          {
+            "id": "1",
+            "label": "Least squares requires exactly three sensors"
+          },
+          {
+            "id": "2",
+            "label": "Correlated noise always has zero variance"
+          }
+        ]
+      },
+      "solution": "Shared error can move both readings together without adding independent information.",
+      "hint": "Separate repeated information from independent information.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate repeated information from independent information.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-ridge",
+      "prompt": "In the example AᵀA=diag(3,2), Aᵀy=(7,3), use penalty λ=1 on both scaled parameters. Find the regularised slope. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 1,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The slope is 3/(2+1)=1.",
+      "hint": "Add λ to the slope's diagonal coefficient.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-bias",
+      "prompt": "A penalty makes a rank-deficient fit unique. Where did the extra selection come from?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "New experimental observations"
+          },
+          {
+            "id": "1",
+            "label": "The modelling preference encoded by the penalty"
+          },
+          {
+            "id": "2",
+            "label": "A proof that noise vanished"
+          }
+        ]
+      },
+      "solution": "Regularisation selects among data-compatible possibilities using an added assumption.",
+      "hint": "Uniqueness and information are different questions.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Uniqueness and information are different questions.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-residual",
+      "prompt": "A small training residual establishes which claim?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "The law is physically exact"
+          },
+          {
+            "id": "1",
+            "label": "Extrapolation is guaranteed"
+          },
+          {
+            "id": "2",
+            "label": "The model agrees with these observations under the chosen loss"
+          }
+        ]
+      },
+      "solution": "Fit quality at sampled inputs is narrower than a claim about the underlying law.",
+      "hint": "Keep the conclusion within what was measured.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Keep the conclusion within what was measured.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Linear Algebra",
+      "url": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/"
+    },
+    {
+      "title": "MIT OpenCourseWare · Introduction to Probability and Statistics",
+      "url": "https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/"
+    }
+  ],
+  "title": "Bring ideas together: least squares and inverse problems",
+  "description": "Reconstruct model parameters through projection while diagnosing missing information, sensitivity and uncertainty.",
+  "domain": "Mathematics for physics",
+  "unit": "09 · Responses and uncertainty",
+  "prerequisites": ["linear-maps", "probability", "gaussian"],
+  "minutes": 90,
+  "heading": "What does fitting a line actually learn, and which parts of the answer come from assumptions?",
+  "lead": "A concrete fit brings together projection, Gaussian likelihood, covariance, nullspaces and sensitivity.",
+  "outcomes": [
+    "Derive a fit from perpendicular residuals.",
+    "Explain how noise covariance changes the fitting geometry.",
+    "Distinguish missing information, weak information and regularisation bias."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Suppose a sensor gives three readings while a quantity is expected to vary linearly with a controlled input. Two parameters can draw a line through two readings, but three noisy readings usually disagree. We need a rule for choosing a line, and we need to understand what the rule assumes.\n\nPlotting a line through points is familiar. A more revealing picture places the entire list of readings in one vector. Every possible line predicts another vector. Those possible prediction vectors form a plane inside the three-dimensional space of readings. Fitting will mean finding the nearest point on that plane.\n\nWe will build that picture with exact numbers, derive the fitting equations from perpendicularity, and connect them to Gaussian noise. Then we will examine two failures that a successful calculation can conceal: different parameters may describe the same predictions, or almost the same predictions. These are questions about information, not merely about an algorithm's accuracy."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "What does fitting a line actually learn, and which parts of the answer come from assumptions?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "A concrete fit brings together projection, Gaussian likelihood, covariance, nullspaces and sensitivity."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Derive a fit from perpendicular residuals.",
+              "Explain how noise covariance changes the fitting geometry.",
+              "Distinguish missing information, weak information and regularisation bias."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Should a sensor reading with ten times greater uncertainty influence a fit as strongly?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If every measurement uses the same input value, can more readings determine both slope and intercept?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Projection in reading space",
+              "caption": "A two-dimensional slice shows data y, its fitted prediction p in the model subspace, and the perpendicular residual. The actual three-reading model subspace is a plane.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [70, 255],
+                  "to": [520, 255],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [70, 255],
+                  "to": [350, 70],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [70, 255],
+                  "to": [350, 255],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [350, 255],
+                  "to": [350, 70],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [334, 255],
+                  "to": [334, 239],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [334, 239],
+                  "to": [350, 239],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "point",
+                  "at": [350, 70],
+                  "label": "data y",
+                  "tone": "ink",
+                  "labelOffset": [12, 0]
+                },
+                {
+                  "kind": "point",
+                  "at": [350, 255],
+                  "label": "prediction p",
+                  "tone": "accent",
+                  "labelOffset": [-30, 25]
+                },
+                {
+                  "kind": "label",
+                  "at": [366, 167],
+                  "text": "residual y − p"
+                },
+                {
+                  "kind": "label",
+                  "at": [85, 235],
+                  "text": "model direction"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. A model is a subspace of possible predictions",
+            "body": "Consider dimensionless inputs $t=-1,0,1$ and readings $\\mathbf y=(1,2,4)^T$, expressed in a common chosen measurement unit. Our model is $y(t)\\approx a+bt$. The parameters $a$ and $b$ specify a prediction, not an exact explanation of each noisy observation. Collecting predictions gives\n$$A\\boldsymbol\\theta=\n\\begin{pmatrix}1&-1\\\\1&0\\\\1&1\\end{pmatrix}\n\\begin{pmatrix}a\\\\b\\end{pmatrix},\\qquad\n\\boldsymbol\\theta=(a,b)^T.$$\nThe first column changes all readings equally when the intercept changes. The second tilts the predictions in opposite directions at the two endpoints. Every prediction is a linear combination of these columns, so the possible predictions form the column space of $A$: a plane through the origin in reading space. Although a plotted line need not pass through the origin, this space of prediction vectors does. The two pictures use different axes.\n\nDefine the residual $\\mathbf r=\\mathbf y-A\\boldsymbol\\theta$. Ordinary least squares chooses the parameters that minimise $\\|\\mathbf r\\|^2$, the sum of squared discrepancies. Squaring makes discrepancies of either sign contribute positively and weights larger discrepancies more strongly. It is a modelling choice; other losses are possible when the noise or purpose differs.\n\nAt the nearest prediction, the residual is perpendicular to every direction along the prediction plane. Otherwise moving slightly in the direction of the residual's projection would shorten the distance. In particular it is perpendicular to each column, giving\n$$A^T(\\mathbf y-A\\boldsymbol\\theta)=0,\n\\qquad A^TA\\boldsymbol\\theta=A^T\\mathbf y.$$\nThese are the normal equations: “normal” means perpendicular here. They arise from geometry before probability enters.\n\nThe prediction vector is unique because orthogonal projection onto a subspace is unique. Parameters need not be unique: different parameter vectors can map to the same prediction if $A$ has a nonzero nullspace. Separating prediction from parameter is crucial. The observations constrain what the model outputs, and only indirectly constrain the coordinates used to describe it."
+          },
+          {
+            "kind": "question",
+            "bridge": "Put entire sets of predictions into a vector space.",
+            "meaning": "Columns describe the changes that the model can express.",
+            "question": "Why is the best residual perpendicular to every column?",
+            "answer": "A component along a column would allow a small model adjustment that reduces its length.",
+            "further": [
+              {
+                "question": "What are the coordinates of reading space?",
+                "answer": "One coordinate for each observation, rather than slope and intercept."
+              },
+              {
+                "question": "Must the parameters be unique?",
+                "answer": "Only when the design matrix has no parameter nullspace."
+              },
+              {
+                "question": "Is squared loss compulsory?",
+                "answer": "No. It is one choice, with specific geometric and statistical advantages."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. Solve one fit and learn what the residual says",
+            "body": "For the three readings above, the columns $(1,1,1)^T$ and $(-1,0,1)^T$ are perpendicular. Their squared lengths are 3 and 2, respectively. Thus $A^TA$ is diagonal with entries 3 and 2. Also $A^T\\mathbf y=(7,3)^T$, so the fitted intercept and slope are\n$$a=7/3,\\qquad b=3/2.$$\nThis is exactly how Fourier coefficients are obtained: take an inner product with a basis direction and divide by that direction's squared length. The directions happen to describe offsets and slopes rather than sines and cosines.\n\nThe fitted vector is $(5/6,7/3,23/6)^T$. Subtracting it from the observations gives $\\mathbf r=(1/6,-1/3,1/6)^T$. Check both perpendicularity conditions explicitly: the residual components sum to zero, and their input-weighted sum is $-1/6+1/6=0$. The first condition is a consequence of including an intercept; it is not a universal property of every fit. The residual sum of squares is $1/6$.\n\nPythagoras now gives a useful interpretation. For any other model prediction $A\\boldsymbol\\eta$, the displacement from the fitted prediction lies in the column space and is perpendicular to $\\mathbf r$. Therefore\n$$\\|\\mathbf y-A\\boldsymbol\\eta\\|^2\n=\\|\\mathbf r\\|^2+\\|A\\boldsymbol\\theta-A\\boldsymbol\\eta\\|^2.$$\nNo alternative parameters can reduce the first term by cancelling it: the directions are perpendicular. This proves the fitted prediction is optimal without a long expansion of a quadratic polynomial.\n\nA small residual does not prove the model is physically right. Three readings offer little evidence about curvature, and an excellent interpolation says little about extrapolation. The residual records discrepancy at measured inputs. Testing a physical model also requires examining systematic residual patterns, repeating measurements, and asking whether the chosen input range distinguishes plausible alternatives.\n\nThe equations are an excellent explanation but not always the best numerical algorithm. Forming $A^TA$ squares the condition number when $A$ has full column rank. QR factorisation instead builds orthonormal directions in the column space, and singular-value decomposition reveals weak directions explicitly. Both implement the same projection while avoiding unnecessary numerical damage."
+          },
+          {
+            "kind": "question",
+            "bridge": "Check the fit using exact residuals.",
+            "meaning": "Perpendicularity explains both the normal equations and optimality.",
+            "question": "Why do residuals sum to zero in this example?",
+            "answer": "They are perpendicular to the constant column supplied by the intercept.",
+            "further": [
+              {
+                "question": "How does Fourier analysis enter?",
+                "answer": "Coefficients along orthogonal columns are inner products divided by squared lengths, as for Fourier modes."
+              },
+              {
+                "question": "What does a small residual establish?",
+                "answer": "Agreement at the sampled inputs under the chosen loss, not physical correctness everywhere."
+              },
+              {
+                "question": "Why use QR rather than directly forming normal equations?",
+                "answer": "It computes the same projection without squaring the condition number."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Gaussian uncertainty chooses a weighted geometry",
+            "body": "Now add a statistical assumption: $\\mathbf y=A\\boldsymbol\\theta_*+\\boldsymbol\\epsilon$, where the errors have mean zero, and initially suppose they are independent Gaussians with a common known variance $\\sigma^2$. The joint density is proportional to $\\exp[-\\|\\mathbf y-A\\boldsymbol\\theta_*\\|^2/(2\\sigma^2)]$. Maximising likelihood therefore minimises the squared residual. Geometry and probability have arrived at the same fit, but probability required explicit assumptions.\n\nIf independent readings have different known variances $\\sigma_i^2$, the exponent becomes $-\\tfrac12\\sum_i r_i^2/\\sigma_i^2$. A discrepancy of one unit means less at a noisy sensor than at a precise one. Each residual is measured in its own standard deviations. Precision weights are inverse variances, not inverse standard deviations.\n\nCorrelated errors require more care. Let their known covariance matrix be the positive-definite matrix $\\Sigma$, whose entry $\\Sigma_{ij}$ is the expectation of the product of errors $i$ and $j$. The Gaussian likelihood minimises\n$$\\mathbf r^T\\Sigma^{-1}\\mathbf r.$$\nThis expression defines a new inner product in reading space. The corresponding normal equations are $A^T\\Sigma^{-1}A\\boldsymbol\\theta=A^T\\Sigma^{-1}\\mathbf y$. Residuals are perpendicular to the model space in this weighted geometry, though they need not be perpendicular in the ordinary dot product.\n\nFor intuition, imagine two sensors sharing a fluctuating calibration offset. Agreement between them is not two independent confirmations: both can move together because of the same error. A covariance matrix accounts for those shared directions. Equivalently, transform the readings and model by a matrix $W$ satisfying $W\\Sigma W^T=I$. The transformed noise has unit covariance, and ordinary least squares on $W\\mathbf y$ and $WA$ reproduces the weighted solution. This transformation is called whitening.\n\nWhen the linear model and stated noise assumptions hold and $A$ has full column rank, the parameter covariance is $(A^T\\Sigma^{-1}A)^{-1}$. It measures how repeated noisy experiments scatter the fitted parameters. It does not include uncertainty from choosing the wrong model. For equal independent variance in our symmetric example, the intercept variance is $\\sigma^2/3$ and the slope variance is $\\sigma^2/2$. The experimental geometry determines how noise becomes parameter uncertainty."
+          },
+          {
+            "kind": "question",
+            "bridge": "Measure discrepancy relative to noise.",
+            "meaning": "Covariance defines which reading-space directions are trustworthy.",
+            "question": "Why weight by inverse variance?",
+            "answer": "The Gaussian exponent contains residual squared divided by variance.",
+            "further": [
+              {
+                "question": "Why are correlated readings not independent confirmations?",
+                "answer": "They can share one fluctuating error source."
+              },
+              {
+                "question": "What does whitening accomplish?",
+                "answer": "It transforms a positive-definite covariance to the identity, making the weighted fit an ordinary projection."
+              },
+              {
+                "question": "Does parameter covariance cover model error?",
+                "answer": "No. The stated formula assumes the linear model and noise covariance are correct."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "4. Missing information, weak information and deliberate bias",
+            "body": "Suppose all observations are taken at $t=1$. Both columns of the design matrix are then identical. The predictions depend only on $a+b$, so changing parameters by $(\\delta,-\\delta)$ changes no prediction. This is rank deficiency: a whole direction in parameter space is invisible to the experiment. More readings at the same input can estimate the sum more precisely but cannot separate the two parameters.\n\nNow place observations at $t=1-\\delta,1,1+\\delta$ for a small nonzero $\\delta$. The parameters are mathematically identifiable, but slope is inferred from tiny differences. In centred coordinates $u=t-1$, the model is $c+bu$ with $c=a+b$. The slope estimate is $(y_+-y_-)/(2\\delta)$. For independent noise of variance $\\sigma^2$, its variance is $\\sigma^2/(2\\delta^2)$. Halving the input spread quadruples slope variance. This is weak information, expressed as ill-conditioning, rather than exact missing information.\n\nChanging coordinates from $a$ to $c$ makes the reasoning cleaner but does not create new information about slope. Nor should a huge condition number caused merely by inconsistent units automatically be interpreted as a bad experiment: scale the parameter coordinates sensibly before interpreting numerical sensitivity. The relevant physical question is which changes in the parameters produce predictions distinguishable from noise.\n\nRegularisation adds a preference. In scaled coordinates, one example minimises $\\|\\mathbf y-A\\boldsymbol\\theta\\|^2+\\lambda\\|\\boldsymbol\\theta\\|^2$ with $\\lambda>0$. Its equations are $(A^TA+\\lambda I)\\boldsymbol\\theta=A^T\\mathbf y$. The penalty makes weak directions costly and gives a unique answer even in some rank-deficient problems. But that uniqueness comes partly from the imposed preference for small parameters, not from the data.\n\nFor our diagonal example it changes the estimates to $a=7/(3+\\lambda)$ and $b=3/(2+\\lambda)$. Both shrink toward zero. If the true parameters are nonzero, this introduces bias: averaging many repeated fits will generally not return the true parameters. Reduced variance may make that trade useful, but it must be described honestly. A different penalty can spare the intercept or favour smoothness instead. Units, scaling and the meaning of the preferred model must be chosen explicitly; regularisation is a modelling assumption written as a quadratic form."
+          },
+          {
+            "kind": "question",
+            "bridge": "Look for parameter directions the experiment barely sees.",
+            "meaning": "A unique numerical answer can depend on a modelling preference.",
+            "question": "Can repeated measurements at one input determine both slope and intercept?",
+            "answer": "No. They constrain only one combination of the parameters.",
+            "further": [
+              {
+                "question": "What happens when the input spread is halved?",
+                "answer": "In the symmetric three-point design with fixed independent noise, slope variance grows by four."
+              },
+              {
+                "question": "What does regularisation add?",
+                "answer": "A preference such as small scaled parameters or smooth predictions."
+              },
+              {
+                "question": "Why can regularisation be biased?",
+                "answer": "The penalty systematically pulls estimates toward its preferred values, even across repeated experiments."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The residual has its own dimension",
+            "body": "With $n$ readings and $p$ linearly independent model columns, the model subspace has dimension $p$ and its orthogonal complement has dimension $n-p$. In our example, $n-p=1$: after fitting two parameters, the remaining discrepancy lies along one direction. Indeed $(1,-2,1)$ is perpendicular to both model columns, and our residual is one sixth of that vector.\n\nSuppose the model is correct and independent Gaussian noise has unknown common variance $\\sigma^2$. Rotate observation space into orthonormal model and residual directions. The spherical Gaussian has the same variance along every direction. Projection removes the $p$ model components, leaving $n-p$ independent squared noise components. Consequently the expected residual sum of squares is $(n-p)\\sigma^2$, which explains the unbiased variance estimate $s^2=\\mathrm{RSS}/(n-p)$.\n\nThis division is not a correction to the fitted line. It estimates the underlying noise variance after accounting for directions spent fitting parameters. With our three readings it gives $s^2=1/6$, but it rests on only one residual direction and is consequently very uncertain. If the true signal is curved, the residual can also contain model mismatch and this interpretation breaks down. “Degrees of freedom” is the geometry of remaining directions, not a mysterious adjustment factor."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Fit a symmetric three-point experiment",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Fit a symmetric three-point experiment",
+            "problem": "At scaled inputs −1, 0, 1, readings are 1, 2, 4. Fit a+bt using equal weights and identify the unexplained part.",
+            "steps": [
+              {
+                "title": "Choose model directions",
+                "body": "Use columns c₀=(1,1,1) and c₁=(−1,0,1). Their dot product is zero.",
+                "reason": "Symmetric inputs separate intercept and slope geometrically.",
+                "trap": "The columns live in observation space, with three entries."
+              },
+              {
+                "title": "Project onto each direction",
+                "body": "The inner products with the data are 7 and 3; squared column lengths are 3 and 2. Thus a=7/3 and b=3/2.",
+                "reason": "An orthogonal basis permits independent coefficient calculations.",
+                "trap": "Divide by squared length, not length."
+              },
+              {
+                "title": "Compute the residual",
+                "body": "Predictions are (5/6,7/3,23/6), so residuals are (1/6,−1/3,1/6). Their squared sum is 1/6.",
+                "reason": "The residual is the data component outside the model plane.",
+                "trap": "Residual here means observed minus predicted."
+              },
+              {
+                "title": "Verify both perpendicularities",
+                "body": "The residual sum is zero, and its dot product with (−1,0,1) is zero.",
+                "reason": "Both normal equations are independently satisfied.",
+                "trap": "Checking only the residual sum tests only the intercept direction."
+              },
+              {
+                "title": "Interpret statistical uncertainty",
+                "body": "If each reading has independent known variance σ², the fitted intercept variance is σ²/3 and the slope variance is σ²/2.",
+                "reason": "Noise is propagated through the two projection coefficients.",
+                "trap": "The observed residual alone is not the known noise variance, nor evidence that the model is exact."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "A fit is a projection shaped by a model and a noise geometry; its uncertainty reflects the information the experiment supplies.",
+            "nextConnection": "Variational calculus extends minimisation from finitely many parameters to entire functions, while inverse field problems reuse the same distinction between observable and weakly constrained modes."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Fitting a linear model is projection onto the space of predictions that the model can express. Noise assumptions choose the geometry of that projection; poorly determined parameter directions explain uncertainty and the need for explicit modelling choices.",
+              "widerConnection": "Fourier coefficients, normal modes and least squares all use inner products to resolve information along available directions. Gaussian likelihood turns the same geometric distance into a statistical criterion."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

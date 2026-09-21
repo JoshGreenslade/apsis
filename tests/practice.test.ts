@@ -1,10 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import katex from "katex";
-import agents from "../curricula/agentic-engineering";
-import astrodynamics from "../curricula/astrodynamics";
-import mathematics from "../curricula/mathematics-for-physics";
-import { mu } from "../curricula/astrodynamics/constants";
+import agents from "../curriculums/agentic-engineering";
+import astrodynamics from "../curriculums/astrodynamics";
+import mathematics from "../curriculums/mathematics-for-physics";
+const mu = 398600.4418; // Independent physical benchmark, km³/s².
 import {
   calculate,
   generatePractice,

@@ -1,7 +1,7 @@
 import { chromium } from "@playwright/test";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
-import course from "../curricula/agentic-engineering";
+import course from "../curriculums/agentic-engineering";
 async function main() {
   const base = process.env.TEST_BASE_URL ?? "http://127.0.0.1:3000";
   const browser = await chromium.launch({
@@ -21,7 +21,10 @@ async function main() {
     await page
       .getByRole("heading", { name: course.overview!.headline })
       .waitFor();
-    assert.equal(await page.locator(`#curriculum option[value="${course.id}"]`).count(), 1);
+    assert.equal(
+      await page.locator(`#curriculum option[value="${course.id}"]`).count(),
+      1,
+    );
     const nav = page.getByRole("navigation", { name: "Lessons" });
     assert.equal(await nav.getByRole("button").count(), 15);
     await page.screenshot({ path: "../../work/qa-agents/overview.png" });
@@ -33,21 +36,27 @@ async function main() {
         })
         .click();
       await page
-        .getByRole("heading", { name: topic.teaching!.question, exact: true })
+        .getByRole("heading", { name: topic.heading!, exact: true })
         .waitFor();
       assert.equal(
         await page.locator(".content-prose h3").count(),
-        topic.theory.length,
+        topic.content.sections
+          .flatMap((s) => s.blocks)
+          .filter((b) => b.kind === "content" && b.title).length,
         topic.id,
       );
       assert.equal(
         await page.locator(".worked-step").count(),
-        topic.workedExample.steps.length,
+        topic.content.sections
+          .flatMap((s) => s.blocks)
+          .flatMap((b) => (b.kind === "example" ? b.steps : [])).length,
         topic.id,
       );
       assert.equal(
         await page.locator(".practical-lab").count(),
-        topic.practical ? 1 : 0,
+        topic.content.sections
+          .flatMap((s) => s.blocks)
+          .filter((b) => b.kind === "lab").length,
         topic.id,
       );
     }

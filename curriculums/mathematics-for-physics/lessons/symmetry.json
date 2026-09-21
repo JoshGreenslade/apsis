@@ -1,0 +1,715 @@
+{
+  "id": "symmetry",
+  "diagnostics": [
+    {
+      "id": "d-variation",
+      "prompt": "If ∂L/∂q = 0, Euler–Lagrange implies:",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "∂L/∂q̇ = 0 necessarily"
+          },
+          {
+            "id": "1",
+            "label": "d(∂L/∂q̇)/dt = 0"
+          },
+          {
+            "id": "2",
+            "label": "q = 0"
+          }
+        ]
+      },
+      "solution": "The conjugate momentum is constant, not necessarily zero.",
+      "hint": "Use Euler–Lagrange directly.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use Euler–Lagrange directly.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "variation"
+    },
+    {
+      "id": "d-metric",
+      "prompt": "A Lorentz boost preserves which form?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "The Minkowski interval"
+          },
+          {
+            "id": "1",
+            "label": "Every component separately"
+          },
+          {
+            "id": "2",
+            "label": "The Euclidean sum of all four squares"
+          }
+        ]
+      },
+      "solution": "Its defining matrix identity uses the indefinite metric.",
+      "hint": "Name the preserved structure.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Name the preserved structure.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "metrics"
+    },
+    {
+      "id": "d-unitary",
+      "prompt": "For a unitary U, which identity holds?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "U = U† necessarily"
+          },
+          {
+            "id": "1",
+            "label": "U² = 0"
+          },
+          {
+            "id": "2",
+            "label": "U†U = I"
+          }
+        ]
+      },
+      "solution": "Unitarity preserves the positive complex inner product.",
+      "hint": "Use the conjugate transpose.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the conjugate transpose.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "quantum-vectors"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Compare two shears A = [[1,2],[0,1]] and B = [[1,0],[1,1]] on v = (1,0).",
+    "supplied": [
+      {
+        "heading": "Independent transformations",
+        "body": "A(x,y) = (x + 2y,y), B(x,y) = (x,y + x). In AB, B acts first. All numeric answers use unit 1."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-first",
+        "prompt": "Find the second component of B(1,0). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "B(1,0) = (1,1).",
+        "hint": "Apply the vertical shear.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Apply the vertical shear.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-ab",
+        "prompt": "Given Bv = (1,1), find the first component of A(Bv). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "1 + 2 × 1 = 3.",
+        "hint": "Now apply the horizontal shear.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Now apply the horizontal shear.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-ba",
+        "prompt": "Given Av = (1,0), find the first component of B(Av). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The vertical shear leaves the first component equal to 1.",
+        "hint": "Reverse the operation order.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Reverse the operation order.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-difference",
+        "prompt": "Given ABv = (3,1) and BAv = (1,1), find the first component of [A,B]v. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Subtracting gives (2,0).",
+        "hint": "The commutator is AB − BA.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "The commutator is AB − BA.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-generator",
+      "prompt": "For J = [[0,−1],[1,0]], find the y-component of J(3,0). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 3,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "J(3,0) = (0,3).",
+      "hint": "Multiply by the generator.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Multiply by the generator.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-infinitesimal",
+      "prompt": "A real Euclidean rotation generator satisfies:",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Jᵀ = J"
+          },
+          {
+            "id": "1",
+            "label": "Jᵀ = −J"
+          },
+          {
+            "id": "2",
+            "label": "J = I"
+          }
+        ]
+      },
+      "solution": "Antisymmetry cancels the first-order change in squared norm.",
+      "hint": "Differentiate RᵀR = I.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Differentiate RᵀR = I.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-commute",
+      "prompt": "Do all area-preserving planar maps commute?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Yes"
+          },
+          {
+            "id": "1",
+            "label": "Only if their determinants are positive"
+          },
+          {
+            "id": "2",
+            "label": "No"
+          }
+        ]
+      },
+      "solution": "Horizontal and vertical shears provide a counterexample.",
+      "hint": "Preserved area does not determine the full action.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Preserved area does not determine the full action.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-momentum",
+      "prompt": "For L = m q̇²/2 with m = 3 kg and q̇ = 4 m/s, find conjugate momentum.",
+      "answer": {
+        "kind": "numeric",
+        "value": 12,
+        "unit": "kg m/s",
+        "acceptedUnits": ["kg m/s"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "∂L/∂q̇ = m q̇ = 12 kg m/s.",
+      "hint": "Differentiate with respect to velocity.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Differentiate with respect to velocity.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-energy",
+      "prompt": "Along an Euler–Lagrange solution, E = q̇p − L obeys:",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "dE/dt = −∂L/∂t"
+          },
+          {
+            "id": "1",
+            "label": "dE/dt = ∂L/∂q"
+          },
+          {
+            "id": "2",
+            "label": "E = 0 always"
+          }
+        ]
+      },
+      "solution": "The coordinate and acceleration terms cancel using the equations of motion.",
+      "hint": "Keep explicit time dependence separate from evolution along a path.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Keep explicit time dependence separate from evolution along a path.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-transfer",
+      "prompt": "Conserved mr²φ̇ holds with fixed m. If r doubles, what is the ratio of new angular speed to old? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.25,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The r² factor quadruples, so angular speed becomes one quarter.",
+      "hint": "Hold the conserved product fixed.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Hold the conserved product fixed.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "David Tong · Dynamics and Relativity",
+      "url": "https://davidtong.org/teaching/dynamics-and-relativity/"
+    },
+    {
+      "title": "MIT OpenCourseWare · Linear Algebra",
+      "url": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/"
+    }
+  ],
+  "title": "Symmetry, generators and conserved quantities",
+  "description": "Connect a continuous transformation to its infinitesimal generator and a simple conserved quantity.",
+  "domain": "Mathematics for physics",
+  "unit": "11 · Coordinates, geometry and symmetry",
+  "prerequisites": ["variation", "metrics", "quantum-vectors"],
+  "minutes": 60,
+  "transferProblems": [
+    {
+      "id": "transfer-symmetry-invariant",
+      "prompt": "What makes a transformation a physical symmetry rather than merely a visual resemblance?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "It leaves the governing equations or action unchanged"
+          },
+          {
+            "id": "1",
+            "label": "It changes every coordinate value"
+          },
+          {
+            "id": "2",
+            "label": "It has a matrix representation"
+          }
+        ]
+      },
+      "solution": "A symmetry preserves the structure that defines the dynamics, not merely the appearance of one diagram.",
+      "hint": "Ask what mathematical object must remain unchanged.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Ask what mathematical object must remain unchanged.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "transfer-coordinate-invariant",
+      "prompt": "Why is tensor notation useful when changing coordinates?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Contractions can preserve the underlying geometric quantity despite component changes"
+          },
+          {
+            "id": "1",
+            "label": "It makes every component numerically constant"
+          },
+          {
+            "id": "2",
+            "label": "It removes the need to declare a metric"
+          }
+        ]
+      },
+      "solution": "Tensor transformation laws let coordinate-dependent components represent coordinate-independent contractions and relations.",
+      "hint": "Components can change while the represented object remains the same.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Components can change while the represented object remains the same.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "heading": "How does a transformation's small change connect to a conserved quantity?",
+  "lead": "Generators explain continuous transformations, while Lagrangian symmetry identifies conservation laws with explicit hypotheses.",
+  "outcomes": [
+    "Compute a rotation generator and its preserved form.",
+    "Demonstrate order dependence with a commutator.",
+    "Derive cyclic momentum and time-independent energy conservation."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Rotate an isolated experiment on a level, featureless table. If its physical laws and apparatus supply no preferred horizontal direction, the rotated experiment should obey the same equations. This is a symmetry claim about the model, not merely a statement that we can draw rotated coordinate axes.\n\nA continuous symmetry varies smoothly from doing nothing: a tiny rotation, followed by another tiny rotation, can build a finite turn. Its first-order change is described by a generator. Looking near the identity makes a whole family of transformations accessible through a simpler linear operation.\n\nSymmetry can also constrain motion. If a Lagrangian does not depend on a coordinate, its conjugate momentum is conserved by the Euler–Lagrange equation. If it has no explicit time dependence, a corresponding energy function is conserved. These results need the stated dynamical assumptions; preserving a geometric norm by itself does not automatically establish a conservation law for an arbitrary system.\n\nWe will connect rotations to generators, calculate a pair of order-dependent transformations, and derive these two elementary conservation results. They provide a concrete bridge toward Noether's theorem and Lie groups without claiming to prove their most general forms."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How does a transformation's small change connect to a conserved quantity?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Generators explain continuous transformations, while Lagrangian symmetry identifies conservation laws with explicit hypotheses."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Compute a rotation generator and its preserved form.",
+              "Demonstrate order dependence with a commutator.",
+              "Derive cyclic momentum and time-independent energy conservation."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Does the existence of a rotation matrix prove that a particular apparatus has rotational symmetry?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can two individually length-preserving operations give different outcomes when their order is reversed?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "The generator gives the tangent direction",
+              "caption": "At θ = 0 a unit vector lies on the positive x-axis. J sends it upward, tangent to its rotation circle; a finite turn follows the circle rather than the tangent line.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "ellipse",
+                  "center": [260, 175],
+                  "rx": 105,
+                  "ry": 105,
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [120, 175],
+                  "to": [480, 175],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 295],
+                  "to": [260, 35],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 175],
+                  "to": [365, 175],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [365, 175],
+                  "to": [365, 75],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [358, 88],
+                  "to": [365, 75],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [372, 88],
+                  "to": [365, 75],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 175],
+                  "to": [334.246, 100.754],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [380, 85],
+                  "text": "J(1,0) = (0,1)"
+                },
+                {
+                  "kind": "label",
+                  "at": [370, 200],
+                  "text": "(1,0)"
+                },
+                {
+                  "kind": "label",
+                  "at": [295, 55],
+                  "text": "R(π/4)(1,0)"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Read a finite transformation from its infinitesimal change",
+            "body": "Turn an arrow on the table counterclockwise through angle $\\theta$. In an orthonormal planar basis its active rotation is\n$$R(\\theta)=\\begin{pmatrix}\\cos\\theta&-\\sin\\theta\\\\\\sin\\theta&\\cos\\theta\\end{pmatrix}.$$\nActive means the arrow itself is transformed while the reference axes stay fixed. A passive change of axes describes the same arrow with different components and uses the corresponding inverse conversion. Keeping that distinction prevents a sign convention from becoming a physical disagreement.\n\nFor a small angle $\\epsilon$, Taylor expansion gives $\\cos\\epsilon=1+O(\\epsilon^2)$ and $\\sin\\epsilon=\\epsilon+O(\\epsilon^3)$. The notation $O(\\epsilon^2)$ means that the neglected magnitude is bounded by a constant times $\\epsilon^2$ sufficiently near zero. Thus\n$$R(\\epsilon)=I+\\epsilon J+O(\\epsilon^2),\\qquad\nJ=\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}.$$\nThe generator $J=R'(0)$ gives the first-order change of every vector: $\\delta\\mathbf v=\\epsilon J\\mathbf v$ to leading order.\n\nSince $J^2=-I$, the matrix exponential series separates into even and odd powers:\n$$e^{\\theta J}=I\\cos\\theta+J\\sin\\theta=R(\\theta).$$\nThe exponential is defined by the convergent matrix power series, and here its reduction follows directly from the repeating powers of $J$. A finite rotation is therefore built from the same local turning rule repeated continuously.\n\nLength preservation can be inspected infinitesimally. Expanding $(I+\\epsilon J)^T(I+\\epsilon J)$ gives $I+\\epsilon(J^T+J)+O(\\epsilon^2)$. Since $J^T=-J$, the first-order change of every squared length vanishes. The exact rotation preserves length to all orders because $R^TR=I$. A truncated first-order approximation need not preserve it exactly for finite $\\epsilon$.\n\nMore generally, a matrix family preserving a bilinear form $g$ has an infinitesimal generator $G$ satisfying $G^Tg+gG=0$, obtained by differentiating the preservation identity at zero. For complex unitary transformations the corresponding condition is $G^\\dagger+G=0$. These algebraic conditions describe preserved structure; selecting a family as a physical evolution still requires a model."
+          },
+          {
+            "kind": "question",
+            "bridge": "Differentiate a transformation at identity.",
+            "meaning": "A generator records its first-order action.",
+            "question": "What is R′(0) for a planar rotation?",
+            "answer": "The matrix J with rows (0,−1) and (1,0).",
+            "further": [
+              {
+                "question": "Why does J² = −I help compute its exponential?",
+                "answer": "Even and odd powers collect into cosine and sine series."
+              },
+              {
+                "question": "Does I + εJ preserve lengths exactly for finite ε?",
+                "answer": "No. It preserves them to first order, while higher-order errors remain."
+              },
+              {
+                "question": "What generator condition preserves a real form g to first order?",
+                "answer": "Gᵀg + gG = 0, from differentiating the preservation identity."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. Check whether order matters",
+            "body": "First shear a square horizontally, then shear it vertically. A horizontal shear $A=\\begin{pmatrix}1&a\\\\0&1\\end{pmatrix}$ sends $(x,y)$ to $(x+ay,y)$; a vertical shear $B=\\begin{pmatrix}1&0\\\\b&1\\end{pmatrix}$ sends it to $(x,y+bx)$. Their products are\n$$AB=\\begin{pmatrix}1+ab&a\\\\b&1\\end{pmatrix},\\qquad\nBA=\\begin{pmatrix}1&a\\\\b&1+ab\\end{pmatrix}.$$\nThe rightmost transformation acts first, so these describe different experimental orders.\n\nFor $a=b=1$ and input $(1,0)$, $AB$ gives $(2,1)$ whereas $BA$ gives $(1,1)$. The difference is directly visible in the output vectors. The commutator $[A,B]=AB-BA$ measures the failure to commute and here equals $\\operatorname{diag}(ab,-ab)$. Both maps preserve oriented area because their determinants are one, yet area preservation does not make their actions interchangeable.\n\nFor infinitesimal transformations $I+\\epsilon G$ and $I+\\delta H$, comparing the two orders gives\n$$[I+\\epsilon G,I+\\delta H]=\\epsilon\\delta[G,H].$$\nThe first-order individual terms cancel; the leading order-dependent effect involves both small parameters. Generators therefore reveal how families of small transformations interact.\n\nPlanar rotations about the same origin do commute: angle addition gives $R(\\alpha)R(\\beta)=R(\\alpha+\\beta)$. This is a special property of that family, not a general statement about all transformations or even all spatial rotations in three dimensions. Rotations around different three-dimensional axes can fail to commute.\n\nA Lie group is, roughly, a group of transformations with a compatible smooth parameter structure. A group includes identity, composition and inverses, while smoothness allows infinitesimal generators. We use the term as a bridge: a general treatment must specify the parameter space and its differentiable structure. Not every collection of matrices chosen for a calculation automatically forms such a group.\n\nIn quantum notation, unequal operator products must also be interpreted carefully. Two particular output vectors differing only by a global phase represent the same pure state in the assumed model, even when the matrices are unequal. An observable difference requires a suitable input and measurement, not merely a nonzero symbolic commutator. This is another reason to keep the algebraic claim distinct from its experimental interpretation."
+          },
+          {
+            "kind": "question",
+            "bridge": "Compare the same operations in opposite orders.",
+            "meaning": "A shared preserved quantity does not make transformations commute.",
+            "question": "Which map acts first in AB?",
+            "answer": "B acts first.",
+            "further": [
+              {
+                "question": "Why can two unit-determinant shears fail to commute?",
+                "answer": "Both preserve area but change the directions on which the next shear acts."
+              },
+              {
+                "question": "At what combined order do two infinitesimal transformations first differ?",
+                "answer": "At order εδ through the generator commutator."
+              },
+              {
+                "question": "Does a nonzero operator commutator alone specify a measurable quantum difference for every input?",
+                "answer": "No. Particular outputs can differ only by global phase; an input and measurement must support the experimental claim."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Derive conserved momentum and energy from a Lagrangian",
+            "body": "Consider a particle moving along a uniform track with Lagrangian $L(q,\\dot q,t)$. We assume its motion obeys the Euler–Lagrange equation\n$$\\frac{d}{dt}\\frac{\\partial L}{\\partial\\dot q}=\\frac{\\partial L}{\\partial q}.$$\nDefine the conjugate momentum $p=\\partial L/\\partial\\dot q$. If $L$ does not depend on $q$, that coordinate is called cyclic, and the equation immediately gives $\\dot p=0$. Independence of position means translating the coordinate does not change this Lagrangian, under the stated model.\n\nFor a free particle with $L=\\frac12m\\dot q^2$, the momentum is $m\\dot q$ and is constant. Add a spring term $-\\frac12kq^2$, and position independence is lost: the apparatus now identifies the spring's equilibrium point. Momentum is no longer conserved, although another invariant survives because the spring model has no explicit time dependence.\n\nFor a planar central-force model in polar coordinates,\n$$L=\\tfrac12m(\\dot r^2+r^2\\dot\\phi^2)-V(r).$$\nThe angle $\\phi$ is cyclic even though its velocity appears. Its conjugate momentum is $p_\\phi=mr^2\\dot\\phi$, the angular momentum perpendicular to the plane, and it is conserved. If the radius decreases, angular speed increases to preserve this product. The metric factor $r^2$ from the previous chapter is precisely what gives the correct kinetic term and momentum.\n\nTo derive energy conservation, define $E=\\dot q\\,p-L$. Differentiate along a solution:\n$$\\frac{dE}{dt}=\\ddot q\\,p+\\dot q\\,\\dot p\n-L_q\\dot q-L_{\\dot q}\\ddot q-L_t=-L_t.$$\nThe acceleration terms cancel because $p=L_{\\dot q}$, and the remaining coordinate terms cancel by the Euler–Lagrange equation. Thus no explicit time dependence, $L_t=0$, implies constant $E$. With several coordinates the same calculation sums one pair of cancelling terms per coordinate.\n\nFor the common time-independent form $L=T-V$ with quadratic velocity kinetic energy, this $E$ equals $T+V$. For more general Lagrangians, use the definition rather than assuming that identification without checking. If a spring stiffness is externally varied in time, $L_t$ is nonzero and the external actuator can exchange energy with the system.\n\nThese are concrete instances of Noether's connection between continuous action symmetries and conserved quantities. The general theorem also handles transformations involving several coordinates, time changes, and Lagrangians changing by a total derivative; we have not proved that full scope. What we have proved is enough to reconstruct cyclic-coordinate momentum conservation and the no-explicit-time-dependence energy identity, while naming the assumptions each requires.\n\nThe spring provides a direct check of the energy identity. With constant $m,k>0$, $L=m\\dot q^2/2-kq^2/2$ gives $p=m\\dot q$ and $E=m\\dot q^2/2+kq^2/2$. Differentiation yields $\\dot E=\\dot q(m\\ddot q+kq)=0$ along the spring equation. Momentum varies because the spring picks out an origin, while energy remains constant because the parameters do not change with time.\n\nIf an external actuator changes $k$ to $k(t)$, the same definition gives $\\dot E=\\dot k\\,q^2/2$ along the modified equation. The sign has a concrete interpretation: stiffening a displaced spring increases its stored energy, supplied by the actuator. The partial derivative $L_t=-\\dot k\\,q^2/2$ treats $q$ and $\\dot q$ as independent arguments while differentiating explicit time dependence. It is not the same as the total derivative of $L$ along a moving particle. Confusing these derivatives would incorrectly suggest that a time-independent Lagrangian never changes along a trajectory."
+          },
+          {
+            "kind": "question",
+            "bridge": "Apply Euler–Lagrange with the symmetry assumption visible.",
+            "meaning": "Conservation follows from the dynamics, not only from matrix geometry.",
+            "question": "What is a cyclic coordinate?",
+            "answer": "A coordinate absent from L itself, though its velocity may appear.",
+            "further": [
+              {
+                "question": "Why is its conjugate momentum conserved?",
+                "answer": "Euler–Lagrange gives dp/dt = ∂L/∂q = 0."
+              },
+              {
+                "question": "Why does energy conservation require no explicit time dependence?",
+                "answer": "Along solutions dE/dt = −∂L/∂t."
+              },
+              {
+                "question": "What changes for an externally time-varying spring stiffness?",
+                "answer": "The Lagrangian gains explicit time dependence, allowing energy exchange with the actuator."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "An invariant is more important than the coordinates used to display it",
+            "body": "The course has met this idea in several forms: a vector is not its component list, a tensor is not an arbitrary array, and an eigenvalue describes a map through a special direction. Symmetry pushes the idea further by asking which transformation leaves the governing structure unchanged. The conserved quantity is the shadow of that invariance. In the final synthesis, quantum norms and spacetime intervals will look different, but both require separating representation from what the transformation preserves."
+          },
+          {
+            "kind": "question",
+            "bridge": "Carry the chapter's structure into the next physical setting.",
+            "meaning": "A chapter idea becomes more useful when you can recognise the same structure in a new physical setting.",
+            "question": "What is the main transfer lesson in the section “An invariant is more important than the coordinates used to display it”?",
+            "answer": "The section makes the chapter's central structure explicit, then shows how the same structure reappears in a later physical model.",
+            "further": [
+              {
+                "question": "Which assumption makes this transfer valid?",
+                "answer": "The transfer is conditional on the chapter's stated model, definitions, and validity checks; it is a structural analogy, not a license to ignore those assumptions."
+              },
+              {
+                "question": "What should you check before using the idea in a new problem?",
+                "answer": "Check the objects, units or domains, boundary or initial data, and the limiting case that defines the approximation."
+              },
+              {
+                "question": "Why is this connection worth remembering?",
+                "answer": "It turns an isolated technique into a reusable way of organising a derivation and testing whether its conclusion is trustworthy."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The generator of a boost",
+            "body": "Using rapidity $\\chi$ with $\\beta=\\tanh\\chi$, a boost in $(T,X)$ can be written $\\Lambda(\\chi)=\\begin{pmatrix}\\cosh\\chi&-\\sinh\\chi\\\\-\\sinh\\chi&\\cosh\\chi\\end{pmatrix}$. Its generator is $G=\\begin{pmatrix}0&-1\\\\-1&0\\end{pmatrix}$, which is symmetric in the ordinary transpose sense but satisfies $G^T\\eta+\\eta G=0$ for $\\eta=\\operatorname{diag}(-1,1)$. This contrasts with a Euclidean rotation generator because the preserved forms differ."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "How a continuous symmetry produces a conserved quantity",
+            "body": "Suppose the Lagrangian $L(q,\\dot q,t)$ is unchanged by a small time-independent transformation $q\\mapsto q+\\varepsilon\\xi(q)$. Along a path, $\\delta\\dot q=\\varepsilon\\,d\\xi/dt$. To first order, invariance says\n$$0=L_q\\cdot\\xi+L_{\\dot q}\\cdot\\frac{d\\xi}{dt}.$$\nOn a physical trajectory the Euler–Lagrange equation gives $L_q=dp/dt$, where $p=L_{\\dot q}$. The expression is now a product rule:\n$$0=\\frac{d}{dt}(p\\cdot\\xi).$$\nThus $p\\cdot\\xi$ is constant along the motion.\n\nFor translation in one coordinate, $\\xi$ is the corresponding constant unit vector, giving conservation of that momentum component. For rotation about a fixed unit axis n in ordinary space, $\\xi=n\\times r$. The conserved expression becomes $p\\cdot(n\\times r)=n\\cdot(r\\times p)$, the angular momentum component along that axis.\n\nThe dot product pairs momentum with the infinitesimal displacement generated by the symmetry. This connects the tensor chapter’s dual pairing to the variational chapter’s allowed changes.\n\nThe derivation assumes exact invariance of L under this form of transformation. Transformations involving time or changes by a total derivative require the corresponding extra terms. A boundary or external potential can also break a symmetry. Conservation is therefore a consequence of a stated invariance of the dynamics, not merely of a symmetric-looking diagram."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "An invariant is more important than the coordinates used to display it",
+            "body": "The course has met this idea in several forms: a vector is not its component list, a tensor is not an arbitrary array, and an eigenvalue describes a map through a special direction. Symmetry pushes the idea further by asking which transformation leaves the governing structure unchanged. The conserved quantity is the shadow of that invariance. In the final synthesis, quantum norms and spacetime intervals will look different, but both require separating representation from what the transformation preserves."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Conserved angular momentum on a central-force trajectory",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Conserved angular momentum on a central-force trajectory",
+            "problem": "A particle of mass 2 kg moves with L = m(ṙ² + r²φ̇²)/2 − V(r). Initially r = 3 m and φ̇ = 2/s. Later r = 2 m. Find the later angular speed.",
+            "steps": [
+              {
+                "title": "Identify the symmetry",
+                "body": "The Lagrangian depends on r and velocities but not φ.",
+                "reason": "Rotation leaves a central potential unchanged.",
+                "trap": "Dependence on φ̇ does not destroy cyclicity."
+              },
+              {
+                "title": "Differentiate for momentum",
+                "body": "pφ = ∂L/∂φ̇ = mr²φ̇.",
+                "reason": "Euler–Lagrange conserves the conjugate momentum of φ.",
+                "trap": "The r² metric factor is essential."
+              },
+              {
+                "title": "Evaluate the constant",
+                "body": "pφ = 2 × 3² × 2 = 36 kg m²/s.",
+                "reason": "Use the initial data to determine the conserved value.",
+                "trap": "Conserved does not mean zero."
+              },
+              {
+                "title": "Predict the new speed",
+                "body": "φ̇ = 36/(2 × 2²) = 4.5/s.",
+                "reason": "The same angular momentum holds at the later radius.",
+                "trap": "This predicts speed conditional on reaching that radius; it does not by itself determine the radial trajectory."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "Identify the transformation, the preserved structure and the dynamical assumptions before claiming a conservation law.",
+            "nextConnection": "The final investigations will combine these tools to model a pendulum, verify heat flow and compare quantum and spacetime invariants."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A symmetry preserves the governing structure under a transformation, and its continuous generators can produce conserved quantities. The transformation is physically meaningful because the equations or action remain unchanged, not because two diagrams happen to look alike.",
+              "widerConnection": "This is the organising principle that links coordinate changes, tensors, metrics, mechanics, and quantum operators. It gives the course a final answer to the question of why invariants matter: they are the quantities left untouched by the structure's genuine symmetries."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

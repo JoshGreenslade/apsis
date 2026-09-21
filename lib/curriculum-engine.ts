@@ -60,9 +60,6 @@ export function validatePack(input: unknown): CurriculumPack {
       )
         throw new Error("Canonical unit must be accepted");
     }
-    for (const prerequisite of t.prerequisites)
-      if (!t.content && !t.diagnostics.some((p) => p.prerequisiteId === prerequisite))
-        throw new Error(`Missing diagnostic for ${prerequisite}`);
   }
   return pack;
 }

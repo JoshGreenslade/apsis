@@ -1,0 +1,512 @@
+{
+  "id": "verification",
+  "title": "Verification · Economics",
+  "description": "Match claims to independent evidence and distinguish execution status from behavioural correctness. Compare agentic work using total cost, acceptance rate, review effort, recovery and opportunity value.",
+  "domain": "Agentic engineering",
+  "unit": "06 · Evaluate quality and economics",
+  "prerequisites": ["evaluation"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "verification--verification",
+        "title": "Verification: connect every claim to evidence",
+        "navLabel": "Verification",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A lab result is persuasive because it says what was measured, under which conditions and with what uncertainty. An agent's 'all done' is not a lab result. Verification means connecting the important claims in the report to evidence that could reveal the claim is false."
+          },
+          {
+            "kind": "example",
+            "title": "An agent reports that a dependency upgrade is complete.",
+            "problem": "An agent reports that a dependency upgrade is complete.",
+            "steps": [
+              {
+                "title": "Map the claims",
+                "body": "Check the version diff, lockfile, focused tests, full suite status, security advisory result and whether unrelated packages changed.",
+                "reason": "Each part of the report has inspectable evidence.",
+                "trap": "Accepting the agent's summary as the only proof."
+              },
+              {
+                "title": "Record the gaps",
+                "body": "Mark the integration environment unavailable and state that production compatibility remains unverified.",
+                "reason": "Uncertainty stays visible instead of becoming a false guarantee.",
+                "trap": "Writing 'verified' because local tests passed."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Build a claim-evidence map",
+            "body": "Take the claim 'retries now stop after three attempts'. Lint cannot establish it. A focused test that counts calls under repeated timeouts can. Better still, show that the regression test fails on the old implementation and passes on the new one: that checks whether the test can detect this particular mistake.\n\nDifferent claims need different evidence. The diff can show that the public signature is unchanged. A behavioural check can show which error reaches the caller. Neither establishes that an unavailable integration environment will behave correctly.\n\nAn agent-written test is useful, but the test and patch may share the same mistaken interpretation. Compare both with the task contract, or use a separate check. Where evidence stops, say so: 'local behaviour verified; integration compatibility not checked' is a useful result."
+          },
+          {
+            "kind": "question",
+            "bridge": "A result becomes trustworthy through the relationship between claim and evidence.",
+            "meaning": "The evidence should be specific enough to fail when the claim is false.",
+            "question": "An agent says 'the retry bug is fixed' and links only to a passing lint command. What is missing?",
+            "answer": "A behavioural check that exercises retry success, exhaustion and error handling on the intended revision.",
+            "further": [
+              {
+                "question": "Why prefer independent evidence?",
+                "answer": "The agent's explanation may repeat the same mistaken assumption as the implementation."
+              },
+              {
+                "question": "What should an assumption look like?",
+                "answer": "A clearly labelled claim with a stated basis and a next check, not a hidden premise."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Verify the boundaries",
+            "body": "Check scope, negative cases, permissions, generated artefacts and failure handling, not only the happy path. A command can exit successfully while testing the wrong revision or skipping the relevant suite. Verification asks what happened, what was actually checked and what remains outside the evidence."
+          },
+          {
+            "kind": "question",
+            "bridge": "Verification includes what did not happen.",
+            "meaning": "Scope, skipped checks and external effects matter as much as green commands.",
+            "question": "The tests pass, but the changed file is outside the requested package. Is the task verified?",
+            "answer": "No. Scope is part of correctness, and the successful tests may not cover the intended result.",
+            "further": [
+              {
+                "question": "Why inspect skipped tests?",
+                "answer": "A green summary can conceal that the relevant evidence was never executed."
+              },
+              {
+                "question": "What is verification of an external effect?",
+                "answer": "A bounded check that the intended side effect occurred, with the right identity and without unintended changes."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Make claims inspectable: name the evidence, verify the boundaries and report what remains unknown.",
+            "nextConnection": "Once you know which results are acceptable, you can price the work honestly. The next section includes the review, repair and failed attempts that a model invoice leaves out."
+          }
+        ]
+      },
+      {
+        "id": "economics--economics",
+        "title": "Economics: cost per accepted result",
+        "navLabel": "Economics",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The model bill is easy to find. The twenty minutes spent repairing a patch may be hidden in somebody's afternoon. A workflow can therefore look cheap on a dashboard while making the team busier.\n\nThe comparison we need follows the task all the way to acceptance. What did it cost to get a useful result, and what would the team have spent getting that result another way?"
+          },
+          {
+            "kind": "content",
+            "title": "Count the whole loop",
+            "body": "Suppose ten attempted tasks cost 30 currency units in model and tool usage. Review and repairs take 90 active minutes, valued for this example at 60 units per hour. Six results are accepted.\n\nThe batch cost is 30 + 90 = 120 units, or 20 per accepted result. Dividing by ten would give 12, but that would price an attempt rather than a useful outcome. The failed attempts still consumed resources and belong in the numerator.\n\nThis simplified calculation excludes setup and ongoing maintenance; a real comparison should allocate those too. Track elapsed waiting separately from active labour. An unattended hour is not automatically an hour of salary cost, although a delayed result may have business consequences.\n\nCompare with a credible manual baseline for similar work. Then inspect the expensive failures rather than stopping at the average. A rare incident can outweigh many small savings."
+          },
+          {
+            "kind": "question",
+            "bridge": "The bill for agentic work arrives in more places than the API invoice.",
+            "meaning": "Total cost includes the human and operational work around the generated result.",
+            "question": "Why can a lower token price fail to make a workflow cheaper?",
+            "answer": "If it produces more errors, review and recovery, the total cost per accepted result can rise.",
+            "further": [
+              {
+                "question": "Why measure variance?",
+                "answer": "Rare, expensive failures can dominate the economics even when the average run looks attractive."
+              },
+              {
+                "question": "What is opportunity cost?",
+                "answer": "The valuable work people could have done instead of reviewing, maintaining or recovering the automation."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "Compare manual triage with an agentic triage workflow.",
+            "problem": "Compare manual triage with an agentic triage workflow.",
+            "steps": [
+              {
+                "title": "Count the loop",
+                "body": "Include setup, model calls, tool calls, reviewer minutes, false escalations and missed incidents for both approaches.",
+                "reason": "The comparison reflects operating reality.",
+                "trap": "Comparing only per-call API cost."
+              },
+              {
+                "title": "Make a boundary decision",
+                "body": "Keep automation for low-risk classification, route ambiguous or high-impact cases to a human and review the error sample monthly.",
+                "reason": "Economics and risk inform the operating design together.",
+                "trap": "Optimising volume while ignoring escaped incidents."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Value learning and capacity carefully",
+            "body": "Some systems are worthwhile because they shorten time to evidence, improve consistency or free people for harder work even when direct savings are modest. Make those benefits explicit, and compare them with the opportunity cost of building and operating the system."
+          },
+          {
+            "kind": "question",
+            "bridge": "Not every benefit appears as immediate cash saving.",
+            "meaning": "Speed to evidence, consistency and capacity can matter, but they should be stated and tested rather than assumed.",
+            "question": "A workflow costs about the same as manual work but gives engineers reliable evidence earlier. Can it still be valuable?",
+            "answer": "Yes, if the earlier evidence improves decisions or frees scarce expertise, and the benefit is measured against the real alternative.",
+            "further": [
+              {
+                "question": "What is the right denominator?",
+                "answer": "Accepted, useful outcomes or decisions, not raw attempts or generated text."
+              },
+              {
+                "question": "When should a workflow be retired?",
+                "answer": "When its total cost or risk exceeds the value of accepted results and learning it provides."
+              }
+            ]
+          },
+          {
+            "kind": "lab",
+            "data": {
+              "title": "Lab 4 · Run an honest evaluation",
+              "minutes": 45,
+              "brief": "Use three to five real or reconstructed tasks to compare an agentic workflow with the current human baseline.",
+              "steps": [
+                "Define accepted outcome, defect escape, review effort and correct refusal before running anything.",
+                "Pin the task revisions and record the evidence available to the agent.",
+                "Run the workflow and score claims against independent checks.",
+                "Calculate cost per accepted result and write one boundary change justified by the evidence."
+              ],
+              "deliverables": [
+                "A small versioned benchmark",
+                "A claim-evidence scorecard",
+                "A total-cost comparison and decision"
+              ],
+              "review": "The evaluation should reveal at least one limitation, not merely produce a flattering average. A credible conclusion says what the system can do, what it cannot yet do and what evidence would change the boundary."
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "Compare total cost per accepted result, including review, recovery, variance and the value of capacity released.",
+            "nextConnection": "You have a way to judge quality and cost. Next, use those criteria to choose an operating mode and prepare an environment where its evidence will be reliable."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Match claims to independent evidence and distinguish execution status from behavioural correctness. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Compare agentic work using total cost, acceptance rate, review effort, recovery and opportunity value. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "Once you know which results are acceptable, you can price the work honestly. The next section includes the review, repair and failed attempts that a model invoice leaves out. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. You have a way to judge quality and cost. Next, use those criteria to choose an operating mode and prepare an environment where its evidence will be reliable. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Match claims to independent evidence and distinguish execution status from behavioural correctness.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Compare agentic work using total cost, acceptance rate, review effort, recovery and opportunity value."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "Verification tests the artifact or outcome against evidence independent of the agent's claim. Automation is valuable when accepted-result cost, active human time, and maintenance burden beat the manual baseline.",
+              "invariant": "Completion is a state established by acceptance evidence, not a message emitted by the worker. The denominator is accepted outcomes, and all attempted work and recurring costs are included.",
+              "limitingCase": "If the artifact has no observable acceptance property, the task contract is incomplete. If maintenance exceeds the saved active effort, a manual workflow is economically superior.",
+              "counterexample": "A green test run before the final write is stale evidence for the final workspace. Lower token cost does not imply lower cost per accepted result when retries and review increase.",
+              "validity": "Verification proves only the checks performed; untested properties remain uncertainty. Economic conclusions depend on workload volume, failure distribution, labour valuation, and time horizon."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-benchmark-check-1",
+      "prompt": "What makes a benchmark representative?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Varied real task shapes"
+          },
+          {
+            "id": "1",
+            "label": "Only easy examples"
+          },
+          {
+            "id": "2",
+            "label": "One repeated prompt"
+          }
+        ]
+      },
+      "solution": "Engineering work includes ambiguity, risk and different horizons.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "evaluation"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Make claims inspectable: name the evidence, verify the boundaries and report what remains unknown."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Compare total cost per accepted result, including review, recovery, variance and the value of capacity released."
+      }
+    ],
+    "steps": [
+      {
+        "id": "verification-apply",
+        "prompt": "How should unavailable evidence be reported?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "As verified anyway"
+            },
+            {
+              "id": "1",
+              "label": "As an explicit gap or assumption"
+            },
+            {
+              "id": "2",
+              "label": "By deleting the task"
+            }
+          ]
+        },
+        "solution": "Uncertainty is part of an honest result.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "economics-apply",
+        "prompt": "Can equal direct cost still be valuable?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Yes, if measured capacity or decision quality improves"
+            },
+            {
+              "id": "1",
+              "label": "Never"
+            },
+            {
+              "id": "2",
+              "label": "Only with more tokens"
+            }
+          ]
+        },
+        "solution": "Opportunity value can matter when it is real and evidenced.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "verification-check-1",
+      "prompt": "What should support a claim?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Specific evidence that could disprove it"
+          },
+          {
+            "id": "1",
+            "label": "Confidence alone"
+          },
+          {
+            "id": "2",
+            "label": "A longer explanation"
+          }
+        ]
+      },
+      "solution": "Verification needs a checkable relationship.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "verification-check-2",
+      "prompt": "What does a green command not prove?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "That the right behaviour and scope were checked"
+          },
+          {
+            "id": "1",
+            "label": "That the process ran"
+          },
+          {
+            "id": "2",
+            "label": "That some output existed"
+          }
+        ]
+      },
+      "solution": "Execution status and task correctness are distinct.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "economics-check-1",
+      "prompt": "What is the useful denominator?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Accepted outcomes"
+          },
+          {
+            "id": "1",
+            "label": "Tokens generated"
+          },
+          {
+            "id": "2",
+            "label": "Number of prompts"
+          }
+        ]
+      },
+      "solution": "Economics should follow useful work.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "economics-check-2",
+      "prompt": "What belongs in total cost?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Review and recovery"
+          },
+          {
+            "id": "1",
+            "label": "Only model price"
+          },
+          {
+            "id": "2",
+            "label": "Only developer salary"
+          }
+        ]
+      },
+      "solution": "The loop has operational and human costs.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Codex: security boundaries",
+      "url": "https://learn.chatgpt.com/docs/security"
+    },
+    {
+      "title": "gh-aw: safe outputs",
+      "url": "https://github.github.io/gh-aw/reference/safe-outputs/"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    }
+  ],
+  "practiceTemplates": [
+    {
+      "id": "accepted-cost",
+      "title": "Cost per accepted engineering result",
+      "prompt": "A fictional batch costs {{machine}} currency units in machine usage and {{minutes}} active human minutes at 60 units/hour. It yields {{accepted}} accepted results. Find total cost per accepted result, including all attempted work.",
+      "variables": [
+        {
+          "name": "machine",
+          "min": 10,
+          "max": 50,
+          "step": 5
+        },
+        {
+          "name": "minutes",
+          "min": 30,
+          "max": 120,
+          "step": 10
+        },
+        {
+          "name": "accepted",
+          "min": 2,
+          "max": 8,
+          "step": 1
+        }
+      ],
+      "formula": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "add",
+            "args": [
+              {
+                "variable": "machine"
+              },
+              {
+                "variable": "minutes"
+              }
+            ]
+          },
+          {
+            "variable": "accepted"
+          }
+        ]
+      },
+      "unit": "units/result",
+      "hint": "At 60 units/hour, each active minute costs one unit. Add machine and labour costs, then divide by accepted outcomes.",
+      "solution": "({{machine}} + {{minutes}}) / {{accepted}} = {{answer}} units/result. Keep elapsed waiting separate from active labour."
+    }
+  ],
+  "heading": "What would make you trust an agent's report?",
+  "lead": "Match claims to independent evidence and distinguish execution status from behavioural correctness. Compare agentic work using total cost, acceptance rate, review effort, recovery and opportunity value.",
+  "outcomes": [
+    "Match claims to independent evidence and distinguish execution status from behavioural correctness.",
+    "Compare agentic work using total cost, acceptance rate, review effort, recovery and opportunity value."
+  ]
+}

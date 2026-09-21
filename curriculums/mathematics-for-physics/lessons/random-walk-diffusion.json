@@ -1,0 +1,1211 @@
+{
+  "id": "random-walk-diffusion",
+  "diagnostics": [
+    {
+      "id": "d-gaussian",
+      "prompt": "A Gaussian has standard deviation 3 m. Find its variance in m^2.",
+      "answer": {
+        "kind": "numeric",
+        "value": 9,
+        "unit": "m^2",
+        "acceptedUnits": ["m^2"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Track the mean and variance separately; check the units.",
+      "solution": "Variance is the square of standard deviation.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Variance is the square of standard deviation.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "gaussian"
+    },
+    {
+      "id": "d-pdes",
+      "prompt": "How many independent initial fields does the heat equation require?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "One density or temperature field"
+          },
+          {
+            "id": "b",
+            "label": "A field and an independently chosen time derivative"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "Its time derivative is fixed by the first-order equation.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Its time derivative is fixed by the first-order equation.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "pdes"
+    },
+    {
+      "id": "d-transport",
+      "prompt": "For spatially varying velocity v, which expression conserves transported density?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "p_t + ∂x(vp) = 0"
+          },
+          {
+            "id": "b",
+            "label": "p_t + v p_x = 0 in every case"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "The product derivative includes compression through p v_x.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "The product derivative includes compression through p v_x.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "transport-trajectories"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Use independent unbiased steps a=0.1 m and Δt=0.005 s, a point release, and uniform drift v=0.25 m/s. Evaluate at t=8 s.",
+    "supplied": [
+      {
+        "heading": "Useful identities",
+        "body": "D=a²/(2Δt), mean=vt, variance=2Dt, standard deviation=√variance."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-d",
+        "prompt": "Find D in m^2/s.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "m^2/s",
+          "acceptedUnits": ["m^2/s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Track the mean and variance separately; check the units.",
+        "solution": "0.01/(2×0.005)=1.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "0.01/(2×0.005)=1.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-mean",
+        "prompt": "Find mean position in m.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "m",
+          "acceptedUnits": ["m"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Track the mean and variance separately; check the units.",
+        "solution": "0.25×8=2.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "0.25×8=2.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-variance",
+        "prompt": "Find variance in m^2.",
+        "answer": {
+          "kind": "numeric",
+          "value": 16,
+          "unit": "m^2",
+          "acceptedUnits": ["m^2"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Track the mean and variance separately; check the units.",
+        "solution": "2×1×8=16.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "2×1×8=16.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-width",
+        "prompt": "Find standard deviation in m.",
+        "answer": {
+          "kind": "numeric",
+          "value": 4,
+          "unit": "m",
+          "acceptedUnits": ["m"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Track the mean and variance separately; check the units.",
+        "solution": "√16=4.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "√16=4.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-steps",
+      "prompt": "An unbiased independent walk has step length 2 m. After 9 steps, find its standard deviation in m.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "m",
+        "acceptedUnits": ["m"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Track the mean and variance separately; check the units.",
+      "solution": "a√N=2√9=6.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "a√N=2√9=6.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-time",
+      "prompt": "At fixed D, by what factor must time increase to double the standard deviation? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 4,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Track the mean and variance separately; check the units.",
+      "solution": "Width is proportional to √t.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Width is proportional to √t.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-scaling",
+      "prompt": "Halve step length while preserving D. What happens to the time step?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "It becomes one quarter as large"
+          },
+          {
+            "id": "b",
+            "label": "It becomes one half as large"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "Δt scales as a².",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Δt scales as a².",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-current",
+      "prompt": "For positive density gradient and no drift, where does probability flow?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Toward decreasing x"
+          },
+          {
+            "id": "b",
+            "label": "Toward increasing x"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "J=−Dp_x is negative.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "J=−Dp_x is negative.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-bias",
+      "prompt": "In a diffusion limit, can a fixed nonzero directional bias retain finite drift speed?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "No; the bias must shrink with step length"
+          },
+          {
+            "id": "b",
+            "label": "Yes; any fixed bias gives finite drift"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "The drift a(2r−1)/Δt diverges for fixed bias when Δt is proportional to a².",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "The drift a(2r−1)/Δt diverges for fixed bias when Δt is proportional to a².",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-boundary",
+      "prompt": "Which boundary preserves probability in a closed interval?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Zero current at each endpoint"
+          },
+          {
+            "id": "b",
+            "label": "Absorbing endpoints"
+          }
+        ]
+      },
+      "hint": "Distinguish an individual trajectory from the distribution of many trajectories.",
+      "solution": "Reflecting endpoints prevent loss; absorbing boundaries remove surviving probability.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Reflecting endpoints prevent loss; absorbing boundaries remove surviving probability.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-variance",
+      "prompt": "Initial variance is 4 m² and D=3 m²/s. Find variance after 2 s in m^2.",
+      "answer": {
+        "kind": "numeric",
+        "value": 16,
+        "unit": "m^2",
+        "acceptedUnits": ["m^2"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Track the mean and variance separately; check the units.",
+      "solution": "4+2×3×2=16.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "4+2×3×2=16.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Introduction to Probability and Statistics",
+      "url": "https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/"
+    },
+    {
+      "title": "MIT OpenCourseWare · Differential Equations",
+      "url": "https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/"
+    }
+  ],
+  "title": "Bring ideas together: diffusion from a random walk",
+  "description": "Derive macroscopic diffusion from microscopic steps and connect variance, probability flux and Gaussian spreading.",
+  "domain": "Mathematics for physics",
+  "unit": "09 · Responses and uncertainty",
+  "prerequisites": ["gaussian", "pdes", "transport-trajectories"],
+  "minutes": 90,
+  "heading": "How can unpredictable paths produce a predictable diffusion equation?",
+  "lead": "The derivation joins probability, local balances, scaling limits and transport into one model.",
+  "outcomes": [
+    "Derive the square-root spreading law from independent increments.",
+    "Obtain diffusion from a lattice probability balance with the correct scaling.",
+    "Interpret the Gaussian kernel and its limits.",
+    "Separate drift from diffusion using probability current."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Release many tiny tracer particles at one point in still water. One wanders left, another right; predicting either route is difficult. Yet the cloud can spread in a reproducible way. The mathematical object we predict is a density: the probability of finding a particle within a small interval, divided by that interval's length.\n\nWe will build that description from a coin-toss walk. Every step of the argument has a different role. Independence adds variances. A balance of arrivals produces a difference equation. A carefully scaled limit produces a PDE. Finally, conservation identifies the current that makes the spreading possible. The familiar bell curve will emerge as a solution with particular initial data, rather than as a shape imposed by wishful thinking."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How can unpredictable paths produce a predictable diffusion equation?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "The derivation joins probability, local balances, scaling limits and transport into one model."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Derive the square-root spreading law from independent increments.",
+              "Obtain diffusion from a lattice probability balance with the correct scaling.",
+              "Interpret the Gaussian kernel and its limits.",
+              "Separate drift from diffusion using probability current."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can the mean position remain zero while almost every particle has moved away from the origin?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If the step length halves but the clock stays the same, should spreading become faster or slower?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "How would a uniform current change the cloud's centre and width separately?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "A cloud broadens while conserving its area",
+              "caption": "The later density is wider and lower. Both curves have the same centre and area; drift would translate the centre as well.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [40, 265],
+                  "to": [560, 265],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [50, 264.8895831856953],
+                  "to": [60, 264.80281466317456],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 264.80281466317456],
+                  "to": [70, 264.6560978737119],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [70, 264.6560978737119],
+                  "to": [80, 264.414245078744],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [80, 264.414245078744],
+                  "to": [90, 264.0256435335882],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [90, 264.0256435335882],
+                  "to": [100, 263.4171468016567],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [100, 263.4171468016567],
+                  "to": [110, 262.4887829859793],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [110, 262.4887829859793],
+                  "to": [120, 261.10911233053463],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [120, 261.10911233053463],
+                  "to": [130, 259.112458502679],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [130, 259.112458502679],
+                  "to": [140, 256.2995821601724],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 256.2995821601724],
+                  "to": [150, 252.4435439776453],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [150, 252.4435439776453],
+                  "to": [160, 247.30237900168916],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [160, 247.30237900168916],
+                  "to": [170, 240.6396490174097],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [170, 240.6396490174097],
+                  "to": [180, 232.25288590192181],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [180, 232.25288590192181],
+                  "to": [190, 222.00842405830616],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [190, 222.00842405830616],
+                  "to": [200, 209.87932358955237],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [200, 209.87932358955237],
+                  "to": [210, 195.98133541616474],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [210, 195.98133541616474],
+                  "to": [220, 180.60059083302912],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [220, 180.60059083302912],
+                  "to": [230, 164.20636648336],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [230, 164.20636648336],
+                  "to": [240, 147.44323210542842],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [240, 147.44323210542842],
+                  "to": [250, 131.09924881522366],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [250, 131.09924881522366],
+                  "to": [260, 116.05043801589355],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 116.05043801589355],
+                  "to": [270, 103.18592755693001],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [270, 103.18592755693001],
+                  "to": [280, 93.32218136916418],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [280, 93.32218136916418],
+                  "to": [290, 87.11762248964442],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [290, 87.11762248964442],
+                  "to": [300, 85],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [300, 85],
+                  "to": [310, 87.11762248964442],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [310, 87.11762248964442],
+                  "to": [320, 93.32218136916418],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [320, 93.32218136916418],
+                  "to": [330, 103.18592755693001],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [330, 103.18592755693001],
+                  "to": [340, 116.05043801589355],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [340, 116.05043801589355],
+                  "to": [350, 131.09924881522366],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [350, 131.09924881522366],
+                  "to": [360, 147.44323210542842],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [360, 147.44323210542842],
+                  "to": [370, 164.20636648336],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [370, 164.20636648336],
+                  "to": [380, 180.60059083302912],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [380, 180.60059083302912],
+                  "to": [390, 195.98133541616474],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [390, 195.98133541616474],
+                  "to": [400, 209.87932358955237],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [400, 209.87932358955237],
+                  "to": [410, 222.00842405830616],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [410, 222.00842405830616],
+                  "to": [420, 232.25288590192181],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [420, 232.25288590192181],
+                  "to": [430, 240.6396490174097],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [430, 240.6396490174097],
+                  "to": [440, 247.30237900168916],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [440, 247.30237900168916],
+                  "to": [450, 252.4435439776453],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [450, 252.4435439776453],
+                  "to": [460, 256.2995821601724],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [460, 256.2995821601724],
+                  "to": [470, 259.112458502679],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [470, 259.112458502679],
+                  "to": [480, 261.10911233053463],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [480, 261.10911233053463],
+                  "to": [490, 262.4887829859793],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [490, 262.4887829859793],
+                  "to": [500, 263.4171468016567],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [500, 263.4171468016567],
+                  "to": [510, 264.0256435335882],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [510, 264.0256435335882],
+                  "to": [520, 264.414245078744],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [520, 264.414245078744],
+                  "to": [530, 264.6560978737119],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [530, 264.6560978737119],
+                  "to": [540, 264.80281466317456],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [540, 264.80281466317456],
+                  "to": [550, 264.8895831856953],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [50, 250.83608909064094],
+                  "to": [60, 248.6264429509609],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 248.6264429509609],
+                  "to": [70, 246.18374896997514],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [70, 246.18374896997514],
+                  "to": [80, 243.50421202915308],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [80, 243.50421202915308],
+                  "to": [90, 240.58797246721872],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [90, 240.58797246721872],
+                  "to": [100, 237.43966179477619],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [100, 237.43966179477619],
+                  "to": [110, 234.0688943454728],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [110, 234.0688943454728],
+                  "to": [120, 230.49066770808236],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [120, 230.49066770808236],
+                  "to": [130, 226.7256451967077],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [130, 226.7256451967077],
+                  "to": [140, 222.80029541651456],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 222.80029541651456],
+                  "to": [150, 218.7468672426996],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [150, 218.7468672426996],
+                  "to": [160, 214.60318324168],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [160, 214.60318324168],
+                  "to": [170, 210.41224062586298],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [170, 210.41224062586298],
+                  "to": [180, 206.2216160527142],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [180, 206.2216160527142],
+                  "to": [190, 202.0826786701341],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [190, 202.0826786701341],
+                  "to": [200, 198.04962440761182],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [200, 198.04962440761182],
+                  "to": [210, 194.17835318694128],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [210, 194.17835318694128],
+                  "to": [220, 190.52521900794676],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [220, 190.52521900794676],
+                  "to": [230, 187.14569027216203],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [230, 187.14569027216203],
+                  "to": [240, 184.092963778465],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [240, 184.092963778465],
+                  "to": [250, 181.41658014826737],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [250, 181.41658014826737],
+                  "to": [260, 179.1610906845821],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 179.1610906845821],
+                  "to": [270, 177.36482561755025],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [270, 177.36482561755025],
+                  "to": [280, 176.0588112448222],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [280, 176.0588112448222],
+                  "to": [290, 175.26587868374614],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [290, 175.26587868374614],
+                  "to": [300, 175],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [300, 175],
+                  "to": [310, 175.26587868374614],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [310, 175.26587868374614],
+                  "to": [320, 176.0588112448222],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [320, 176.0588112448222],
+                  "to": [330, 177.36482561755025],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [330, 177.36482561755025],
+                  "to": [340, 179.1610906845821],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [340, 179.1610906845821],
+                  "to": [350, 181.41658014826737],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [350, 181.41658014826737],
+                  "to": [360, 184.092963778465],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [360, 184.092963778465],
+                  "to": [370, 187.14569027216203],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [370, 187.14569027216203],
+                  "to": [380, 190.52521900794676],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [380, 190.52521900794676],
+                  "to": [390, 194.17835318694128],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [390, 194.17835318694128],
+                  "to": [400, 198.04962440761182],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [400, 198.04962440761182],
+                  "to": [410, 202.0826786701341],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [410, 202.0826786701341],
+                  "to": [420, 206.2216160527142],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [420, 206.2216160527142],
+                  "to": [430, 210.41224062586298],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [430, 210.41224062586298],
+                  "to": [440, 214.60318324168],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [440, 214.60318324168],
+                  "to": [450, 218.7468672426996],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [450, 218.7468672426996],
+                  "to": [460, 222.80029541651456],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [460, 222.80029541651456],
+                  "to": [470, 226.7256451967077],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [470, 226.7256451967077],
+                  "to": [480, 230.49066770808236],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [480, 230.49066770808236],
+                  "to": [490, 234.0688943454728],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [490, 234.0688943454728],
+                  "to": [500, 237.43966179477619],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [500, 237.43966179477619],
+                  "to": [510, 240.58797246721872],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [510, 240.58797246721872],
+                  "to": [520, 243.50421202915308],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [520, 243.50421202915308],
+                  "to": [530, 246.18374896997514],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [530, 246.18374896997514],
+                  "to": [540, 248.6264429509609],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [540, 248.6264429509609],
+                  "to": [550, 250.83608909064094],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "label",
+                  "at": [325, 85],
+                  "text": "earlier: narrow and tall"
+                },
+                {
+                  "kind": "label",
+                  "at": [380, 170],
+                  "text": "later: wide and low"
+                },
+                {
+                  "kind": "label",
+                  "at": [275, 290],
+                  "text": "mean = 0"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. A cloud spreads because variances add",
+            "body": "At each time interval Δt, move a distance a to the right or left with equal probability, independently of previous steps. Write the rth increment as ξ_r. Its mean is zero and its variance is a². After N steps the position is X_N=ξ_1+⋯+ξ_N. Linearity of expectation gives E[X_N]=0. Independence makes the cross terms in E[X_N²] vanish, giving\n$$\\operatorname{Var}(X_N)=Na^2,\\qquad\n\\sqrt{\\operatorname{Var}(X_N)}=a\\sqrt N.$$\nThe square-root law is the first surprising result. Twice as much elapsed time does not usually carry a particle twice as far from its starting point. Random reversals cancel much of the travelled distance. The total path length is Na, but its typical displacement is of order a√N. These are different observables.\n\nWith t=NΔt, introduce D=a²/(2Δt). Then Var(X)=2Dt. D has dimensions length squared per time; it is not a velocity. A useful diffusion time over distance L is therefore of order L²/D. Multiplying the distance by ten costs roughly a hundred times as long. The exact coefficient depends on what event or spread measure we choose.\n\nIndependence is doing real work. In general, Var(Σξ_r)=ΣVar(ξ_r)+2Σ_{r<s}Cov(ξ_r,ξ_s). A walker that tends to continue in the same direction has positive correlations and initially spreads faster. A walker that immediately retraces every step does not accumulate variance at all over complete pairs. Equal left and right frequencies alone do not establish ordinary diffusion.\n\nThere is also no contradiction between zero mean and broadening. The mean is a signed average, so left and right displacements cancel. Squaring before averaging measures spread without that cancellation. This is why the variance, rather than mean distance travelled or mean position, is the quantity that carries the microscopic random motion into the continuum model."
+          },
+          {
+            "kind": "question",
+            "bridge": "Add increments before describing a density.",
+            "meaning": "Independence removes the covariance terms.",
+            "question": "Why does typical displacement grow as √N rather than N?",
+            "answer": "Variance adds as Na², and standard deviation is its square root.",
+            "further": [
+              {
+                "question": "Can a zero mean coexist with a large spread?",
+                "answer": "Yes; opposite displacements cancel in the mean but not in the variance."
+              },
+              {
+                "question": "What distinguishes displacement from distance travelled?",
+                "answer": "Displacement includes cancellations; path length counts every step."
+              },
+              {
+                "question": "What can persistent correlations change?",
+                "answer": "The variance growth law, because covariance terms need not vanish."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A local probability balance becomes the heat equation",
+            "body": "Let P_j^n be the probability of occupying lattice point ja after n steps. To arrive at j at the next step, the walker must come from j−1 and move right, or from j+1 and move left. Thus\n$$P_j^{n+1}=\\tfrac12P_{j-1}^n+\\tfrac12P_{j+1}^n.$$\nThe probabilities sum to one because this rule redistributes rather than creates walkers. Subtract P_j^n and divide by Δt:\n$$\\frac{P_j^{n+1}-P_j^n}{\\Delta t}\n=\\frac{a^2}{2\\Delta t}\\frac{P_{j+1}^n-2P_j^n+P_{j-1}^n}{a^2}.$$\nRecognise the same neighbour-difference operator that appeared for the vibrating string. Here it determines a first time derivative rather than acceleration. The shared spatial operator does not imply shared dynamics.\n\nTo pass to a continuum density p(x,t), interpret probability in a small spatial bin as approximately p times its width. Taylor expansion of a smoothly averaged density turns the second difference into p_xx and the time difference into p_t. Holding D=a²/(2Δt) fixed gives\n$$p_t=Dp_{xx}.$$\nThere is a minor lattice subtlety: after a fixed number of steps only one parity of sites is reachable. Raw single-site probabilities therefore alternate with zero values. The continuum limit describes spatially averaged probabilities, or convergence of distributions, rather than a claim that every individual lattice value divided by a is already smooth.\n\nThe scaling is essential. Shrinking a while holding Δt fixed makes D tend to zero: on the chosen macroscopic clock, spreading disappears. Holding a fixed while sending Δt to zero makes the spreading rate diverge. A finite diffusion limit requires Δt proportional to a². This is called diffusive scaling, and it is different from preserving a fixed step speed a/Δt.\n\nThe derivation also identifies a regime of validity: many independent, sufficiently small steps viewed on scales larger than a and Δt. The PDE smooths the lattice detail. It should not be trusted to predict which exact lattice site is reachable after three steps, or to describe a process with long correlations or infinite step variance without further analysis."
+          },
+          {
+            "kind": "question",
+            "bridge": "Count arrivals at one lattice site.",
+            "meaning": "A neighbour balance supplies the spatial second derivative.",
+            "question": "Which ratio remains fixed in the diffusion limit?",
+            "answer": "a²/(2Δt)=D.",
+            "further": [
+              {
+                "question": "What if a shrinks with Δt fixed?",
+                "answer": "D tends to zero and macroscopic diffusion stops."
+              },
+              {
+                "question": "Why mention lattice parity?",
+                "answer": "Raw probabilities occupy only alternating sites at a given time; continuum density averages over that structure."
+              },
+              {
+                "question": "Why is this not the string equation?",
+                "answer": "The balance is first order in time, whereas the string has inertia and a second time derivative."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. The Gaussian is a normalised spreading solution",
+            "body": "Suppose all particles start at x=0 on an unbounded line. The diffusion equation has the density\n$$p(x,t)=\\frac{1}{\\sqrt{4\\pi Dt}}\\exp\\!\\left(-\\frac{x^2}{4Dt}\\right),\\qquad t>0.$$\nCompare it with the Gaussian density from the previous chapter: its mean is zero and variance is 2Dt. Its width increases as √t while its height decreases as 1/√t. Those changes must accompany one another so that the area remains one.\n\nWe can check the equation without guessing. Differentiating gives p_x=−xp/(2Dt) and p_xx=[x²/(4D²t²)−1/(2Dt)]p. Differentiating in time gives p_t=[−1/(2t)+x²/(4Dt²)]p, exactly Dp_xx. The formula therefore satisfies the local law as well as the variance predicted by the walk.\n\nAt t=0 the expression is singular. It represents a point release in the limiting sense that its total probability remains one and its mass concentrates in every interval containing the origin. It does not become an ordinary function of infinite height that we can evaluate at zero time. A finite initial cloud p_0 instead evolves by adding shifted point-release responses:\n$$p(x,t)=\\int_{-\\infty}^{\\infty}G(x-\\xi,t)p_0(\\xi)\\,d\\xi,$$\nwhere G is the displayed Gaussian. This convolution is the Green-function construction: each initial location contributes its own translated response, weighted by its initial probability.\n\nFor a Gaussian initial cloud of variance σ₀², the resulting variance is σ₀²+2Dt. The interpretation is the sum of an independent initial position and a random diffusive increment. An arbitrary initial density need not become exactly Gaussian immediately, although diffusion smooths it and large-scale asymptotic behaviour often approaches this shape under suitable conditions.\n\nFinally, the free-space Gaussian is positive at arbitrarily large distances for any t>0. A finite-step walk has a maximum possible displacement Na. There is no conflict: the diffusive limit sends its microscopic step speed a/Δt to infinity while preserving a finite macroscopic spread. The Gaussian tails are part of that idealisation. Boundaries, finite microscopic travel times and rare large jumps can require a different description."
+          },
+          {
+            "kind": "question",
+            "bridge": "Test the Gaussian against the PDE and total probability.",
+            "meaning": "Width grows as height falls, preserving area.",
+            "question": "What is the variance of the point-release solution?",
+            "answer": "2Dt.",
+            "further": [
+              {
+                "question": "What represents a finite initial cloud?",
+                "answer": "A convolution of its density with the Gaussian kernel."
+              },
+              {
+                "question": "Does the kernel have an ordinary value at t=0?",
+                "answer": "No; its initial condition is a point mass interpreted through integrals."
+              },
+              {
+                "question": "Are all initial densities immediately Gaussian?",
+                "answer": "No; convolution smooths them without generally making them exactly Gaussian at finite time."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "4. Drift moves the centre; diffusion spreads the cloud",
+            "body": "A probability density has a conservation law just like mass or energy. Define the probability current J so that probability in [b,c] changes by J(b,t)−J(c,t). The differential form is p_t+J_x=0. For diffusion,\n$$J=-Dp_x.$$\nWhy the minus sign? If more walkers sit on the right than the left, equally likely individual steps produce more leftward crossings than rightward crossings. The net current points down the density gradient even though no individual walker needs to sense that gradient. A collective law emerges from unequal numbers making unbiased moves.\n\nAdd a uniform rightward drift velocity v. Transport contributes vp to the current, so\n$$J=vp-Dp_x,\\qquad p_t+vp_x=Dp_{xx}.$$\nUse the moving coordinate z=x−vt. The chain rule removes the transport term and leaves ordinary diffusion in z. For a point release the Gaussian is therefore centred at vt, while its variance remains 2Dt. Deterministic translation and random spreading act on different properties of the cloud.\n\nWe can see the same distinction microscopically. Let the right-step probability be r and the left-step probability 1−r. The mean increment is a(2r−1), so a finite drift requires a(2r−1)/Δt→v. Under diffusive scaling, the bias must shrink with a; a fixed nonzero bias would produce a diverging drift speed. The variance of an increment is a²[1−(2r−1)²], which yields the same limiting D when the bias shrinks appropriately.\n\nIf v varies with position, conservation gives p_t+∂_x(vp)=Dp_xx, not simply p_t+vp_x=Dp_xx. The additional term pv_x accounts for local compression or expansion of the flow. This is the precise point where following one trajectory and following the density of many trajectories differ.\n\nOn a closed reflecting interval, impose J=0 at its ends to conserve total probability. An absorbing boundary instead removes surviving probability. Boundary conditions describe what happens to the walkers; they are part of the physical experiment, not decorative constraints appended after solving the PDE."
+          },
+          {
+            "kind": "question",
+            "bridge": "Identify a current before adding transport.",
+            "meaning": "Translation moves probability; diffusion spreads it down gradients.",
+            "question": "Why does variable drift require ∂x(vp)?",
+            "answer": "Density also changes when neighbouring trajectories compress or separate.",
+            "further": [
+              {
+                "question": "What does uniform drift do to variance?",
+                "answer": "It leaves the diffusive variance unchanged."
+              },
+              {
+                "question": "What is a reflecting boundary?",
+                "answer": "A boundary with zero total probability current."
+              },
+              {
+                "question": "Must each walker sense the density gradient?",
+                "answer": "No; unequal numbers of unbiased walkers create the net current."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The variance law can be derived without solving the PDE",
+            "body": "Assume the density and its derivatives decay fast enough at infinity for all boundary terms to vanish. Multiply p_t=Dp_xx by x² and integrate. Two integrations by parts give\n$$\\frac{d}{dt}\\int x^2p\\,dx\n=D\\int x^2p_{xx}\\,dx\n=-2D\\int xp_x\\,dx\n=2D\\int p\\,dx=2D.$$\nRepeating the calculation with x instead of x² gives a constant mean. Hence variance grows at rate 2D, whether or not the density is Gaussian. The bell curve is one particularly useful solution; the moment law is broader.\n\nThere is an operator connection hiding in those integrations by parts. Instead of evolving p and then averaging an observable f(x), we can transfer the derivatives to f: dE[f]/dt=E[D f'']. With drift, the expression becomes E[v f'+D f'']. This operator acts on observables rather than densities. Choosing f=x extracts the mean law; choosing f=x² extracts the second-moment law. We have turned a PDE into equations for selected measurements without reconstructing the entire solution.\n\nThe boundary assumptions are essential. In a bounded reflecting interval the variance cannot increase forever; boundary terms eventually alter this free-line calculation. Whenever an elegant moment identity contradicts confinement, inspect the discarded boundary terms before abandoning conservation."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Predicting a drifting cloud",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Predicting a drifting cloud",
+            "problem": "Walkers make independent steps ±0.2 m every 0.01 s. Initially their independent positions form a Gaussian of variance 1 m². In the continuum model add uniform drift 0.5 m/s. Find the density and its mean and spread at 2 s.",
+            "steps": [
+              {
+                "title": "Extract the diffusion coefficient",
+                "body": "D=a²/(2Δt)=0.04/0.02=2 m²/s.",
+                "reason": "Match the microscopic variance rate to 2D.",
+                "trap": "a/Δt is not the diffusion coefficient."
+              },
+              {
+                "title": "Move the centre",
+                "body": "The initial mean is zero, so at 2 s it is vt=1 m.",
+                "reason": "Uniform drift translates every initial position by the same amount.",
+                "trap": "Drift does not itself increase variance."
+              },
+              {
+                "title": "Add independent variances",
+                "body": "The variance is σ₀²+2Dt=1+8=9 m²; standard deviation is 3 m.",
+                "reason": "Initial position and later random increments are independent.",
+                "trap": "Add variances, not standard deviations."
+              },
+              {
+                "title": "Write the density",
+                "body": "p(x,2 s)=[1/(3√(2π) m)] exp[−(x−1 m)²/(18 m²)].",
+                "reason": "A Gaussian initial position plus Gaussian diffusive increment remains Gaussian.",
+                "trap": "The prefactor has units of inverse length, not probability."
+              },
+              {
+                "title": "Check the interpretation",
+                "body": "The integral is one, the centre is 1 m, and the variance has grown by 8 m². The description averages over many steps.",
+                "reason": "Normalisation and moments independently check the model.",
+                "trap": "Do not use the continuum formula as an exact single-site lattice probability."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "A diffusive density is the conserved, coarse description of many random paths; its centre and spread encode different mechanisms.",
+            "nextConnection": "Variational and field methods will reuse local balances, boundary conditions and the distinction between individual states and collective descriptions."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A symmetric walk becomes diffusion when step length and time shrink together with a²/(2Δt) fixed. The probability density obeys a conservation law even though individual paths remain unpredictable.",
+              "widerConnection": "Variance addition, Taylor expansion and local conservation lead to the same heat equation. Drift transports a distribution's centre while diffusion broadens it, connecting probability to characteristics and field evolution."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

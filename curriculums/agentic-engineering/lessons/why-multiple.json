@@ -1,0 +1,443 @@
+{
+  "id": "why-multiple",
+  "title": "Why multiple agents? Find the separable work · Sub-agents",
+  "description": "Identify work that can be split with low coupling and explain the cost of coordination before adding agents. Write sub-agent briefs that define scope, evidence, limitations and a compact result format.",
+  "domain": "Agentic engineering",
+  "unit": "12 · Coordinate agents",
+  "prerequisites": ["tools"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "why-multiple--why-multiple",
+        "title": "Why multiple agents? Find the separable work",
+        "navLabel": "Why multiple agents? Find the separable work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A second pair of hands helps when there are two jobs that can genuinely happen at once. It slows everything down when both people reach for the same tool, edit the same file and wait for each other to explain what changed. Multi-agent design starts with separability, not headcount."
+          },
+          {
+            "kind": "content",
+            "title": "Look for independent questions",
+            "body": "Good parallel work has separate inputs, a bounded output and a join that can compare or combine results. Examples include asking one agent to map callers while another reads tests, or asking an independent reviewer to challenge a proposed change. A single tightly coupled implementation path usually benefits more from one coherent owner."
+          },
+          {
+            "kind": "question",
+            "bridge": "Parallelism is useful only when the work can be separated and later joined.",
+            "meaning": "Independence is about information and side effects, not merely having different prompts.",
+            "question": "Which is the better split: one agent maps callers while another reviews tests, or two agents edit the same retry function?",
+            "answer": "The first. The investigations have distinct evidence and can be joined; concurrent edits to one function create conflict and duplicate reasoning.",
+            "further": [
+              {
+                "question": "What is a good worker boundary?",
+                "answer": "A bounded question, known inputs, a return format and no need to mutate shared state while investigating."
+              },
+              {
+                "question": "Why use an independent reviewer?",
+                "answer": "A fresh context can expose assumptions that the original implementer has normalised."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "A retry change needs both repository mapping and a behavioural critique.",
+            "problem": "A retry change needs both repository mapping and a behavioural critique.",
+            "steps": [
+              {
+                "title": "Split the questions",
+                "body": "Ask one worker to map callers and test fixtures, and another to inspect the proposed contract for missing failure cases.",
+                "reason": "Each worker returns evidence that the main agent can compare.",
+                "trap": "Ask both workers to edit the same implementation file."
+              },
+              {
+                "title": "Design the join",
+                "body": "The main agent compares the maps, resolves disagreements against the source and owns the final patch.",
+                "reason": "One place remains accountable for synthesis.",
+                "trap": "Concatenating both reports and calling the result a decision."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Price the coordination",
+            "body": "Two ten-minute investigations do not automatically become a ten-minute task when run in parallel. If briefing takes five minutes and combining the reports takes another ten, the elapsed saving may disappear. Both workers also consume resources, even when one finding makes the other irrelevant.\n\nBefore launching them, describe what you expect back and how you will use it. 'List callers that depend on the current retry count, with file references' is easier to combine with a test survey than a broad request to 'investigate robustness'.\n\nA split earns its place when the returned evidence advances the decision enough to cover that coordination work. Measure it on the tasks you actually have; headcount is not a performance metric."
+          },
+          {
+            "kind": "question",
+            "bridge": "The join is part of the design from the beginning.",
+            "meaning": "A split without an evaluation or merge plan is just more output to sort through.",
+            "question": "What should you estimate before adding a second agent?",
+            "answer": "The time and evidence needed to compare outputs, resolve conflicts, transfer context and review the combined result.",
+            "further": [
+              {
+                "question": "When is parallelism not worth it?",
+                "answer": "When the work is tightly coupled, the join is expensive or the task is already small enough for one coherent loop."
+              },
+              {
+                "question": "What is duplicated work?",
+                "answer": "Two workers independently rediscovering the same context or solving the same subproblem because their boundaries were not explicit."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Add agents only when the work has independent questions, bounded returns and a cheaper join than a single loop.",
+            "nextConnection": "Once a split is justified, each worker needs a contract. The next lesson designs sub-agent requests that return useful evidence instead of vague prose."
+          }
+        ]
+      },
+      {
+        "id": "subagents--subagents",
+        "title": "Sub-agents: delegate a question with a return contract",
+        "navLabel": "Sub-agents",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Sending someone to 'look into retries' is not delegation; it is forwarding your uncertainty. A useful sub-agent brief says which question matters, what evidence to inspect, what it must not change and what the caller should receive. The worker is not a smaller copy of the whole system. It is a bounded instrument in a larger investigation."
+          },
+          {
+            "kind": "example",
+            "title": "Delegate a repository map to a sub-agent.",
+            "problem": "Delegate a repository map to a sub-agent.",
+            "steps": [
+              {
+                "title": "Write the brief",
+                "body": "Inspect callers of RetryPolicy at abc123. Do not edit files. Return entry points, relevant tests, assumptions, evidence paths and one missing check.",
+                "reason": "The worker knows the question and the boundary.",
+                "trap": "Asking it to 'understand the retry system.'"
+              },
+              {
+                "title": "Use the result",
+                "body": "Compare its map with the test reviewer, resolve any disagreement against the source and record what remains unknown.",
+                "reason": "The parent retains synthesis and accountability.",
+                "trap": "Treating the first confident report as ground truth."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Give enough context, not the whole world",
+            "body": "A useful read-only brief could be:\n\n> At revision abc123, find callers that rely on the retry function throwing the first error after exhaustion. Do not edit files. Return caller locations, the relevant behaviour or tests, and anything you could not establish. Do not propose a new retry policy.\n\nThe worker now has a question it can finish answering. Give it access to the named revision and the evidence needed to explore beyond the initial file list. The scope limits the decision, not its ability to follow a relevant reference.\n\nAvoid copying the entire parent conversation by default. Include decisions the worker must respect, but keep tentative explanations labelled as hypotheses so it can disagree with them."
+          },
+          {
+            "kind": "question",
+            "bridge": "A worker can only return useful evidence if it knows what decision its answer will support.",
+            "meaning": "Delegation is a contract between caller and worker, not a vague request for another opinion.",
+            "question": "What is missing from 'review this code and tell me what you think'?",
+            "answer": "The decision, scope, evidence standard, limitations and return format. The worker may produce an articulate report that does not answer the actual need.",
+            "further": [
+              {
+                "question": "Why state a revision?",
+                "answer": "It anchors the worker's findings to a known code state."
+              },
+              {
+                "question": "Why state what not to change?",
+                "answer": "It prevents a research worker from creating side effects while gathering evidence."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Make the return inspectable",
+            "body": "Require findings, evidence pointers, uncertainty, rejected explanations and a recommendation or next check. Use a stable shape so the caller can compare workers. Do not ask the worker to quietly edit shared state unless ownership and conflict handling are explicit."
+          },
+          {
+            "kind": "question",
+            "bridge": "A worker report should reduce the caller's uncertainty, not transfer a new transcript.",
+            "meaning": "Evidence pointers and explicit uncertainty make the result comparable and challengeable.",
+            "question": "Which return is more useful: 'the retry code looks risky' or a finding with file, line, observed behaviour and next check?",
+            "answer": "The finding with evidence and a next check. It gives the caller something to verify and act on.",
+            "further": [
+              {
+                "question": "Should a worker hide uncertainty?",
+                "answer": "No. Uncertainty tells the caller where synthesis or further investigation is needed."
+              },
+              {
+                "question": "What makes worker outputs composable?",
+                "answer": "A stable structure with scope, findings, evidence, confidence and open questions."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Delegate a decision-relevant question, then require evidence, uncertainty and a stable return shape.",
+            "nextConnection": "Several well-scoped workers still need shared ownership and state. The next lesson makes coordination explicit so progress does not dissolve into competing edits."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Identify work that can be split with low coupling and explain the cost of coordination before adding agents. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Write sub-agent briefs that define scope, evidence, limitations and a compact result format. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "Once a split is justified, each worker needs a contract. The next lesson designs sub-agent requests that return useful evidence instead of vague prose. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Several well-scoped workers still need shared ownership and state. The next lesson makes coordination explicit so progress does not dissolve into competing edits. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Identify work that can be split with low coupling and explain the cost of coordination before adding agents.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Write sub-agent briefs that define scope, evidence, limitations and a compact result format."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "Multiple agents earn their cost only when division of labour creates independent evidence, parallelism, or a needed viewpoint. A subagent is a bounded worker with a narrow question, explicit return schema, and an accountable parent.",
+              "invariant": "The roles, contracts, and evidence contributions of each worker remain distinguishable. Every worker result includes evidence and uncertainty, and the parent remains responsible for acceptance.",
+              "limitingCase": "If one agent can complete and verify the task within its budget, adding another agent is overhead. A worker with no distinct question or evidence source should not be spawned.",
+              "counterexample": "Two agents repeating the same context and conclusion do not provide independent verification. A worker that echoes the parent's premise cannot function as independent review.",
+              "validity": "Multi-agent benefits depend on task decomposition, communication cost, and actual independence. Delegated reasoning reduces local complexity only when the worker contract and failure handling are explicit."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-skills-check-1",
+      "prompt": "When should a workflow become a skill?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "After one lucky use"
+          },
+          {
+            "id": "1",
+            "label": "When it recurs with stable decisions and checks"
+          },
+          {
+            "id": "2",
+            "label": "Whenever it sounds impressive"
+          }
+        ]
+      },
+      "solution": "Reuse is valuable when the pattern is real and maintainable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "tools"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Add agents only when the work has independent questions, bounded returns and a cheaper join than a single loop."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Delegate a decision-relevant question, then require evidence, uncertainty and a stable return shape."
+      }
+    ],
+    "steps": [
+      {
+        "id": "why-multiple-apply",
+        "prompt": "Who should own synthesis?",
+        "answer": {
+          "kind": "choice",
+          "value": "2",
+          "options": [
+            {
+              "id": "0",
+              "label": "Nobody"
+            },
+            {
+              "id": "1",
+              "label": "Every worker at once"
+            },
+            {
+              "id": "2",
+              "label": "An explicit final owner"
+            }
+          ]
+        },
+        "solution": "A join needs accountability.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "subagents-apply",
+        "prompt": "Why prohibit edits for a mapping worker?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "To hide its findings"
+            },
+            {
+              "id": "1",
+              "label": "To keep ownership and side effects clear"
+            },
+            {
+              "id": "2",
+              "label": "To reduce all useful work"
+            }
+          ]
+        },
+        "solution": "Read-only investigation is easier to join safely.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "why-multiple-check-1",
+      "prompt": "What makes work separable?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Different agent names"
+          },
+          {
+            "id": "1",
+            "label": "Distinct inputs, outputs and a join"
+          },
+          {
+            "id": "2",
+            "label": "More tokens"
+          }
+        ]
+      },
+      "solution": "Parallelism depends on low coupling and a planned join.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "why-multiple-check-2",
+      "prompt": "What is a coordination cost?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "A shorter task"
+          },
+          {
+            "id": "1",
+            "label": "Context transfer and conflict resolution"
+          },
+          {
+            "id": "2",
+            "label": "A stronger assertion"
+          }
+        ]
+      },
+      "solution": "Extra agents create work as well as capacity.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "subagents-check-1",
+      "prompt": "What belongs in a sub-agent brief?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only a topic"
+          },
+          {
+            "id": "1",
+            "label": "Question, scope, evidence and boundary"
+          },
+          {
+            "id": "2",
+            "label": "The entire transcript"
+          }
+        ]
+      },
+      "solution": "A worker needs enough context to answer a bounded question.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "subagents-check-2",
+      "prompt": "What should a return contract include?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only a confidence score"
+          },
+          {
+            "id": "1",
+            "label": "An unrelated patch"
+          },
+          {
+            "id": "2",
+            "label": "Evidence and uncertainty"
+          }
+        ]
+      },
+      "solution": "The caller must be able to inspect the result.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    },
+    {
+      "title": "Anthropic: Claude Code overview",
+      "url": "https://code.claude.com/docs/en/overview"
+    }
+  ],
+  "heading": "When does a second agent create leverage rather than noise?",
+  "lead": "Identify work that can be split with low coupling and explain the cost of coordination before adding agents. Write sub-agent briefs that define scope, evidence, limitations and a compact result format.",
+  "outcomes": [
+    "Identify work that can be split with low coupling and explain the cost of coordination before adding agents.",
+    "Write sub-agent briefs that define scope, evidence, limitations and a compact result format."
+  ]
+}

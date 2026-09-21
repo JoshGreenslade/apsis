@@ -98,26 +98,6 @@ export const PracticeTemplateSchema = z.object({
   solution: text,
 });
 export type PracticeTemplate = z.infer<typeof PracticeTemplateSchema>;
-export const TeachingSchema = z.object({
-  question: text,
-  why: text,
-  outcomes: z.array(text).min(1),
-  checkpoints: z.array(
-    z.object({
-      bridge: text,
-      meaning: text,
-      question: text,
-      answer: text,
-      // Additional, progressively harder reflection prompts for the same
-      // theory section, shown after the primary question. Optional so
-      // existing single-question checkpoints remain valid unchanged.
-      further: z.array(z.object({ question: text, answer: text })).optional(),
-    }),
-  ),
-  takeaway: text,
-  nextConnection: text,
-});
-export type Teaching = z.infer<typeof TeachingSchema>;
 const practicalSchema = z.object({
   title: text,
   minutes: z.number().int().positive(),
@@ -128,11 +108,11 @@ const practicalSchema = z.object({
 });
 export type Practical = z.infer<typeof practicalSchema>;
 export const OverviewSchema = z.object({
-  headline: text,
-  introduction: text,
-  outcomes: z.array(z.object({ title: text, description: text })).min(1),
-  startingPoint: text,
-  capstone: z.object({ title: text, description: text }),
+  headline: text.optional(),
+  introduction: text.optional(),
+  outcomes: z.array(z.object({ title: text, description: text })).optional(),
+  startingPoint: text.optional(),
+  capstone: z.object({ title: text, description: text }).optional(),
   throughlines: z
     .array(
       z.object({
@@ -206,8 +186,33 @@ const lessonStepSchema = z.object({
   reason: text.optional(),
   trap: text.optional(),
 });
-const lessonBlockSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("prose"), title: text.optional(), body: text }),
+export const SummarySchema = z.object({
+  coreIdea: text,
+  widerConnection: text,
+  primitives: z.array(text).min(1).optional(),
+  assumptions: z.array(text).min(1).optional(),
+  governingLaw: text.optional(),
+  invariant: text.optional(),
+  derivation: text.optional(),
+  checks: z.array(text).min(1).optional(),
+  limitingCase: text.optional(),
+  counterexample: text.optional(),
+  validity: text.optional(),
+});
+
+export const LessonBlockSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("exploration"),
+    experiment: z.enum([
+      "derivatives",
+      "integrals",
+      "eigenvectors",
+      "fourier",
+      "metrics",
+    ]),
+  }),
+  z.object({ kind: z.literal("summary"), data: SummarySchema }),
+  z.object({ kind: z.literal("content"), title: text.optional(), body: text }),
   z.object({
     kind: z.literal("callout"),
     title: text,
@@ -226,7 +231,7 @@ const lessonBlockSchema = z.discriminatedUnion("kind", [
   }),
   z.object({ kind: z.literal("diagram"), data: DiagramSchema }),
   z.object({
-    kind: z.literal("checkpoint"),
+    kind: z.literal("question"),
     bridge: text.optional(),
     meaning: text.optional(),
     question: text,
@@ -247,7 +252,7 @@ const lessonBlockSchema = z.discriminatedUnion("kind", [
     nextConnection: text.optional(),
   }),
 ]);
-export type LessonBlock = z.infer<typeof lessonBlockSchema>;
+export type LessonBlock = z.infer<typeof LessonBlockSchema>;
 const lessonSectionSchema = z.object({
   id: text,
   title: text,
@@ -256,115 +261,59 @@ const lessonSectionSchema = z.object({
   role: z
     .enum(["story", "reasoning", "example", "takeaway", "custom"])
     .optional(),
-  blocks: z.array(lessonBlockSchema).min(1),
+  blocks: z.array(LessonBlockSchema).min(1),
 });
 export type LessonSection = z.infer<typeof lessonSectionSchema>;
-export const LessonContentSchema = z.object({
-  sections: z.array(lessonSectionSchema).min(1),
-}).superRefine((content, ctx) => {
-  const ids = content.sections.map((section) => section.id);
-  if (new Set(ids).size !== ids.length) {
-    ctx.addIssue({
-      code: "custom",
-      path: ["sections"],
-      message: "Lesson section IDs must be unique within a lesson",
-    });
-  }
-});
+export const LessonContentSchema = z
+  .object({
+    sections: z.array(lessonSectionSchema).min(1),
+  })
+  .superRefine((content, ctx) => {
+    const ids = content.sections.map((section) => section.id);
+    if (new Set(ids).size !== ids.length) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["sections"],
+        message: "Lesson section IDs must be unique within a lesson",
+      });
+    }
+  });
 export type LessonContent = z.infer<typeof LessonContentSchema>;
-export type CurriculumTopicDraft = {
-  id: string;
-  title: string;
-  description: string;
-  domain: string;
-  unit: string;
-  prerequisites: string[];
-  minutes: number;
-  content: LessonContent;
-  sources: { title: string; url: string }[];
-  practical?: Practical;
-  theoreticalMinimum?: NonNullable<
-    z.infer<typeof CurriculumTopicSchema>["theoreticalMinimum"]
-  >;
-  practiceTemplates?: PracticeTemplate[];
-  diagnostics?: Problem[];
-  retrievalProblems?: Problem[];
-  fadedExercise?: {
-    prompt: string;
-    supplied: { heading: string; body: string }[];
-    steps: Problem[];
-  };
-  transferProblems?: Problem[];
-};
-export const CurriculumTopicSchema = z.object({
-  id: text,
-  title: text,
-  description: text,
-  domain: text,
-  unit: text,
-  prerequisites: z.array(text),
-  minutes: z.number().int().positive(),
-  teaching: TeachingSchema.optional(),
-  theoreticalMinimum: z
-    .object({
-      coreIdea: text,
-      widerConnection: text,
-      primitives: z.array(text).min(1).optional(),
-      assumptions: z.array(text).min(1).optional(),
-      governingLaw: text.optional(),
-      invariant: text.optional(),
-      derivation: text.optional(),
-      checks: z.array(text).min(1).optional(),
-      limitingCase: text.optional(),
-      counterexample: text.optional(),
-      validity: text.optional(),
-    })
-    .optional(),
-  practiceTemplates: z.array(PracticeTemplateSchema).optional(),
-  practical: practicalSchema.optional(),
-  diagnostics: z.array(ProblemSchema),
-  intuition: z.object({ body: z.string(), thoughtExperiments: z.array(text) }),
-  theory: z.array(exposition),
-  diagram: DiagramSchema.optional(),
-  sidebars: z.array(exposition),
-  workedExample: z.object({
-    title: z.string(),
-    problem: z.string(),
-    steps: z
-      .array(z.object({ title: text, body: text, reason: text, trap: text }))
-      ,
-  }),
-  fadedExercise: z.object({
-    prompt: z.string(),
-    supplied: z.array(exposition),
-    steps: z.array(ProblemSchema),
-  }),
-  retrievalProblems: z.array(ProblemSchema),
-  transferProblems: z.array(ProblemSchema).optional(),
-  sources: z.array(z.object({ title: text, url: z.url() })).min(1),
-  content: LessonContentSchema.optional(),
-}).superRefine((topic, ctx) => {
-  if (topic.content) return;
-  const required = {
-    intuition: topic.intuition.body.length > 0 && topic.intuition.thoughtExperiments.length > 0,
-    theory: topic.theory.length > 0,
-    diagram: Boolean(topic.diagram),
-    workedExample: Boolean(topic.workedExample.title && topic.workedExample.problem) && topic.workedExample.steps.length >= 2,
-    diagnostics: topic.diagnostics.length > 0,
-    fadedExercise: Boolean(topic.fadedExercise.prompt) && topic.fadedExercise.supplied.length > 0 && topic.fadedExercise.steps.length > 0,
-    retrievalProblems: topic.retrievalProblems.length >= 2,
-  };
-  for (const [field, valid] of Object.entries(required)) {
-    if (!valid) ctx.addIssue({ code: "custom", path: [field], message: "Legacy topics require complete teaching and assessment fields" });
-  }
-});
+export const CurriculumTopicSchema = z
+  .object({
+    id: text,
+    title: text,
+    description: z.string().default(""),
+    heading: text.optional(),
+    lead: text.optional(),
+    outcomes: z.array(text).default([]),
+    domain: z.string().default(""),
+    unit: z.string().default(""),
+    prerequisites: z.array(text).default([]),
+    minutes: z.number().int().positive().optional(),
+    content: LessonContentSchema,
+    practiceTemplates: z.array(PracticeTemplateSchema).optional(),
+    diagnostics: z.array(ProblemSchema).default([]),
+    fadedExercise: z
+      .object({
+        prompt: z.string(),
+        supplied: z.array(exposition),
+        steps: z.array(ProblemSchema),
+      })
+      .default({ prompt: "", supplied: [], steps: [] }),
+    retrievalProblems: z.array(ProblemSchema).default([]),
+    transferProblems: z.array(ProblemSchema).optional(),
+    sources: z.array(z.object({ title: text, url: z.url() })).default([]),
+  })
+  .strict();
+export type CurriculumTopicDraft = z.input<typeof CurriculumTopicSchema>;
 export type CurriculumTopic = z.infer<typeof CurriculumTopicSchema>;
 export const CurriculumPackSchema = z.object({
   id: text,
   version: text,
   title: text,
   description: text,
-  conventions: text,
+  conventions: z.string().default(""),
   overview: OverviewSchema.optional(),
   topics: z.array(CurriculumTopicSchema).min(1),
 });

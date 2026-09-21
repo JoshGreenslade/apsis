@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import katex from "katex";
-import astrodynamics from "../curricula/astrodynamics";
-import agents from "../curricula/agentic-engineering";
-import mathematics from "../curricula/mathematics-for-physics";
+import astrodynamics from "../curriculums/astrodynamics";
+import agents from "../curriculums/agentic-engineering";
+import mathematics from "../curriculums/mathematics-for-physics";
 import {
   applyAction,
   evaluate,
@@ -24,11 +24,6 @@ const pack = validatePack(astrodynamics),
 
 test("every pack validates, every answer passes, every formula parses", () => {
   for (const p of [pack, validatePack(agents), validatePack(mathematics)]) {
-    for (const topic of p.topics)
-      assert.ok(
-        !topic.intuition.body.includes("\\n"),
-        "Intuition must contain real paragraph breaks, not literal newline escapes",
-      );
     for (const t of p.topics)
       for (const problem of [
         ...t.diagnostics,
@@ -59,17 +54,7 @@ test("every pack validates, every answer passes, every formula parses", () => {
     visit(p);
   }
 });
-test("astrodynamics keeps a progressive laboratory spine", () => {
-  const labs = pack.topics.filter((topic) => topic.practical);
-  assert.deepEqual(
-    labs.map((topic) => topic.id),
-    ["two-body", "perturbations", "patched-conics"],
-  );
-  assert.match(labs[0].practical!.title, /Propagate an orbit/);
-  assert.match(labs[1].practical!.title, /secular drift/);
-  assert.match(labs[2].practical!.title, /lunar estimate/);
-});
-test("DAG rejects cycles, duplicates, dangling dependencies and missing diagnostics", () => {
+test("DAG rejects cycles, duplicates, dangling dependencies and permits optional diagnostics", () => {
   const clone = structuredClone(pack.topics);
   clone[0].prerequisites = [clone[1].id];
   assert.throws(() => topologicalOrder(clone), /cycle/);
@@ -79,7 +64,7 @@ test("DAG rejects cycles, duplicates, dangling dependencies and missing diagnost
   assert.throws(() => topologicalOrder([missing]), /Missing/);
   const bad = structuredClone(pack);
   bad.topics[1].diagnostics.forEach((d) => (d.prerequisiteId = undefined));
-  assert.throws(() => validatePack(bad), /Missing diagnostic/);
+  assert.doesNotThrow(() => validatePack(bad));
 });
 test("numeric evaluation distinguishes units, malformed inputs and tolerances", () => {
   const p = t.diagnostics[0];

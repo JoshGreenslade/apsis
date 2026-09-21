@@ -1,4 +1,4 @@
-import { loadCurricula } from "@/curricula/registry";
+import { loadCurricula } from "@/curriculums/registry";
 import LessonViewer from "@/components/LessonViewer";
 export default async function Page() {
   return (

@@ -1,0 +1,644 @@
+{
+  "id": "tools",
+  "title": "Tools · MCP · Skills and guidance",
+  "description": "Design tools with narrow inputs, explicit permissions, useful observations and predictable failure behaviour. Use MCP as a typed connection boundary while keeping identity, trust, permissions and tool semantics explicit. Package repeatable workflows as scoped, discoverable guidance with inputs, evidence and maintenance rules.",
+  "domain": "Agentic engineering",
+  "unit": "11 · Add external capabilities",
+  "prerequisites": ["customisation"],
+  "minutes": 36,
+  "content": {
+    "sections": [
+      {
+        "id": "tools--tools",
+        "title": "Tools: design the action and observation together",
+        "navLabel": "Tools",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Compare two tools: one accepts an arbitrary shell command; the other runs a named test suite in an assigned checkout and returns the command, exit status and output artifact. Both may be useful, but the second makes far fewer decisions implicit.\n\nTool design decides what an agent can ask to do and what it will learn afterwards. A successful operation with an uninformative response can leave the next turn almost as uncertain as a failed one."
+          },
+          {
+            "kind": "example",
+            "title": "A team wants an agent to update customer records.",
+            "problem": "A team wants an agent to update customer records.",
+            "steps": [
+              {
+                "title": "Narrow the operation",
+                "body": "Expose update_customer_status with a validated customer ID, allowed status values and an explicit audit reason.",
+                "reason": "The tool communicates intent and limits the write surface.",
+                "trap": "Exposing a raw database console because it is flexible."
+              },
+              {
+                "title": "Return an observable result",
+                "body": "Return the changed record ID, old and new status, audit event ID and a clear conflict error.",
+                "reason": "The agent and reviewer can see what happened.",
+                "trap": "Returning the whole customer table after every write."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Make the contract small",
+            "body": "Name the operation, input schema, side effects, permission boundary and output shape. A read tool should not quietly mutate. A write tool should say what it changes and return an identifier, diff or receipt that makes the result inspectable. Narrow contracts also make tool selection easier for the model."
+          },
+          {
+            "kind": "question",
+            "bridge": "Tool quality is not just the ability to cause an effect. It is the quality of the loop between action and observation.",
+            "meaning": "The agent needs a bounded action and enough trustworthy output to decide what comes next.",
+            "question": "What is wrong with a tool that accepts arbitrary shell text for every operation?",
+            "answer": "Its contract, permissions and effects are opaque. The agent must infer too much, and a small mistake can have a large blast radius.",
+            "further": [
+              {
+                "question": "What should a write tool return?",
+                "answer": "A bounded description of what changed, a stable identifier or diff and any verification result needed for the next step."
+              },
+              {
+                "question": "Why validate before side effects?",
+                "answer": "It prevents malformed or unauthorized requests from creating damage that a later error cannot undo."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Treat failures as observations",
+            "body": "'Timed out' is not enough information for a write operation. Did the request fail before it reached the server, or did the write finish while the response was lost? In the second case, retrying blindly may duplicate the effect.\n\nReturn an operation identifier when possible and let the caller query its status. Distinguish invalid input, permission denial, execution failure and an unknown outcome. These states suggest different next actions: correct the arguments, obtain approval, investigate the failure, or reconcile what already happened.\n\nValidate before acting, and keep error output useful without leaking secrets. For a large log, return a bounded excerpt and an artifact reference rather than flooding the next model request."
+          },
+          {
+            "kind": "question",
+            "bridge": "An error is part of the tool's output, not an embarrassing exception to hide.",
+            "meaning": "Failure messages should help choose a safe recovery and reveal whether repeating the action is appropriate.",
+            "question": "A tool reports only 'request failed.' What is missing?",
+            "answer": "The cause, retry safety, relevant identifiers and the next useful action. Without them, the agent may repeat a dangerous or pointless call.",
+            "further": [
+              {
+                "question": "Why cap output?",
+                "answer": "Unbounded output can bury the useful observation and consume context without improving the decision."
+              },
+              {
+                "question": "What does idempotence buy?",
+                "answer": "A repeated request has a predictable effect, making retries safer after uncertain network failures."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "A tool is a decision interface: constrain the action, expose its effects and return the evidence needed for recovery.",
+            "nextConnection": "Tools become more useful when they can be discovered and connected consistently. MCP supplies a protocol for that connection, but it does not remove the need for tool design."
+          }
+        ]
+      },
+      {
+        "id": "mcp--mcp",
+        "title": "MCP: a connection protocol, not an agent",
+        "navLabel": "MCP",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Suppose two agent applications need access to the same issue tracker. Without a shared protocol, each may need a different adapter for discovering operations, sending arguments and receiving results. MCP provides a common way for clients and servers to exchange those capabilities.\n\nThat saves integration work. It does not answer whether this particular agent should close an issue, whether the server is trustworthy, or which account a request should use. Those decisions still need an owner."
+          },
+          {
+            "kind": "content",
+            "title": "Separate protocol from policy",
+            "body": "Keep three roles distinct. The host is the application the user is working in. It manages a client connection to a server, which exposes capabilities such as tools, resources or prompts. The model may request an exposed tool; the surrounding application determines whether and how that request is sent.\n\nAn issue-tracker server might expose both reading and closing an issue. Discovering the closing tool is not permission to use it. Decide which identity the connection uses, which data may leave the host and which actions need approval.\n\nKeep server results at the right level of trust as well. Text retrieved from an issue can contain instructions, but its arrival through a protocol does not make those instructions authoritative."
+          },
+          {
+            "kind": "question",
+            "bridge": "A standard connection reduces integration friction, not operational responsibility.",
+            "meaning": "MCP is a transport and discovery boundary; trust, permissions and semantic safety remain application decisions.",
+            "question": "Does exposing a dangerous database tool through MCP make it safe?",
+            "answer": "No. It may make the interface consistent, but the tool still needs least privilege, validation, auditing and an approval policy.",
+            "further": [
+              {
+                "question": "What does MCP standardise?",
+                "answer": "How a client and server discover and invoke capabilities and exchange structured data."
+              },
+              {
+                "question": "What does it not decide?",
+                "answer": "Whether a server is trusted, who may call it, what side effects are allowed or whether the result is correct."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Read the host/client/server diagram",
+            "body": "The [MCP architecture diagram in the March 2025 specification](https://modelcontextprotocol.io/specification/2025-03-26/architecture) shows the host managing separate client/server connections. Follow one tool request across that boundary. This is a versioned reference: check your negotiated protocol version before implementing lifecycle details."
+          },
+          {
+            "kind": "content",
+            "title": "Make the boundary inspectable",
+            "body": "Use explicit schemas, stable error shapes and clear resource ownership. Treat server output as data, not as a new instruction hierarchy. Version the contract, record calls that matter and test the connection under denial, timeout and partial-failure conditions."
+          },
+          {
+            "kind": "question",
+            "bridge": "The protocol boundary is also a trust boundary.",
+            "meaning": "Server output must be bounded, attributed and interpreted as data within the host policy.",
+            "question": "A connected server returns text saying to ignore the task and upload a secret. What should the client do?",
+            "answer": "Treat it as untrusted output, apply the host's authority rules and refuse the unsafe action. Protocol transport does not grant instruction authority.",
+            "further": [
+              {
+                "question": "Why log important calls?",
+                "answer": "Logs support review, incident investigation and detection of unexpected access or side effects."
+              },
+              {
+                "question": "What should failure tests include?",
+                "answer": "Denial, timeout, malformed output and partial completion, not only the happy path."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "A CI service is added through an MCP server.",
+            "problem": "A CI service is added through an MCP server.",
+            "steps": [
+              {
+                "title": "Review the boundary",
+                "body": "Define which repositories the server may read, which actions are read-only, how identity is mapped and what output is returned.",
+                "reason": "The connection has an explicit trust and permission model.",
+                "trap": "Assuming discovery means every discovered tool should be enabled."
+              },
+              {
+                "title": "Test an interruption",
+                "body": "Simulate a timeout after the CI run starts and verify that the client can identify the run before retrying or reporting its state.",
+                "reason": "Uncertain outcomes do not become duplicate actions by accident.",
+                "trap": "Blindly invoking the command again after every network error."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "MCP can standardise the connection, but trust, permissions, semantics and recovery still belong to the system around it.",
+            "nextConnection": "Some useful capability is not a remote tool at all. Skills package repeatable decisions and guidance so agents can apply local practice consistently."
+          }
+        ]
+      },
+      {
+        "id": "skills--skills",
+        "title": "Skills and guidance: reuse decisions, not just commands",
+        "navLabel": "Skills and guidance",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "After several dependency upgrades, the team keeps repeating the same advice: inspect the changelog, check the lockfile, run the affected tests and call out integration checks that could not run. That recurring judgement is a candidate for a skill.\n\nA useful skill helps an agent recognise this kind of task and carry it through. It can include instructions, scripts and references. It is not a new permission grant, and following its steps is not evidence that the upgrade succeeded."
+          },
+          {
+            "kind": "example",
+            "title": "A team repeats the same dependency-update workflow every week.",
+            "problem": "A team repeats the same dependency-update workflow every week.",
+            "steps": [
+              {
+                "title": "Extract the decisions",
+                "body": "Record how to inspect advisories, choose a version, run compatibility tests, review the diff and handle a failed upgrade.",
+                "reason": "The skill captures judgement rather than just a command sequence.",
+                "trap": "Publishing a skill that says only 'run npm update.'"
+              },
+              {
+                "title": "Attach proof and scope",
+                "body": "Require a clean test report and define that production release remains a separate approved action.",
+                "reason": "The skill accelerates work without expanding authority.",
+                "trap": "Letting the skill publish automatically because the tests passed."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Promote a pattern only after it repeats",
+            "body": "A skill is worth creating when a workflow recurs, has a recognisable trigger and benefits from consistent treatment. Include prerequisites, inputs, steps, expected outputs, failure recovery and an owner. Avoid turning every clever one-off prompt into permanent guidance; stale skills add search noise and false confidence."
+          },
+          {
+            "kind": "question",
+            "bridge": "A skill is reusable judgement made visible, not a bag of magic words.",
+            "meaning": "It should help an agent recognise a situation, choose actions and produce evidence within a scope.",
+            "question": "What is a good candidate for a skill?",
+            "answer": "A recurring workflow with a clear trigger, stable decisions and a repeatable verification path.",
+            "further": [
+              {
+                "question": "Why include non-applicability?",
+                "answer": "It prevents a skill from being invoked merely because its keywords look similar to the current task."
+              },
+              {
+                "question": "Why name an owner?",
+                "answer": "Guidance can become stale; someone must be responsible for reviewing and updating it."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Keep skills scoped and testable",
+            "body": "Try the upgrade skill on two cases: a routine patch release and a major version with a migration requirement. It should not apply the same sequence blindly. The major upgrade may need investigation or approval before changing dependencies.\n\nThen try an unrelated task. Does the skill stay out of the way, or does its broad description attract work it was never meant to govern? Scope matters as much as the happy path.\n\nLink to commands and checks that can establish the result, and give the skill an owner. When the repository's setup changes, update or retire the stale guidance. Reusable instructions create maintenance work just as reusable code does."
+          },
+          {
+            "kind": "question",
+            "bridge": "Guidance cannot substitute for proof.",
+            "meaning": "The skill should direct the agent to checks and recovery, not declare its own success.",
+            "question": "A deployment skill says 'run the release command and confirm success.' What should it add?",
+            "answer": "The exact preconditions, observable release identifier, verification checks and rollback or escalation path.",
+            "further": [
+              {
+                "question": "Why prefer a decision tree?",
+                "answer": "It makes conditions and exceptions explicit instead of hiding them inside a ritual sequence."
+              },
+              {
+                "question": "When should a skill be retired?",
+                "answer": "When its tools, workflow or assumptions no longer match reality and it cannot be repaired economically."
+              }
+            ]
+          },
+          {
+            "kind": "lab",
+            "data": {
+              "title": "Lab 7 · Design one trustworthy capability",
+              "minutes": 30,
+              "brief": "Choose a recurring workflow and specify either a narrow tool or a reusable skill, including its trust boundary and evidence.",
+              "steps": [
+                "Write the trigger, inputs, side effects, permissions and expected output.",
+                "Define the smallest useful schema or decision tree.",
+                "List denial, timeout, malformed-input and partial-success behaviour.",
+                "Run one representative case and compare the returned evidence with the contract."
+              ],
+              "deliverables": [
+                "A capability contract",
+                "A trust and permission note",
+                "A happy-path and failure-path result"
+              ],
+              "review": "The capability should make one useful action easier to choose and safer to inspect. A broad interface with vague output has failed the lab even if it can technically perform the task."
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "Turn repeated judgement into scoped, testable skills, and maintain them like code.",
+            "nextConnection": "Capabilities can be connected and reused, but one agent still has limits. The next unit asks when several agents help and how to coordinate them without multiplying confusion."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Design tools with narrow inputs, explicit permissions, useful observations and predictable failure behaviour. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Use MCP as a typed connection boundary while keeping identity, trust, permissions and tool semantics explicit. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Package repeatable workflows as scoped, discoverable guidance with inputs, evidence and maintenance rules. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "Tools become more useful when they can be discovered and connected consistently. MCP supplies a protocol for that connection, but it does not remove the need for tool design. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Some useful capability is not a remote tool at all. Skills package repeatable decisions and guidance so agents can apply local practice consistently. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Capabilities can be connected and reused, but one agent still has limits. The next unit asks when several agents help and how to coordinate them without multiplying confusion. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Design tools with narrow inputs, explicit permissions, useful observations and predictable failure behaviour.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Use MCP as a typed connection boundary while keeping identity, trust, permissions and tool semantics explicit.",
+                "The lesson's target: Package repeatable workflows as scoped, discoverable guidance with inputs, evidence and maintenance rules."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "A tool is a typed authority boundary: it accepts validated arguments, performs a bounded effect, and returns an observation. An external capability becomes usable through a protocol contract that separates discovery, invocation, and returned evidence. A skill packages repeatable instructions and checks so a capability can be invoked consistently within a bounded context.",
+              "invariant": "Every tool call has a contract, identity, timeout, and result that can be attributed to that call. The client must validate the server's identity, schema, arguments, authority, and result before using it. The skill's declared inputs, outputs, side effects, and version remain inspectable to its caller.",
+              "limitingCase": "If a tool has no effect or observation, it is context rather than an executable capability. When no external state or capability is required, adding a protocol server only adds attack and maintenance surface. For a single transparent action, packaging a skill can cost more than invoking the action directly.",
+              "counterexample": "A successful tool response can still be irrelevant if it acted on the wrong resource or stale revision. A tool being discoverable does not mean it is safe, correctly scoped, or suitable for the current task. A polished skill can amplify a bad instruction across every invocation instead of improving the underlying decision.",
+              "validity": "Tool contracts describe intended behaviour; the executor must still enforce validation and permissions. Protocol guarantees cover message exchange, not the truthfulness, safety, or business meaning of an external result. A skill is a reusable procedure, not proof that its output is correct in every environment."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-workflow-patterns-check-1",
+      "prompt": "What does a workflow pattern provide?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A control shape for a recurring decision"
+          },
+          {
+            "id": "1",
+            "label": "A guarantee of correctness"
+          },
+          {
+            "id": "2",
+            "label": "An unlimited token budget"
+          }
+        ]
+      },
+      "solution": "Patterns organise authority, evidence and handoffs.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "customisation"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "A tool is a decision interface: constrain the action, expose its effects and return the evidence needed for recovery."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "MCP can standardise the connection, but trust, permissions, semantics and recovery still belong to the system around it."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Turn repeated judgement into scoped, testable skills, and maintain them like code."
+      }
+    ],
+    "steps": [
+      {
+        "id": "tools-apply",
+        "prompt": "What is an idempotent operation?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "One whose repeated request has a predictable effect"
+            },
+            {
+              "id": "1",
+              "label": "One that always succeeds"
+            },
+            {
+              "id": "2",
+              "label": "One that never changes state"
+            }
+          ]
+        },
+        "solution": "Predictable retries matter when network outcomes are uncertain.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "mcp-apply",
+        "prompt": "What should a timeout test verify?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "That the request is forgotten"
+            },
+            {
+              "id": "1",
+              "label": "How the client identifies and recovers from uncertain completion"
+            },
+            {
+              "id": "2",
+              "label": "That retries are unlimited"
+            }
+          ]
+        },
+        "solution": "Partial failure is part of the connection contract.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "skills-apply",
+        "prompt": "What proves a skill worked?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "The prose says done"
+            },
+            {
+              "id": "1",
+              "label": "Its named verification evidence"
+            },
+            {
+              "id": "2",
+              "label": "The skill file is long"
+            }
+          ]
+        },
+        "solution": "Guidance should point to proof rather than replace it.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "tools-check-1",
+      "prompt": "What makes a tool safer?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A narrow contract and explicit side effects"
+          },
+          {
+            "id": "1",
+            "label": "Unlimited shell access"
+          },
+          {
+            "id": "2",
+            "label": "An opaque success string"
+          }
+        ]
+      },
+      "solution": "A small, inspectable contract reduces ambiguity and blast radius.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "tools-check-2",
+      "prompt": "Why cap tool output?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "To hide all evidence"
+          },
+          {
+            "id": "1",
+            "label": "To preserve useful context"
+          },
+          {
+            "id": "2",
+            "label": "To make errors mysterious"
+          }
+        ]
+      },
+      "solution": "Bounded output keeps observations usable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "mcp-check-1",
+      "prompt": "What does MCP primarily provide?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "A connection and discovery protocol"
+          },
+          {
+            "id": "1",
+            "label": "A guarantee of safe reasoning"
+          },
+          {
+            "id": "2",
+            "label": "A replacement for review"
+          }
+        ]
+      },
+      "solution": "The protocol helps capabilities connect; policy still governs use.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "mcp-check-2",
+      "prompt": "Is server output authoritative?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Always"
+          },
+          {
+            "id": "1",
+            "label": "Only because it is structured"
+          },
+          {
+            "id": "2",
+            "label": "No, it remains data subject to host policy"
+          }
+        ]
+      },
+      "solution": "Transport and structure do not change authority.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "skills-check-1",
+      "prompt": "When should a workflow become a skill?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "After one lucky use"
+          },
+          {
+            "id": "1",
+            "label": "When it recurs with stable decisions and checks"
+          },
+          {
+            "id": "2",
+            "label": "Whenever it sounds impressive"
+          }
+        ]
+      },
+      "solution": "Reuse is valuable when the pattern is real and maintainable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "skills-check-2",
+      "prompt": "What should a skill include?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only a command"
+          },
+          {
+            "id": "1",
+            "label": "Trigger, boundaries, steps, evidence and recovery"
+          },
+          {
+            "id": "2",
+            "label": "A promise of certainty"
+          }
+        ]
+      },
+      "solution": "The workflow needs enough context to be applied safely.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "MCP: architecture",
+      "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture"
+    },
+    {
+      "title": "Codex: security boundaries",
+      "url": "https://learn.chatgpt.com/docs/security"
+    },
+    {
+      "title": "Codex: repository instructions",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+    }
+  ],
+  "heading": "Why is read_customer safer and easier to use than run_anything?",
+  "lead": "Design tools with narrow inputs, explicit permissions, useful observations and predictable failure behaviour. Use MCP as a typed connection boundary while keeping identity, trust, permissions and tool semantics explicit. Package repeatable workflows as scoped, discoverable guidance with inputs, evidence and maintenance rules.",
+  "outcomes": [
+    "Design tools with narrow inputs, explicit permissions, useful observations and predictable failure behaviour.",
+    "Use MCP as a typed connection boundary while keeping identity, trust, permissions and tool semantics explicit.",
+    "Package repeatable workflows as scoped, discoverable guidance with inputs, evidence and maintenance rules."
+  ]
+}

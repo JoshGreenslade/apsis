@@ -1,0 +1,532 @@
+{
+  "id": "models",
+  "title": "Models · Agents",
+  "description": "Separate a model's inference from the product that gives it context, tools and a place to act. Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions.",
+  "domain": "Agentic engineering",
+  "unit": "01 · Build the mental model",
+  "prerequisites": [],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "models--models",
+        "title": "Models: prediction is not execution",
+        "navLabel": "Models",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A retry-service test is failing. You paste the failure into a chat window, and the assistant gives a convincing diagnosis: a request is being counted as complete before the retry backoff has finished. The explanation is precise enough to guide a fix. Then you ask the assistant to apply it. You look at the file. Nothing has changed.\n\nThe assistant may have been right. It still did not perform the repair.\n\nThat gap is the first distinction in this course. A model produces an answer from the information it receives. A separate system has to turn that answer into an action on a real repository, under real permissions, and then report what happened. When those jobs are blurred together, every failure looks like a failure of intelligence. When they are separated, the next question becomes clearer: did the model reason badly, did it receive the wrong evidence, or did nothing execute its suggestion?"
+          },
+          {
+            "kind": "content",
+            "title": "The model produces an output",
+            "body": "Training and use are different moments. During training, a model's parameters are adjusted using large collections of examples. During inference, those parameters are fixed. The model receives current input - its context - and produces an output.\n\nThat output might be prose, a proposed patch, structured data or a tool-shaped request. However impressive it is, it is still an output. If the model writes read_file for src/retry.ts, it has not read the file. It has described a request that another program may understand and execute.\n\nThis is also why more reasoning cannot replace missing evidence. If the failure report omits the stack trace, asking the model to think longer may help it organise the information it has, but it cannot make the absent stack trace appear."
+          },
+          {
+            "kind": "question",
+            "bridge": "Start with the smallest thing the model actually does: transform supplied context into an output.",
+            "meaning": "A model can propose a file read or a patch, but the proposal is not the file read or the patch.",
+            "question": "A model is asked to think longer about a bug report that omits the stack trace. Will more thinking recover the missing evidence?",
+            "answer": "No. More computation can improve the use of existing evidence, but it cannot create an observation that was never supplied."
+          },
+          {
+            "kind": "example",
+            "title": "A retry bug is diagnosed correctly in chat but the delegated run edits the wrong file.",
+            "problem": "A retry bug is diagnosed correctly in chat but the delegated run edits the wrong file.",
+            "steps": [
+              {
+                "title": "Compare the evidence",
+                "body": "The chat used the current implementation and failing test. The delegated run read an old generated client because its search returned a stale match.",
+                "reason": "The apparent capability difference may be an input difference.",
+                "trap": "Choosing a more expensive model before checking which file was supplied."
+              },
+              {
+                "title": "Change one factor",
+                "body": "Keep the model and task fixed. Point the run at the current source, then inspect the requested path and resulting diff.",
+                "reason": "A controlled change lets the result tell you whether context caused the failure.",
+                "trap": "Treating a fluent explanation as proof that the correct file was changed."
+              },
+              {
+                "title": "Check the result",
+                "body": "Run the focused regression test against the final workspace, not against the model's description of what it intended to do.",
+                "reason": "The accepted result is the observed change plus evidence that it works.",
+                "trap": "Stopping at the assistant's statement that the fix is complete."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "A product is more than its model",
+            "body": "The thing people call an assistant is usually a bundle of parts: a model, instructions, retrieval, context assembly, tools, permissions, an interface and sometimes a router that chooses between models.\n\nIf two systems use the same underlying model but one sees the current source file while the other sees a stale generated copy, their different results do not prove that the models differ. They show that the systems supplied different evidence.\n\nWhen a result is poor, ask three questions: did the system have the evidence it needed, did the model have a suitable inference setup, and did the surrounding system have a working way to act and observe the result? Those are different failure surfaces."
+          },
+          {
+            "kind": "question",
+            "bridge": "Once output and execution are separate, comparisons need to keep the model separate from the product around it.",
+            "meaning": "Different context, retrieval, tools or permissions can produce different results even when the underlying model is the same.",
+            "question": "Two products use the same named model, but only one reads the current implementation. What does their different result establish?",
+            "answer": "It establishes that their overall configurations differ in a relevant way. It does not, by itself, establish that the underlying models differ in capability."
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Models: prediction is not execution",
+              "caption": "Read each handoff in order; the surrounding case explains who owns it.",
+              "viewBox": [0, 0, 600, 460],
+              "elements": [
+                {
+                  "kind": "box",
+                  "center": [300, 48],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Context supplied to the model",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 75],
+                  "to": [300, 107],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 134],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Inference produces an output",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 161],
+                  "to": [300, 193],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 220],
+                  "width": 430,
+                  "height": 54,
+                  "label": "A surrounding system interprets it",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 247],
+                  "to": [300, 279],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 306],
+                  "width": 430,
+                  "height": 54,
+                  "label": "A tool may change the environment",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 333],
+                  "to": [300, 365],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 392],
+                  "width": 430,
+                  "height": 54,
+                  "label": "The result becomes new evidence",
+                  "tone": "accent"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "A model produces outputs from context. A product determines what context it sees and what those outputs can do.",
+            "nextConnection": "Once a model's output is separate from execution, the next question is how a system can let it choose actions, observe their results and continue from the evidence."
+          }
+        ]
+      },
+      {
+        "id": "agents--agents",
+        "title": "Agents: close the action-observation loop",
+        "navLabel": "Agents",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A chat assistant can suggest where the retry counter is wrong. An agent can ask to open the file, inspect the surrounding code, run the focused test and use the result to decide what to do next.\n\nThat is a real change, but it is not magic. The agent has gained a loop around the model: propose an action, execute it, return an observation, then make another decision.\n\nThe loop makes the system capable of adapting to evidence. It also creates new responsibilities: which actions are allowed, which observations are trustworthy, and what counts as a legitimate stopping point?"
+          },
+          {
+            "kind": "example",
+            "title": "The agent runs the same failing command three times.",
+            "problem": "The agent runs the same failing command three times.",
+            "steps": [
+              {
+                "title": "Classify the observation",
+                "body": "The command reports a missing environment variable before loading the tests. Record an environment blocker, not a retry-logic failure.",
+                "reason": "The result contains no evidence about the application behaviour.",
+                "trap": "Interpreting every nonzero exit code as a defect in the code under investigation."
+              },
+              {
+                "title": "Choose a new action",
+                "body": "Read the test setup instructions and look for the documented fixture configuration. If it is unavailable, stop with a blocked report.",
+                "reason": "The next action should change the evidence or resolve the blocker.",
+                "trap": "Issuing a fourth identical command simply because turns remain."
+              },
+              {
+                "title": "Verify the stopping state",
+                "body": "If the test runs, continue from its actual assertion. If it cannot run, preserve the command, environment and error as the reason for stopping.",
+                "reason": "A useful run leaves behind a reconstructable account of what happened.",
+                "trap": "Calling the run complete because the model produced a confident summary."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "The basic loop",
+            "body": "A useful abstract loop has four steps:\n\n1. Start with a goal and the evidence currently available.\n2. Ask the model to choose the next action.\n3. Execute that action through a controlled tool.\n4. Return the result as an observation and repeat.\n\nFor the retry incident, the first action might be reading the failing test. The next might be reading the retry implementation. A later action might run the test after a proposed edit. The model chooses among operations that the surrounding system exposes; it does not directly become the filesystem or shell.\n\nWithout the observation step, this is only repeated suggestion. The model cannot adapt to a test result it never receives."
+          },
+          {
+            "kind": "question",
+            "bridge": "Follow the retry investigation through one complete cycle: choose an action, execute it and return what happened.",
+            "meaning": "The action-observation loop is what lets the model adapt. A tool-shaped message without execution is still just a proposal.",
+            "question": "What closes an agent loop?",
+            "answer": "The result of an executed action is returned as an observation that informs the next decision."
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Agents: close the action-observation loop",
+              "caption": "Read each handoff in order; the surrounding case explains who owns it.",
+              "viewBox": [0, 0, 600, 460],
+              "elements": [
+                {
+                  "kind": "box",
+                  "center": [300, 48],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Goal and stopping contract",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 75],
+                  "to": [300, 107],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 134],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Model selects an action",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 161],
+                  "to": [300, 193],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 220],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Executor returns an observation",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 247],
+                  "to": [300, 279],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 306],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Model updates its next decision",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 333],
+                  "to": [300, 365],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 392],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Acceptance evidence decides the outcome",
+                  "tone": "accent"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "content",
+            "title": "Observations and stopping states",
+            "body": "The loop only helps if observations describe what happened. A denied request, an environment failure and a failing test are different observations and should lead to different next actions.\n\nA run also needs more than a turn limit. It needs explicit outcomes such as complete, blocked and exhausted. A turn limit is a resource boundary, not a definition of success. Completion should be established by acceptance evidence such as a passing regression test and an inspected diff.\n\nA blocked result is meaningful. If the required fixture, permission or runtime is unavailable, the responsible outcome may be a precise report of the blocker rather than another uninformative retry. A good agent loop knows how to stop honestly."
+          },
+          {
+            "kind": "question",
+            "bridge": "A system that can act also needs a clear and honest way to stop.",
+            "meaning": "Budgets constrain resource use, while acceptance evidence determines success. They must not be treated as the same thing.",
+            "question": "An agent uses all 20 allotted turns and reports complete. Does the turn count support that claim?",
+            "answer": "No. The run is budget-exhausted unless independent acceptance evidence shows that the task was completed before the limit."
+          },
+          {
+            "kind": "takeaway",
+            "body": "An agent is a model inside a bounded action-observation loop. Autonomy requires goals, allowed actions, observations, budgets and stopping rules.",
+            "nextConnection": "The loop describes the behaviour we want. The next lesson asks which machinery validates requests, runs tools, assembles context and enforces the boundary around that behaviour."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Separate a model's inference from the product that gives it context, tools and a place to act. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "Once a model's output is separate from execution, the next question is how a system can let it choose actions, observe their results and continue from the evidence. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. The loop describes the behaviour we want. The next lesson asks which machinery validates requests, runs tools, assembles context and enforces the boundary around that behaviour. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Separate a model's inference from the product that gives it context, tools and a place to act.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "A model maps supplied context to a proposed output; execution belongs to a separate system boundary. An agent loop couples a model's proposed action with tool execution and an observation returned to the next turn.",
+              "invariant": "A fluent model claim is not an observation of the repository or a proof that any action occurred. Every accepted action needs an attributable observation, and every stop state needs an explicit reason.",
+              "limitingCase": "With no relevant evidence in context, more inference cannot recover the missing observation. Without a tool or an observation channel, the system is assistance, not execution-capable agency.",
+              "counterexample": "A correct diagnosis in chat can coexist with an unchanged file and a still-failing test. A model that emits a tool-shaped message but never reaches an executor has not changed the world.",
+              "validity": "Model quality is only one part of a product outcome; context, tools, permissions, and verification remain outside the model. The loop model describes control flow, not intelligence or reliability; those require separate evidence."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "A model produces outputs from context. A product determines what context it sees and what those outputs can do."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "An agent is a model inside a bounded action-observation loop. Autonomy requires goals, allowed actions, observations, budgets and stopping rules."
+      }
+    ],
+    "steps": [
+      {
+        "id": "models-apply",
+        "prompt": "A model invents a missing log line. What should improve first?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Retrieve the actual log"
+            },
+            {
+              "id": "1",
+              "label": "Increase the requested answer length"
+            },
+            {
+              "id": "2",
+              "label": "Add more specialist vocabulary"
+            }
+          ]
+        },
+        "solution": "The missing ingredient is evidence. Additional prose does not supply it.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "agents-apply",
+        "prompt": "A tool returns permission denied. What is that result?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Useful evidence about the execution boundary"
+            },
+            {
+              "id": "1",
+              "label": "Proof that the model is unintelligent"
+            },
+            {
+              "id": "2",
+              "label": "Nothing until the command is retried"
+            }
+          ]
+        },
+        "solution": "A denied action is an observation that should influence the next decision.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "models-check-1",
+      "prompt": "Which event proves that a file changed?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The model describes a patch"
+          },
+          {
+            "id": "1",
+            "label": "A tool applies it and the file or diff is observed"
+          },
+          {
+            "id": "2",
+            "label": "The model says it has write access"
+          }
+        ]
+      },
+      "solution": "A model output is a proposal. Execution and an observed file state establish the change.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "models-check-2",
+      "prompt": "Two products use the same model but achieve different results. What should you investigate?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only the model's training data"
+          },
+          {
+            "id": "1",
+            "label": "Context, tools and surrounding configuration"
+          },
+          {
+            "id": "2",
+            "label": "Whether the longer answer is automatically better"
+          }
+        ]
+      },
+      "solution": "The surrounding product changes what the model can see and what its output can do.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "agents-check-1",
+      "prompt": "What closes the agent loop?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Returning the tool result for the next decision"
+          },
+          {
+            "id": "1",
+            "label": "Adding the word agent to the prompt"
+          },
+          {
+            "id": "2",
+            "label": "Running without a human watching"
+          }
+        ]
+      },
+      "solution": "The next action can adapt only when execution results feed back into the decision.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "agents-check-2",
+      "prompt": "A run reaches its turn cap. What status is justified?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Successful by persistence"
+          },
+          {
+            "id": "1",
+            "label": "Budget-exhausted unless completion was verified"
+          },
+          {
+            "id": "2",
+            "label": "Permanently improved for the next task"
+          }
+        ]
+      },
+      "solution": "A resource limit describes why execution stopped, not whether the goal was achieved.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "Official Codex documentation",
+      "url": "https://learn.chatgpt.com/docs"
+    },
+    {
+      "title": "Codex: security boundaries",
+      "url": "https://learn.chatgpt.com/docs/security"
+    }
+  ],
+  "heading": "Why can a model explain a bug but fail to fix it?",
+  "lead": "Separate a model's inference from the product that gives it context, tools and a place to act. Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions.",
+  "outcomes": [
+    "Separate a model's inference from the product that gives it context, tools and a place to act.",
+    "Recognise an agent as a model inside a bounded action-observation loop, with explicit goals, budgets and stopping conditions."
+  ]
+}

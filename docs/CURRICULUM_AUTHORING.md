@@ -1,93 +1,99 @@
-# Curriculum authoring
+# Courses and prefabs
 
-## Editorial judgement
+Every course uses the same file layout and runtime contract. Teaching style,
+pace, length, section names, prefab order and assessment choices belong to the
+course. No prefab or question count is mandatory.
 
-The original agentic lessons were too dense. Preserve the readability of the rewrite when repairing omissions; do not bring back compressed explanations.
-
-Write naturally. There is no required opening, paragraph rhythm, or definition-example-warning sequence. Choose the shape of each lesson for what it teaches. Give difficult ideas room, explain unfamiliar terms when needed, and retain examples, runnable exercises and qualifications that help the reader understand. Shorter is not automatically clearer.
-
-Read the course as a learner before polishing its machinery. Look for advice that names a technique without explaining how to use it, repeated analogies and examples that never reach an actual decision. Improve those passages directly. Do not turn this advice into a requirement that every lesson begin with an incident or contain the same kind of example. Tests can catch missing blocks; they cannot establish that the prose is worth reading.
-
-Use diagrams only when they explain something the prose cannot show as well. A well-chosen, attributed external diagram can be better than a generic flowchart. Check the rendered lesson and its actual neighbours, not just the source file.
-
-Curriculum topics have two layers:
-
-- the validated runtime contract, which supplies metadata, practice and compatibility fields;
-- `content`, which controls the reader-facing order and shape of a lesson.
-
-Use `content` when a lesson needs a structure that is not the standard story, reasoning, example and takeaway sequence. A lesson can have any number of sections, and each section can mix reusable blocks:
-
-```ts
-content: {
-  sections: [
-    {
-      id: "opening",
-      title: "The problem",
-      role: "story",
-      blocks: [
-        { kind: "prose", body: "Begin with the concrete situation..." },
-        {
-          kind: "callout",
-          title: "The question",
-          body: "What should the reader decide next?",
-          tone: "question",
-        },
-      ],
-    },
-    {
-      id: "investigation",
-      title: "Follow the evidence",
-      role: "reasoning",
-      blocks: [
-        { kind: "prose", title: "First idea", body: "..." },
-        {
-          kind: "checkpoint",
-          question: "What changed?",
-          answer: "The observation changed the next decision.",
-        },
-      ],
-    },
-  ],
-},
+```text
+curriculums/my-course/
+  course.json          Course metadata (id, version, title, description)
+  index.ts             Imports lessons in the intended reading order
+  lessons/
+    introduction.json  Lesson metadata and prefab sections
 ```
 
-Available blocks are `prose`, `callout`, `list`, `steps`, `diagram`, `checkpoint`, `example`, `sidebar`, `lab` and `takeaway`. These are intentionally subject-neutral. A maths lesson can use a diagram and worked steps; an engineering lesson can use an incident sequence and a lab; neither needs a different renderer.
-
-Keep domain-specific assessment data separate. Numeric answers, units, tolerances, choice options and retrieval scheduling belong in the typed practice fields, not in a generic prose block.
-
-Topics without `content` continue to use the existing presentation. Agentic lessons now emit this content model through their builder, while older maths and astrodynamics topics remain compatible during migration.
-
-For a new course, compile a content-first topic with `defineCurriculumTopic`:
+Run `npm run course:new -- my-course "My course"` to create this layout, or copy
+an existing course. The registry discovers `curriculums/*/index.ts` at build time;
+there is no central course list to update. Lesson files may also be TypeScript
+when helpers or shared constants are useful; import them in the same `index.ts`.
 
 ```ts
-import { defineCurriculumTopic } from "@/curriculum-support/authoring";
+import { defineCourse } from "@/prefabs/authoring";
+import course from "./course.json";
+import introduction from "./lessons/introduction.json";
 
-const topic = defineCurriculumTopic({
-  id: "first-lesson",
-  title: "A lesson with its own shape",
-  description: "State the capability the learner should leave with.",
-  domain: "Example course",
-  unit: "01 · Begin",
-  prerequisites: [],
-  minutes: 20,
-  content: {
-    sections: [
+export default defineCourse({ ...course, topics: [introduction] });
+```
+
+A complete minimal lesson:
+
+```json
+{
+  "id": "introduction",
+  "title": "Introduction",
+  "content": {
+    "sections": [
       {
-        id: "opening",
-        title: "Start with the situation",
-        role: "story",
-        blocks: [{ kind: "prose", body: "Begin with a concrete case." }],
-      },
-    ],
-  },
-  sources: [{ title: "Course notes", url: "https://example.com/notes" }],
-});
+        "id": "opening",
+        "title": "An idea",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Write in Markdown, with optional $math$."
+          },
+          {
+            "kind": "question",
+            "question": "What follows?",
+            "answer": "An optional reflection."
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
-The compiler supplies empty compatibility containers, not invented teaching material. It does not generate diagrams, examples or graded questions from prose or checkpoints. Supply `retrievalProblems`, `diagnostics` and `fadedExercise` explicitly when needed. Checkpoints remain ungraded reflections.
+## Prefab library
 
-Content-first lessons can declare prerequisites without assigning diagnostics. Any supplied diagnostic must refer to a declared prerequisite. Without retrieval questions, a lesson can be marked as read but cannot earn mastery or enter scheduled review merely by answering a warm-up.
+`prefabs/schema.ts` exports the contracts, `prefabs/Renderer.tsx` renders them,
+and `prefabs/authoring.ts` supplies optional numeric, choice, expression and
+diagram helpers. Type definitions and runtime schemas live in `types/curriculum.ts`.
 
-Legacy lessons retain their stricter requirements. `contentFromCurriculumTopic` preserves their diagrams, thought experiments, checkpoints, examples and sidebars during migration. Consolidation must not turn example introductions into artificial solution steps. Warm-ups must match the actual chapter order.
+| Kind          | Data                              | Purpose                                                                     |
+| ------------- | --------------------------------- | --------------------------------------------------------------------------- |
+| `content`     | `body`, optional `title`          | Markdown and mathematics                                                    |
+| `diagram`     | `data`                            | Declarative SVG primitives                                                  |
+| `question`    | `question`, `answer`              | Ungraded reflection with answer disclosure                                  |
+| `example`     | `title`, `problem`, `steps`       | Worked example                                                              |
+| `steps`       | `title`, `steps`                  | An ordered explanation                                                      |
+| `callout`     | `title`, `body`, optional `tone`  | Emphasis or a warning                                                       |
+| `list`        | `items`, optional `title`         | A list                                                                      |
+| `sidebar`     | `heading`, `body`                 | Expandable supporting material                                              |
+| `lab`         | `data`                            | Practical brief, steps, deliverables and review                             |
+| `takeaway`    | `body`, optional `nextConnection` | A closing thought                                                           |
+| `summary`     | `data`                            | Optional mathematical assumptions, laws and checks                          |
+| `exploration` | `experiment`                      | Interactive derivative, integral, eigenvector, Fourier or metric experiment |
 
-Course-specific reading orders belong with that course, not in the shared renderer. Reusable blocks are a vocabulary, not a required checklist. Test content-only lessons, mixed legacy content, explicit assessments and rendered navigation when extending the model.
+Use any mix, repeat blocks, and order sections however the lesson needs. Section
+IDs must be unique within a lesson because they are navigation anchors. Optional
+section `role` values affect styling only. To add a prefab, add a discriminated
+variant to `LessonBlockSchema`, its renderer case, and a rendering test. The
+exhaustive switch flags missing renderers. New experiments can extend the
+exploration prefab; they are selected by data, never by course ID.
+
+## Optional features
+
+Lessons may supply `description`, `heading`, `lead`, `outcomes`, `domain`, `unit`,
+`minutes`, `sources` and `prerequisites`. Time is an estimate, never a limit.
+Prerequisites must reference lessons in the same course and form an acyclic
+graph; they do not lock reading or require diagnostic questions.
+
+Graded questions live in optional `diagnostics`, `fadedExercise.steps`,
+`retrievalProblems` and `transferProblems`. `practiceTemplates` provides bounded
+numerical variants. These use `ProblemSchema` and the shared practice engine.
+Question IDs are unique within a lesson. Choice answers reference valid options;
+numeric answers declare accepted units and tolerances. Reflection prefabs do not
+award mastery. Reading progress and scheduled knowledge checks remain separate.
+
+Keep course IDs, lesson IDs, question IDs and versions stable when retaining
+existing notebooks. Bumping a course version creates a new progress namespace.

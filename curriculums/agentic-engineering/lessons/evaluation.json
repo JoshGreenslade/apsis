@@ -1,0 +1,478 @@
+{
+  "id": "evaluation",
+  "title": "Evaluation · Build a benchmark from your own engineering history",
+  "description": "Design evaluation around accepted outcomes, defect escape, review effort and the quality of evidence. Create a representative, versioned benchmark with task diversity, hidden checks and a review protocol.",
+  "domain": "Agentic engineering",
+  "unit": "05 · Evaluate quality and economics",
+  "prerequisites": ["specification"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "evaluation--evaluation",
+        "title": "Evaluation: measure accepted engineering work",
+        "navLabel": "Evaluation",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A score can tell you that something changed without telling you whether the change mattered. An agent that produces ten green-looking patches may be less useful than one that produces four accepted patches if the other six need repair. Evaluation should follow the work to the point where a person can responsibly accept it."
+          },
+          {
+            "kind": "example",
+            "title": "A team reports that an agent completes 80% of coding tasks.",
+            "problem": "A team reports that an agent completes 80% of coding tasks.",
+            "steps": [
+              {
+                "title": "Define completion",
+                "body": "Count a task complete only when the requested behaviour passes its checks, the diff is in scope and review accepts it without repair.",
+                "reason": "The metric now follows the real boundary.",
+                "trap": "Counting any non-empty patch as a success."
+              },
+              {
+                "title": "Add cost and failure detail",
+                "body": "Track review minutes, rework, escaped defects, correct refusals and evidence quality alongside completion.",
+                "reason": "The team can see where the system helps and where it creates debt.",
+                "trap": "Optimising the one number that is easiest to improve."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Define the unit of success",
+            "body": "Decide what you will count before running the pilot. For a patch task, acceptance might mean that the requested behaviour works, the diff stays within scope and a reviewer would merge it. For investigation, a correct diagnosis with supporting evidence may be enough; requiring a patch would reward unnecessary changes.\n\nKeep a row for every attempted task, including timeouts and abandoned runs. Record whether the first result was accepted, whether a person repaired it, or whether it remained unresolved. A repaired patch may still be useful, but it should not look identical to one that needed no intervention.\n\nSome tasks should end in refusal or escalation. Define those cases in advance too, so a system cannot improve its apparent success rate by declining everything difficult."
+          },
+          {
+            "kind": "question",
+            "bridge": "Evaluation starts where the work becomes acceptable, not where the model stops speaking.",
+            "meaning": "The unit of measurement should connect to the decision the engineering team actually cares about.",
+            "question": "Why is 'the agent produced a patch' a weak success metric?",
+            "answer": "A patch can be out of scope, unverified, wrong or expensive to review. Production is not acceptance.",
+            "further": [
+              {
+                "question": "What is defect escape?",
+                "answer": "An error that passes the local workflow and is discovered later, where recovery is more costly."
+              },
+              {
+                "question": "Why measure refusal?",
+                "answer": "Correctly declining an unsafe or underspecified task can be a successful outcome."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Measure the human boundary",
+            "body": "One agent takes four minutes to produce a patch and leaves the reviewer twenty minutes of detective work. Another takes eight minutes but points to a small diff, a relevant regression test and one unverified assumption. Generation speed favours the first; the engineer may finish sooner with the second.\n\nMeasure active review and repair time, and keep it separate from elapsed waiting. Note what made a result hard to assess: unrelated edits, missing commands, an unsupported claim, or an explanation that never gets to the point. Those notes tell you what to improve in a way that a single satisfaction score cannot.\n\nAlso revisit accepted work. An error discovered after merge is a defect escape, not evidence that the original acceptance was correct."
+          },
+          {
+            "kind": "question",
+            "bridge": "The human boundary is part of the system's performance.",
+            "meaning": "Review and recovery effort can erase apparent gains from faster generation.",
+            "question": "Two systems produce equally correct patches, but one takes twice as long to review. Which metric is missing?",
+            "answer": "Review effort or time to acceptance. Correctness alone does not capture the operational result.",
+            "further": [
+              {
+                "question": "What is false confidence?",
+                "answer": "A result that looks certain or complete while omitting evidence or hiding uncertainty."
+              },
+              {
+                "question": "Why keep qualitative notes?",
+                "answer": "Some important failure patterns, such as confusing explanations or poor handoffs, are not visible in a single numeric score."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Measure accepted outcomes, escaped defects, review effort and evidence, not just output volume or first-pass speed.",
+            "nextConnection": "A useful metric needs representative tasks. The next lesson shows how to build a benchmark from the work your team has actually seen."
+          }
+        ]
+      },
+      {
+        "id": "benchmark--benchmark",
+        "title": "Build a benchmark from your own engineering history",
+        "navLabel": "Build a benchmark from your own engineering history",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A benchmark built from easy puzzles can reward clever test-taking rather than useful engineering. The best starting material is your own history: bugs that took time, changes that needed review, incidents that exposed missing context and tasks where humans disagreed about the right result. A good benchmark preserves the ambiguity and evidence shape of real work while making evaluation repeatable."
+          },
+          {
+            "kind": "content",
+            "title": "Sample the work, not the demos",
+            "body": "Take a resolved retry incident and reconstruct the starting point: the revision before the fix, the original failure report and the evidence available at the time. Keep the eventual patch and diagnosis out of the agent's inputs. Otherwise you may be measuring its ability to follow an answer that the original engineer had to discover.\n\nWrite down what a correct result must preserve, and allow alternative implementations that meet that contract. A hidden check can test a required edge case, but it should not introduce a secret requirement that no reasonable reader could infer from the task.\n\nThen broaden the sample. Include a routine repair, a task with misleading documentation, and a case where the right response is to request missing information. A handful of cases can uncover useful failures; it cannot establish a reliable ranking for every kind of engineering work."
+          },
+          {
+            "kind": "question",
+            "bridge": "A benchmark is a sample of work, not a trophy shelf.",
+            "meaning": "Representative difficulty and task variety matter more than a clean story about average performance.",
+            "question": "Why include ambiguous and failed historical tasks?",
+            "answer": "They test whether the system can ask, bound scope and recover, rather than only solve well-formed exercises.",
+            "further": [
+              {
+                "question": "Why pin a revision?",
+                "answer": "Without a stable environment, score changes may reflect repository drift instead of system improvement."
+              },
+              {
+                "question": "Why include a human baseline?",
+                "answer": "It provides context for the cost and difficulty of the work instead of assuming automation should be perfect."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "Build a retry benchmark from incident history.",
+            "problem": "Build a retry benchmark from incident history.",
+            "steps": [
+              {
+                "title": "Select varied cases",
+                "body": "Include a straightforward timeout bug, an ambiguous race, a task with stale documentation and a case that should be refused because production access is missing.",
+                "reason": "The set tests capability and judgement.",
+                "trap": "Using five nearly identical toy prompts."
+              },
+              {
+                "title": "Define the review",
+                "body": "Pin the repository revisions, hide one behavioural check, record the human baseline and score acceptance plus review effort.",
+                "reason": "Results remain interpretable.",
+                "trap": "Comparing raw answer length."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Version the benchmark",
+            "body": "Tasks drift as code and dependencies change. Pin revisions, update expected results deliberately and record why a task was retired or changed. Run a human baseline when possible, and compare not only success but time, review effort, refusal quality and failure modes."
+          },
+          {
+            "kind": "question",
+            "bridge": "Repeatability requires the benchmark itself to have a lifecycle.",
+            "meaning": "Tasks, checks and accepted answers must be maintained as the engineering environment changes.",
+            "question": "A benchmark task now fails because an API was intentionally changed. What should happen?",
+            "answer": "Version or retire the task deliberately, record the reason and avoid treating the changed expectation as a model regression.",
+            "further": [
+              {
+                "question": "What should hidden checks protect?",
+                "answer": "Important behaviour the agent should discover through the contract and evidence, not merely copy from visible tests."
+              },
+              {
+                "question": "Why record acceptable alternatives?",
+                "answer": "Good engineering can have more than one implementation; the benchmark should not punish a correct alternative arbitrarily."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Build benchmarks from real work, pin their conditions, include human judgement and maintain them as carefully as code.",
+            "nextConnection": "Scores tell you where to look; verification tells you whether a particular claim is supported. The next lesson builds that evidence chain."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Design evaluation around accepted outcomes, defect escape, review effort and the quality of evidence. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Create a representative, versioned benchmark with task diversity, hidden checks and a review protocol. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "A useful metric needs representative tasks. The next lesson shows how to build a benchmark from the work your team has actually seen. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Scores tell you where to look; verification tells you whether a particular claim is supported. The next lesson builds that evidence chain. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Design evaluation around accepted outcomes, defect escape, review effort and the quality of evidence.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Create a representative, versioned benchmark with task diversity, hidden checks and a review protocol."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "Evaluation compares defined outcomes under a declared denominator, baseline, and intervention accounting. A benchmark is a controlled sample of tasks designed to expose a decision-relevant difference.",
+              "invariant": "Accepted results, failed attempts, human intervention, and cost remain separately countable. The task set, scoring rule, model/configuration, and environment are recorded well enough to reproduce the comparison.",
+              "limitingCase": "A zero-intervention baseline can still be worse if its accepted-outcome rate is lower or its cost is higher. A benchmark with no variation or no decision-relevant metric cannot discriminate between alternatives.",
+              "counterexample": "A high success percentage can conceal repeated failed attempts when failures are excluded from the denominator. Optimising for a visible benchmark can improve its score while degrading the real workload.",
+              "validity": "An evaluation supports only the workload, sample, configuration, and acceptance definition it actually measured. Benchmark results generalise only to tasks and conditions resembling the measured sample."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-failure-modes-check-1",
+      "prompt": "A missing dependency prevents a test from running. Which layer failed?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Environment"
+          },
+          {
+            "id": "1",
+            "label": "Reasoning"
+          },
+          {
+            "id": "2",
+            "label": "Typography"
+          }
+        ]
+      },
+      "solution": "Unavailable tools are an environment problem until proven otherwise.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "specification"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Measure accepted outcomes, escaped defects, review effort and evidence, not just output volume or first-pass speed."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Build benchmarks from real work, pin their conditions, include human judgement and maintain them as carefully as code."
+      }
+    ],
+    "steps": [
+      {
+        "id": "evaluation-apply",
+        "prompt": "Can refusal be successful?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Yes, when the task is unsafe or underspecified"
+            },
+            {
+              "id": "1",
+              "label": "Never"
+            },
+            {
+              "id": "2",
+              "label": "Only when it uses more tokens"
+            }
+          ]
+        },
+        "solution": "Correct boundaries are valuable behaviour.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "benchmark-apply",
+        "prompt": "What should a benchmark allow?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "Only one exact implementation"
+            },
+            {
+              "id": "1",
+              "label": "Correct alternatives with evidence"
+            },
+            {
+              "id": "2",
+              "label": "No review"
+            }
+          ]
+        },
+        "solution": "Good evaluation recognises valid engineering choices.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "evaluation-check-1",
+      "prompt": "What is a strong success unit?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "An accepted, evidenced outcome"
+          },
+          {
+            "id": "1",
+            "label": "A generated paragraph"
+          },
+          {
+            "id": "2",
+            "label": "A token count"
+          }
+        ]
+      },
+      "solution": "Evaluation should follow work to acceptance.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "evaluation-check-2",
+      "prompt": "What does review time measure?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Human boundary cost"
+          },
+          {
+            "id": "1",
+            "label": "Model size"
+          },
+          {
+            "id": "2",
+            "label": "Prompt length only"
+          }
+        ]
+      },
+      "solution": "Review is part of the operating result.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "benchmark-check-1",
+      "prompt": "What makes a benchmark representative?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Varied real task shapes"
+          },
+          {
+            "id": "1",
+            "label": "Only easy examples"
+          },
+          {
+            "id": "2",
+            "label": "One repeated prompt"
+          }
+        ]
+      },
+      "solution": "Engineering work includes ambiguity, risk and different horizons.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "benchmark-check-2",
+      "prompt": "Why version tasks?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "To distinguish system change from environment drift"
+          },
+          {
+            "id": "1",
+            "label": "To prevent maintenance"
+          },
+          {
+            "id": "2",
+            "label": "To hide failures"
+          }
+        ]
+      },
+      "solution": "Benchmarks are living artefacts.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "GitHub: Copilot cloud agent",
+      "url": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+    },
+    {
+      "title": "Official Codex documentation",
+      "url": "https://learn.chatgpt.com/docs"
+    },
+    {
+      "title": "Anthropic: Claude Code overview",
+      "url": "https://code.claude.com/docs/en/overview"
+    },
+    {
+      "title": "Google: Gemini CLI documentation",
+      "url": "https://geminicli.com/docs/"
+    }
+  ],
+  "practiceTemplates": [
+    {
+      "id": "acceptance-rate",
+      "title": "Acceptance rate with failed attempts included",
+      "prompt": "A fictional pilot attempts 20 tasks and accepts {{accepted}} results. What is the acceptance rate, including every failed attempt in the denominator?",
+      "variables": [
+        {
+          "name": "accepted",
+          "min": 5,
+          "max": 19,
+          "step": 1
+        }
+      ],
+      "formula": {
+        "op": "multiply",
+        "args": [
+          5,
+          {
+            "variable": "accepted"
+          }
+        ]
+      },
+      "unit": "%",
+      "hint": "Divide accepted outcomes by all 20 attempts, then multiply by 100.",
+      "solution": "{{accepted}} / 20 × 100 = {{answer}}%. This describes the pilot; it does not establish a universal product ranking."
+    }
+  ],
+  "heading": "What does an agent's success rate hide?",
+  "lead": "Design evaluation around accepted outcomes, defect escape, review effort and the quality of evidence. Create a representative, versioned benchmark with task diversity, hidden checks and a review protocol.",
+  "outcomes": [
+    "Design evaluation around accepted outcomes, defect escape, review effort and the quality of evidence.",
+    "Create a representative, versioned benchmark with task diversity, hidden checks and a review protocol."
+  ]
+}

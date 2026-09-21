@@ -1,0 +1,767 @@
+{
+  "id": "exponentials",
+  "diagnostics": [
+    {
+      "id": "d-chain",
+      "prompt": "For y(t) = (3t + 1)², find y′(0). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "2(3t + 1) × 3 equals 6 at zero.",
+      "hint": "Include the inside derivative.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Include the inside derivative.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "derivatives"
+    },
+    {
+      "id": "d-units",
+      "prompt": "If N is an amount and N′ = kN, k has units:",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Amount"
+          },
+          {
+            "id": "1",
+            "label": "Time"
+          },
+          {
+            "id": "2",
+            "label": "Inverse time"
+          }
+        ]
+      },
+      "solution": "N′ has amount/time units; division by N leaves inverse time.",
+      "hint": "Compare both sides.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Compare both sides.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "derivatives"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "A different exponential signal retains one eighth after 9 s. Determine its decay constant and future fraction.",
+    "supplied": [
+      {
+        "heading": "Relations",
+        "body": "Use λ = −ln r/t and H = ln 2/λ. One eighth equals (1/2)³."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-halves",
+        "prompt": "How many halvings give one eighth? Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "(1/2)³ = 1/8.",
+        "hint": "Count repeated factors.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Count repeated factors.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-life",
+        "prompt": "Three halvings take 9 s. Find the half-life.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "s",
+          "acceptedUnits": ["s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "9/3 = 3 s.",
+        "hint": "Equal fractions take equal intervals.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Equal fractions take equal intervals.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-rate",
+        "prompt": "With half-life 3 s, calculate λ = ln 2/3.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.23104906018664842,
+          "unit": "s⁻¹",
+          "acceptedUnits": ["s⁻¹"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "λ ≈ 0.231049 s⁻¹.",
+        "hint": "Use the natural logarithm.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Use the natural logarithm.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-fraction",
+        "prompt": "With half-life 3 s, what fraction remains after 12 s? Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.0625,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Four halvings leave 1/16 = 0.0625.",
+        "hint": "Multiply four factors of one half.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Multiply four factors of one half.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-rate",
+      "prompt": "Constant fractional decay means:",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The same absolute loss each second"
+          },
+          {
+            "id": "1",
+            "label": "The same proportion lost over equal intervals"
+          },
+          {
+            "id": "2",
+            "label": "The amount becomes negative eventually"
+          }
+        ]
+      },
+      "solution": "The loss scales with the amount currently present.",
+      "hint": "Distinguish amount from fraction.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Distinguish amount from fraction.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-exp",
+      "prompt": "Evaluate e⁰. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 1,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Zero elapsed exponent corresponds to multiplier one.",
+      "hint": "Use the initial normalization.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Use the initial normalization.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-log",
+      "prompt": "Calculate ln(e³). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 3,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The logarithm recovers the exponent.",
+      "hint": "Use the inverse relation.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Use the inverse relation.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-domain",
+      "prompt": "Which real logarithm input is permitted?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "−2"
+          },
+          {
+            "id": "1",
+            "label": "0"
+          },
+          {
+            "id": "2",
+            "label": "2"
+          }
+        ]
+      },
+      "solution": "The real natural logarithm is defined for positive inputs.",
+      "hint": "Recall the range of a real exponential.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the range of a real exponential.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-time",
+      "prompt": "A decay constant is 0.5 s⁻¹. Find the e-folding time.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "s",
+        "acceptedUnits": ["s"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "τ = 1/λ = 2 s.",
+      "hint": "Invert the rate constant.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Invert the rate constant.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-transfer",
+      "prompt": "Doubling N₀ while keeping λ fixed does what to the half-life?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Leaves it unchanged"
+          },
+          {
+            "id": "1",
+            "label": "Doubles it"
+          },
+          {
+            "id": "2",
+            "label": "Halves it"
+          }
+        ]
+      },
+      "solution": "The initial scale cancels in the equation for a remaining fraction.",
+      "hint": "Work with N/N₀.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Work with N/N₀.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Single Variable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+    }
+  ],
+  "title": "Exponentials and logarithms",
+  "description": "Connect constant fractional growth, exponential functions and logarithmic measurement.",
+  "domain": "Mathematics for physics",
+  "unit": "02 · Learn to describe change",
+  "prerequisites": ["derivatives"],
+  "minutes": 60,
+  "transferProblems": [
+    {
+      "id": "transfer-growth-units",
+      "prompt": "A decay law has rate constant $k$ with units of inverse seconds. Which expression is dimensionally valid?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "$e^{-kt}$"
+          },
+          {
+            "id": "1",
+            "label": "$e^{-k}$"
+          },
+          {
+            "id": "2",
+            "label": "$e^{-t/\\mathrm{s}^2}$"
+          }
+        ]
+      },
+      "solution": "The exponent $kt$ is dimensionless, so the exponential can represent a physical decay factor.",
+      "hint": "The argument of an exponential must carry no units.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "The argument of an exponential must carry no units.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "transfer-logarithmic-slope",
+      "prompt": "A straight line on a plot of $\\ln y$ against $t$ most directly indicates what kind of original behaviour?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Constant fractional growth or decay"
+          },
+          {
+            "id": "1",
+            "label": "Constant acceleration in position"
+          },
+          {
+            "id": "2",
+            "label": "A periodic function with arbitrary phase"
+          }
+        ]
+      },
+      "solution": "Taking a logarithm turns multiplicative exponential change into an additive linear slope.",
+      "hint": "Ask which derivative is proportional to the quantity itself.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Ask which derivative is proportional to the quantity itself.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "heading": "What kind of change repeats by a fixed fraction?",
+  "lead": "Exponentials describe proportional rates, while logarithms recover durations and compare multiplicative scales.",
+  "outcomes": [
+    "Verify exponential growth or decay from its rate law.",
+    "Use logarithms with dimensionless arguments.",
+    "Distinguish half-life from e-folding time and test a local approximation."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Two tanks each lose the same fraction of their contents in every equal time interval. The fuller tank loses more material in absolute terms, but neither loses more as a fraction of what it currently holds. This is different from draining both at a fixed number of litres per second. A constant absolute rate suggests a straight line; a constant fractional rate suggests an exponential.\n\nTreat this as a mathematical model: a positive amount N has instantaneous rate dN/dt = kN, with k constant. The sign of k distinguishes growth from decay. We have stated the rate law rather than derived it from a particular mechanism. Radioactive populations, chemical concentrations and temperature differences can sometimes obey such a law, but each needs its own physical justification and range of validity.\n\nAn exponential translates equal input increments into equal output ratios. A logarithm reverses that relation, translating multiplication into addition. Together they provide a language for quantities that span many scales and for questions such as how long it takes an amount to halve.\n\nThe natural base e is not selected because its decimal expansion is special. It is selected because its exponential has fractional derivative one. This makes the function fit continuous rate laws directly and reveals why logarithms belong beside it."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "What kind of change repeats by a fixed fraction?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Exponentials describe proportional rates, while logarithms recover durations and compare multiplicative scales."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Verify exponential growth or decay from its rate law.",
+              "Use logarithms with dimensionless arguments.",
+              "Distinguish half-life from e-folding time and test a local approximation."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If two samples decay with the same constant fractional rate but one begins ten times larger, will their half-lives differ?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If a quantity loses half its current amount each hour, can extending a straight-line graph describe many hours correctly?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Equal intervals, equal ratios",
+              "caption": "The plotted points are N/N₀ = e^(−t/τ) at integer t/τ. Connecting segments aid reading; the exact decay is smooth. Each one-unit horizontal step multiplies the remaining fraction by 1/e.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [60, 275],
+                  "to": [550, 275],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 275],
+                  "to": [60, 35],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 55],
+                  "to": [82, 94.87923432284401],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [82, 94.87923432284401],
+                  "to": [104, 127.52958987215933],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [104, 127.52958987215933],
+                  "to": [126, 154.2614400593142],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [126, 154.2614400593142],
+                  "to": [148, 176.14762789421127],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [148, 176.14762789421127],
+                  "to": [170, 194.0665229422827],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [170, 194.0665229422827],
+                  "to": [192, 208.73727337931552],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [192, 208.73727337931552],
+                  "to": [214, 220.74866793284656],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [214, 220.74866793284656],
+                  "to": [236, 230.58276604117583],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [236, 230.58276604117583],
+                  "to": [258, 238.63424459125096],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [258, 238.63424459125096],
+                  "to": [280, 245.2262376879452],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [280, 245.2262376879452],
+                  "to": [302, 250.62330516028655],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [302, 250.62330516028655],
+                  "to": [324, 255.04205027632923],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [324, 255.04205027632923],
+                  "to": [346, 258.65981279284654],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [346, 258.65981279284654],
+                  "to": [368, 261.62178622245204],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [368, 261.62178622245204],
+                  "to": [390, 264.0468449590699],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [390, 264.0468449590699],
+                  "to": [412, 266.0323151247594],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [412, 266.0323151247594],
+                  "to": [434, 267.65788060872825],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [434, 267.65788060872825],
+                  "to": [456, 268.98878106159566],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [456, 268.98878106159566],
+                  "to": [478, 270.0784301916436],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [478, 270.0784301916436],
+                  "to": [500, 270.97055944447845],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [60, 55],
+                  "label": "1",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [170, 194.0665229422827],
+                  "label": "1/e",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [280, 245.2262376879452],
+                  "label": "1/e²",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [470, 305],
+                  "text": "t/τ"
+                },
+                {
+                  "kind": "label",
+                  "at": [90, 30],
+                  "text": "N/N₀"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. From repeated factors to a continuous rate",
+            "body": "First divide one unit of dimensionless time into n short steps. If each step increases the current amount by the fraction 1/n, then after all n steps its multiplier is $(1+1/n)^n$. For n equal to one the multiplier is two, while more frequent updates apply later increases to an amount that has already grown. As the steps become indefinitely fine, the multiplier approaches a definite number, denoted $e$, approximately 2.71828.\n\nThis construction motivates the natural exponential, written $e^u$ or $\\exp(u)$. It is the positive function with value one at zero whose derivative equals itself. Those properties make its instantaneous fractional rate $(d e^u/du)/e^u$ equal to one. The limiting compounding construction and this derivative characterization describe the same function; a full construction is beyond what we need here, but the role of the normalization is essential.\n\nExponential multiplication follows the addition of input intervals:\n$$e^{u+v}=e^u e^v.$$\nZero input gives multiplier one, negative input gives the reciprocal, and adding the same interval v anywhere multiplies the current value by the same factor $e^v$. This is the mathematical meaning of constant fractional behaviour. The absolute increase over that interval still depends on the starting amount.\n\nFor a time-dependent quantity, set $N(t)=N_0e^{kt}$. The chain rule gives $N'(t)=kN_0e^{kt}=kN(t)$. Thus this expression satisfies the stated rate law and the initial condition $N(0)=N_0$. The constant k has units inverse time, so kt is dimensionless. The units of N come entirely from N₀. Writing an exponential of a raw dimensional time would leave its value dependent on the chosen clock unit.\n\nIf k is negative, the amount decreases but remains positive at every finite time when N₀ is positive. Its rate becomes smaller in magnitude as the amount shrinks. The model approaches zero without reaching it in finite time. Real systems may have detection thresholds or discrete particles; those qualifications concern the model's application, not an algebraic zero of the exponential.\n\nNotice that checking the proposed expression by differentiation is already useful even before we develop general methods for solving differential equations. We can verify a candidate trajectory against a law without claiming that we have solved every possible rate law."
+          },
+          {
+            "kind": "question",
+            "bridge": "Update the amount by a fraction of its current value.",
+            "meaning": "Equal time increments give equal ratios, and the constant fractional rate has inverse-time units.",
+            "question": "Why does N₀e^(kt) satisfy N′ = kN?",
+            "answer": "The exponential differentiates to itself and the chain rule contributes k.",
+            "further": [
+              {
+                "question": "What is held constant in constant fractional growth?",
+                "answer": "N′/N is constant; the absolute rate N′ generally changes."
+              },
+              {
+                "question": "Why must kt be dimensionless?",
+                "answer": "The exponential input represents a numerical scaling parameter independent of the chosen time unit."
+              },
+              {
+                "question": "Can positive exponential decay reach zero at a finite time?",
+                "answer": "No. A real exponential remains positive for every finite exponent."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A logarithm recovers the exponent",
+            "body": "Because $e^u$ increases from arbitrarily small positive values to arbitrarily large ones, it has an inverse on positive outputs. Define the natural logarithm by $\\ln z=u$ exactly when $e^u=z$. Consequently $\\ln1=0$ and $\\ln e=1$. The real logarithm requires z to be positive. It cannot recover a real exponent for zero or a negative output because a real exponential never produces those values.\n\nThe exponential addition rule becomes a logarithmic product rule:\n$$\\ln(ab)=\\ln a+\\ln b$$\nfor positive a and b. Similarly, $\\ln(a/b)=\\ln a-\\ln b$. A product of successive multipliers is therefore an additive sum on a logarithmic scale. There is no corresponding rule turning $\\ln(a+b)$ into $\\ln a+\\ln b$. Addition of amounts and multiplication of factors are different operations.\n\nDifferentiate $e^{\\ln z}=z$. The chain rule gives $e^{\\ln z}(d\\ln z/dz)=1$, so $d\\ln z/dz=1/z$ for z positive. The reciprocal slope reflects the fact that a fixed absolute increment is a smaller fractional change when the starting value is large. More generally, for a positive differentiable quantity N(t),\n$$\\frac{d}{dt}\\ln\\!\\left(\\frac{N(t)}{N_*}\\right)=\\frac{N'(t)}{N(t)},$$\nwhere the fixed reference N* has the same units as N.\n\nThe ratio inside the logarithm matters. A measurement of 1000 milligrams and the same measurement of one gram should not represent different physical amounts merely because their numerical logarithms differ. Specifying N/N* makes the comparison independent of unit choice. A different reference shifts the logarithm by a constant; its time derivative is unchanged.\n\nFor the exponential model, $\\ln(N/N_0)=kt$. Plotting this logarithmic ratio against time gives a straight line with slope k. A straight trend on such a plot suggests an approximately constant fractional rate over the observed interval. It does not alone identify a mechanism, and noise or a changing rate can complicate interpretation.\n\nA logarithm with another positive base b different from one is related by $\\log_bz=\\ln z/\\ln b$. Changing the base rescales the numerical reading. Base ten may be convenient for orders of magnitude, while the natural base makes calculus formulas especially direct."
+          },
+          {
+            "kind": "question",
+            "bridge": "Undo a multiplier by recovering its exponent.",
+            "meaning": "Logarithms turn products into sums and their derivative measures fractional change.",
+            "question": "Why use ln(N/N*) instead of the logarithm of a dimensional amount?",
+            "answer": "The ratio is independent of the chosen unit and has a defined reference scale.",
+            "further": [
+              {
+                "question": "Is ln(a + b) = ln a + ln b?",
+                "answer": "No. The right side is ln(ab), for positive inputs."
+              },
+              {
+                "question": "What is d ln z/dz?",
+                "answer": "It is 1/z for z > 0, obtained by differentiating the inverse relation."
+              },
+              {
+                "question": "What does a straight graph of ln(N/N₀) against time suggest?",
+                "answer": "A constant fractional rate over that interval, though it does not prove a specific physical mechanism."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Read time scales and test the model",
+            "body": "For decay write $k=-\\lambda$ with $\\lambda>0$. The quantity $\\tau=1/\\lambda$ is a characteristic decay time: after time τ the amount is $N_0/e$, about 36.8 percent of its initial value. It is often called an e-folding time. It is not the half-life, because one half and $1/e$ are different fractions.\n\nTo find the half-life H, set $N(H)/N_0=1/2$. Taking logarithms gives $-\\lambda H=\\ln(1/2)=-\\ln2$, and therefore $H=\\ln2/\\lambda$. The initial amount cancels. This explains why samples governed by the same constant λ have the same half-life even if their starting amounts differ greatly.\n\nMore generally, reaching a remaining fraction r with $0<r<1$ takes $t=-\\ln r/\\lambda$. Reaching one quarter takes two half-lives because a quarter is a product of two halves and logarithms turn that product into an additive duration. The final quarter does not disappear after another equal interval; the model again multiplies whatever remains by the same factor.\n\nSuppose λ is 0.2 per second. Then τ is 5 s and H is about 3.466 s. After 10 s, the fraction remaining is $e^{-2}$, about 0.1353. At that instant the absolute decay rate is $-0.2N(10)$ per second, smaller in magnitude than at the start. The fractional rate remains exactly −0.2 per second throughout.\n\nFor a sufficiently short time step h, the derivative gives $N(t+h)\\approx N(t)(1+kh)$. This first-order approximation explains the repeated-factor construction. It is useful when |kh| is small, but a coarse decay step with $1+kh<0$ predicts a negative amount and plainly contradicts the positive exponential. The failure is in the step approximation, not the original rate law.\n\nFinally, ask whether the proportional-rate assumption is plausible. A reservoir draining at a fixed pump throughput follows a different law until it empties. Growth limited by scarce resources cannot remain exponential indefinitely. A measured straight logarithmic graph is evidence for a useful model over a specified interval, not a license to extrapolate forever. Mathematics helps us recognize the prediction and the assumptions it depends on."
+          },
+          {
+            "kind": "question",
+            "bridge": "Solve for a specified remaining fraction.",
+            "meaning": "Half-life and e-folding time refer to different fractions, both set by the same decay constant.",
+            "question": "Why is half-life independent of the starting amount?",
+            "answer": "Dividing by N₀ leaves an equation only for the fraction, decay constant and time.",
+            "further": [
+              {
+                "question": "What fraction remains after one e-folding time?",
+                "answer": "1/e, approximately 0.368."
+              },
+              {
+                "question": "How many half-lives produce one eighth?",
+                "answer": "Three, because (1/2)³ = 1/8."
+              },
+              {
+                "question": "Why can a coarse linear decay step produce nonsense?",
+                "answer": "The approximation 1 − λh can become negative when the step is too large; the exact exponential never does."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "The same derivative will govern many kinds of change",
+            "body": "Constant fractional growth is not just a special graph. It is the first example of a rate law whose derivative is proportional to the quantity itself, which is why exponentials return in decay, oscillators, Fourier modes and differential equations. The logarithm reverses that representation: it turns multiplication into addition and exposes a fractional rate as a slope. Later, when a physical system is modelled, ask whether the exponential came from an actual rate law or was merely used as a convenient fit."
+          },
+          {
+            "kind": "question",
+            "bridge": "Carry the chapter's structure into the next physical setting.",
+            "meaning": "A chapter idea becomes more useful when you can recognise the same structure in a new physical setting.",
+            "question": "What is the main transfer lesson in the section “The same derivative will govern many kinds of change”?",
+            "answer": "The section makes the chapter's central structure explicit, then shows how the same structure reappears in a later physical model.",
+            "further": [
+              {
+                "question": "Which assumption makes this transfer valid?",
+                "answer": "The transfer is conditional on the chapter's stated model, definitions, and validity checks; it is a structural analogy, not a license to ignore those assumptions."
+              },
+              {
+                "question": "What should you check before using the idea in a new problem?",
+                "answer": "Check the objects, units or domains, boundary or initial data, and the limiting case that defines the approximation."
+              },
+              {
+                "question": "Why is this connection worth remembering?",
+                "answer": "It turns an isolated technique into a reusable way of organising a derivation and testing whether its conclusion is trustworthy."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Local logarithms for signed functions",
+            "body": "For a nonzero differentiable real function f that keeps its sign on an interval, d ln|f|/dt = f′/f. This extends logarithmic differentiation to negative values without claiming that ln f is real there. Zeros still require separate treatment; dividing by f would discard them."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "What survives when the fractional growth rate changes",
+            "body": "A constant fractional rate means that over a short duration $\\Delta t$, a quantity is multiplied approximately by $1+k\\Delta t$. Repeating the same multiplication leads to an exponential. Now suppose the rate is a function of time. Over successive intervals the multipliers differ:\n$$N(t)\\approx N(0)\\prod_j[1+k(t_j)\\Delta t_j].$$\nTaking a logarithm turns this product into a sum. When each interval is small, $\\ln(1+u)\\approx u$, so the sum approaches the accumulated fractional rate. In the integral notation developed shortly,\n$$N(t)=N(0)\\exp\\!\\left(\\int_0^t k(s)\\,ds\\right).$$\nEvery term in the exponent is dimensionless: a rate multiplied by a time.\n\nConsider growth at rate a for a duration T, followed by decay at rate a for the same duration. The exact continuous model multiplies by $e^{aT}$ and then $e^{-aT}$, returning to the original amount. By contrast, a 10% increase followed by a 10% decrease multiplies by $1.1\\times0.9=0.99$. Equal signed percentages applied to different starting amounts do not undo each other.\n\nThe log of a ratio records the accumulated fractional change and makes such comparisons additive. Later, an exponential solution to an equation will be meaningful because it encodes a rate law. A straight-looking growth curve alone does not establish that the fractional rate is constant."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The same derivative will govern many kinds of change",
+            "body": "Constant fractional growth is not just a special graph. It is the first example of a rate law whose derivative is proportional to the quantity itself, which is why exponentials return in decay, oscillators, Fourier modes and differential equations. The logarithm reverses that representation: it turns multiplication into addition and exposes a fractional rate as a slope. Later, when a physical system is modelled, ask whether the exponential came from an actual rate law or was merely used as a convenient fit."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Infer a decay clock",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Infer a decay clock",
+            "problem": "A positive signal follows N(t) = N₀e^(−λt). After 8 s it is one quarter of its initial value. Find λ, its half-life and the fraction remaining after 12 s.",
+            "steps": [
+              {
+                "title": "Use the measured ratio",
+                "body": "1/4 = e^(−8λ).",
+                "reason": "The initial amplitude cancels from the ratio.",
+                "trap": "Do not take a logarithm of an unreferenced dimensional signal."
+              },
+              {
+                "title": "Recover the exponent",
+                "body": "λ = ln 4 / 8 ≈ 0.173287 s⁻¹.",
+                "reason": "The natural logarithm reverses the exponential.",
+                "trap": "The logarithm of one quarter is negative, but λ is defined positive."
+              },
+              {
+                "title": "Find the half-life",
+                "body": "H = ln 2/λ = 4 s.",
+                "reason": "One quarter represents two successive halvings.",
+                "trap": "Eight seconds is two half-lives, not one."
+              },
+              {
+                "title": "Predict another time",
+                "body": "Twelve seconds is three half-lives, so N/N₀ = 1/8.",
+                "reason": "Equal durations multiply the current amount by the same fraction.",
+                "trap": "Do not subtract a quarter every eight seconds."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "An exponential has a constant fractional rate; logarithms convert its ratios into additive time and scale comparisons.",
+            "nextConnection": "Knowing a rate invites the reverse question: how much accumulates over an interval? That leads to integration."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Exponential change is the trajectory whose instantaneous rate is proportional to the quantity already present. Logarithms expose that fractional rate by turning multiplication into addition, which is why half-lives, time constants, and slopes on a logarithmic plot are all versions of the same idea.",
+              "widerConnection": "Growth and decay reappear in differential equations, damping, Green functions, probability, and mode evolution. The important transfer is to recognise an exponential as the signature of a local rule that reproduces the current state, not simply as a convenient curve to fit after the fact."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

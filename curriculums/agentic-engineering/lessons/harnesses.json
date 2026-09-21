@@ -1,0 +1,589 @@
+{
+  "id": "harnesses",
+  "title": "Harnesses · Orchestration",
+  "description": "Locate loop control, tool execution, context selection and permission enforcement in a harness. Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model.",
+  "domain": "Agentic engineering",
+  "unit": "02 · Build the mental model",
+  "prerequisites": ["models"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "harnesses--harnesses",
+        "title": "Harnesses: the machinery around the model",
+        "navLabel": "Harnesses",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Give two mechanics the same car and the same diagnosis. Put one in a well-organised workshop, with working tools, a clear job card and a checked lift. Put the other in a room where the tools are scattered and nobody knows which version of the job is current. Their results will differ, even if their technical ability is the same.\n\nCoding agents have workshops too. The harness is the machinery around the model: it builds model requests, interprets tool calls, decides whether they may run, executes them, returns observations and decides when the run ends.\n\nThe model supplies judgement inside the loop. The harness supplies the operating boundary. Keeping those responsibilities distinct gives us somewhere concrete to look when the agent behaves strangely."
+          },
+          {
+            "kind": "content",
+            "title": "Follow one request across the boundary",
+            "body": "Suppose the model requests read_file for src/retry.ts. Before the file contents reach the model, the harness may validate the request shape, resolve the path inside the assigned workspace, check access policy, read the bytes, attach the tool-call identity and package the result as new context.\n\nThe model cannot enforce these steps merely by being instructed to behave well. A prompt can say stay inside the repository; executable path checks are what make that boundary real.\n\nUseful failure categories include malformed request, policy denial, execution failure, stale or incorrect result, and successful observation. A harness that reports all of them as tool succeeded destroys the information needed to debug the run."
+          },
+          {
+            "kind": "question",
+            "bridge": "Take the model's request to read a file and follow it into the code that actually acts on the request.",
+            "meaning": "Validation, path resolution, access checks and execution are harness responsibilities. A model's instruction cannot enforce them by itself.",
+            "question": "A tool request is valid JSON but points outside the assigned repository. Who should reject it?",
+            "answer": "The harness validation and access-control layer should reject it before execution."
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Harnesses: the machinery around the model",
+              "caption": "Read each handoff in order; the surrounding case explains who owns it.",
+              "viewBox": [0, 0, 600, 460],
+              "elements": [
+                {
+                  "kind": "box",
+                  "center": [300, 48],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Model requests an action",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 75],
+                  "to": [300, 107],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 134],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Harness validates policy",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 161],
+                  "to": [300, 193],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 220],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Environment performs or denies it",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 247],
+                  "to": [300, 279],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 306],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Harness records the observation",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 333],
+                  "to": [300, 365],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 392],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Context assembly prepares the next turn",
+                  "tone": "accent"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "example",
+            "title": "The same model succeeds locally but fails in CI.",
+            "problem": "The same model succeeds locally but fails in CI.",
+            "steps": [
+              {
+                "title": "Compare the execution environments",
+                "body": "Record the checkout revision, working directory, available commands, environment inputs and tool outputs. CI starts one directory above the package.",
+                "reason": "The harness supplies the working environment, so model identity does not control it.",
+                "trap": "Changing the prompt to compensate for an accidental directory mismatch."
+              },
+              {
+                "title": "Make one supported correction",
+                "body": "Set the job's working directory and repeat the same task with the same model and instructions.",
+                "reason": "A controlled rerun separates an environment effect from a reasoning effect.",
+                "trap": "Declaring a custom harness necessary before checking existing configuration."
+              },
+              {
+                "title": "Inspect the final evidence",
+                "body": "Compare the command result, resulting diff and final test output. Keep the original failure so the change is attributable.",
+                "reason": "A useful harness makes both action and observation reconstructable.",
+                "trap": "Keeping only the final success message."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Configure before replacing",
+            "body": "A harness can enforce that a command is allowed, set a timeout and record its result. It cannot, by those controls alone, establish that the model chose the right hypothesis or that the task was well specified.\n\nIt also decides what survives into the next model request. A perfectly executed file read is of little use if the result is dropped. Retaining every log line can bury the evidence that matters.\n\nA custom harness is justified when the current system cannot enforce a requirement that matters - for example, when every write must pass through a domain-specific transaction service with its own audit trail. Even then, include the ongoing cost of cancellation, retries, provider changes, schema evolution and recovery."
+          },
+          {
+            "kind": "question",
+            "bridge": "Before building a replacement, identify the concrete boundary your current setup cannot enforce.",
+            "meaning": "Custom harness ownership includes the unhappy paths as well as the happy path. A missing enforceable requirement can justify it; preference alone cannot.",
+            "question": "A team needs every write to pass through an audit service that the stock product cannot express. Is custom harness work potentially justified?",
+            "answer": "Yes, potentially. This is a concrete missing capability, although the team still needs to weigh implementation and maintenance cost."
+          },
+          {
+            "kind": "takeaway",
+            "body": "The harness owns the loop's mechanics. Debug its evidence, policy and environment separately from the model.",
+            "nextConnection": "The harness can run a task once it receives one. The next lesson moves outward to the system that decides when a task should run, where it should go and what happens after it finishes."
+          }
+        ]
+      },
+      {
+        "id": "orchestration--orchestration",
+        "title": "Orchestration: work outside the inner loop",
+        "navLabel": "Orchestration",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "It is two in the morning and a pull request has just failed its retry-service checks. If the only thing in the system is an agent loop waiting for a task, nothing happens. The model has not been invoked. The harness has no run to manage. The failure simply waits for somebody to notice it.\n\nSomething outside the inner loop has to decide that this event matters, start a job, choose its permissions and carry the result somewhere useful. That outer layer is orchestration.\n\nOrchestration does not replace the agent's reasoning loop. It surrounds it. It decides when work begins, which bounded worker receives it, how stages hand work to one another and what happens when the result is complete, blocked or irrelevant."
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Orchestration: work outside the inner loop",
+              "caption": "Read each handoff in order; the surrounding case explains who owns it.",
+              "viewBox": [0, 0, 600, 460],
+              "elements": [
+                {
+                  "kind": "box",
+                  "center": [300, 48],
+                  "width": 430,
+                  "height": 54,
+                  "label": "External event or schedule",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 75],
+                  "to": [300, 107],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 134],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Workflow creates a bounded run",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 161],
+                  "to": [300, 193],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 220],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Engine and harness start the agent",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 247],
+                  "to": [300, 279],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 306],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Model chooses tool actions",
+                  "tone": "muted"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [300, 333],
+                  "to": [300, 365],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "box",
+                  "center": [300, 392],
+                  "width": 430,
+                  "height": 54,
+                  "label": "Evidence becomes a reviewed result",
+                  "tone": "accent"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "content",
+            "title": "Separate the two control loops",
+            "body": "The inner loop is local to one task: the model proposes an action, the harness executes it and an observation comes back.\n\nThe outer loop reacts to an event or schedule, creates a run, supplies an environment, selects an engine and routes the result to review, publication or a no-action outcome.\n\nA useful chain is: external event, workflow job, agent engine and harness, model and tools, then result and review. GitHub Actions can provide the event and job runtime. GitHub Agentic Workflows can provide a structured way to author the workflow. An engine runs the agent. The harness manages the inner loop. The model proposes the next action. These names describe different boxes."
+          },
+          {
+            "kind": "question",
+            "bridge": "A failing pull request does not investigate itself. Identify the layer that notices the event and starts the work.",
+            "meaning": "The outer workflow selects and routes a task; the inner agent loop chooses actions after it has been started.",
+            "question": "A nightly job silently stops running two months after setup. Which layer should you inspect first?",
+            "answer": "The outer workflow, trigger or scheduling configuration. The model cannot fail to reason about a run that was never started."
+          },
+          {
+            "kind": "content",
+            "title": "Automation adds repetition, not reliability",
+            "body": "Assistance means a person is present and steering. Delegation means a person hands over a bounded task and returns to inspect the result. Automation adds a repeatable trigger and a standing policy, so the cycle can begin without a person deciding each time.\n\nThat extra reach is useful only when the delegated task is already understandable and reasonably reliable. Automating an unreliable investigator does not repair it. It repeats the same failure, often at a larger scale and with less supervision.\n\nStart with a manually triggered investigator. Then add event filtering, stable run identity, duplicate handling, resource limits and a constrained output stage. A no-action result should be normal: if nothing relevant changed, the workflow should be able to say so."
+          },
+          {
+            "kind": "question",
+            "bridge": "Different operating modes trade supervision for reach. Automation is the last step, not the definition of an agent.",
+            "meaning": "Assistance, delegation and automation differ in who initiates and supervises the work. More independence does not make an unreliable task reliable.",
+            "question": "Should a newly automated investigator create an issue on every scheduled run?",
+            "answer": "No. It should publish an issue only when its contract and evidence justify one. An explicit no-action result is a legitimate outcome."
+          },
+          {
+            "kind": "example",
+            "title": "Design a nightly flaky-test investigation using a repository event, an agent engine and a model.",
+            "problem": "Design a nightly flaky-test investigation using a repository event, an agent engine and a model.",
+            "steps": [
+              {
+                "title": "Assign the owners",
+                "body": "A schedule starts the workflow. The workflow creates a job and supplies permissions. The engine runs the harness, which sends the task to the model and executes allowed tools.",
+                "reason": "Each layer owns a different transition; product names should not hide those boundaries.",
+                "trap": "Putting the model in charge of the schedule because it writes the final report."
+              },
+              {
+                "title": "Define the handoff",
+                "body": "The investigator returns evidence, uncertainty and either a supported finding or an explicit no-action result. A constrained output stage decides what may be published.",
+                "reason": "Investigation and publication have different contracts and should not share unrestricted authority.",
+                "trap": "Giving every investigative tool permission to create or edit public issues."
+              },
+              {
+                "title": "Test the negative path",
+                "body": "Deliver the same event twice and run it when no relevant failure has changed. Confirm that identity prevents duplicate work and that no-action is recorded honestly.",
+                "reason": "A workflow is reliable only when its ordinary non-action and failure paths are meaningful.",
+                "trap": "Testing only the happy path that produces a report."
+              }
+            ]
+          },
+          {
+            "kind": "lab",
+            "data": {
+              "title": "Lab 1 · Draw the stack",
+              "minutes": 20,
+              "brief": "Sketch a workflow that investigates a failed CI run and recommends a next action. No account or API key is needed.",
+              "steps": [
+                "Draw the event, workflow, harness, model, tools and output as separate boxes.",
+                "Label who owns the checkout, permissions, timeout, event identity and success criterion.",
+                "Replace the engine with another one. Circle the contracts you expect to remain stable and the configuration you expect to change."
+              ],
+              "deliverables": [
+                "One annotated architecture diagram",
+                "A responsibility table and one failure example per layer"
+              ],
+              "review": "A sound design places the event and job lifecycle outside the agent loop. The harness executes tools; the model selects requests. Permissions constrain operations. Engine replacement may change supported tools, authentication and context behaviour even when the outer task remains unchanged."
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "The inner loop chooses actions. The outer workflow chooses work, manages identity and controls the lifecycle around that loop.",
+            "nextConnection": "The foundation is now in place: a model proposes, an agent loops, a harness enforces and an orchestrator starts and routes work. Next we ask what information should actually reach the model at each step."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Locate loop control, tool execution, context selection and permission enforcement in a harness. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "The harness can run a task once it receives one. The next lesson moves outward to the system that decides when a task should run, where it should go and what happens after it finishes. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. The foundation is now in place: a model proposes, an agent loops, a harness enforces and an orchestrator starts and routes work. Next we ask what information should actually reach the model at each step. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Locate loop control, tool execution, context selection and permission enforcement in a harness.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "A harness owns the boundary between proposed actions and controlled, observable effects. Outer orchestration selects and routes work; the inner agent loop operates within one bounded task.",
+              "invariant": "Authority, identity, timeout, and completion evidence remain enforceable outside the model's request. Task identity, ownership, and completion evidence survive every handoff between layers.",
+              "limitingCase": "A harness with no independent verification can only report claims, not establish completion. If there is only one task and one execution loop, an outer orchestrator adds complexity without leverage.",
+              "counterexample": "An allowlisted command can still produce a false success if the final state is never checked. A router that retries an event without stable identity can publish duplicate work as if it were independent.",
+              "validity": "Harness controls reduce operational risk but do not prove that the underlying task or model is correct. Orchestration coordinates bounded systems; it cannot repair an undefined task contract or absent evidence."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-agents-check-1",
+      "prompt": "What closes the agent loop?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Returning the tool result for the next decision"
+          },
+          {
+            "id": "1",
+            "label": "Adding the word agent to the prompt"
+          },
+          {
+            "id": "2",
+            "label": "Running without a human watching"
+          }
+        ]
+      },
+      "solution": "The next action can adapt only when execution results feed back into the decision.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "models"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "The harness owns the loop's mechanics. Debug its evidence, policy and environment separately from the model."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "The inner loop chooses actions. The outer workflow chooses work, manages identity and controls the lifecycle around that loop."
+      }
+    ],
+    "steps": [
+      {
+        "id": "harnesses-apply",
+        "prompt": "The tool returned the correct file but the next request omitted it. What should you inspect?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Context assembly in the harness"
+            },
+            {
+              "id": "1",
+              "label": "The issue author's writing style"
+            },
+            {
+              "id": "2",
+              "label": "The model's training data first"
+            }
+          ]
+        },
+        "solution": "The action succeeded, but its observation was lost before the next decision.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "orchestration-apply",
+        "prompt": "An investigation finds no actionable change. What should it support?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "An explicit no-action result"
+            },
+            {
+              "id": "1",
+              "label": "A fabricated issue to prove it ran"
+            },
+            {
+              "id": "2",
+              "label": "An unbounded retry"
+            }
+          ]
+        },
+        "solution": "An orchestrator needs meaningful negative outcomes as well as positive findings.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "harnesses-check-1",
+      "prompt": "Who must enforce a file-write boundary?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The model's internal reasoning"
+          },
+          {
+            "id": "1",
+            "label": "The harness and underlying execution environment"
+          },
+          {
+            "id": "2",
+            "label": "The final reviewer alone"
+          }
+        ]
+      },
+      "solution": "Instructions influence decisions; executable policy and environment permissions constrain actions.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "harnesses-check-2",
+      "prompt": "What is a good reason to build a custom harness?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "The word custom sounds more advanced"
+          },
+          {
+            "id": "1",
+            "label": "The team has not read the existing configuration"
+          },
+          {
+            "id": "2",
+            "label": "A required enforceable rule is unavailable in the product"
+          }
+        ]
+      },
+      "solution": "Custom machinery should answer a concrete missing capability and its maintenance cost.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "orchestration-check-1",
+      "prompt": "Which responsibility belongs to outer orchestration?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Predicting the next model output"
+          },
+          {
+            "id": "1",
+            "label": "Selecting a workflow when CI fails"
+          },
+          {
+            "id": "2",
+            "label": "Parsing a source file's syntax"
+          }
+        ]
+      },
+      "solution": "The workflow decides when and where agent work begins.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "orchestration-check-2",
+      "prompt": "Why test delegated work before scheduling it?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Scheduling improves reasoning automatically"
+          },
+          {
+            "id": "1",
+            "label": "Unattended runs cannot fail"
+          },
+          {
+            "id": "2",
+            "label": "Repeated failures can create repeated cost and noise"
+          }
+        ]
+      },
+      "solution": "Automation repeats the behaviour you have, including its mistakes.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "Codex: security boundaries",
+      "url": "https://learn.chatgpt.com/docs/security"
+    },
+    {
+      "title": "GitHub: create an agentic workflow",
+      "url": "https://github.github.io/gh-aw/setup/creating-workflows/"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    },
+    {
+      "title": "gh-aw: safe outputs",
+      "url": "https://github.github.io/gh-aw/reference/safe-outputs/"
+    }
+  ],
+  "heading": "Who actually runs the command the model asks for?",
+  "lead": "Locate loop control, tool execution, context selection and permission enforcement in a harness. Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model.",
+  "outcomes": [
+    "Locate loop control, tool execution, context selection and permission enforcement in a harness.",
+    "Draw the responsibilities of an external event, workflow, coding-agent engine, harness and model."
+  ]
+}

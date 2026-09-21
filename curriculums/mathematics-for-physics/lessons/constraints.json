@@ -1,0 +1,673 @@
+{
+  "id": "constraints",
+  "diagnostics": [
+    {
+      "id": "d-gradient",
+      "prompt": "For U = x² + y², find the x component of ∇U at (3,1). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Uₓ = 2x = 6.",
+      "hint": "Differentiate with y fixed.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "multivariable"
+    },
+    {
+      "id": "d-eigen",
+      "prompt": "The matrix diag(2,−1) has which curvature signs?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Both positive"
+          },
+          {
+            "id": "1",
+            "label": "Opposite signs"
+          },
+          {
+            "id": "2",
+            "label": "Both zero"
+          }
+        ]
+      },
+      "solution": "Its coordinate eigenvalues are 2 and −1.",
+      "hint": "Read the diagonal eigenvalues.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Read the diagonal eigenvalues.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "eigenvectors"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Find extrema of f = x on the unit circle x² + y² = 1.",
+    "supplied": [
+      {
+        "heading": "Multiplier equations",
+        "body": "$(1,0)=\\lambda(2x,2y)$ together with $x^2+y^2=1$. All variables are dimensionless."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-lambda",
+        "prompt": "Can λ equal zero?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "Yes"
+            },
+            {
+              "id": "1",
+              "label": "No"
+            }
+          ]
+        },
+        "solution": "The first equation would become 1 = 0.",
+        "hint": "Inspect the first component.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Inspect the first component.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-y",
+        "prompt": "Since λ is nonzero and 0 = 2λy, find y. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Divide by the known nonzero multiplier.",
+        "hint": "Use the second component.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-max",
+        "prompt": "With y = 0, the candidates are x = ±1. What is the maximum f? Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "f equals x, so the larger value is 1.",
+        "hint": "Evaluate the objective.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-min",
+        "prompt": "On the same circle, what is the minimum f? Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": -1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The smallest allowed x is −1, attained at (−1,0).",
+        "hint": "Compare both candidates.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-stationary",
+      "prompt": "At the origin, x² − y² has what type?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Minimum"
+          },
+          {
+            "id": "1",
+            "label": "Maximum"
+          },
+          {
+            "id": "2",
+            "label": "Saddle"
+          }
+        ]
+      },
+      "solution": "Along x energy rises; along y it falls.",
+      "hint": "Test two coordinate directions.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Test two coordinate directions.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-hessian",
+      "prompt": "For U = 3x², what is Uₓₓ? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Differentiate twice.",
+      "hint": "Keep the quadratic expansion's factor one half in mind.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-zero",
+      "prompt": "For U = x⁴ at zero, the second derivative test is what?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Inconclusive, although a minimum exists"
+          },
+          {
+            "id": "1",
+            "label": "Proof of a maximum"
+          },
+          {
+            "id": "2",
+            "label": "Proof of no extremum"
+          }
+        ]
+      },
+      "solution": "The second derivative is zero, but x⁴ is nonnegative.",
+      "hint": "Inspect higher-order behavior.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Inspect higher-order behavior.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-line",
+      "prompt": "Minimize x² + y² on x + y = 4. What is the minimum value? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 8,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "At x = y = 2, the sum is 8.",
+      "hint": "Equal coordinates solve the multiplier equations.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-singular",
+      "prompt": "Why inspect a point with ∇g = 0 separately?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "It is always forbidden"
+          },
+          {
+            "id": "1",
+            "label": "The regular multiplier argument may fail"
+          },
+          {
+            "id": "2",
+            "label": "It is automatically a saddle"
+          }
+        ]
+      },
+      "solution": "The normal direction is not supplied by a nonzero constraint gradient.",
+      "hint": "Recall the regularity hypothesis.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Recall the regularity hypothesis.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-transfer",
+      "prompt": "A constrained candidate is found on a closed segment. What remains?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "Nothing"
+          },
+          {
+            "id": "1",
+            "label": "Only find a multiplier"
+          },
+          {
+            "id": "2",
+            "label": "Classify it and compare endpoints"
+          }
+        ]
+      },
+      "solution": "Global extrema on a segment can occur at the boundary.",
+      "hint": "Include all allowed locations.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Include all allowed locations.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    },
+    {
+      "title": "MIT OpenCourseWare · Linear Algebra",
+      "url": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/"
+    }
+  ],
+  "title": "Extrema, curvature and constraints",
+  "description": "Distinguish a stationary point from a minimum and reason about constrained variation.",
+  "domain": "Mathematics for physics",
+  "unit": "06 · Work in several dimensions",
+  "prerequisites": ["multivariable", "eigenvectors"],
+  "minutes": 60,
+  "transferProblems": [
+    {
+      "id": "transfer-gradient-tangent",
+      "prompt": "At a regular constrained extremum, why are the constraint gradient and objective gradient parallel?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "All allowed tangent directions give zero first-order change"
+          },
+          {
+            "id": "1",
+            "label": "The objective is constant everywhere"
+          },
+          {
+            "id": "2",
+            "label": "The Hessian must be the identity"
+          }
+        ]
+      },
+      "solution": "The gradient is normal to level surfaces; if every allowed tangent direction is orthogonal to the objective gradient, the two normals are parallel.",
+      "hint": "Translate the constraint into the geometry of allowed directions.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Translate the constraint into the geometry of allowed directions.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "transfer-curvature",
+      "prompt": "A Hessian has one positive and one negative eigenvalue at a stationary point. What follows?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "The point is a saddle, not a local minimum"
+          },
+          {
+            "id": "1",
+            "label": "The point is necessarily a maximum"
+          },
+          {
+            "id": "2",
+            "label": "The function is linear nearby"
+          }
+        ]
+      },
+      "solution": "Opposite curvature signs give directions of increase and decrease, which is the signature of a saddle.",
+      "hint": "Use the eigenvectors as independent curvature directions.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the eigenvectors as independent curvature directions.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "heading": "Can energy be minimal when its gradient is not zero?",
+  "lead": "Allowed directions determine equilibrium under a constraint, while curvature distinguishes stable and unstable stationary points.",
+  "outcomes": [
+    "Classify nondegenerate stationary points using Hessian eigenvalues.",
+    "Derive and check regular Lagrange multiplier candidates."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A bead can move on a wire drawn across an energy landscape. The landscape may slope steeply in a direction the wire forbids, yet the bead can still sit at equilibrium on the wire. To decide whether the bead can lower its energy, we must ask about allowed displacements, not arbitrary ones. A constraint changes the question that optimization answers.\n\nEven without a wire, zero slope is only the beginning. A bowl, a hill and a saddle all have a horizontal tangent plane at a suitable central point. Nearby energy rises in every direction for a bowl, falls in every direction for a hill, and does both for a saddle. Second derivatives reveal these different local shapes.\n\nWe will connect the Hessian to the eigenvectors already used to find a matrix's natural directions. Then we will restrict variation to a constraint and derive why two gradients must be parallel at a regular constrained extremum. This gives a useful equation, but it does not eliminate the need to compare candidates and check exceptional points."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "Can energy be minimal when its gradient is not zero?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Allowed directions determine equilibrium under a constraint, while curvature distinguishes stable and unstable stationary points."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Classify nondegenerate stationary points using Hessian eigenvalues.",
+              "Derive and check regular Lagrange multiplier candidates."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Could a point be stable along a wire but unstable if the bead were allowed to leave it?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If every first derivative vanishes, what observation would distinguish a flat-bottomed minimum from a saddle?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "The smallest circle touching a constraint line",
+              "caption": "For U = x² + y² with x + y = 2, the circle U = 2 touches the line at (1,1). The radius, objective gradient and constraint normal are parallel.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [90, 260],
+                  "to": [490, 260],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 290],
+                  "to": [140, 35],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "ellipse",
+                  "center": [140, 260],
+                  "rx": 141.421,
+                  "ry": 141.421,
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 60],
+                  "to": [340, 260],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [140, 260],
+                  "to": [240, 160],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [240, 160],
+                  "label": "(1,1)",
+                  "tone": "accent",
+                  "labelOffset": [18, -5]
+                },
+                {
+                  "kind": "label",
+                  "at": [325, 235],
+                  "text": "x + y = 2"
+                },
+                {
+                  "kind": "label",
+                  "at": [80, 110],
+                  "text": "U = 2"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Stationarity removes the linear term, not the question",
+            "body": "Let U be a smooth real function of position, interpreted here as a potential energy. For an unconstrained interior minimum, its derivative in every direction must vanish. Otherwise moving a short distance opposite a nonzero gradient would decrease U. Thus $\\nabla U=0$ is a necessary condition. Such a point is called stationary. The condition is not sufficient: $U=x^2-y^2$ has zero gradient at the origin but decreases along the y-axis and increases along the x-axis.\n\nNear a point $\\mathbf r_0$, a sufficiently smooth function has expansion\n$$U(\\mathbf r_0+\\mathbf h)=U(\\mathbf r_0)+\\nabla U(\\mathbf r_0)\\cdot\\mathbf h+\\frac12\\mathbf h^T H\\mathbf h+o(|\\mathbf h|^2),$$\nwhere the Hessian H is the matrix of second derivatives evaluated at that point. The final notation says that the remaining error divided by $|\\mathbf h|^2$ tends to zero. At a stationary point the linear term disappears, so the quadratic expression supplies the first available curvature test.\n\nFor two variables, $H=\\begin{pmatrix}U_{xx}&U_{xy}\\\\U_{yx}&U_{yy}\\end{pmatrix}$. When second partial derivatives are continuous nearby, the mixed entries agree and H is symmetric. The factor one half in the expansion matters: for $U=x^2+3y^2$, the Hessian is diag(2,6), whose half-quadratic form reproduces the energy exactly.\n\nIf the quadratic form is strictly positive for every nonzero displacement, sufficiently nearby points have higher energy and the stationary point is a strict local minimum. Strict negativity gives a local maximum. Opposite signs in different directions give a saddle. The word local matters: a neighborhood test does not compare the point with distant regions or boundary values.\n\nWhen the quadratic form vanishes in some directions, higher-order terms can decide the outcome. In one variable, x⁴ and −x⁴ have identical first and second derivatives at zero but opposite types of extremum. A failed second-derivative test is an honest statement of missing information, not evidence that no extremum exists."
+          },
+          {
+            "kind": "question",
+            "bridge": "Inspect energy near an unconstrained stationary point.",
+            "meaning": "Zero first-order change leaves curvature to decide the local shape.",
+            "question": "Why does ∇U = 0 not prove a minimum?",
+            "answer": "A hill or saddle can also have no linear change at its center.",
+            "further": [
+              {
+                "question": "What does a positive-definite Hessian imply?",
+                "answer": "A strict local minimum at a stationary point."
+              },
+              {
+                "question": "What if the Hessian has a zero eigenvalue?",
+                "answer": "The quadratic test may be inconclusive; higher terms matter."
+              },
+              {
+                "question": "Does a local minimum have to be globally lowest?",
+                "answer": "No; distant regions or boundaries can have lower values."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. Eigenvectors expose independent curvature directions",
+            "body": "A real symmetric Hessian has an orthonormal eigenbasis. This is the finite-dimensional symmetric diagonalization result from the eigenvector chapter. Write its eigenvectors as $\\mathbf e_j$ and eigenvalues as $\\lambda_j$. Expanding a displacement as $\\mathbf h=\\sum_j q_j\\mathbf e_j$ turns the quadratic term into $\\frac12\\sum_j\\lambda_jq_j^2$. The cross terms vanish because the eigenvectors are orthogonal. Each eigenvalue measures curvature along a natural direction.\n\nFor $U=x^2+2xy+3y^2$, the Hessian is $\\begin{pmatrix}2&2\\\\2&6\\end{pmatrix}$. Its eigenvalues are $4\\pm2\\sqrt2$, both positive. The coordinate axes are not its principal curvature directions because of the xy term, but every nonzero displacement still increases the quadratic energy from the origin. A tilted bowl is still a bowl; a cross term does not automatically indicate a saddle.\n\nIn two dimensions one can also inspect the Hessian determinant and its first diagonal entry. Positive determinant together with positive $U_{xx}$ implies both eigenvalues are positive; positive determinant and negative $U_{xx}$ implies both are negative. Negative determinant means eigenvalues of opposite sign. A zero determinant leaves the test inconclusive. These shortcuts are consequences of the eigenvalues, not substitutes for understanding what curvature means.\n\nIf physical dynamics obey $m\\ddot{\\mathbf r}=-\\nabla U$ with positive scalar mass and no other forces, a positive quadratic energy near equilibrium gives small restoring forces in all directions. Negative curvature supplies a direction in which displacement is pushed farther away. This links static energy shape to local motion, under the stated force law. A full stability analysis can require higher-order terms, damping or additional conserved quantities; the Hessian describes the local quadratic model.\n\nCoordinates also need compatible physical interpretation. Changing numerical units changes Hessian entries and eigenvalues as numbers. The geometric conclusion about whether a quadratic form is positive does not depend on such relabeling, provided transformations are performed consistently. Later normal-mode calculations will also account for a nontrivial mass matrix when the kinetic energy does not treat all coordinates equally."
+          },
+          {
+            "kind": "question",
+            "bridge": "Rotate to the Hessian's natural directions.",
+            "meaning": "Eigenvalues are the curvatures of independent quadratic directions.",
+            "question": "What do opposite-sign Hessian eigenvalues imply?",
+            "answer": "A saddle, because energy rises in some directions and falls in others.",
+            "further": [
+              {
+                "question": "Does an xy term force a saddle?",
+                "answer": "No; it may describe a rotated positive bowl."
+              },
+              {
+                "question": "Why are Hessian eigenvalues real here?",
+                "answer": "Continuous second partials make the Hessian real symmetric."
+              },
+              {
+                "question": "What physical assumption connects energy curvature to acceleration?",
+                "answer": "A force law F = −∇U together with positive mass and Newton's law."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Constrained extrema permit only tangent variation",
+            "body": "Suppose the bead is confined to a smooth curve $g(x,y)=c$. At a regular point, $\\nabla g\\ne0$, and a tangent displacement $\\mathbf h$ satisfies $\\nabla g\\cdot\\mathbf h=0$ to first order. At a constrained extremum, the first-order energy change must also vanish for every allowed tangent direction: $\\nabla U\\cdot\\mathbf h=0$. In the plane both gradients are perpendicular to the same tangent, so they are parallel:\n$$\\nabla U=\\lambda\\nabla g,\\qquad g=c.$$\nThe scalar $\\lambda$ is a Lagrange multiplier. It does not add a new physical freedom for the bead; it records how the prohibited normal direction accounts for a gradient that need not vanish.\n\nFor example, minimize $U=x^2+y^2$ on the line x + y = 2. The equations are $2x=\\lambda$, $2y=\\lambda$, and x + y = 2. Hence x = y = 1 and U = 2. The unconstrained minimum at the origin is unavailable. Along the line, write y = 2 − x; then $U=2(x-1)^2+2$, independently confirming the global constrained minimum. This direct parameterization is often the simplest check.\n\nMultiplier equations produce stationary candidates, not an automatic minimum label. On a compact constraint such as a circle, a continuous function has global extrema, and regular stationary candidates can be compared. On an open or unbounded constraint, a minimum may fail to exist or an infimum may never be attained. Boundary points of allowed segments must also be considered.\n\nRegularity is essential. The set $x^2+y^2=0$ contains only the origin, where the constraint gradient vanishes. Every function has both a constrained minimum and maximum on this one-point set, but the equation $\\nabla U=\\lambda\\nabla g$ may have no solution for a function with nonzero gradient there. This is a failure of the regularity assumption, not a paradox about extrema.\n\nFor curvature along a curved constraint, the relevant second variation uses the Hessian of $L=U-\\lambda(g-c)$ restricted to tangent displacements, evaluated at a multiplier solution. The constraint's curvature contributes through the second derivatives of g. Merely restricting the unconstrained Hessian of U can miss that contribution. This refinement is explained in the sidebar; for simple cases, parameterizing the constraint and differentiating the resulting one-variable function gives a transparent and reliable classification."
+          },
+          {
+            "kind": "question",
+            "bridge": "Allow only displacements along the constraint.",
+            "meaning": "At a regular constrained extremum, the objective gradient has no tangent component.",
+            "question": "Why are ∇U and ∇g parallel?",
+            "answer": "Both are normal to all allowed tangent directions for one regular constraint.",
+            "further": [
+              {
+                "question": "What else accompanies the multiplier equation?",
+                "answer": "The constraint g = c itself."
+              },
+              {
+                "question": "Why check singular points separately?",
+                "answer": "When ∇g = 0, the tangent-normal argument does not apply."
+              },
+              {
+                "question": "How can a candidate be classified without a second-variation formula?",
+                "answer": "Parameterize the constraint and inspect the resulting function, including boundaries."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Curvature becomes a coordinate-free question through eigenvectors",
+            "body": "The Hessian is not merely a table of second derivatives. Its eigenvectors identify the directions in which the local quadratic model separates, and its eigenvalues tell you the curvature along those directions. This is the same natural-coordinate idea used for linear maps and coupled modes. Constraints then ask a further question: which of those directions are physically allowed? A stationary equation is useful only after both the geometry of the space and the allowed variations are made explicit."
+          },
+          {
+            "kind": "question",
+            "bridge": "Carry the chapter's structure into the next physical setting.",
+            "meaning": "A chapter idea becomes more useful when you can recognise the same structure in a new physical setting.",
+            "question": "What is the main transfer lesson in the section “Curvature becomes a coordinate-free question through eigenvectors”?",
+            "answer": "The section makes the chapter's central structure explicit, then shows how the same structure reappears in a later physical model.",
+            "further": [
+              {
+                "question": "Which assumption makes this transfer valid?",
+                "answer": "The transfer is conditional on the chapter's stated model, definitions, and validity checks; it is a structural analogy, not a license to ignore those assumptions."
+              },
+              {
+                "question": "What should you check before using the idea in a new problem?",
+                "answer": "Check the objects, units or domains, boundary or initial data, and the limiting case that defines the approximation."
+              },
+              {
+                "question": "Why is this connection worth remembering?",
+                "answer": "It turns an isolated technique into a reusable way of organising a derivation and testing whether its conclusion is trustworthy."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Why the constrained Hessian includes the constraint",
+            "body": "Let a feasible path r(s) pass through a multiplier solution with tangent v. Twice differentiating U(r(s)) gives vᵀH(U)v + ∇U · r''. Twice differentiating the constant g(r(s)) gives vᵀH(g)v + ∇g · r'' = 0. Since ∇U = λ∇g, eliminate r'' to obtain vᵀ[H(U) − λH(g)]v. This is the Hessian of the Lagrangian restricted to tangent directions."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "A constraint tells you which variations are available",
+            "body": "Consider minimising $U(x,y)=x^2+y^2$ while keeping $x+y=1$. An unconstrained minimum at the origin is irrelevant because it is forbidden. A small allowed displacement must satisfy $\\delta x+\\delta y=0$, so every allowed tangent direction is proportional to $(1,-1)$.\n\nThe first-order change is $\\delta U=2x\\,\\delta x+2y\\,\\delta y=2(x-y)\\delta x$. To make it zero for every allowed displacement requires x=y. Together with the constraint this gives $x=y=1/2$. We obtained the multiplier result by asking directly which variations can occur.\n\nIn matrix language, if a linear constraint is $Aq=b$, its allowed small changes satisfy $A\\delta q=0$. They lie in the nullspace of A. Stationarity means the gradient is perpendicular to that nullspace. This is why the gradient can be expressed through the constraint normals.\n\nNotice the link to the opening dimensional analysis: there, nullspace vectors were exponent choices that preserved dimensions; here, they are displacements that preserve a constraint. “Sent to zero” means “does not change the quantity being monitored” in both settings.\n\nFor a curved constraint, its derivative gives the tangent condition only locally. Second-order changes must also account for the curvature of the feasible path. This prepares the variational chapter, where allowed displacements become whole functions rather than a finite list of coordinates."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Curvature becomes a coordinate-free question through eigenvectors",
+            "body": "The Hessian is not merely a table of second derivatives. Its eigenvectors identify the directions in which the local quadratic model separates, and its eigenvalues tell you the curvature along those directions. This is the same natural-coordinate idea used for linear maps and coupled modes. Constraints then ask a further question: which of those directions are physically allowed? A stationary equation is useful only after both the geometry of the space and the allowed variations are made explicit."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "A lowest-energy point on a line",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "A lowest-energy point on a line",
+            "problem": "Minimize U = x² + 2y² subject to x + y = 3, in dimensionless variables.",
+            "steps": [
+              {
+                "title": "Write parallel gradients",
+                "body": "$(2x,4y)=\\lambda(1,1)$.",
+                "reason": "At a regular constrained extremum, the gradient is normal to the line.",
+                "trap": "The unconstrained origin is not on the line."
+              },
+              {
+                "title": "Relate coordinates",
+                "body": "$2x=4y$, so $x=2y$.",
+                "reason": "Both expressions equal the same multiplier.",
+                "trap": "Do not replace this with x = y."
+              },
+              {
+                "title": "Apply the constraint",
+                "body": "$3y=3$, hence $(x,y)=(2,1)$ and $U=6$.",
+                "reason": "The geometric restriction selects the permitted point.",
+                "trap": "The gradient equation alone does not enforce feasibility."
+              },
+              {
+                "title": "Classify globally on the line",
+                "body": "With $x=3-y$, $U=3(y-1)^2+6$.",
+                "reason": "A nonnegative square proves 6 is the global minimum on the entire line.",
+                "trap": "A multiplier solution alone is not a classification."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "First find stationary candidates in the allowed directions; then use curvature, boundaries and comparison to classify them.",
+            "nextConnection": "Line integrals will measure accumulated work along a path and connect force to changes in potential energy."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A constrained extremum tests only allowed tangent directions, so the objective gradient is compared with the constraint normal rather than required to vanish. Stationarity supplies candidates, while Hessian curvature, boundaries, and singular constraints determine what those candidates actually mean.",
+              "widerConnection": "Curvature and eigenvectors then connect optimisation to stability, mechanics, and variational reasoning. The wider lesson is that a mathematical condition is only as strong as the space of variations on which it was derived."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

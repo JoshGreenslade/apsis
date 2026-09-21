@@ -1,0 +1,558 @@
+{
+  "id": "multivariable",
+  "diagnostics": [
+    {
+      "id": "d-derivative",
+      "prompt": "For f(x) = x², find f'(3). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The derivative is 2x, giving 6.",
+      "hint": "Use the quadratic slope.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "derivatives"
+    },
+    {
+      "id": "d-dot",
+      "prompt": "Find (2,3) · (1,−1). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": -1,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "2 − 3 = −1.",
+      "hint": "Multiply matching components and add.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "vectors"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "For the dimensionless field f(x,y) = 3x² + y² at (1,2), examine the direction u = (3/5,4/5).",
+    "supplied": [
+      {
+        "heading": "Local model",
+        "body": "The directional derivative is $\\nabla f\\cdot\\mathbf u$ for a unit u. Enter unit 1 for all numerical answers."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-x",
+        "prompt": "Find fₓ at (1,2). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 6,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "fₓ = 6x = 6.",
+        "hint": "Hold y fixed.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-y",
+        "prompt": "Find fᵧ at (1,2). Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 4,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "fᵧ = 2y = 4.",
+        "hint": "Hold x fixed.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-direction",
+        "prompt": "Using gradient (6,4), find the directional derivative along u. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 6.8,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "6(3/5) + 4(4/5) = 34/5.",
+        "hint": "Take the dot product.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-predict",
+        "prompt": "Using directional derivative 6.8, predict the linear change after distance 0.01 along u. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 0.068,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "The first-order change is 6.8 × 0.01.",
+        "hint": "A slope per distance multiplies the traveled distance.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-partial",
+      "prompt": "For f = x²y, find fₓ at (2,3). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 12,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "2xy = 12.",
+      "hint": "Treat y as constant.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-normal",
+      "prompt": "At a regular point, a gradient is what relative to a level curve?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Tangent"
+          },
+          {
+            "id": "1",
+            "label": "Perpendicular"
+          },
+          {
+            "id": "2",
+            "label": "Always zero"
+          }
+        ]
+      },
+      "solution": "The tangent derivative vanishes, so the gradient is normal.",
+      "hint": "Use the directional derivative.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Use the directional derivative.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-unit",
+      "prompt": "What is the x component of the unit vector along (3,4)? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Divide 3 by the length 5.",
+      "hint": "Normalize.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-path",
+      "prompt": "For f = x + y and path (t,2t), find df/dt. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 3,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The gradient (1,1) dotted with velocity (1,2) is 3.",
+      "hint": "Combine both coordinates.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-differentiable",
+      "prompt": "Existing partials at one point guarantee what?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "A local plane in every direction"
+          },
+          {
+            "id": "1",
+            "label": "Continuity"
+          },
+          {
+            "id": "2",
+            "label": "Only the corresponding coordinate derivatives"
+          }
+        ]
+      },
+      "solution": "The diagonal counterexample shows the stronger claims can fail.",
+      "hint": "Distinguish axis tests from all approaches.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Distinguish axis tests from all approaches.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-transfer",
+      "prompt": "A stationary sensor has what motion contribution?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "Zero gradient dotted with velocity"
+          },
+          {
+            "id": "1",
+            "label": "The gradient magnitude"
+          },
+          {
+            "id": "2",
+            "label": "The partial time derivative twice"
+          }
+        ]
+      },
+      "solution": "Its velocity is zero, so the spatial-motion term is zero, although the field may evolve.",
+      "hint": "Separate spatial transport and local time change.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate spatial transport and local time change.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    }
+  ],
+  "title": "Derivatives in several directions",
+  "description": "Use a total differential and a gradient to distinguish a path change from a partial change.",
+  "domain": "Mathematics for physics",
+  "unit": "06 · Work in several dimensions",
+  "prerequisites": ["derivatives", "vectors"],
+  "minutes": 60,
+  "heading": "What does a sensor measure when it moves through a changing field?",
+  "lead": "Partial and total change answer different physical questions; the gradient connects them.",
+  "outcomes": [
+    "Construct a local linear model and a normalized directional derivative.",
+    "Apply the chain rule to a moving measurement and recognize differentiability limits."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A temperature sensor moves across a metal plate. Its reading changes because it visits different places, even if the plate's temperature pattern is steady. If a heater is also warming the plate, the reading has another reason to change. A single recorded time derivative mixes motion through a spatial pattern with evolution of the pattern itself. Several-variable calculus separates those contributions.\n\nImagine first that the plate is steady and its temperature is given at every point by a function T(x,y). Walking east and walking north can produce different rates of change at the same starting point. There is no single slope until a direction has been specified. Nevertheless, when the field is locally well approximated by a plane, one compact object contains the first-order answer for every direction: the gradient.\n\nWe will build that object from ordinary one-variable derivatives, then ask what extra condition lets those separate derivatives describe general motion. The distinction matters. Measuring eastward and northward changes alone does not automatically prove that every diagonal approach behaves well. The local linear model, rather than a list of formulas, is the organizing idea."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "What does a sensor measure when it moves through a changing field?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Partial and total change answer different physical questions; the gradient connects them."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Construct a local linear model and a normalized directional derivative.",
+              "Apply the chain rule to a moving measurement and recognize differentiability limits."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can a sensor's reading change while the field itself is steady?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If a temperature field is constant along a contour, where should the direction of fastest increase point relative to that contour?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "A gradient crosses a level line",
+              "caption": "For f = x + 2y, level lines have slope −1/2. At the highlighted point, the vector (1,2) is normal and points toward larger f; the axes use equal scales.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [70, 275],
+                  "to": [530, 275],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [70, 275],
+                  "to": [70, 25],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [100, 90],
+                  "to": [420, 250],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [180, 50],
+                  "to": [500, 210],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "point",
+                  "at": [260, 170],
+                  "label": "point",
+                  "tone": "ink",
+                  "labelOffset": [-55, 20]
+                },
+                {
+                  "kind": "line",
+                  "from": [260, 170],
+                  "to": [310, 70],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "point",
+                  "at": [310, 70],
+                  "label": "gradient (1,2)",
+                  "tone": "accent",
+                  "labelOffset": [15, 0]
+                },
+                {
+                  "kind": "label",
+                  "at": [400, 265],
+                  "text": "constant f"
+                },
+                {
+                  "kind": "label",
+                  "at": [480, 190],
+                  "text": "larger f"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. A partial derivative asks a controlled question",
+            "body": "A scalar field assigns one number to each point: $T(x,y)$ might give temperature on a plate, while $U(x,y,z)$ might give potential energy in space. A **partial derivative** changes one coordinate while holding the others fixed. Thus $T_x=\\partial T/\\partial x$ is the limit of $[T(x+h,y)-T(x,y)]/h$ as h tends to zero. This is an ordinary derivative along a coordinate line, with y treated as a constant parameter.\n\nConsider $T(x,y)=20+x^2+3y$ in scaled coordinates, with temperatures measured in degrees and distances in the chosen length unit. The coefficients carry the units needed to make the terms compatible. Holding y fixed gives $T_x=2x$; holding x fixed gives $T_y=3$. At $(1,2)$, moving a small distance east changes temperature by about twice that distance, whereas moving the same distance north changes it by about three times that distance. Both answers refer to the same point but to different experimental changes.\n\nFor a differentiable field, combine these changes into the local model\n$$T(x+\\Delta x,y+\\Delta y)=T(x,y)+T_x\\Delta x+T_y\\Delta y+\\text{remainder}.$$\nDifferentiability means the remainder divided by $\\sqrt{(\\Delta x)^2+(\\Delta y)^2}$ tends to zero as the displacement shrinks along any direction. The expression $dT=T_x\\,dx+T_y\\,dy$ is called the total differential. It is the linear part of a finite change, not a promise that every finite change equals the differential exactly.\n\nFor our quadratic field at $(1,2)$, the exact change is $2\\Delta x+3\\Delta y+(\\Delta x)^2$. The omitted term displays why the local model improves with smaller steps. If both displacements are scaled down by a factor of ten, the linear part scales down tenfold and this error one hundredfold. The approximation has an identifiable regime rather than a vague claim of smallness.\n\nPartial derivatives are coordinate-dependent measurements. Their usefulness lies in combining them into a prediction for the actual displacement. Holding y fixed must describe a meaningful controlled variation; along a curved path y may change together with x, and simply using $T_x$ would answer the wrong question."
+          },
+          {
+            "kind": "question",
+            "bridge": "Change one coordinate while holding the other fixed.",
+            "meaning": "Partials are controlled coordinate slopes; the total differential combines them.",
+            "question": "For T = 20 + x² + 3y at (1,2), what is the linear change?",
+            "answer": "2Δx + 3Δy; the exact omitted term is (Δx)².",
+            "further": [
+              {
+                "question": "Why is dT not generally a finite exact change?",
+                "answer": "It retains only the linear part of the local expansion."
+              },
+              {
+                "question": "What does holding y fixed mean?",
+                "answer": "The comparison follows a horizontal coordinate line."
+              },
+              {
+                "question": "How does the quadratic error scale under tenfold smaller steps?",
+                "answer": "It becomes one hundred times smaller."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. The gradient collects all directional slopes",
+            "body": "In orthonormal Cartesian coordinates define $\\nabla T=(T_x,T_y)$, where the symbol $\\nabla$ is read 'del'. The linear change becomes $dT=\\nabla T\\cdot d\\mathbf r$. For a unit vector $\\mathbf u$, the directional derivative is\n$$D_{\\mathbf u}T=\\nabla T\\cdot\\mathbf u.$$\nA unit vector specifies direction without adding an arbitrary speed. If a vector is not normalized, its dot product gives the rate for a parameterized motion with that velocity, not change per unit distance.\n\nAt $(1,2)$ in our field, the gradient is $(2,3)$. An eastward unit displacement has directional derivative 2, a northward one has derivative 3, and the unit northeast direction $(1,1)/\\sqrt2$ gives $5/\\sqrt2$. This last result is not the sum 5 because a unit diagonal step travels only $1/\\sqrt2$ in each coordinate. The normalization has a geometric purpose.\n\nThe dot product is $|\\nabla T|\\cos\\alpha$, where $\\alpha$ is the angle between the gradient and a unit direction. Its greatest value is $|\\nabla T|$, attained in the gradient direction when the gradient is nonzero. The negative gradient gives fastest decrease; perpendicular directions give zero first-order change. Thus the gradient is a compact answer to an entire family of directional questions, not merely a pair of unrelated partial derivatives.\n\nA level curve is a path along which T stays constant. Its tangent direction has zero directional derivative, so a nonzero gradient is perpendicular to the curve. This explains contour maps: tightly spaced equal-value contours indicate a large gradient magnitude, and the direction across contours points toward increasing values. At a point where the gradient vanishes, this first-order argument selects no preferred direction; second-order information may become important.\n\nThe Cartesian formula assumes orthonormal axes with compatible length units. In polar coordinates, the components of a gradient are not simply the two raw partial derivatives because an angular increment corresponds to a distance that depends on radius. We will derive coordinate measures in the next chapter and return to geometric measurement later. The vector should represent physical directional change, independently of a convenient coordinate label."
+          },
+          {
+            "kind": "question",
+            "bridge": "Ask for change along an arbitrary direction.",
+            "meaning": "A gradient encodes directional slopes through a dot product.",
+            "question": "Why normalize the direction?",
+            "answer": "To measure change per unit distance instead of allowing vector length to rescale the answer.",
+            "further": [
+              {
+                "question": "Where is increase fastest?",
+                "answer": "Along the nonzero gradient, with slope equal to its magnitude."
+              },
+              {
+                "question": "Why is the gradient normal to a level curve?",
+                "answer": "Tangent motion leaves the function unchanged to first order, so its dot product with the gradient is zero."
+              },
+              {
+                "question": "Does a zero gradient establish a minimum?",
+                "answer": "No; it gives no first-order direction of change, and curvature must be inspected."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Follow a moving sensor and inspect the limits of the model",
+            "body": "Let a path be $\\mathbf r(t)=(x(t),y(t))$. Insert its small coordinate changes into the total differential and divide by elapsed time. When the field and path are differentiable, the chain rule gives\n$$\\frac{d}{dt}T(x(t),y(t))=T_x\\dot x+T_y\\dot y=\\nabla T\\cdot\\dot{\\mathbf r}.$$\nThis is change per unit time, while a unit-direction derivative is change per unit distance. The velocity supplies both direction and speed. Stopping the sensor makes this path contribution vanish in a steady field.\n\nFor $T=20+x^2+3y$ and path $x=t$, $y=2t$, direct substitution gives $T(t)=20+t^2+6t$, so $dT/dt=2t+6$. The chain rule gives exactly the same result: $T_x=2t$, $T_y=3$, $\\dot x=1$, and $\\dot y=2$. At t = 1 the reading rises at 8 temperature units per time unit. Calculating both ways makes visible why the two partial contributions must be added.\n\nIf the field also depends explicitly on time, write $T(x,y,t)$. The moving sensor then reads\n$$\\frac{dT}{dt}=\\frac{\\partial T}{\\partial t}+\\nabla T\\cdot\\mathbf v.$$\nThe partial time derivative describes warming at a fixed location; the other term describes movement through the pattern. Either can vanish while the total is nonzero, or they can cancel. This distinction will recur in fluid motion, transport and conservation equations.\n\nExistence of partial derivatives at a point alone does not justify the local plane. For a sharp counterexample, define $f(x,y)=xy/(x^2+y^2)$ away from the origin and $f(0,0)=0$. Along either axis the function is zero, so both partial derivatives at the origin are zero. Along y = x, however, it equals 1/2 away from the origin. The function is not even continuous there. The coordinate-line tests missed a diagonal failure. Continuous first partial derivatives in a neighborhood are a convenient sufficient condition for differentiability.\n\nTo improve a differentiable local model, collect second derivatives into the Hessian matrix H. For a sufficiently smooth function, the next term is $\\frac12\\Delta\\mathbf r^T H\\Delta\\mathbf r$. It records how the slope changes with direction. In our field the only nonzero Hessian entry is $T_{xx}=2$, giving exactly the correction $(\\Delta x)^2$. The later chapter on extrema will turn this curvature information into a way to distinguish bowls, hills and saddles."
+          },
+          {
+            "kind": "question",
+            "bridge": "Move the point while allowing the field to evolve.",
+            "meaning": "The recorded time rate includes both local evolution and motion through spatial variation.",
+            "question": "What is dT/dt for a moving sensor?",
+            "answer": "The partial time derivative plus gradient dotted with velocity.",
+            "further": [
+              {
+                "question": "Can the recorded rate vanish in a changing field?",
+                "answer": "Yes; the spatial-motion contribution can cancel the partial time derivative."
+              },
+              {
+                "question": "Do two existing partial derivatives prove differentiability?",
+                "answer": "No; diagonal approaches can fail even if both axis tests succeed."
+              },
+              {
+                "question": "What does the Hessian add?",
+                "answer": "The quadratic change of the local slope with direction."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "A useful sufficient condition",
+            "body": "Continuous first partial derivatives near a point imply differentiability there. One can split a small displacement into coordinate steps and apply the one-variable mean value theorem to each. Continuity lets the slopes at the intermediate points approach the slopes at the original point, so the remaining error is smaller than the displacement scale. The theorem is sufficient, not necessary."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The Jacobian is the derivative, with more input directions",
+            "body": "For one input, the derivative converts a small input change into a predicted output change. For a map $F(x,y)$ with two outputs, each input direction can affect each output, so the same information needs a matrix:\n$$F(q+\\delta q)\\approx F(q)+J(q)\\delta q.$$\nColumn j of J is the output change per unit change along input direction j. This is the “action on a basis” interpretation from linear maps.\n\nTake the map from polar to Cartesian coordinates, $F(r,\\theta)=(r\\cos\\theta,r\\sin\\theta)$. Its Jacobian is\n$$J=\\begin{pmatrix}\\cos\\theta&-r\\sin\\theta\\\\\\sin\\theta&r\\cos\\theta\\end{pmatrix}.$$\nThe first column is a unit radial displacement. The second is a tangential displacement of length r per radian. The unequal sizes are geometry, not an arbitrary feature of the notation.\n\nThe chain rule follows by composing these local maps. If G acts on F’s output, then a small change first becomes $J_F\\delta q$ and then $J_GJ_F\\delta q$. Matrix multiplication appears because the two stages act in sequence.\n\nAt r=0, the angular column vanishes: changing angle there does not move the Cartesian point. This explains both the singular Jacobian and the failure of a unique polar angle at the origin. Later integration will use the determinant of this same derivative to measure local area change. Rates, coordinate geometry and volume conversion are different uses of one object."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "A sensor crosses a steady field",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "A sensor crosses a steady field",
+            "problem": "In scaled variables T(x,y) = x² + 2xy. A sensor follows x(t) = t and y(t) = t². Find its reading rate at t = 1.",
+            "steps": [
+              {
+                "title": "Differentiate while holding coordinates fixed",
+                "body": "$T_x=2x+2y$, $T_y=2x$.",
+                "reason": "Each partial derivative has its own controlled variation.",
+                "trap": "Do not substitute y = x² before finding the spatial partials."
+              },
+              {
+                "title": "Locate the sensor",
+                "body": "At t = 1, $(x,y)=(1,1)$ and $\\nabla T=(4,2)$.",
+                "reason": "The gradient must be evaluated at the actual location.",
+                "trap": "A gradient formula is not yet its value at a point."
+              },
+              {
+                "title": "Find velocity",
+                "body": "$\\dot{\\mathbf r}=(1,2t)$, hence $(1,2)$ at t = 1.",
+                "reason": "The path parameter is time, so its derivative supplies speed as well as direction.",
+                "trap": "Do not normalize a velocity when seeking change per time."
+              },
+              {
+                "title": "Combine and verify",
+                "body": "$dT/dt=(4,2)\\cdot(1,2)=8$. Directly, $T(t)=t^2+2t^3$, whose derivative at 1 is 8.",
+                "reason": "The chain rule and direct substitution must agree.",
+                "trap": "Using Tₓ alone would miss the changing y coordinate."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "Specify what changes and what stays fixed, then use a local model to predict the actual path change.",
+            "nextConnection": "We now follow actual trajectories, combining the chain rule with changing vector directions; the two-body problem and perturbation theory then use those tools to reconstruct motion."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "The gradient is the coefficient of the best local linear change, while a directional derivative asks for that change along one chosen path. Partial derivatives hold coordinates fixed; the total differential explains how a real path combines changes in all of them.",
+              "widerConnection": "This distinction leads to fields, work, flux, optimisation, constraints, and multidimensional uncertainty propagation. It is the point where single-variable local reasoning becomes a language for geometry and physical space."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

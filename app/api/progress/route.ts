@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { loadCurricula } from "@/curricula/registry";
+import { loadCurricula } from "@/curriculums/registry";
 import { readState, updateState } from "@/lib/store";
 import { isStaticExport } from "@/lib/static-mode";
 
-// On the static GitHub Pages build the SQLite-backed API cannot run. The
-// client components already degrade gracefully ("you can still read every
-// lesson"), so these handlers report the feature as unavailable. The full
-// server app (no PAGES_BASE_PATH) keeps the interactive implementation.
-export const dynamic = "force-static";
+// Static exports omit .ts API routes. Server requests need real cookies and query parameters.
+export const dynamic = "force-dynamic";
 
 const actionSchema = z.discriminatedUnion("type", [
   z

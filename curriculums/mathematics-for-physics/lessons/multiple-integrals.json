@@ -1,0 +1,630 @@
+{
+  "id": "multiple-integrals",
+  "diagnostics": [
+    {
+      "id": "d-partial",
+      "prompt": "For x(u,v) = u²v, find xᵤ at (1,3). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "2uv = 6.",
+      "hint": "Hold v fixed.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "multivariable"
+    },
+    {
+      "id": "d-integral",
+      "prompt": "Evaluate the integral of r² from 0 to 2. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2.6666666666666665,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The antiderivative is r³/3.",
+      "hint": "Apply the endpoint difference.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "integration-methods"
+    },
+    {
+      "id": "d-det",
+      "prompt": "Find the determinant of diag(2,3). Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The area stretch is 2 × 3.",
+      "hint": "Multiply the diagonal entries.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "linear-maps"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "A disk of radius 1 m has σ(r) = (4 kg/m⁴)r². Find its mass and average density.",
+    "supplied": [
+      {
+        "heading": "Set-up",
+        "body": "$M=\\int_0^{2\\pi}\\int_0^1 4r^3\\,dr\\,d\\theta$, with the coefficient units supplied above."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-power",
+        "prompt": "What power of r appears after multiplying density by the polar factor? Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "r² × r = r³.",
+        "hint": "Combine the density and area factor.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-radial",
+        "prompt": "Evaluate the numerical radial integral of 4r³ from 0 to 1. Enter unit 1.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1,
+          "unit": "1",
+          "acceptedUnits": ["1"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "[r⁴]₀¹ = 1.",
+        "hint": "Use the supplied integral.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-mass",
+        "prompt": "The radial result is 1 kg per unit angle. What is M?",
+        "answer": {
+          "kind": "numeric",
+          "value": 6.283185307179586,
+          "unit": "kg",
+          "acceptedUnits": ["kg"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Multiply by the full angular range 2π.",
+        "hint": "Complete the angular accumulation.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-average",
+        "prompt": "The mass is 2π kg and area is π m². Find the average surface density.",
+        "answer": {
+          "kind": "numeric",
+          "value": 2,
+          "unit": "kg/m²",
+          "acceptedUnits": ["kg/m²"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "solution": "Divide mass by area.",
+        "hint": "Use the geometric disk area.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-triangle",
+      "prompt": "Find the area 0 ≤ y ≤ x ≤ 2.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "m²",
+        "acceptedUnits": ["m²"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The triangle has base 2 m and height 2 m; area is 2 m².",
+      "hint": "Treat coordinate lengths as metres.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-jac",
+      "prompt": "Which measure fits polar coordinates?",
+      "answer": {
+        "kind": "choice",
+        "value": "2",
+        "options": [
+          {
+            "id": "0",
+            "label": "dr dθ"
+          },
+          {
+            "id": "1",
+            "label": "r² dr dθ"
+          },
+          {
+            "id": "2",
+            "label": "r dr dθ"
+          }
+        ]
+      },
+      "solution": "A sector's angular edge has length r dθ.",
+      "hint": "Inspect the physical edges.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Inspect the physical edges.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-stretch",
+      "prompt": "Under x = 2u, y = 3v, what is the area factor? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 6,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "The Jacobian determinant is 6.",
+      "hint": "Use the local linear map.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-orient",
+      "prompt": "A Jacobian equals −2. What factor belongs in an ordinary area integral?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "2"
+          },
+          {
+            "id": "1",
+            "label": "−2"
+          },
+          {
+            "id": "2",
+            "label": "1/2"
+          }
+        ]
+      },
+      "solution": "Area uses the absolute determinant.",
+      "hint": "Separate measure from orientation.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Separate measure from orientation.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-ball",
+      "prompt": "A sphere radius doubles at fixed uniform density. By what factor does mass grow? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 8,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "solution": "Volume scales with radius cubed.",
+      "hint": "Use the volume measure.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Check the governing relation, substitute consistently, and keep unrounded intermediate values.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-angle",
+      "prompt": "In spherical coordinates with ϑ from the z-axis, why does the measure vanish at the poles?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The sphere has a hole"
+          },
+          {
+            "id": "1",
+            "label": "Azimuthal circles shrink to zero radius"
+          },
+          {
+            "id": "2",
+            "label": "Physical density must vanish"
+          }
+        ]
+      },
+      "solution": "Azimuth labels become redundant at the axis; the coordinate length r sin(ϑ)dφ shrinks.",
+      "hint": "Distinguish a coordinate degeneracy from missing matter.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Distinguish a coordinate degeneracy from missing matter.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    },
+    {
+      "title": "MIT OpenCourseWare · Single Variable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+    }
+  ],
+  "practiceTemplates": [
+    {
+      "id": "disk-mass",
+      "title": "A polar area integral",
+      "prompt": "A flat disk has radius {{radius}} m and uniform surface mass density {{density}} kg/m². Find its mass.",
+      "variables": [
+        {
+          "name": "radius",
+          "min": 1,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "name": "density",
+          "min": 1,
+          "max": 8,
+          "step": 1
+        }
+      ],
+      "formula": {
+        "op": "multiply",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              3.141592653589793,
+              {
+                "op": "power",
+                "args": [
+                  {
+                    "variable": "radius"
+                  },
+                  2
+                ]
+              }
+            ]
+          },
+          {
+            "variable": "density"
+          }
+        ]
+      },
+      "unit": "kg",
+      "hint": "Integrate density times r dr dθ, or use the disk's area.",
+      "solution": "The mass is density × πR² = {{density}} × π × {{radius}}² = {{answer}} kg. The extra r in the polar measure accounts for growing ring area."
+    }
+  ],
+  "title": "Integration and coordinates in several dimensions",
+  "description": "Explain how a coordinate transformation changes area or volume before evaluating an integral.",
+  "domain": "Mathematics for physics",
+  "unit": "06 · Work in several dimensions",
+  "prerequisites": ["multivariable", "integration-methods", "linear-maps"],
+  "minutes": 60,
+  "heading": "Why does changing coordinates change the integration measure?",
+  "lead": "Correct accumulation requires the physical size of each tile, not just its coordinate widths.",
+  "outcomes": [
+    "Set bounds for a region and interpret iterated integration.",
+    "Derive the polar area factor and use cylindrical or spherical measures with stated angle conventions."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A plate can have a different mass per unit area at every location. To estimate its total mass, divide it into small tiles, multiply each tile's area by a representative density and add. Refining the tiles turns that estimate into a double integral. The idea is the same accumulation used for a changing velocity, but the contributions now fill a region instead of an interval.\n\nThere is a practical freedom: the tiles need not be arranged in a rectangular grid. A circular plate may be easier to describe using rings and angular sectors. That choice makes the boundary simpler, but a tile with the same radial and angular coordinate widths gets larger farther from the center. Replacing coordinate labels without changing the area factor would count those outer tiles incorrectly.\n\nThe central task is therefore to connect coordinates to physical measure. A Jacobian tells us how a coordinate map stretches a small area or volume. Once that geometric question is answered, iterated one-variable integrals do the accumulation. We will keep the region, its bounds and its measure visible throughout."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "Why does changing coordinates change the integration measure?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Correct accumulation requires the physical size of each tile, not just its coordinate widths."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Set bounds for a region and interpret iterated integration.",
+              "Derive the polar area factor and use cylindrical or spherical measures with stated angle conventions."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Do two polar sectors with equal radial width and equal angular width have equal area at different radii?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If a coordinate map reverses orientation, should a positive mass density produce negative mass?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "Equal angular widths have different physical widths",
+              "caption": "Two circular arcs at radii r and 2r subtend the same angle. Their arc lengths are rΔθ and 2rΔθ, which explains the polar area factor.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [80, 260],
+                  "to": [520, 260],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [80, 260],
+                  "to": [440, 80],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [80, 260],
+                  "to": [440, 170],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [200, 200],
+                  "to": [210, 227.5],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [320, 140],
+                  "to": [340, 195],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "label",
+                  "at": [145, 175],
+                  "text": "r Δθ"
+                },
+                {
+                  "kind": "label",
+                  "at": [350, 165],
+                  "text": "2r Δθ"
+                },
+                {
+                  "kind": "label",
+                  "at": [100, 290],
+                  "text": "same angle Δθ"
+                },
+                {
+                  "kind": "label",
+                  "at": [205, 250],
+                  "text": "near ring"
+                },
+                {
+                  "kind": "label",
+                  "at": [365, 230],
+                  "text": "far ring"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Iterated integrals slice an actual region",
+            "body": "Let $\\sigma(x,y)$ be mass per unit area on a region R. Approximate the mass by $\\sum\\sigma(x_j,y_j)\\Delta A_j$. For an integrable density, the limit as the largest tile shrinks is $M=\\iint_R\\sigma\\,dA$. The units are density times area, giving mass. If the integrand represents a signed quantity instead, contributions can cancel; the integral does not automatically mean unsigned volume.\n\nFor a rectangular region $a\\le x\\le b$, $c\\le y\\le d$, continuous densities can be accumulated in strips:\n$$M=\\int_a^b\\left[\\int_c^d\\sigma(x,y)\\,dy\\right]dx.$$\nThe inner integral treats x as fixed and adds along a vertical slice. The outer integral then sums slices across x. Under continuity on a bounded region, or more generally suitable integrability conditions, reversing the order gives the same total. For singular or non-absolutely integrable expressions, changing order requires additional care.\n\nA nonrectangular region changes the bounds. Consider the triangle $0\\le x\\le1$, $0\\le y\\le x$. At each fixed x, the vertical slice begins at y = 0 and ends at y = x. Thus $\\iint_R1\\,dA=\\int_0^1\\int_0^x1\\,dy\\,dx=1/2$. The upper limit is a function because the slice length varies. To reverse the order, fix y instead: y runs from 0 to 1 and x from y to 1. Both descriptions specify the same triangle.\n\nDraw or describe the region before computing. A correct antiderivative with incorrect bounds answers a different physical question. In particular, using independent limits 0 to 1 for both variables would integrate over a square, doubling this triangle's area. The differential order gives an instruction about which variable is being accumulated first; it must agree with the dependence of the bounds.\n\nThe same construction extends to three dimensions. A volume density times a small volume gives a small mass, and a triple integral sums these contributions. Computational complexity increases, but the meaning of accumulation remains unchanged."
+          },
+          {
+            "kind": "question",
+            "bridge": "Build a total from density times small area.",
+            "meaning": "Bounds describe the actual region being counted.",
+            "question": "For 0 ≤ y ≤ x ≤ 1, why does the inner upper bound depend on x?",
+            "answer": "A vertical slice ends at the sloping boundary y = x.",
+            "further": [
+              {
+                "question": "What is the reversed order?",
+                "answer": "Let y run from 0 to 1 and x from y to 1."
+              },
+              {
+                "question": "What does integrating 1 give?",
+                "answer": "The area of the region."
+              },
+              {
+                "question": "Can order always be reversed without conditions?",
+                "answer": "No; continuity on a bounded region is sufficient, but singular non-absolutely integrable cases require care."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A Jacobian measures the local stretch",
+            "body": "Suppose coordinates $(u,v)$ locate a point through $x=x(u,v)$ and $y=y(u,v)$. Over small coordinate increments, differentiability gives a linear approximation. The two coordinate edges map approximately to vectors $(x_u,y_u)\\,du$ and $(x_v,y_v)\\,dv$. Their parallelogram area is the absolute value of their determinant times $du\\,dv$:\n$$dA=\\left|\\frac{\\partial(x,y)}{\\partial(u,v)}\\right|du\\,dv,\\qquad \\frac{\\partial(x,y)}{\\partial(u,v)}=x_uy_v-x_vy_u.$$\nThis determinant is the **Jacobian determinant**. The linear-map chapter interpreted a determinant as an oriented area factor. Here the coordinate map may be nonlinear, but in a sufficiently small neighborhood its derivative is a linear map.\n\nThe absolute value has a physical role. Swapping u and v reverses orientation and changes the determinant sign, yet an area tile still has positive size. Ordinary area and volume integrals use the magnitude. Signed orientation will return in line and flux integrals, where orientation is part of the quantity being measured.\n\nFor polar coordinates, $x=r\\cos\\theta$ and $y=r\\sin\\theta$. Differentiation gives columns $(\\cos\\theta,\\sin\\theta)$ and $(-r\\sin\\theta,r\\cos\\theta)$. Their determinant is r, using $\\cos^2\\theta+\\sin^2\\theta=1$. Consequently $dA=r\\,dr\\,d\\theta$ for nonnegative r. Geometrically, a thin sector has radial width dr and tangential width approximately $r\\,d\\theta$; multiplying produces the same factor.\n\nA disk of radius R is therefore $0\\le r\\le R$, $0\\le\\theta<2\\pi$, and its area is $\\int_0^{2\\pi}\\int_0^R r\\,dr\\,d\\theta=\\pi R^2$. Omitting r would give $2\\pi R$, which even has the wrong length scaling for an area. The angular coordinate is dimensionless, so dr alone cannot supply area units.\n\nA coordinate substitution also needs an appropriate domain. It should cover the intended region once, apart from harmless boundaries, and be smoothly invertible where the ordinary change-of-variables theorem applies. Polar coordinates identify all angles at r = 0 and repeat after a full turn. These boundary or isolated degeneracies do not affect regular area integrals, but integrating through two full turns would count the disk twice."
+          },
+          {
+            "kind": "question",
+            "bridge": "Compare a coordinate tile with its image.",
+            "meaning": "The derivative map's determinant measures local area stretch.",
+            "question": "Why is polar dA equal to r dr dθ?",
+            "answer": "The tangential edge has length approximately r dθ, while the radial edge has length dr.",
+            "further": [
+              {
+                "question": "Why use the determinant's absolute value?",
+                "answer": "Area is positive even if coordinates reverse orientation."
+              },
+              {
+                "question": "What fails if θ covers 4π for a disk?",
+                "answer": "Almost every point is counted twice."
+              },
+              {
+                "question": "Why is the polar origin not fatal for a regular area integral?",
+                "answer": "Its degeneracy is confined to a set of zero area; the rest of the disk is represented normally."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Choose coordinates for both the boundary and the integrand",
+            "body": "If a disk's surface density depends only on distance from its center, Cartesian coordinates conceal a simple symmetry. Let $\\sigma=\\sigma_0(r/R)$ on a disk of radius R. A ring of radius r and thickness dr has area approximately $2\\pi r\\,dr$. Its density increases linearly with r, so\n$$M=\\int_0^{2\\pi}\\int_0^R\\sigma_0\\frac rR\\,r\\,dr\\,d\\theta=\\frac{2\\pi}{3}\\sigma_0R^2.$$\nThe average density is $M/(\\pi R^2)=2\\sigma_0/3$. It exceeds the simple average of center and edge densities, $\\sigma_0/2$, because there is more area in outer rings. The measure factor captures that physical weighting.\n\nCylindrical coordinates add a height z to polar coordinates. A small tile is extruded through thickness dz, so $dV=r\\,dr\\,d\\theta\\,dz$. This suits cylinders, pipes and fields with rotational symmetry around an axis. The height bounds can depend on r and angle; a coordinate system does not make every region a rectangular box in coordinate space.\n\nFor spherical coordinates, use radius r, polar angle $\\vartheta$ measured from the positive z-axis, and azimuth $\\varphi$ around that axis. The standard ranges are $r\\ge0$, $0\\le\\vartheta\\le\\pi$, and $0\\le\\varphi<2\\pi$. A small box has edge lengths approximately dr, $r\\,d\\vartheta$, and $r\\sin\\vartheta\\,d\\varphi$. Their directions are mutually perpendicular, giving\n$$dV=r^2\\sin\\vartheta\\,dr\\,d\\vartheta\\,d\\varphi.$$\nThe sine factor reflects how circles of latitude shrink toward the poles. Using an angle measured from the equatorial plane would require a different trigonometric factor and different bounds; angle conventions must be stated.\n\nA sphere of radius R checks the formula: the radial integral is $R^3/3$, the polar integral of sine is 2, and the azimuthal integral is $2\\pi$, giving $4\\pi R^3/3$. Again units and scaling help detect missing factors.\n\nThe method is now systematic: identify the physical quantity being added, draw or describe its region, choose coordinates that simplify the region or density, compute the local measure, and evaluate. A complicated boundary may remain complicated after a substitution; no coordinate system is universally best. The useful choice makes the geometry and weighting easier to see, not merely the symbols shorter."
+          },
+          {
+            "kind": "question",
+            "bridge": "Match coordinates to symmetry.",
+            "meaning": "Volume factors include the physical lengths corresponding to angular increments.",
+            "question": "What is spherical dV when the polar angle is measured from the z-axis?",
+            "answer": "r² sin(ϑ) dr dϑ dφ.",
+            "further": [
+              {
+                "question": "Why does sin(ϑ) appear?",
+                "answer": "The azimuthal circle has radius r sin(ϑ)."
+              },
+              {
+                "question": "Why does outward-increasing density weight outer rings strongly?",
+                "answer": "Each outer radial interval contains more area because circumference increases with radius."
+              },
+              {
+                "question": "What are two quick checks on a measure?",
+                "answer": "Check its physical dimensions and whether integrating 1 reproduces a known area or volume."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "When a transformation counts more than once",
+            "body": "The map $(u,v)\\mapsto(u^2,v)$ on −1 ≤ u ≤ 1 covers most points in its image twice. Integrating with $|2u|$ over the entire coordinate domain counts both sheets. Restricting to 0 ≤ u ≤ 1 makes the map one-to-one except on its boundary. A Jacobian does not by itself repair an incorrectly chosen covering domain."
+          },
+          {
+            "kind": "sidebar",
+            "heading": "The Jacobian determinant is local volume scaling",
+            "body": "A linear map A sends a small parallelogram to another parallelogram and multiplies its area by $|\\det A|$. A smooth nonlinear coordinate change is approximately linear inside a sufficiently small neighbourhood. Its derivative J therefore supplies the local area factor. Adding all the small transformed patches gives the change-of-variables formula.\n\nFor polar coordinates, the Jacobian columns are perpendicular, with lengths one and r. A tiny coordinate rectangle of sides $dr$ and $d\\theta$ becomes approximately a patch of sides $dr$ and $r\\,d\\theta$. Its area is $r\\,dr\\,d\\theta$, which is why the factor r appears in a polar integral. The factor is a geometric consequence of angular lines spreading apart.\n\nA probability density makes the meaning especially clear. If p is probability per unit Cartesian area, then the same probability element is\n$$p(x,y)\\,dx\\,dy=p(r\\cos\\theta,r\\sin\\theta)\\,r\\,dr\\,d\\theta.$$\nThe value of a density depends on the measure it is defined against; the probability assigned to the patch does not.\n\nThe determinant alone cannot ensure that patches are counted once. Letting the angle run from zero to $4\\pi$ covers most points twice. Thus both the local linear map and the global coordinate domain matter. This connects integration to determinants, probability densities and the distinction between an object and its coordinate description."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "Mass of a radially graded disk",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "Mass of a radially graded disk",
+            "problem": "A disk of radius 2 m has surface density σ(r) = (3 kg/m³)r. Find its total mass.",
+            "steps": [
+              {
+                "title": "Describe the region",
+                "body": "Use $0\\le r\\le2$ m and $0\\le\\theta<2\\pi$.",
+                "reason": "The boundary is a fixed radius in polar coordinates.",
+                "trap": "A full disk requires one full turn."
+              },
+              {
+                "title": "Include the area stretch",
+                "body": "$dM=(3r)r\\,dr\\,d\\theta$ with the supplied coefficient units.",
+                "reason": "Density multiplies r dr dθ, not dr dθ.",
+                "trap": "The density's r does not replace the Jacobian's r."
+              },
+              {
+                "title": "Accumulate radially",
+                "body": "$\\int_0^2 3r^2\\,dr=8$ kg per unit angle.",
+                "reason": "At a fixed angle, integrate all radial tiles.",
+                "trap": "Retain the upper-bound cube."
+              },
+              {
+                "title": "Complete and interpret",
+                "body": "$M=16\\pi$ kg. Average density is $M/(4\\pi)=4$ kg/m², below the edge density 6.",
+                "reason": "The angular integral contributes 2π, and the average checks the result.",
+                "trap": "An average above the maximum density would be impossible."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "Transform the region, integrand and measure together; the Jacobian supplies the missing geometry.",
+            "nextConnection": "We will use local quadratic models and constraints to find physically allowed extrema."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A coordinate transformation changes the local measure as well as the coordinates, and the Jacobian records that change. Integrating in a new coordinate system is therefore a geometric translation that must preserve the physical region and its area or volume element.",
+              "widerConnection": "The same separation between representation and invariant quantity appears in geometry, probability densities, and tensor calculations. Later coordinate changes will again succeed only when the transformed measure is carried along with the transformed variables."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

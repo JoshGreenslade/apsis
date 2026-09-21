@@ -1,0 +1,448 @@
+{
+  "id": "gh-aw",
+  "title": "Repository automation · Controlling execution",
+  "description": "Design an unattended workflow with a clear trigger, task contract, permissions, evidence and approval boundary. Use execution controls to limit cost and blast radius without mistaking them for proof of correctness.",
+  "domain": "Agentic engineering",
+  "unit": "09 · Engineer unattended workflows",
+  "prerequisites": ["long-horizon"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "gh-aw--gh-aw",
+        "title": "Repository automation: turn an event into bounded work",
+        "navLabel": "Repository automation",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A scheduled job is a small production system, even when its instruction lives in Markdown. Something wakes it, constructs context, grants tools, runs an agent and reports an output. The convenience is real, but the event is also a permission to act. Treating the workflow as a paragraph with a cron expression attached is how silent assumptions become recurring incidents."
+          },
+          {
+            "kind": "content",
+            "title": "Trace the execution path",
+            "body": "Start with the event: issue opened, pull request changed, schedule reached or command requested. Then identify the instruction source, checkout revision, identity, tools, outputs and final destination. Each transition should be explicit enough that a reviewer can answer what ran, against what and with which authority."
+          },
+          {
+            "kind": "question",
+            "bridge": "An event is not the work. It starts a chain of context and authority.",
+            "meaning": "Reliable automation makes each transition from trigger to output inspectable.",
+            "question": "A nightly workflow opens a pull request with no recorded revision or tool list. What cannot a reviewer establish?",
+            "answer": "They cannot tell exactly what code was examined, what capabilities were available or why the output should be trusted.",
+            "further": [
+              {
+                "question": "Why record the checkout revision?",
+                "answer": "The same prompt can produce a different result against a different repository state."
+              },
+              {
+                "question": "Why separate draft output from merge?",
+                "answer": "It keeps the agent's work reviewable and reversible before an external effect becomes permanent."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Trace the production architecture",
+            "body": "Open the [GitHub Agentic Workflows architecture diagram](https://github.github.com/gh-aw/introduction/architecture/). Locate the agent job and the separate output jobs. Trace where a proposed change becomes an external write, then compare the permissions on either side of that boundary."
+          },
+          {
+            "kind": "example",
+            "title": "A repository wants a nightly dependency advisory workflow.",
+            "problem": "A repository wants a nightly dependency advisory workflow.",
+            "steps": [
+              {
+                "title": "Map the chain",
+                "body": "Schedule the event, pin the checkout, load the local instructions, run the advisory tool, create a draft report and attach the evidence.",
+                "reason": "The output can be reviewed and traced.",
+                "trap": "Letting the job push directly to the default branch."
+              },
+              {
+                "title": "Bound the effect",
+                "body": "Grant read access to dependencies and repository metadata; require approval before changing versions or publishing.",
+                "reason": "The automation has useful reach without hidden authority.",
+                "trap": "Using a broad token because the workflow is trusted."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Make the unattended contract narrow",
+            "body": "Define what the job may read, change and publish. Prefer an artifact or draft proposal before a merge or release. Make failure visible, preserve logs and ensure the workflow can be disabled without editing the system that it is currently trying to repair."
+          },
+          {
+            "kind": "question",
+            "bridge": "Unattended does not mean unbounded.",
+            "meaning": "A scheduled workflow needs explicit permissions, failure reporting and a disable path.",
+            "question": "What is the safer default for a new automated maintenance job?",
+            "answer": "Read and propose first: produce a branch, patch or draft with evidence, then expand permissions only after the workflow is understood.",
+            "further": [
+              {
+                "question": "What should happen on failure?",
+                "answer": "The workflow should surface a clear status, preserve enough logs to diagnose it and avoid silently presenting partial work as complete."
+              },
+              {
+                "question": "Why keep a disable path?",
+                "answer": "A recurring system must be stoppable quickly when its assumptions or dependencies change."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Treat repository automation as a small production system: trace the trigger, bound authority and make the output reviewable.",
+            "nextConnection": "A workflow can be correctly wired and still run too long or spend too much. The next lesson separates operational controls from evidence of success."
+          }
+        ]
+      },
+      {
+        "id": "controls--controls",
+        "title": "Controlling execution: budgets are not success criteria",
+        "navLabel": "Controlling execution",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A workflow finishes in nine minutes, within its ten-minute limit, and returns a patch. Its resource controls worked. Whether the patch fixes the bug is a separate question.\n\nNow suppose the next run reaches the limit after finding the cause but before making a change. That run is incomplete, yet its evidence may still be useful. Keep those two descriptions available: why execution stopped, and what the task actually achieved."
+          },
+          {
+            "kind": "content",
+            "title": "Control the run",
+            "body": "Choose limits for the work you can afford to lose or repeat. A read-only investigation might have a short wall-clock limit, a small retry allowance for transient tool failures and a cap on simultaneous runs. A write-capable job also needs a clear account of what may already have changed when it stops.\n\nEnforce limits in the executor or scheduler, not only in the prompt. If a subprocess keeps running after the agent stops, the wall-clock limit has not bounded the whole job. Reserve time for cancellation and saving evidence rather than expecting cleanup to happen after resources are gone.\n\nOn exhaustion, return the last verified state, any partial artifacts and the reason for stopping. Do not automatically reset the budget and resume forever; that would make the limit cosmetic."
+          },
+          {
+            "kind": "question",
+            "bridge": "Control answers 'how much may this run consume?' Success answers 'did it achieve the task?'",
+            "meaning": "Operational limits and correctness evidence are complementary, not interchangeable.",
+            "question": "A workflow finishes within its token budget but edits the wrong package. Did the budget help prove success?",
+            "answer": "No. It controlled consumption, but the task still failed. Scope and behavioural checks are separate evidence.",
+            "further": [
+              {
+                "question": "What should a timeout produce?",
+                "answer": "A clear partial status, preserved state or logs and an instruction for safe continuation or escalation."
+              },
+              {
+                "question": "Why cap concurrency?",
+                "answer": "Parallel work can multiply side effects, rate pressure and review complexity."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "A nightly job sometimes runs for an hour without producing a useful patch.",
+            "problem": "A nightly job sometimes runs for an hour without producing a useful patch.",
+            "steps": [
+              {
+                "title": "Add operational limits",
+                "body": "Set a 15-minute budget, two tool retries, one concurrent run and a checkpoint artifact on timeout.",
+                "reason": "The job is bounded and recoverable.",
+                "trap": "Increasing the timeout until the behaviour is forgotten."
+              },
+              {
+                "title": "Add task evidence",
+                "body": "Require the focused test, diff scope and advisory report before marking the job successful.",
+                "reason": "A completed run must also satisfy the task contract.",
+                "trap": "Treating exit code zero as proof."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Prove the result separately",
+            "body": "Success criteria belong to the task: tests, invariants, review checks and output completeness. A run can finish under budget and still be wrong; it can also exceed a budget while discovering useful evidence. Record operational status and task status separately."
+          },
+          {
+            "kind": "question",
+            "bridge": "A good control has a deliberate response when it fires.",
+            "meaning": "Limits should preserve useful state and avoid ambiguous partial effects.",
+            "question": "A tool-call budget is reached halfway through an investigation. What is better than silently ending?",
+            "answer": "Save the current observations and next decision, report the limit, and ask whether to resume or narrow the scope.",
+            "further": [
+              {
+                "question": "Can a longer timeout fix a wrong task?",
+                "answer": "No. It may spend more resources on an incorrect objective."
+              },
+              {
+                "question": "What is a useful approval gate?",
+                "answer": "A gate tied to evidence and a consequential transition, not a ritual pause with no decision to inspect."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Budget the run to protect resources, then verify the result with evidence that speaks to the task.",
+            "nextConnection": "Controls are useful defaults, but every harness has different contracts. The next lesson asks when customisation earns its complexity."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Design an unattended workflow with a clear trigger, task contract, permissions, evidence and approval boundary. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Use execution controls to limit cost and blast radius without mistaking them for proof of correctness. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "A workflow can be correctly wired and still run too long or spend too much. The next lesson separates operational controls from evidence of success. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Controls are useful defaults, but every harness has different contracts. The next lesson asks when customisation earns its complexity. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Design an unattended workflow with a clear trigger, task contract, permissions, evidence and approval boundary.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Use execution controls to limit cost and blast radius without mistaking them for proof of correctness."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "An unattended workflow connects an external event to bounded execution, evidence collection, and a human decision boundary. Controls reduce the consequences of an agent action by limiting authority, requiring evidence, or stopping execution.",
+              "invariant": "Event identity, permissions, and approval state remain explicit across the workflow run. Permission boundaries and approval gates are separate controls and must not be treated as interchangeable.",
+              "limitingCase": "If no repeatable event or acceptance action exists, an unattended workflow has no stable job to perform. A fully read-only workflow needs no write approval, but still needs evidence and resource limits.",
+              "counterexample": "A workflow can run successfully while producing no accepted engineering outcome. A human approval gate does not repair an overly broad permission granted before the gate.",
+              "validity": "The workflow's guarantees are limited to its configured triggers, permissions, tools, and checks. Controls lower risk within their enforcement point; a control outside the actual execution boundary is cosmetic."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-choosing-check-1",
+      "prompt": "What should determine autonomy?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Demo excitement"
+          },
+          {
+            "id": "1",
+            "label": "Risk, uncertainty and reversibility"
+          },
+          {
+            "id": "2",
+            "label": "The number of tools installed"
+          }
+        ]
+      },
+      "solution": "Autonomy is a task decision.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "long-horizon"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Treat repository automation as a small production system: trace the trigger, bound authority and make the output reviewable."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Budget the run to protect resources, then verify the result with evidence that speaks to the task."
+      }
+    ],
+    "steps": [
+      {
+        "id": "gh-aw-apply",
+        "prompt": "Why pin the checkout?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "For reproducibility"
+            },
+            {
+              "id": "1",
+              "label": "To prevent all updates"
+            },
+            {
+              "id": "2",
+              "label": "To increase permissions"
+            }
+          ]
+        },
+        "solution": "The run should identify the state it examined.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "controls-apply",
+        "prompt": "What is task evidence?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "Tests and invariants tied to the requested result"
+            },
+            {
+              "id": "1",
+              "label": "Token count"
+            },
+            {
+              "id": "2",
+              "label": "Elapsed time alone"
+            }
+          ]
+        },
+        "solution": "Correctness is assessed separately from consumption.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "gh-aw-check-1",
+      "prompt": "What starts an unattended workflow?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "An event or schedule"
+          },
+          {
+            "id": "1",
+            "label": "A vague intention"
+          },
+          {
+            "id": "2",
+            "label": "A successful merge only"
+          }
+        ]
+      },
+      "solution": "The trigger begins the chain that must then be made explicit.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "gh-aw-check-2",
+      "prompt": "What should a first automation produce?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "An unreviewed production change"
+          },
+          {
+            "id": "1",
+            "label": "A traceable proposal or artifact"
+          },
+          {
+            "id": "2",
+            "label": "No evidence"
+          }
+        ]
+      },
+      "solution": "Reviewable output is a safer first boundary.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "controls-check-1",
+      "prompt": "What does a timeout prove?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "The task is correct"
+          },
+          {
+            "id": "1",
+            "label": "The run reached an operational limit"
+          },
+          {
+            "id": "2",
+            "label": "The output is safe"
+          }
+        ]
+      },
+      "solution": "A timeout is a control signal, not a correctness result.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "controls-check-2",
+      "prompt": "What should happen at a budget boundary?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Silently disappear"
+          },
+          {
+            "id": "1",
+            "label": "Preserve state and report the boundary"
+          },
+          {
+            "id": "2",
+            "label": "Publish partial work automatically"
+          }
+        ]
+      },
+      "solution": "Recovery needs an observable stopping point.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "GitHub: create an agentic workflow",
+      "url": "https://github.github.io/gh-aw/setup/creating-workflows/"
+    },
+    {
+      "title": "gh-aw: safe outputs",
+      "url": "https://github.github.io/gh-aw/reference/safe-outputs/"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    }
+  ],
+  "heading": "How does a repository event become a running agent job?",
+  "lead": "Design an unattended workflow with a clear trigger, task contract, permissions, evidence and approval boundary. Use execution controls to limit cost and blast radius without mistaking them for proof of correctness.",
+  "outcomes": [
+    "Design an unattended workflow with a clear trigger, task contract, permissions, evidence and approval boundary.",
+    "Use execution controls to limit cost and blast radius without mistaking them for proof of correctness."
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "id": "long-horizon",
+  "title": "Long-horizon work · Choosing an agent",
+  "description": "Break extended work into resumable experiments with explicit state, gates and evidence. Match autonomy, cost and review effort to task risk, uncertainty and reversibility.",
+  "domain": "Agentic engineering",
+  "unit": "08 · Choose and operate",
+  "prerequisites": ["landscape"],
+  "minutes": 25,
+  "content": {
+    "sections": [
+      {
+        "id": "long-horizon--long-horizon",
+        "title": "Long-horizon work: accumulate evidence, not elapsed time",
+        "navLabel": "Long-horizon work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The agent has been busy for two hours. It has read dozens of files, tried several patches and produced a long status report. What do we know now that we did not know at the start?\n\nIf that question is difficult to answer, more runtime may just buy more activity. Long tasks need intermediate results that can be checked and carried forward, especially when the work changes direction or moves to a fresh session."
+          },
+          {
+            "kind": "example",
+            "title": "A migration task may run across several sessions.",
+            "problem": "A migration task may run across several sessions.",
+            "steps": [
+              {
+                "title": "Divide the route",
+                "body": "Stage one maps callers, stage two adds compatibility, stage three migrates one path, and stage four removes the old path only after evidence.",
+                "reason": "Each stage has a smaller proof and a safe stopping point.",
+                "trap": "Giving one prompt permission to rewrite every caller and delete the old API."
+              },
+              {
+                "title": "Resume from state",
+                "body": "After each stage, record the revision, tests, unresolved questions and next gate.",
+                "reason": "A fresh run can continue without replaying the whole investigation.",
+                "trap": "Relying on the transcript as the only memory."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Make progress legible",
+            "body": "For a retry repair, the first stage might end with a deterministic reproduction, not a patch. The second ends with a candidate change and evidence that the reproduction now passes. The third checks surrounding behaviour and prepares the result for review.\n\nThese stages need not take equal time. Their value is that each answers a different question: can we reproduce it, does the change address it, and what else might the change affect?\n\nAfter each stage, keep a short record of the revision, commands, findings and unresolved questions. If reproduction proves impossible without production access, stop there and report the missing evidence. Do not quietly replace the task with a plausible-looking cleanup."
+          },
+          {
+            "kind": "question",
+            "bridge": "Elapsed time is not evidence of progress.",
+            "meaning": "A long task needs observable stage outcomes and resumable state.",
+            "question": "An agent has edited twenty files but cannot say which hypothesis the changes test. What is missing?",
+            "answer": "A progress contract: the task was not broken into stages with a decision, evidence and stopping condition.",
+            "further": [
+              {
+                "question": "What should a stage record?",
+                "answer": "The goal, changed artifacts, observations, uncertainty and the next permitted experiment."
+              },
+              {
+                "question": "Why record rejected paths?",
+                "answer": "They stop a resumed run from repeating work that already failed to explain the problem."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Use gates, not hope",
+            "body": "Pause before expensive, risky or irreversible transitions. A gate can ask whether the hypothesis still fits, whether the tests are trustworthy and whether the next action remains inside scope. Long-horizon autonomy should be a sequence of bounded commitments, not one large permission slip."
+          },
+          {
+            "kind": "question",
+            "bridge": "Long-horizon work needs moments where autonomy narrows before risk rises.",
+            "meaning": "Gates preserve human control at transitions where the next action changes cost, scope or reversibility.",
+            "question": "When should a human approval gate appear?",
+            "answer": "Before a consequential transition such as publishing, changing production configuration or committing to a broad refactor.",
+            "further": [
+              {
+                "question": "What makes a gate useful?",
+                "answer": "It has a clear question and evidence to inspect, rather than asking for a vague feeling of confidence."
+              },
+              {
+                "question": "Should every small action need approval?",
+                "answer": "No. Excessive gates destroy the benefit of delegation; use them where risk or irreversibility changes."
+              }
+            ]
+          },
+          {
+            "kind": "takeaway",
+            "body": "Long-horizon work is a chain of bounded experiments, each leaving enough evidence for the next one.",
+            "nextConnection": "The final lesson in this unit asks the harder question: given the task, environment and horizon, how much autonomy should you buy?"
+          }
+        ]
+      },
+      {
+        "id": "choosing--choosing",
+        "title": "Choosing an agent: buy the right amount of autonomy",
+        "navLabel": "Choosing an agent",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Autonomy is not a trophy. It is a setting. A human should not hand over a task simply because an agent can attempt it, just as a team should not manually repeat a safe, well-specified check that a machine can perform reliably. The useful choice depends on uncertainty, consequence, reversibility and the quality of available evidence."
+          },
+          {
+            "kind": "content",
+            "title": "Use a risk-adjusted decision",
+            "body": "Reading a CI log and drafting an explanation has a different risk from merging the proposed fix. The investigation can often run unattended while the merge still requires a reviewer. Autonomy does not have to be granted to the whole workflow at once.\n\nAsk where an error would be noticed and how it would be undone. A patch on an isolated branch is relatively easy to inspect and discard. A public message, data migration or production change may be harder to reverse even when the command itself is simple.\n\nPut review at the transition where it can change the outcome. Approval after an irreversible action is only an audit. If the objective itself is disputed or the evidence cannot support a decision, bring a person in before implementation begins."
+          },
+          {
+            "kind": "question",
+            "bridge": "The best agent is the one whose level of autonomy matches the task, not the one with the most impressive demo.",
+            "meaning": "Risk, uncertainty and reversibility determine how much delegation is sensible.",
+            "question": "Which task is the better first candidate for autonomy: formatting a known set of files or deleting production data?",
+            "answer": "Formatting the known files. It is bounded, observable and reversible; production deletion demands a much stronger approval boundary.",
+            "further": [
+              {
+                "question": "Why does reversibility matter?",
+                "answer": "It reduces the cost of a wrong action and makes experimentation safer."
+              },
+              {
+                "question": "When is a human the right choice?",
+                "answer": "When the objective or evidence requires judgment that cannot be made legible enough for safe delegation, especially before irreversible consequences."
+              }
+            ]
+          },
+          {
+            "kind": "example",
+            "title": "A team wants an agent to own a dependency upgrade.",
+            "problem": "A team wants an agent to own a dependency upgrade.",
+            "steps": [
+              {
+                "title": "Start at a safe boundary",
+                "body": "Let it inspect the dependency, propose the version change, run the focused tests and produce a diff.",
+                "reason": "The team gets useful work with a clear review point.",
+                "trap": "Allowing an automatic publish on the first trial."
+              },
+              {
+                "title": "Expand by evidence",
+                "body": "After repeated successful trials, consider automatic branch creation or merge checks, while keeping release changes gated.",
+                "reason": "Autonomy grows with demonstrated control.",
+                "trap": "Treating a high benchmark score as permission for production actions."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "Prefer a smaller promise you can prove",
+            "body": "A modest agent that produces a reviewable patch may beat a powerful agent that takes broad action with opaque evidence. Start with the narrowest autonomy that could deliver value, measure the result and expand only when the failure modes are understood."
+          },
+          {
+            "kind": "question",
+            "bridge": "Autonomy should expand from evidence, not optimism.",
+            "meaning": "Start with a narrow promise, measure the outcome and use what you learn to set the next boundary.",
+            "question": "What should a team measure before increasing autonomy?",
+            "answer": "Task success, defect escape, review effort, recovery time, cost and the quality of evidence accompanying decisions.",
+            "further": [
+              {
+                "question": "Why include review effort?",
+                "answer": "A result that takes longer to verify than to produce may not be an efficiency gain."
+              },
+              {
+                "question": "What is a good expansion rule?",
+                "answer": "Increase scope only when the existing scope has reliable checks and known recovery paths."
+              }
+            ]
+          },
+          {
+            "kind": "lab",
+            "data": {
+              "title": "Lab 5 · Choose an autonomy boundary",
+              "minutes": 30,
+              "brief": "Take one real engineering task and decide which actions an agent may inspect, propose, apply and publish.",
+              "steps": [
+                "Describe the task's uncertainty, consequence, reversibility and available checks.",
+                "Draw four boundaries: read, propose, apply and publish.",
+                "Run a narrow trial and record success, review effort, recovery and escaped defects.",
+                "Use the evidence to keep, narrow or expand one boundary."
+              ],
+              "deliverables": [
+                "An environment contract",
+                "An autonomy boundary map",
+                "A trial report with an expansion decision"
+              ],
+              "review": "A good decision explains why each boundary matches the task's risk and names the evidence that would justify changing it. 'The agent seemed capable' is not enough."
+            }
+          },
+          {
+            "kind": "takeaway",
+            "body": "Buy the amount of autonomy you can supervise, verify and recover from; expand only when evidence earns it.",
+            "nextConnection": "With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "Break extended work into resumable experiments with explicit state, gates and evidence. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Match autonomy, cost and review effort to task risk, uncertainty and reversibility. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
+              "widerConnection": "The final lesson in this unit asks the harder question: given the task, environment and horizon, how much autonomy should you buy? This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. With operating choices made, the course can engineer unattended workflows with explicit triggers, controls and approval boundaries. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
+              "primitives": [
+                "The lesson's target: Break extended work into resumable experiments with explicit state, gates and evidence.",
+                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
+                "An observable outcome and the evidence needed to accept it",
+                "The lesson's target: Match autonomy, cost and review effort to task risk, uncertainty and reversibility."
+              ],
+              "assumptions": [
+                "The task boundary and acceptance condition are explicit before execution begins.",
+                "Claims are kept separate from observations produced by the environment or verifier.",
+                "Authority is limited to the actions required by the stated task."
+              ],
+              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
+              "checks": [
+                "What observation would distinguish the intended explanation from its nearest alternative?",
+                "Which action, state transition, or evidence boundary does the system own?",
+                "What would still be unknown after the stated check passes?"
+              ],
+              "governingLaw": "Long-horizon work requires explicit state, checkpoints, bounded progress, and recovery rather than one uninterrupted context. The right autonomy level is the least powerful arrangement that can meet the task's evidence and risk requirements.",
+              "invariant": "A resumed run must re-establish task identity and evidence before continuing from a checkpoint. Escalation changes authority only when the acceptance test and rollback path remain explicit.",
+              "limitingCase": "For a one-step task, checkpointing costs more than it saves and adds no recovery value. When the task is ambiguous or irreversible, supervised assistance can be the maximum justified autonomy.",
+              "counterexample": "More turns do not imply more progress when the agent repeats an action without changing its hypothesis. Automating a frequent task can reduce throughput if review, recovery, and maintenance cost exceed the saved effort.",
+              "validity": "Long-horizon reliability depends on recoverable state and measurable progress, not on context length alone. An autonomy choice is valid only for the named task, environment, risk tolerance, and evidence contract."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "warmup-environment-check-1",
+      "prompt": "Which belongs in an environment contract?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only the repository URL"
+          },
+          {
+            "id": "1",
+            "label": "Revision, tools, permissions and verification"
+          },
+          {
+            "id": "2",
+            "label": "The agent's favourite font"
+          }
+        ]
+      },
+      "solution": "A workplace contract describes the conditions that make evidence trustworthy.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "landscape"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Try the next decision yourself, then compare the layers involved.",
+    "supplied": [
+      {
+        "heading": "Keep this principle in view",
+        "body": "Long-horizon work is a chain of bounded experiments, each leaving enough evidence for the next one."
+      },
+      {
+        "heading": "Keep this principle in view",
+        "body": "Buy the amount of autonomy you can supervise, verify and recover from; expand only when evidence earns it."
+      }
+    ],
+    "steps": [
+      {
+        "id": "long-horizon-apply",
+        "prompt": "What belongs in resumable state?",
+        "answer": {
+          "kind": "choice",
+          "value": "1",
+          "options": [
+            {
+              "id": "0",
+              "label": "Only the final answer"
+            },
+            {
+              "id": "1",
+              "label": "Observations, uncertainty and the next action"
+            },
+            {
+              "id": "2",
+              "label": "Every token ever produced"
+            }
+          ]
+        },
+        "solution": "A handoff needs the reasoning state, not a raw transcript.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "choosing-apply",
+        "prompt": "When might a human be the best agent?",
+        "answer": {
+          "kind": "choice",
+          "value": "0",
+          "options": [
+            {
+              "id": "0",
+              "label": "When the objective is contested or the action irreversible"
+            },
+            {
+              "id": "1",
+              "label": "For every spelling fix"
+            },
+            {
+              "id": "2",
+              "label": "Only when no model exists"
+            }
+          ]
+        },
+        "solution": "Some decisions need accountable judgment and cannot yet be delegated safely.",
+        "hint": "Identify the observation that would distinguish the alternatives.",
+        "rubric": {
+          "defaultCategory": "conceptual",
+          "explanation": "Identify the observation that would distinguish the alternatives.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "long-horizon-check-1",
+      "prompt": "What is a useful stage boundary?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "A time limit only"
+          },
+          {
+            "id": "1",
+            "label": "A result with evidence and a stopping condition"
+          },
+          {
+            "id": "2",
+            "label": "A larger prompt"
+          }
+        ]
+      },
+      "solution": "Stages make progress inspectable and resumable.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "long-horizon-check-2",
+      "prompt": "What does a gate protect?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Only prose style"
+          },
+          {
+            "id": "1",
+            "label": "A consequential transition"
+          },
+          {
+            "id": "2",
+            "label": "The model's context limit"
+          }
+        ]
+      },
+      "solution": "Gates narrow autonomy where risk changes.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "choosing-check-1",
+      "prompt": "What should determine autonomy?",
+      "answer": {
+        "kind": "choice",
+        "value": "1",
+        "options": [
+          {
+            "id": "0",
+            "label": "Demo excitement"
+          },
+          {
+            "id": "1",
+            "label": "Risk, uncertainty and reversibility"
+          },
+          {
+            "id": "2",
+            "label": "The number of tools installed"
+          }
+        ]
+      },
+      "solution": "Autonomy is a task decision.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "choosing-check-2",
+      "prompt": "Why start with a narrow promise?",
+      "answer": {
+        "kind": "choice",
+        "value": "0",
+        "options": [
+          {
+            "id": "0",
+            "label": "It makes outcomes and failures easier to understand"
+          },
+          {
+            "id": "1",
+            "label": "It guarantees perfection"
+          },
+          {
+            "id": "2",
+            "label": "It removes review"
+          }
+        ]
+      },
+      "solution": "Small scope creates evidence for the next decision.",
+      "hint": "Identify the observation that would distinguish the alternatives.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Identify the observation that would distinguish the alternatives.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "OpenAI: function calling",
+      "url": "https://developers.openai.com/api/docs/guides/function-calling"
+    },
+    {
+      "title": "Codex: repository instructions",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+    },
+    {
+      "title": "GitHub: Copilot cloud agent",
+      "url": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+    },
+    {
+      "title": "Official Codex documentation",
+      "url": "https://learn.chatgpt.com/docs"
+    },
+    {
+      "title": "gh-aw: engine capabilities and limits",
+      "url": "https://github.github.io/gh-aw/reference/engines/"
+    }
+  ],
+  "heading": "How can an agent work for longer without losing the thread?",
+  "lead": "Break extended work into resumable experiments with explicit state, gates and evidence. Match autonomy, cost and review effort to task risk, uncertainty and reversibility.",
+  "outcomes": [
+    "Break extended work into resumable experiments with explicit state, gates and evidence.",
+    "Match autonomy, cost and review effort to task risk, uncertainty and reversibility."
+  ]
+}

@@ -1,0 +1,1075 @@
+{
+  "id": "vibrating-string",
+  "diagnostics": [
+    {
+      "id": "d-pdes",
+      "prompt": "Which data specify an unforced string initially?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Displacement and velocity fields"
+          },
+          {
+            "id": "b",
+            "label": "Displacement alone"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "The equation is second order in time.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "The equation is second order in time.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "pdes"
+    },
+    {
+      "id": "d-modes",
+      "prompt": "What does a normal-mode basis do to linear coupled motion?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Separates it into independent modal equations"
+          },
+          {
+            "id": "b",
+            "label": "Makes every frequency equal"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "Eigenvectors diagonalise the coupling operator.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Eigenvectors diagonalise the coupling operator.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "coupled-modes"
+    },
+    {
+      "id": "d-fourier",
+      "prompt": "A sine expansion is 3sin(πx/L). Find its first coefficient. Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 3,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Orthogonal projection recovers 3.",
+      "solution": "Orthogonal projection recovers 3.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Orthogonal projection recovers 3.",
+        "misconceptions": []
+      },
+      "prerequisiteId": "fourier"
+    }
+  ],
+  "fadedExercise": {
+    "prompt": "Use a fixed string with L=2 m, T=18 N and μ=2 kg/m in its second mode.",
+    "supplied": [
+      {
+        "heading": "Relations",
+        "body": "c=√(T/μ), k_n=nπ/L, ω_n=ck_n, frequency=ω_n/(2π)."
+      }
+    ],
+    "steps": [
+      {
+        "id": "f-c",
+        "prompt": "Find c in m/s.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3,
+          "unit": "m/s",
+          "acceptedUnits": ["m/s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "√(18/2)=3.",
+        "solution": "√(18/2)=3.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "√(18/2)=3.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-k",
+        "prompt": "Find k₂ in 1/m.",
+        "answer": {
+          "kind": "numeric",
+          "value": 3.141592653589793,
+          "unit": "1/m",
+          "acceptedUnits": ["1/m"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "2π/2=π.",
+        "solution": "2π/2=π.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "2π/2=π.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-w",
+        "prompt": "Find ω₂ in 1/s.",
+        "answer": {
+          "kind": "numeric",
+          "value": 9.42477796076938,
+          "unit": "1/s",
+          "acceptedUnits": ["1/s"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Multiply c by k₂.",
+        "solution": "Multiply c by k₂.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Multiply c by k₂.",
+          "misconceptions": []
+        }
+      },
+      {
+        "id": "f-frequency",
+        "prompt": "Find frequency in Hz.",
+        "answer": {
+          "kind": "numeric",
+          "value": 1.5,
+          "unit": "Hz",
+          "acceptedUnits": ["Hz"],
+          "absoluteTolerance": 0.001,
+          "relativeTolerance": 0.002
+        },
+        "hint": "Divide 3π by 2π.",
+        "solution": "Divide 3π by 2π.",
+        "rubric": {
+          "defaultCategory": "algebraic",
+          "explanation": "Divide 3π by 2π.",
+          "misconceptions": []
+        }
+      }
+    ]
+  },
+  "retrievalProblems": [
+    {
+      "id": "r-mass",
+      "prompt": "At μ=2 kg/m and spacing 0.1 m, find bead mass in kg.",
+      "answer": {
+        "kind": "numeric",
+        "value": 0.2,
+        "unit": "kg",
+        "acceptedUnits": ["kg"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "m=μa.",
+      "solution": "m=μa.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "m=μa.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-limit",
+      "prompt": "When does the continuum dispersion approximate the bead chain?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Wavelength much larger than spacing"
+          },
+          {
+            "id": "b",
+            "label": "Wavelength comparable to spacing"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "The expansion requires |ka| small.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "The expansion requires |ka| small.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-symmetry",
+      "prompt": "Which modes occur in a symmetric midpoint triangular pluck?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "Odd modes"
+          },
+          {
+            "id": "b",
+            "label": "Even modes only"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "Even-mode projections cancel by reflection symmetry.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Even-mode projections cancel by reflection symmetry.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-flux",
+      "prompt": "For a right-moving pulse, which energy current is correct?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "J=ce"
+          },
+          {
+            "id": "b",
+            "label": "J=−ce"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "y_t=−cy_x makes −Ty_ty_x positive.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "y_t=−cy_x makes −Ty_ty_x positive.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-resonance",
+      "prompt": "A force has zero projection on mode 2 and drives at its frequency. What happens in the linear model?",
+      "answer": {
+        "kind": "choice",
+        "value": "a",
+        "options": [
+          {
+            "id": "a",
+            "label": "It does not directly excite mode 2"
+          },
+          {
+            "id": "b",
+            "label": "Mode 2 grows without bound"
+          }
+        ]
+      },
+      "hint": "Identify the physical assumption before using the formula.",
+      "solution": "Frequency matching cannot replace spatial coupling.",
+      "rubric": {
+        "defaultCategory": "conceptual",
+        "explanation": "Frequency matching cannot replace spatial coupling.",
+        "misconceptions": []
+      }
+    },
+    {
+      "id": "r-scaling",
+      "prompt": "Tension is multiplied by 4 at fixed density and length. By what factor do frequencies change? Enter unit 1.",
+      "answer": {
+        "kind": "numeric",
+        "value": 2,
+        "unit": "1",
+        "acceptedUnits": ["1"],
+        "absoluteTolerance": 0.001,
+        "relativeTolerance": 0.002
+      },
+      "hint": "Frequency scales with √T.",
+      "solution": "Frequency scales with √T.",
+      "rubric": {
+        "defaultCategory": "algebraic",
+        "explanation": "Frequency scales with √T.",
+        "misconceptions": []
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "MIT OpenCourseWare · Vibrations and Waves",
+      "url": "https://ocw.mit.edu/courses/8-03sc-physics-iii-vibrations-and-waves-fall-2016/"
+    }
+  ],
+  "title": "Bring ideas together: a vibrating string",
+  "description": "Connect discrete coupled masses to a continuous wave field and use modes to understand energy transport and resonance.",
+  "domain": "Mathematics for physics",
+  "unit": "08 · Let patterns do the work",
+  "prerequisites": ["pdes", "coupled-modes", "fourier"],
+  "minutes": 90,
+  "heading": "How does a collection of coupled masses become a vibrating field?",
+  "lead": "Following one string through a continuum limit, modal coordinates and an energy balance makes the connections operational.",
+  "outcomes": [
+    "Take a physically consistent bead-to-string limit.",
+    "Project a preparation or force onto string modes.",
+    "Derive energy flux and distinguish travelling from standing waves.",
+    "Explain resonance and its limitations."
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "story",
+        "title": "The big idea",
+        "role": "story",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A guitar string appears to be one object, yet infinitely many points move. How can a small collection of musical notes describe all that motion? Begin with a necklace of beads, each pulled by its neighbours. The continuum equation will emerge by making the beads smaller while keeping the physical string the same.\n\nWe will then ask three different questions: which shapes move independently, where the energy goes, and why a periodic force can build a large response. These questions use eigenvectors, Fourier projection, conservation and differential equations together. Keep their jobs distinct: a shape describes the field, an amplitude describes its evolution, and a flux describes transfer between places."
+          },
+          {
+            "kind": "callout",
+            "title": "The question",
+            "body": "How does a collection of coupled masses become a vibrating field?",
+            "tone": "question"
+          },
+          {
+            "kind": "content",
+            "title": "Why this matters",
+            "body": "Following one string through a continuum limit, modal coordinates and an energy balance makes the connections operational."
+          },
+          {
+            "kind": "list",
+            "title": "Learning outcomes",
+            "items": [
+              "Take a physically consistent bead-to-string limit.",
+              "Project a preparation or force onto string modes.",
+              "Derive energy flux and distinguish travelling from standing waves.",
+              "Explain resonance and its limitations."
+            ]
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "If you double the number of beads representing one string, should the predicted wave speed change?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Can the string pass through its straight equilibrium shape while storing substantial energy?",
+            "tone": "question"
+          },
+          {
+            "kind": "callout",
+            "title": "Pause and predict",
+            "body": "Will pushing at the midpoint excite every possible mode?",
+            "tone": "question"
+          },
+          {
+            "kind": "diagram",
+            "data": {
+              "title": "One string, several modal coordinates",
+              "caption": "The first mode has one arch; the second has an interior node. Both vanish at the supports. A midpoint drive misses the second mode.",
+              "viewBox": [0, 0, 600, 320],
+              "elements": [
+                {
+                  "kind": "line",
+                  "from": [60, 110],
+                  "to": [540, 110],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 245],
+                  "to": [540, 245],
+                  "tone": "muted"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 110],
+                  "to": [72, 104.90015877769008],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [72, 104.90015877769008],
+                  "to": [84, 99.831759772385],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [84, 99.831759772385],
+                  "to": [96, 94.82605134936615],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [96, 94.82605134936615],
+                  "to": [108, 89.91389536562842],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [108, 89.91389536562842],
+                  "to": [120, 85.12557689626917],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [120, 85.12557689626917],
+                  "to": [132, 80.49061751692946],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [132, 80.49061751692946],
+                  "to": [144, 76.03759329346333],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [144, 76.03759329346333],
+                  "to": [156, 71.79395860098924],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [156, 71.79395860098924],
+                  "to": [168, 67.78587685853806],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [168, 67.78587685853806],
+                  "to": [180, 64.03805922287441],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [180, 64.03805922287441],
+                  "to": [192, 60.573612235998],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [192, 60.573612235998],
+                  "to": [204, 57.41389536562841],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [204, 57.41389536562841],
+                  "to": [216, 54.57838931698401],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [216, 54.57838931698401],
+                  "to": [228, 52.08457592775609],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [228, 52.08457592775609],
+                  "to": [240, 49.94783038676636],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [240, 49.94783038676636],
+                  "to": [252, 48.18132644081502],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [252, 48.18132644081502],
+                  "to": [264, 46.795955174151025],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [264, 46.795955174151025],
+                  "to": [276, 45.80025786131604],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [276, 45.80025786131604],
+                  "to": [288, 45.20037330734668],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [288, 45.20037330734668],
+                  "to": [300, 45],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [300, 45],
+                  "to": [312, 45.20037330734668],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [312, 45.20037330734668],
+                  "to": [324, 45.80025786131604],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [324, 45.80025786131604],
+                  "to": [336, 46.79595517415102],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [336, 46.79595517415102],
+                  "to": [348, 48.18132644081501],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [348, 48.18132644081501],
+                  "to": [360, 49.94783038676636],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [360, 49.94783038676636],
+                  "to": [372, 52.084575927756084],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [372, 52.084575927756084],
+                  "to": [384, 54.578389316984],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [384, 54.578389316984],
+                  "to": [396, 57.41389536562841],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [396, 57.41389536562841],
+                  "to": [408, 60.573612235997984],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [408, 60.573612235997984],
+                  "to": [420, 64.03805922287441],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [420, 64.03805922287441],
+                  "to": [432, 67.78587685853805],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [432, 67.78587685853805],
+                  "to": [444, 71.79395860098924],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [444, 71.79395860098924],
+                  "to": [456, 76.03759329346332],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [456, 76.03759329346332],
+                  "to": [468, 80.49061751692946],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [468, 80.49061751692946],
+                  "to": [480, 85.12557689626915],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [480, 85.12557689626915],
+                  "to": [492, 89.9138953656284],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [492, 89.9138953656284],
+                  "to": [504, 94.82605134936614],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [504, 94.82605134936614],
+                  "to": [516, 99.83175977238498],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [516, 99.83175977238498],
+                  "to": [528, 104.90015877769007],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [528, 104.90015877769007],
+                  "to": [540, 109.99999999999999],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "line",
+                  "from": [60, 245],
+                  "to": [72, 237.9604490731896],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [72, 237.9604490731896],
+                  "to": [84, 231.09423525312738],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [84, 231.09423525312738],
+                  "to": [96, 224.5704275117204],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [96, 224.5704275117204],
+                  "to": [108, 218.54966364683872],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [108, 218.54966364683872],
+                  "to": [120, 213.18019484660536],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [120, 213.18019484660536],
+                  "to": [132, 208.59423525312735],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [132, 208.59423525312735],
+                  "to": [144, 204.90470641152345],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [144, 204.90470641152345],
+                  "to": [156, 202.2024567667181],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [156, 202.2024567667181],
+                  "to": [168, 200.5540246732188],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [168, 200.5540246732188],
+                  "to": [180, 200],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [180, 200],
+                  "to": [192, 200.5540246732188],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [192, 200.5540246732188],
+                  "to": [204, 202.2024567667181],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [204, 202.2024567667181],
+                  "to": [216, 204.90470641152345],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [216, 204.90470641152345],
+                  "to": [228, 208.59423525312735],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [228, 208.59423525312735],
+                  "to": [240, 213.18019484660536],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [240, 213.18019484660536],
+                  "to": [252, 218.5496636468387],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [252, 218.5496636468387],
+                  "to": [264, 224.5704275117204],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [264, 224.5704275117204],
+                  "to": [276, 231.09423525312735],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [276, 231.09423525312735],
+                  "to": [288, 237.9604490731896],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [288, 237.9604490731896],
+                  "to": [300, 245],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [300, 245],
+                  "to": [312, 252.0395509268104],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [312, 252.0395509268104],
+                  "to": [324, 258.9057647468726],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [324, 258.9057647468726],
+                  "to": [336, 265.4295724882796],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [336, 265.4295724882796],
+                  "to": [348, 271.4503363531613],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [348, 271.4503363531613],
+                  "to": [360, 276.8198051533946],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [360, 276.8198051533946],
+                  "to": [372, 281.40576474687265],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [372, 281.40576474687265],
+                  "to": [384, 285.0952935884766],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [384, 285.0952935884766],
+                  "to": [396, 287.7975432332819],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [396, 287.7975432332819],
+                  "to": [408, 289.4459753267812],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [408, 289.4459753267812],
+                  "to": [420, 290],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [420, 290],
+                  "to": [432, 289.4459753267812],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [432, 289.4459753267812],
+                  "to": [444, 287.7975432332819],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [444, 287.7975432332819],
+                  "to": [456, 285.0952935884766],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [456, 285.0952935884766],
+                  "to": [468, 281.40576474687265],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [468, 281.40576474687265],
+                  "to": [480, 276.81980515339467],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [480, 276.81980515339467],
+                  "to": [492, 271.4503363531613],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [492, 271.4503363531613],
+                  "to": [504, 265.42957248827963],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [504, 265.42957248827963],
+                  "to": [516, 258.90576474687265],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [516, 258.90576474687265],
+                  "to": [528, 252.0395509268104],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "line",
+                  "from": [528, 252.0395509268104],
+                  "to": [540, 245],
+                  "tone": "ink"
+                },
+                {
+                  "kind": "label",
+                  "at": [60, 30],
+                  "text": "n = 1"
+                },
+                {
+                  "kind": "label",
+                  "at": [60, 175],
+                  "text": "n = 2"
+                },
+                {
+                  "kind": "point",
+                  "at": [300, 245],
+                  "label": "midpoint node",
+                  "tone": "accent"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "reasoning",
+        "title": "Build the reasoning",
+        "role": "reasoning",
+        "blocks": [
+          {
+            "kind": "content",
+            "title": "1. Making a continuum without changing the string",
+            "body": "Place identical beads at equilibrium spacing a. Let their transverse displacements be y_j(t), and suppose a light connector between neighbours carries approximately constant tension T. For small slopes, the upward force from the right connector is approximately T(y_{j+1}-y_j)/a. The left connector contributes T(y_{j-1}-y_j)/a. A bead therefore obeys\n$$m\\ddot y_j=\\frac{T}{a}(y_{j+1}-2y_j+y_{j-1}).$$\nThe bracket compares a bead with the average of its neighbours. A bead above that average accelerates downward. This is the discrete version of curvature, and also a row of the coupling matrix from our normal-mode chapter.\n\nNow refine the representation. Keeping bead mass fixed while reducing spacing would make the same length of string heavier and heavier. Instead keep mass per length μ fixed, so m=μa. Division gives\n$$\\ddot y_j=\\frac{T}{\\mu}\\frac{y_{j+1}-2y_j+y_{j-1}}{a^2}.$$\nTaylor-expand a smooth displacement field at neighbouring points. The first derivative terms cancel, the second derivative terms add, and the quotient tends to y_xx. Thus the long-wavelength limit is y_tt=c²y_xx with c²=T/μ. The fixed physical quantities, rather than the mere instruction to take a limit, determine the resulting equation.\n\nThe approximation contains a useful warning. Substituting a discrete travelling pattern exp[i(kja−ωt)] into the bead equation gives\n$$\\omega^2=\\frac{4c^2}{a^2}\\sin^2(ka/2).$$\nOnly when |ka| is small does this reduce to ω²=c²k². Features several bead spacings wide can behave differently from a continuum wave. Refining the beads improves the approximation for a fixed smooth pattern; it does not justify continuum predictions for patterns whose wavelength shrinks alongside the beads.\n\nThis is a recurring physical idea: an equation can be exact for its mathematical model and approximate for the system being modelled. We also assumed small slopes, negligible bending stiffness and nearly constant tension. Large stretching changes the tension and can couple modes that the linear theory separates."
+          },
+          {
+            "kind": "question",
+            "bridge": "Refine a model while preserving its physical parameters.",
+            "meaning": "Mass per length must stay fixed as bead spacing shrinks.",
+            "question": "What happens to bead mass when spacing halves?",
+            "answer": "It halves, because m=μa.",
+            "further": [
+              {
+                "question": "Why is there a second derivative?",
+                "answer": "The first derivatives cancel between the two neighbours."
+              },
+              {
+                "question": "When is the discrete dispersion approximately linear?",
+                "answer": "When the wavelength is much larger than the spacing."
+              },
+              {
+                "question": "What fails for large slopes?",
+                "answer": "The approximations to transverse tension and stretching can fail."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "2. A pluck is a vector expressed in a basis of modes",
+            "body": "Fix both ends at x=0 and x=L. The permitted mode shapes are φ_n(x)=sin(nπx/L). Each has curvature proportional to itself, φ_n''=−k_n²φ_n, so each evolves without changing its spatial shape. Write\n$$y(x,t)=\\sum_{n=1}^{\\infty}q_n(t)\\phi_n(x),\\qquad\n\\ddot q_n+\\omega_n^2q_n=0,\\quad \\omega_n=ck_n.$$\nThis is the same diagonalisation used for a finite set of coupled masses. There are now infinitely many coordinates q_n, and the vector is a function. The inner product is an integral, so projection of an initial shape f gives q_n(0)=(2/L)∫fφ_n dx. Initial velocity is projected separately. A displacement photograph alone cannot tell whether the string is heading up or down.\n\nConsider a triangular pluck of height h at the midpoint. Its two straight sides form a symmetric shape: f(L−x)=f(x). But φ_n(L−x)=(−1)^(n+1)φ_n(x). For even n the two halves cancel in the projection integral. Symmetry has removed half the coordinates before we perform any integration. Integrating the remaining linear pieces gives\n$$q_n(0)=\\frac{8h}{n^2\\pi^2}\\sin(n\\pi/2).$$\nThe alternating signs help the sine waves combine into a sharp peak. Their magnitudes fall as 1/n². A sharp-looking profile does not require equally strong high harmonics; it requires a specific coordinated sum.\n\nThere is a subtle convergence lesson here. The triangular shape has a corner, so its second derivative is not an ordinary function everywhere initially. Its modal description still gives a finite-energy solution, but one should not claim that the PDE holds classically at the corner at time zero. Smooth the pluck slightly if a classical pointwise solution is required.\n\nThe useful question is therefore more precise than “what is the string's frequency?” A general pluck contains many frequencies. Boundary conditions select the available notes; the preparation selects their amplitudes and phases. Fourier analysis is the coordinate system that makes this distinction visible."
+          },
+          {
+            "kind": "question",
+            "bridge": "Treat the displacement as a vector of modal coordinates.",
+            "meaning": "Projection specifies preparation; boundaries specify possible shapes.",
+            "question": "Why does a symmetric midpoint pluck omit even sine modes?",
+            "answer": "Their projections cancel between the two halves.",
+            "further": [
+              {
+                "question": "What sets the phase of each mode?",
+                "answer": "Its initial displacement and velocity."
+              },
+              {
+                "question": "Does a corner invalidate all modal solutions?",
+                "answer": "No, but it requires a weaker interpretation at the corner."
+              },
+              {
+                "question": "Why can one pluck contain several frequencies?",
+                "answer": "It projects onto several independent spatial modes."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "3. Energy moves even when the medium stays nearby",
+            "body": "A string element mostly moves up and down while a pulse travels along the string. What travels is the pattern and its energy, not the same group of material points. To see the mechanism, start with the energy per horizontal length\n$$e=\\frac{\\mu}{2}y_t^2+\\frac{T}{2}y_x^2.$$\nThe first term is kinetic energy. The second follows because a short sloping element has length approximately dx(1+y_x²/2); stretching it against tension stores T times that extra length. Both terms use the same small-slope approximation as the equation of motion.\n\nDifferentiate e in time and substitute μy_tt=Ty_xx. The product rule combines the resulting terms:\n$$e_t=T(y_ty_{xx}+y_xy_{xt})=T\\partial_x(y_ty_x).\n\\qquad e_t+J_x=0,\\quad J=-Ty_ty_x.$$\nJ is the energy current, with units of power. Integrating between two positions gives dE/dt=J(left)−J(right). A conservation law does not require energy at each point to stay fixed; it requires changes to be explained by transport through the boundary.\n\nFor a right-moving pulse y=F(x−ct), we have y_t=−cF' and y_x=F'. Hence J=Tc(F')²≥0. Also e=T(F')², using μc²=T, so J=ce. The sign and speed agree with the direction of the pulse. This is a strong check on the minus sign in the current.\n\nA standing wave behaves differently. Energy exchanges between kinetic and stretching forms and can flow locally, while its current averaged over a period vanishes. At fixed supports y_t=0, so no energy crosses the ends. The total energy of an undriven ideal fixed-end string stays constant even though the displacement at every point changes.\n\nThis calculation connects the integral theorems to dynamics. Local derivatives describe transfer; integration turns them into a boundary account. We will meet the same structure for heat, probability and fluid transport, with a different physical formula for the current in each case."
+          },
+          {
+            "kind": "question",
+            "bridge": "Differentiate energy and collect a spatial derivative.",
+            "meaning": "The product rule identifies an energy current.",
+            "question": "What is positive current for a right-moving pulse?",
+            "answer": "J=ce, carrying nonnegative energy to the right.",
+            "further": [
+              {
+                "question": "Can local energy vary in a closed string?",
+                "answer": "Yes, through current between nearby regions."
+              },
+              {
+                "question": "Why is current zero at a fixed support?",
+                "answer": "Its transverse velocity is zero."
+              },
+              {
+                "question": "What is the average current of a standing mode?",
+                "answer": "Zero over a full period."
+              }
+            ]
+          },
+          {
+            "kind": "content",
+            "title": "4. Resonance requires both frequency matching and spatial overlap",
+            "body": "Apply a transverse force per length f(x)cos(Ωt). The PDE becomes μy_tt=Ty_xx+f(x)cos(Ωt). Projecting onto a sine mode gives\n$$\\ddot q_n+\\omega_n^2q_n=F_n\\cos(\\Omega t),\\qquad\nF_n=\\frac{2}{\\mu L}\\int_0^L f(x)\\phi_n(x)\\,dx.$$\nThe integral matters as much as the driving frequency. A force orthogonal to a mode cannot excite it in this linear model, even if Ω equals that mode's natural frequency. A midpoint point force, for example, has coupling proportional to sin(nπ/2), so it misses the even modes.\n\nOff resonance a particular solution is F_n cos(Ωt)/(ω_n²−Ω²). This is not generally the whole motion: a free oscillation must be added to fit the initial conditions. For initial rest, the full modal response is F_n[cos(Ωt)−cos(ω_nt)]/(ω_n²−Ω²). Near resonance the close frequencies produce beats, and the apparently small denominator must be interpreted alongside the numerator.\n\nExactly at resonance the limit is\n$$q_n(t)=\\frac{F_n}{2\\omega_n}t\\sin(\\omega_nt).$$\nThe envelope grows because each cycle supplies energy at an effective phase. The ideal model predicts no bounded steady oscillation. Real strings lose energy and eventually leave the small-amplitude regime, so indefinite growth is a diagnosis of omitted physics rather than a literal prediction for a guitar.\n\nAdding weak linear damping changes the modal equation to q_n''+2γq_n'+ω_n²q_n=F_n cos(Ωt). Its steady amplitude is |F_n| divided by the square root of (ω_n²−Ω²)²+(2γΩ)². Damping prevents the singular response, while spatial projection still controls whether the mode participates.\n\nWe have followed one model through several mathematical languages. A neighbour-coupling matrix became a spatial derivative. Its eigenvectors became Fourier modes. A product rule became an energy conservation law. Projection converted an applied force into separate forced oscillators. Each language reveals something the others make harder to see."
+          },
+          {
+            "kind": "question",
+            "bridge": "Project the force before solving the oscillator.",
+            "meaning": "Temporal resonance requires spatial coupling too.",
+            "question": "Can a resonant drive fail to excite a mode?",
+            "answer": "Yes, when its spatial projection onto that mode vanishes.",
+            "further": [
+              {
+                "question": "Why add a homogeneous solution?",
+                "answer": "To satisfy the initial data."
+              },
+              {
+                "question": "What grows at ideal resonance?",
+                "answer": "The oscillation envelope grows linearly in time."
+              },
+              {
+                "question": "Why does real growth stop?",
+                "answer": "Dissipation or nonlinear effects invalidate the ideal undamped prediction."
+              }
+            ]
+          },
+          {
+            "kind": "sidebar",
+            "heading": "Why the Fourier basis also separates the energy",
+            "body": "Write y=Σq_nφ_n. Squaring y_t initially produces cross terms q̇_nq̇_mφ_nφ_m. Their integrals vanish for n≠m by sine orthogonality. The gradient energy similarly contains integrals of cos(k_nx)cos(k_mx), which also vanish. Consequently\n$$E=\\frac{\\mu L}{4}\\sum_n(\\dot q_n^2+\\omega_n^2q_n^2).$$\nEach modal coordinate has effective mass μL/2 with our chosen unnormalised sine functions. The numerical mass would change if we rescaled the basis, while the physical energy would not.\n\nThis is the infinite-dimensional version of finding coordinates that diagonalise both kinetic and potential quadratic forms. It explains independent modes more deeply than simply observing that a separated formula works. It also shows why arbitrary Fourier coefficients need not describe a finite-energy string: the sum weighted by ω_n² must converge. For the triangular pluck q_n is proportional to 1/n², so its potential-energy terms behave as 1/n² and their sum converges. The displacement corner is compatible with finite total energy even though its classical second derivative fails there."
+          }
+        ]
+      },
+      {
+        "id": "example",
+        "title": "A measurable single-mode string",
+        "role": "example",
+        "blocks": [
+          {
+            "kind": "example",
+            "title": "A measurable single-mode string",
+            "problem": "A fixed string has L=1 m, tension 16 N and mass density 1 kg/m. Prepare y(x,0)=0.01sin(πx/L) m with zero velocity. Find frequency and total energy.",
+            "steps": [
+              {
+                "title": "Find the propagation speed",
+                "body": "c=√(T/μ)=4 m/s.",
+                "reason": "The continuum limit keeps tension and mass density fixed.",
+                "trap": "Mass density is not total mass."
+              },
+              {
+                "title": "Select the spatial coordinate",
+                "body": "The preparation is exactly the first sine mode, k=π/m.",
+                "reason": "It already fits both endpoints.",
+                "trap": "There is no need to approximate a pure mode by additional modes."
+              },
+              {
+                "title": "Supply the clock",
+                "body": "ω=ck=4π/s and y=0.01sin(πx/L)cos(4πt/(1 s)) m; frequency is 2 Hz.",
+                "reason": "Initial rest selects cosine time dependence.",
+                "trap": "Angular frequency differs from frequency by 2π."
+              },
+              {
+                "title": "Evaluate the conserved energy",
+                "body": "At release all energy is stretching: E=(T/2)A²k²∫cos²(kx)dx=TA²k²L/4=0.0004π² J≈0.003948 J.",
+                "reason": "The integral of cos² over this interval is L/2.",
+                "trap": "Do not use the maximum energy density as though it held everywhere."
+              },
+              {
+                "title": "Check the approximation",
+                "body": "The maximum slope is Ak≈0.0314, small compared with 1.",
+                "reason": "A numerical answer should be checked against the model assumptions.",
+                "trap": "A small displacement is meaningful only relative to a length scale."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "takeaway",
+        "title": "Bring it together",
+        "role": "takeaway",
+        "blocks": [
+          {
+            "kind": "takeaway",
+            "body": "The continuum, modal and conservation descriptions are compatible views of one string.",
+            "nextConnection": "Transport chapters follow fields along trajectories; Green functions assemble their responses to local forcing."
+          },
+          {
+            "kind": "summary",
+            "data": {
+              "coreIdea": "A string is a limit of coupled masses whose tension and mass per length remain fixed. Fourier modes diagonalise its motion; a local energy balance explains how a disturbance transports energy.",
+              "widerConnection": "Discrete eigenvectors become differential-operator eigenfunctions. Orthogonal projection selects which modes a force excites, and resonance exposes the limits of an undamped linear approximation."
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
