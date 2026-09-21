@@ -1,104 +1,294 @@
-# Agentic engineering: a fresh course
+# Agentic engineering: curriculum and workshop design
 
-Status: curriculum and narrative proposal. These are learning strands, not
-chapter boundaries. No lesson text has been drafted.
+Status: curriculum proposal for an experienced practitioner. These parts are
+learning movements, not chapter boundaries. No replacement lessons are drafted.
 
 ## Audience and destination
 
-The reader can write software and has tried an AI assistant. They do not need
-experience building agents or studying machine learning.
+The reader already writes software and builds or uses agents. They want to
+understand the machinery properly and become more effective at designing,
+operating and improving workflows across an organisation.
 
-By the end, they should be able to choose useful work to delegate, understand
-what an agent system is doing, build a small system, and judge whether it is
-worth using. The course should develop engineering judgement as well as
-implementation ability.
+Assume Git, terminal and basic API experience. Supply optional setup material
+for unfamiliar tooling. The opening should investigate a recognisable agent
+system, not explain how to open a terminal or begin with an isolated coding bug.
 
-## Basic curriculum
+By the end, the learner should be able to explain the agent stack, build and
+evaluate reusable capabilities, use gh-aw with sound judgement, deploy an
+organisational workflow and coordinate a small fleet. They should leave with
+working artifacts and evidence for their design decisions.
 
-| Learning strand | What the reader should understand or be able to do |
-| --- | --- |
-| Working with an assistant | Distinguish useful help, delegated work and automation; recognise when ordinary code or a human decision is more appropriate. |
-| Models and their limits | Understand inference, context, variability and missing information well enough to interpret both impressive results and mistakes. |
-| From answers to actions | Follow a tool request through execution and observation; understand how a model participates in a loop and what the surrounding runtime supplies. |
-| Giving work a useful shape | Turn an intention into a task with relevant context, constraints, room for judgement and a recognisable outcome. |
-| Information over time | Select and retrieve evidence, handle conflicting sources, preserve working state and resume without treating old assumptions as current facts. |
-| Building a small agent | Connect a model, tools and explicit state; observe the run and understand how it stops, fails and recovers. |
-| Deciding whether it works | Verify individual results, evaluate representative tasks, examine human effort and cost, and use failures to guide improvement. |
-| Connecting capabilities | Choose tool interfaces and integrations; understand MCP and reusable guidance in the problems they solve. |
-| Operating repeated work | Handle triggers, identities, permissions, isolation, budgets, external effects, interruptions and maintenance. |
-| Dividing work | Decide when workers or independent review help; design delegation, shared ownership and the integration of results. |
-| Choosing what to keep | Compare existing products and custom components; pilot a useful workflow and decide whether to expand, revise or retire it. |
+## Workshop approach
 
-This is a coverage inventory, not a demand for eleven chapters. Some ideas
-should recur with more depth as the reader gains experience.
+Borrow the gh-aw workshop's practical pacing: a visible destination, runnable
+activities, observable results, recovery help and optional supporting material.
+Keep our own narrative and writing. No required heading sequence or lesson form.
+A teardown, experiment, guided build and incident investigation need different
+structures. Essential theory stays on the main path; optional material adds
+depth without concealing prerequisites.
 
-## The course's story
+## Projects and environment
 
-Begin with a familiar experience: an assistant has returned something that
-looks useful. We want to understand what it has actually done, what we still
-need to do, and whether we would trust it with more of the work. Establish why
-these questions matter before introducing implementation terminology.
+Use a small supplied software service with tests, documentation, seeded issues
+and a short change history. It must be understandable without learning a new
+application domain. Use a disposable practice repository for live GitHub work.
 
-Follow that curiosity into the system. The answer depends on information the
-model receives. Acting on the answer requires tools. Tools return observations,
-which can change the next action. The reader gradually acquires the vocabulary
-for machinery they have already seen a reason to examine.
+Three projects connect the learning:
 
-Then move from watching an assistant to working well with one. Give it a task,
-see where the request leaves important choices unresolved, and improve the
-handoff. Introduce context selection and continuity when the work actually
-needs more information or lasts beyond a conversation.
+- **Repository investigator:** gather evidence about a reported problem and
+  propose a bounded change. Inspect an existing agent first, then build a small
+  harness to expose the runtime responsibilities.
+- **Maintenance workflow:** detect actionable documentation drift after code
+  changes. Begin with findings, then propose reviewed patches. This supports
+  substantial gh-aw work, including runs where no action is appropriate.
+- **Coordinated migration:** apply a modest API change across related repositories.
+  Explore dependencies, worker isolation, integration and partial completion.
 
-At that point, build a small agent. Let a first working loop make the earlier
-ideas tangible. Extend it in response to behaviour we can observe, rather than
-starting with a framework and explaining its configuration. Pair a runnable
-path with explanations that remain understandable without running it.
+Supporting examples may differ when they explain a concept better. No single
+project must carry every idea. Offer transfer activities using the learner's
+own repository after the supplied example is understood.
 
-Use the system to do useful work and discover the difference between a
-convincing demonstration and a reliable result. Verification appears wherever
-we make a claim; evaluation now asks how the whole arrangement behaves across
-tasks, including the time it takes people to review and repair its outputs.
+Default to TypeScript for executable examples, alongside shell and workflow
+Markdown. Use established SDKs for provider and protocol plumbing. The small
+harness is a teaching instrument, not a proposed production framework. Pin exact
+tools after lab feasibility work. Do not require production or organisation-admin
+access: fleet labs can use several disposable repositories and simulated policy.
 
-As the system reaches beyond a local experiment, let new requirements motivate
-integrations, durable state, permissions and recovery. Repeated execution
-raises questions a supervised one-off run could leave with its operator.
+## Curriculum
 
-Only then consider more agents and more infrastructure. There should be a
-visible bottleneck or requirement to address. The reader can compare the
-benefit with the work required to combine outputs and operate the system.
+### 1. Understand the system you are already using
 
-Finish with an engineering decision about a modest real workflow: what it is
-useful for, what still needs a person, and what evidence would change that
-decision. A sensible decision not to automate is a valid outcome.
+Start with an agent investigating an issue. Examine its result, then follow the
+input, context, tool requests, observations and resulting change. Identify which
+component supplies each piece and which can enforce a restriction.
 
-## Examples and teaching approach
+Teach model, agent, harness, runtime, tool and workflow responsibilities. Cover
+training versus inference, tokens, context, generation, variability, reasoning
+budgets and practical model selection. Explore quality, latency, cost and
+deployment constraints; distinguish model failures from context or tooling
+failures. Explain what a trace reveals without presenting it as private reasoning.
 
-Use a few recognisable tasks where they naturally help: a small code change,
-investigating an unfamiliar failure, and a recurring maintenance task. Select
-the eventual build project after the learning sequence is agreed. No single
-bug must carry every concept.
+**Practical work:** annotate a recorded run, reproduce it, change one relevant
+input and compare repeated runs on a small task set. Try another model where
+available. Keep conclusions proportional to the sample.
 
-Begin explanations with a situation the reader can understand and a reason
-to investigate it. Develop the reasoning in connected prose. Define technical
-terms when they become useful. Let examples unfold inside the explanation;
-include mistakes when they illuminate a real choice, not to fill a template.
+**Artifact and transition:** a system map and baseline of results, resource use
+and review effort. The next work improves the information and capabilities
+available to this same system.
 
-Use conversational clarity, curiosity and concrete thought experiments.
-Avoid adopting a performer's voice or adding stock lecture phrases. Length,
-diagrams, questions, code and exercises should follow the particular idea.
-There is no required pattern for a lesson or a paragraph.
+### 2. Build capabilities and supply useful information
 
-The scope includes useful capabilities and creative problem-solving as well
-as reliability. Every topic should help the reader understand, build or decide
-something, rather than merely add another caution.
+Give the investigator access to service ownership and API-contract information.
+Build a direct tool, expose the capability through an MCP server, and author a
+skill describing how to investigate a compatibility issue.
 
-## Next decisions
+Teach tool descriptions, schemas, bounded output, pagination, errors and
+consequential actions. Explain MCP hosts, clients, servers, discovery, tools,
+resources, prompts, transport and authentication. Separate protocol capability
+from host support and authorization. MCP does not provide the whole runtime.
 
-First review the coverage and narrative above. Then identify chapter
-boundaries where the reader has answered one substantial question and is
-ready for the next. Check prerequisites, repetition and the balance between
-understanding, building and operating.
+Compare instructions, skills, scripts, tools and MCP. Cover skill discovery and
+loading, supporting references, executable helpers and host-specific behaviour.
+Develop context selection, retrieval, source authority, freshness, compaction
+and durable records. Examine untrusted tool results, repository instructions,
+credential handling and third-party capability review while building.
 
-Only after that, choose the opening chapter and write it in full. Read it as
-a learner before extending the approach to the next small batch. Do not
-generate a whole course from a common prose template.
+**Practical work:** inspect an MCP exchange; repair an ambiguous tool interface;
+compare a skill with the baseline; test irrelevant requests and misleading
+source material. Diagnose whether poor results arise from retrieval, instructions
+or execution instead of treating every failure as a prompt problem.
+
+**Artifact and transition:** a tested tool, MCP integration and reusable skill.
+The learner now has capabilities worth connecting through an explicit harness.
+
+### 3. Take control of execution
+
+Recreate the investigator using a small SDK-based harness. Keep the application
+task familiar so execution is the new subject.
+
+Teach model calls, dispatch, observations, explicit state and stopping. Combine
+deterministic steps with model decisions. Cover structured outputs, validation,
+task briefs, acceptance criteria, clarification and human intervention. Explore
+timeouts, retries, duplicate effects, cancellation, checkpointing and resumption.
+Separate conversation history, working memory and persistent records.
+
+Compare an existing coding harness, an agent SDK and custom orchestration.
+Discuss interactive sessions, background jobs and durable workflow engines.
+
+**Practical work:** build and instrument the minimal loop, interrupt a run and
+resume it. Simulate a tool completing an action before its response is lost.
+Compare the custom implementation with the existing harness used earlier.
+
+**Artifact and transition:** an inspectable agent and a reasoned runtime choice.
+Recurring maintenance now raises scheduling and operational requirements.
+
+### 4. Build and operate GitHub Agentic Workflows
+
+This is a substantial workshop sequence, not a survey chapter. Develop the
+documentation-maintenance project from manual inspection to recurring operation.
+
+- Author and compile a workflow; inspect the generated Actions workflow. Explain
+  authoring, compilation, agent execution and output application separately.
+- Configure engines, tools and repository context. Reuse earlier capabilities
+  where supported, making compatibility limits explicit.
+- Exercise manual, event-driven and scheduled operation. Handle irrelevant
+  triggers, duplicates, legitimate no-ops and automation feedback loops.
+- Investigate authentication, permissions, network access, isolation and safe
+  outputs. Preview consequential actions before enabling them in the sandbox.
+- Add reusable configuration, external information and deterministic checks.
+  Investigate custom outputs when a built-in operation is insufficient.
+- Diagnose compilation, authentication, tool, model and output-application
+  failures using logs and audit artifacts.
+- Examine memory, concurrency, interrupted work, recovery and maintenance.
+  Measure useful outcomes, cost, notification volume and review burden.
+- Compare this task with ordinary Actions and scripts. Examine a long-lived
+  interactive task to understand when another execution environment fits better.
+
+**Practical work:** deploy the workflow, inspect the compiled jobs, repair seeded
+failures, improve weak findings, produce a constrained patch proposal and run
+it repeatedly. Keep live writes inside the disposable repository.
+
+**Artifact and transition:** an operational workflow and troubleshooting record.
+Its usefulness to a second team raises adoption and ownership questions.
+
+Use a pinned gh-aw release. Label preview or experimental features. Teach
+supported composition mechanisms without implying that gh-aw replaces arbitrary
+services or distributed job systems. Full effectiveness means choosing and
+operating useful features, not enumerating every configuration field.
+
+### 5. Make the workflow usable across an organisation
+
+A second team wants the maintenance workflow. Decide what is shared, what varies
+by team and what evidence is needed before expanding access.
+
+Teach use-case discovery, stakeholders, ownership and value. Develop evaluation
+sets from real work, held-out cases, repeated trials, regression checks,
+deterministic validators, human assessment and calibrated model judges.
+Evaluation has appeared throughout; here it becomes a repeatable release practice.
+
+Cover identity, least privilege, secrets, sensitive data, retention, provider
+constraints, auditability and consequential-action approvals. Develop versioned
+skills and tools, provenance, dependency review, distribution and compatibility.
+Include canary releases, observability, service expectations, incident response,
+rollback, model upgrades, drift and retirement. Distinguish local policy from
+universal requirements; this is not a claim of regulatory compliance.
+
+**Practical work:** turn earlier failures into an evaluation set, compare a
+candidate change, plan a pilot and simulate a revoked credential or bad skill
+release. Recover and document what the operator needs to know.
+
+**Artifact and transition:** an evidence-backed release candidate, distribution
+approach and short runbook. A migration spanning teams creates work to coordinate.
+
+### 6. Orchestrate agents at two scales
+
+Use the API migration to create genuinely divisible work. Preserve a single-agent
+or scripted baseline so extra coordination must demonstrate its value.
+
+Within one project, teach decomposition, dependencies, task contracts, context
+allocation, supervisor-worker arrangements, fixed pipelines and independent
+review. Cover workspace isolation, file ownership, conflicting changes, evidence
+exchange and integration responsibility. Discuss correlated mistakes and the
+limits of adding another model as a reviewer.
+
+Across repositories, teach queues, schedules, capacity, leases, deduplication,
+backpressure, retries, cancellation and partial completion. Cover durable records,
+result contracts, identities, quotas, team policy and feedback-loop prevention.
+Revisit model routing, escalation, review bottlenecks, useful throughput and cost
+allocation. Use gh-aw composition where supported and compare an external
+coordinator when requirements exceed that runtime.
+
+**Practical work:** run bounded parallel workers, force overlapping changes,
+interrupt a worker and recover unfinished work. Expand to several repositories,
+apply a concurrency limit and measure accepted results after integration and
+review. Diagnose a fleet that is busy but produces little useful output.
+
+**Artifact and destination:** a small observable fleet and an account of its
+trade-offs. Adapt one workflow to the learner's setting, including what remains
+with people and what evidence would justify further automation.
+
+## The connecting narrative
+
+We begin inside a system the reader already uses. Taking a run apart exposes
+the relationship between the model and its environment. Experiments make those
+relationships testable. Tools, MCP and skills supply access and reusable
+knowledge; the small harness gives the reader responsibility for execution.
+
+Recurring maintenance changes the problem: it needs triggers, bounded actions
+and an operational record. This gives gh-aw a substantial, natural place in
+the story. A successful sandbox workflow attracts another team, making
+evaluation, distribution and ownership concrete. Finally, a migration introduces
+coordination requirements that a single run cannot resolve alone.
+
+The progression is from understanding a run to designing a workflow to owning
+an organisational system. Models remain relevant throughout, as later work
+revisits selection, routing and upgrades with better evidence and higher stakes.
+
+## Lab and writing requirements
+
+- Provide fixtures, known starting states and recovery points. An early broken
+  lab must not block the rest of the course.
+- Supply captured traces for readers without paid access. Explain what that
+  route cannot establish without live execution.
+- State access requirements, side effects, cleanup and estimated cost ranges
+  before live labs. Verify estimates with the eventual pinned kit.
+- Check observable properties, not exact generated prose. Include ambiguous,
+  failed and no-op cases as well as successful ones.
+- Encourage AI-assisted building and debugging, coupled with inspection and
+  explanation of consequential choices. Manual typing is not the objective.
+- Develop explanations in connected prose. Commands need context; avoid hiding
+  the reasoning inside checklist fragments.
+- Do not imitate lecture mannerisms or force worked-example boxes, warnings,
+  recaps and reflections into every lesson. Length follows the idea.
+- Use diagrams for relationships and execution paths. Link strong existing
+  visuals with attribution rather than adding decorative or unclear diagrams.
+- Separate durable concepts from version-sensitive configuration. Record tested
+  versions and source dates in the runnable materials.
+
+## Sources and validation
+
+Consulted 2026-09-21. These inform scope; proposed labs have not yet been built
+or validated.
+
+- [Workshop welcome](https://github.com/githubnext/gh-aw-workshop/blob/main/workshop/00-welcome.md)
+  and [audit activity](https://github.com/githubnext/gh-aw-workshop/blob/main/workshop/25-audit-and-observability.md):
+  practical destination, run inspection and observable checkpoints.
+- [GitHub Agentic Workflows](https://github.com/github/gh-aw): release and
+  implementation entry point; recheck before selecting the lab version.
+- [Safe outputs](https://github.github.com/gh-aw/reference/safe-outputs/):
+  bounded output application, staged mode and workflow composition.
+- [Custom safe outputs](https://github.github.com/gh-aw/reference/custom-safe-outputs/):
+  external effects and deterministic post-processing.
+- [Outcomes](https://github.github.com/gh-aw/reference/outcomes/): measuring
+  what happens after a workflow publishes its result.
+- [MCP architecture](https://modelcontextprotocol.io/docs/learn/architecture):
+  protocol roles and scope. Pin compatible protocol and SDK versions; deployed
+  clients may not implement the latest documentation.
+- [Agent Skills specification](https://agentskills.io/specification): portable
+  format. Verify actual discovery and execution in the selected hosts.
+
+Before writing implementation instructions, add primary documentation for the
+chosen models, harness, SDK, authentication and orchestration runtime. Verify
+commands in the lab environment. Proposed comparisons are not performance claims.
+
+## Bounded authoring batches
+
+1. Curriculum and narrative: this proposal. Check coverage and project scope.
+2. Chapter map and lab feasibility: identify natural boundaries and prerequisites;
+   spike the investigator, maintenance workflow and migration starting states.
+   Select versions, access requirements and realistic lab sizes.
+3. Opening workshop: write and run the first coherent unit, including its trace
+   and experiment. Read it as an experienced learner before extending the prose.
+4. Capabilities and execution: small groups of related chapters around tools,
+   MCP, skills, context and harness responsibilities.
+5. gh-aw workshops: separate first deployment, extension and operational work
+   into manageable writing and verification batches.
+6. Organisational adoption: evaluation, distribution and lifecycle exercises.
+7. Fleets and application: project coordination, cross-repository operation and
+   the learner's own workflow.
+8. Whole-course review: clean learner run, narrative continuity, repetition,
+   source verification, recovery and cleanup.
+
+Batch sizes follow new machinery and prose, not a chapter quota. Review the
+chapter map before drafting the course. Finish each bounded writing batch and
+verify its exercises before moving to the next.
