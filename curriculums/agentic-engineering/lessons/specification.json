@@ -1,296 +1,219 @@
 {
   "id": "specification",
   "title": "Specification · Agent-friendly engineering · Failure modes",
-  "description": "Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point. Shape code, tests and documentation so that the next useful action is easy to discover and verify. Classify failures by cause and choose a targeted recovery instead of repeating the same prompt.",
+  "description": "Turn an ambiguous maintenance request into observable behaviour, executable feedback and a diagnosis that explains how a failed run can be repaired.",
   "domain": "Agentic engineering",
   "unit": "04 · Delegate work well",
-  "prerequisites": ["context"],
-  "minutes": 36,
+  "prerequisites": [
+    "context"
+  ],
+  "minutes": 30,
   "content": {
     "sections": [
       {
         "id": "specification--specification",
-        "title": "Specification: define the result and its boundaries",
-        "navLabel": "Specification",
+        "title": "Two correct answers to the wrong question",
+        "navLabel": "Finding the ambiguity",
         "blocks": [
           {
             "kind": "content",
-            "body": "'Make retries more robust' sounds like a task until two engineers start implementing it. One increases the attempt limit. The other keeps the limit but changes which failures are retried. Both can defend their choice.\n\nAn agent faces the same ambiguity, except that it may quietly choose an interpretation and return a finished-looking patch. The brief needs to settle the decisions that affect correctness, while leaving room for the implementer to choose how to achieve them."
-          },
-          {
-            "kind": "example",
-            "title": "Turn a vague retry request into a brief another engineer can execute.",
-            "problem": "Turn a vague retry request into a brief another engineer can execute.",
-            "steps": [
-              {
-                "title": "State the behaviour",
-                "body": "Retry only transient timeouts, use a capped delay, stop after three attempts and return the original error.",
-                "reason": "The agent can distinguish required behaviour from implementation preference.",
-                "trap": "Writing 'make the retry code more robust.'"
-              },
-              {
-                "title": "Name the evidence",
-                "body": "Add deterministic tests for success on attempt two, exhaustion on attempt three and preservation of the error.",
-                "reason": "The result can be inspected without trusting the patch's explanation.",
-                "trap": "Accepting a green unrelated test suite as proof."
-              }
-            ]
-          },
+            "body": "Our retry helper now has a clear convention: a retry count of two permits an initial attempt and two further attempts. Imagine that the next issue simply says, “Make retries more robust.” One agent increases the limit. Another adds a delay. A third retries every exception instead of only timeouts. Each patch makes sense under some interpretation of “robust”. Those interpretations disagree about what the program should do.\n\nWe can picture the request as a region containing many possible programs. Every additional requirement cuts away some of that region. “Keep the public API unchanged” excludes patches that rename the argument. “Do not retry authentication failures” excludes patches that repeat every failed operation. Eventually the remaining programs share the behaviour we care about, even though their internal code may differ.\n\nThat is the useful job of a specification: remove uncertainty about the result while leaving room to discover a good implementation. A line-by-line recipe can remove freedom without resolving the important ambiguity. “Add a loop around the call” still says nothing about which failures belong inside that loop.\n\nThere is another reason to settle the contract early. Once a plausible patch exists, it becomes easy to explain why that particular patch was the intention all along. Writing down a few observable expectations before editing gives us something stable against which to judge the result. We can revise those expectations when we learn more, but the revision should be visible rather than silently following whatever the implementation happens to do.\n\nSometimes the necessary decision already exists in documentation or established callers. Then the task is to find it. Sometimes the sources conflict. Then investigation has exposed a product decision, and further code generation cannot settle it. A useful agent distinguishes these situations: missing evidence calls for a search; genuinely unspecified behaviour calls for a decision by whoever owns that behaviour."
+          }
+        ]
+      },
+      {
+        "id": "observable-contract",
+        "title": "Make the difference visible at the boundary",
+        "navLabel": "A contract you can observe",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Specify the observable result",
-            "body": "A useful retry brief might read:\n\n> The service currently retries every exception. Change it to retry only transient timeouts. Allow three attempts in total, including the first call. Wait between attempts using the existing delay policy, capped at one second. If all three fail, return the first timeout error unchanged. Other errors must fail immediately. Keep the public API unchanged.\n\nNow there are decisions a reviewer can check. 'Three attempts' cannot accidentally become one initial call plus three retries. 'Original error' names a particular error, rather than leaving the agent to choose the first or last one.\n\nPair the brief with deterministic cases: success on attempt two, exhaustion after three, and a non-timeout error on the first call. The brief describes the desired behaviour; the tests give the implementation a way to demonstrate it. Neither needs to dictate the internal function layout."
+            "body": "For this fictional helper, suppose we agree on a particular change. Keep the existing argument meaning: zero retries still makes one initial call, and two retries permits at most three calls. Retry only errors recognised by the existing timeout classifier. Keep the current delay policy, with each wait capped at one second. Return immediately on success. If every permitted attempt times out, propagate the first timeout object unchanged. If any attempt fails with a different error, propagate that error immediately.\n\nThe last two sentences are deliberately separate. Consider a timeout followed by an authentication error. “Return the original error” could mean returning the timeout, concealing the authentication failure. Our contract instead gives the terminal, non-timeout error precedence. The first-timeout rule applies only when the attempt budget is exhausted entirely by timeouts. This is a choice for this helper, not a universal retry policy.\n\nNow we can make the behaviour visible as a sequence of events. With two retries available:\n\n```text\ntimeout A → success V           returns V after 2 calls\ntimeout A → timeout B → timeout C\n                               throws A after 3 calls\ntimeout A → authentication E    throws E after 2 calls\nauthentication E               throws E after 1 call\n```\n\nNotice how much the third sequence contributes. A test of immediate authentication failure could pass even if a bug swallowed every non-timeout error that occurred after the first timeout. The mixed sequence distinguishes two implementations that the simpler cases cannot tell apart.\n\nThe same reasoning exposes a timing boundary. A wait belongs between a retryable failure and an actual next attempt. There should be no wait after success, after a terminal error, or after the last permitted timeout. Counting calls alone cannot reveal an unnecessary final delay; observing both calls and scheduled waits can.\n\nWe have moved from an adjective to traces that a caller could distinguish. The implementation may use a loop, recursion or an existing utility. Those choices are secondary unless the repository imposes another constraint. The observable result is what connects the request, the implementation and the evidence."
           },
           {
             "kind": "question",
-            "bridge": "The first question is not 'what files should the agent edit?' but 'what must be true when it stops?'",
-            "meaning": "A task is executable when its success can be observed and its boundaries are explicit. Implementation choices can remain open.",
-            "question": "Which is the stronger brief: 'improve retries' or 'retry timeouts three times with bounded backoff and retain the original error'?",
-            "answer": "The second. It states behaviour that can be tested without prematurely prescribing the implementation.",
-            "further": [
-              {
-                "question": "Why name non-goals?",
-                "answer": "They prevent a helpful agent from silently widening the change into adjacent refactoring or API redesign."
-              },
-              {
-                "question": "Does a detailed specification need to prescribe the exact patch?",
-                "answer": "No. It should constrain the outcome and evidence while leaving room for the agent to choose an appropriate implementation."
-              }
-            ]
-          },
+            "question": "With two retries available, the first call times out and the second fails authentication. How many calls and waits should this contract produce?",
+            "answer": "Two calls and one wait. The timeout permits another attempt, so there is one intervening wait. The authentication error is terminal: propagate that error immediately, without a third call or another wait."
+          }
+        ]
+      },
+      {
+        "id": "boundaries",
+        "title": "The boundary around a small change",
+        "navLabel": "Scope and stopping",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Make the stopping point explicit",
-            "body": "Include non-goals, risk boundaries and the checks that must pass before the work is done. A task without a stopping point expands by invitation: the agent cleans nearby code, changes an API and reports green unit tests while the actual behaviour remains unproved. A good specification is a contract for evidence, not a wish for activity."
-          },
-          {
-            "kind": "question",
-            "bridge": "A task is not complete because an agent did work. It is complete when the promised behaviour is evidenced.",
-            "meaning": "Acceptance evidence turns 'looks plausible' into a decision another person can inspect.",
-            "question": "What is missing from a task that says 'update the retry loop and run tests'?",
-            "answer": "The expected behaviour and proof that distinguishes it from a superficially green patch, including the relevant failure and boundary cases.",
-            "further": [
-              {
-                "question": "What is a useful stopping condition?",
-                "answer": "A small set of observable checks, such as deterministic tests for success, exhaustion and error preservation, plus the requested review artefact."
-              },
-              {
-                "question": "Why is 'run tests' weaker than a named acceptance check?",
-                "answer": "A broad test command may pass without exercising the changed behaviour. A named check explains what evidence matters."
-              }
-            ]
-          },
-          {
-            "kind": "takeaway",
-            "body": "Specify the observable result, the evidence that proves it and the boundaries that keep the task from expanding.",
-            "nextConnection": "Once the task is clear, the repository itself can either help or hinder the agent. The next lesson turns good intentions into executable feedback."
+            "body": "A behavioural contract does not describe the whole assignment. Our helper might be correct while the patch also changes every caller, replaces the logging system and updates unrelated dependencies. Those changes create extra review work and extra ways for something to break. We therefore need a boundary around the work as well as a boundary around the function.\n\nHere, preserving the API and the existing timeout classifier keeps the change local. Introducing a new backoff algorithm is outside the request. So is widening the set of operations that are retried. These exclusions matter because repeating an operation can have effects beyond the helper: a caller may submit a payment or create a resource. Whether such repetition is safe depends on the surrounding operation and its guarantees. Fixing the counter does not establish those guarantees. The [AWS Builders’ Library discussion of idempotent APIs](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) explores why repeated requests need an explicit contract for their effects.\n\nA non-goal is most useful when it rules out a tempting expansion. Listing every conceivable thing the agent must never do makes the brief harder to read without clarifying the task. A small set of relevant constraints, placed where they affect a decision, usually communicates more.\n\nThe stopping point also needs meaning. “Keep improving until confident” has no observable end. For this change, we can finish when the agreed traces are checked against the final patch, the relevant caller remains compatible, and the diff stays within scope. If an integration environment is unavailable, that limitation changes what can be claimed. It may still be possible to deliver a locally verified patch for review; it is not possible to turn the unavailable environment into evidence by describing it confidently.\n\nThese boundaries leave the agent substantial freedom: where to investigate, how to organise the implementation and which additional checks would expose a plausible mistake. We are specifying what a successful handoff contains, rather than prescribing every action on the way there."
           }
         ]
       },
       {
         "id": "agent-friendly--agent-friendly",
-        "title": "Agent-friendly engineering: make feedback executable",
-        "navLabel": "Agent-friendly engineering",
+        "title": "Give the investigation something useful to push against",
+        "navLabel": "Executable feedback",
         "blocks": [
           {
             "kind": "content",
-            "body": "The agent has a clear brief. Its next problem is finding out how this repository works. There are three test scripts, one obsolete setup guide and a generated file with the same name as the implementation. Before it can reason about retries, it must work out which of these to trust.\n\nMaking a repository agent-friendly is largely the same work that helps a new colleague: make the real entry points easy to find and give changes fast, informative feedback."
+            "body": "Now imagine handing that brief to an agent in a repository with three obsolete test commands and two files named retry, one generated from the other. The behavioural uncertainty is gone, but the agent still has to discover how to ask the repository a useful question. Every false start consumes attention that could have gone into the actual bug.\n\nRepository structure can remove that friction. A recognisable source directory tells the agent where changes belong. A nearby test shows how the helper is called. A short, accurate command tells it how to execute that test. These are useful to a new human colleague for the same reason: they connect an intention to an action whose result can be interpreted.\n\nFor the retry helper, the most helpful affordance might be a controllable operation that returns a programmed sequence of outcomes. Give it timeout A, timeout B and success V, and it records each call. Replace real waiting with an injectable clock or delay function, and the test can inspect scheduled delays without sleeping through them. Now a trace that was previously a thought experiment becomes a repeatable observation.\n\nThat substitution has a boundary of its own. A fake delay can show that the helper requests the right wait at the right point. It does not prove that the real timer or the external service behaves correctly. The focused test answers a narrow question quickly; integration checks answer different questions. Confusing those roles either makes every small test slow and fragile or makes a tiny test appear to establish far too much.\n\nUseful failures preserve the distinction we are trying to learn. “Expected three calls, observed four” points toward the attempt boundary. “Cannot import the timeout fixture” says the experiment never reached that boundary. Both commands may exit with an error, but their meaning is different. A harness that returns the actual assertion, the command and the relevant output gives the next model call a chance to respond to that difference.\n\nThis is why a repository full of instructions can still be difficult to work in. Prose about diligence cannot replace a test that can run. When a convention can be expressed in a formatter, a type or a focused check, that executable feedback often does more than repeating the convention in another document. Keep written guidance for the context and decisions those tools cannot express."
           },
           {
-            "kind": "content",
-            "title": "Turn conventions into affordances",
-            "body": "Agents do better when the repository says where behaviour lives, how to run the narrow test, which invariants matter and what a successful change looks like. A focused test is not only regression protection; it is a question the agent can answer. A clear module boundary is not only style; it reduces the search space."
-          },
-          {
-            "kind": "question",
-            "bridge": "An agent-friendly repository does not contain more instructions everywhere. It makes the right next action obvious.",
-            "meaning": "Affordances reduce search and interpretation: local rules, clear entry points and focused checks let the agent spend effort on the problem.",
-            "question": "Which helps more with a flaky retry bug: a giant architecture document or a deterministic test named for the retry boundary?",
-            "answer": "The deterministic, focused test. It turns the desired behaviour into executable feedback and narrows the relevant code path.",
-            "further": [
-              {
-                "question": "Why keep guidance near the code it governs?",
-                "answer": "The rule is easier to retrieve at the moment it matters and less likely to be treated as universal when it is local."
-              },
-              {
-                "question": "What makes a test a useful question?",
-                "answer": "It isolates one behaviour, fails for a meaningful reason and gives enough output to choose the next investigation step."
-              }
-            ]
-          },
-          {
-            "kind": "example",
-            "title": "A repository has a flaky retry test and no obvious local guidance.",
-            "problem": "A repository has a flaky retry test and no obvious local guidance.",
-            "steps": [
-              {
-                "title": "Find the missing affordance",
-                "body": "Add a fake-clock fixture, a focused test command and a short local note naming the retry invariant.",
-                "reason": "The next run can discover both the rule and its proof.",
-                "trap": "Adding a broad README paragraph without an executable check."
-              },
-              {
-                "title": "Read the failure as feedback",
-                "body": "Make the test report the attempt count and terminal error, then run it repeatedly under the controlled clock.",
-                "reason": "A failure points to a behaviour rather than to incidental timing.",
-                "trap": "Increasing CI retries until the symptom becomes rare."
-              }
-            ]
-          },
-          {
-            "kind": "content",
-            "title": "Design feedback for diagnosis",
-            "body": "Compare two failures: 'test failed' and 'expected 3 attempts, observed 4 after the final timeout'. The second gives the agent a reason to inspect the loop boundary. It also helps a human distinguish an off-by-one error from a missing fixture.\n\nUse a fake clock when testing backoff so the test can advance time deliberately instead of waiting and hoping the scheduler behaves. Keep unrelated network calls out of that focused check. A failure should usually mean that the behaviour changed, not that today's network was slow.\n\nPut the command next to the code's local guidance, with any setup it requires. Each future task can then begin by asking the code a useful question instead of rediscovering how to run it."
-          },
-          {
-            "kind": "question",
-            "bridge": "Good feedback is not just a green or red light. It helps explain what the next move should be.",
-            "meaning": "Determinism and diagnostic output make verification repeatable for both agents and people.",
-            "question": "A retry test passes locally but fails randomly in CI because it uses the real clock. What repository improvement is indicated?",
-            "answer": "Control time in the test and expose the relevant event or assertion. The fix should remove incidental timing from the evidence, not merely add more retries to the test runner.",
-            "further": [
-              {
-                "question": "Why is adding a sleep often a poor fix?",
-                "answer": "It hides a timing dependency and can make the test slower without making the behaviour deterministic."
-              },
-              {
-                "question": "What is a good narrow verification command?",
-                "answer": "The smallest command that exercises the changed behaviour and gives a meaningful failure when its contract is violated."
-              }
-            ]
-          },
-          {
-            "kind": "takeaway",
-            "body": "Make the repository answer common questions through structure, focused tests, local guidance and diagnostic failures.",
-            "nextConnection": "Even a clear brief and a friendly repository cannot remove every uncertainty. The next lesson teaches how to classify what went wrong before asking the agent to try again."
+            "kind": "diagram",
+            "data": {
+              "title": "A test turns a distinction into feedback",
+              "caption": "The contract supplies an expected trace. The implementation supplies an observed trace. Comparing them can guide a change; an experiment that never runs supplies neither a pass nor a behavioural failure.",
+              "viewBox": [
+                0,
+                0,
+                340,
+                340
+              ],
+              "elements": [
+                {
+                  "kind": "box",
+                  "center": [
+                    85,
+                    50
+                  ],
+                  "width": 140,
+                  "height": 54,
+                  "label": "Contract",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "box",
+                  "center": [
+                    255,
+                    50
+                  ],
+                  "width": 140,
+                  "height": 54,
+                  "label": "Implementation",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "box",
+                  "center": [
+                    85,
+                    165
+                  ],
+                  "width": 140,
+                  "height": 54,
+                  "label": "Expected trace",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "box",
+                  "center": [
+                    255,
+                    165
+                  ],
+                  "width": 140,
+                  "height": 54,
+                  "label": "Observed trace",
+                  "tone": "ink"
+                },
+                {
+                  "kind": "box",
+                  "center": [
+                    170,
+                    285
+                  ],
+                  "width": 240,
+                  "height": 54,
+                  "label": "Compare the traces",
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [
+                    85,
+                    77
+                  ],
+                  "to": [
+                    85,
+                    138
+                  ],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [
+                    255,
+                    77
+                  ],
+                  "to": [
+                    255,
+                    138
+                  ],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [
+                    85,
+                    192
+                  ],
+                  "to": [
+                    145,
+                    258
+                  ],
+                  "tone": "accent"
+                },
+                {
+                  "kind": "arrow",
+                  "from": [
+                    255,
+                    192
+                  ],
+                  "to": [
+                    195,
+                    258
+                  ],
+                  "tone": "accent"
+                }
+              ]
+            }
           }
         ]
       },
       {
         "id": "failure-modes--failure-modes",
-        "title": "Failure modes: diagnose before you reprompt",
-        "navLabel": "Failure modes",
+        "title": "Find where the evidence and the action parted company",
+        "navLabel": "Diagnosing a miss",
         "blocks": [
           {
             "kind": "content",
-            "body": "The patch looks reasonable, but it does not fix the reported failure. Before writing a sterner prompt, find the earliest point where the run went wrong.\n\nDid the agent solve a different interpretation of the task? Read the wrong file? Fail to start the tests? Or did it have the right evidence and draw the wrong conclusion? These failures can produce similar final answers, but repeating the request will not repair all of them."
-          },
-          {
-            "kind": "example",
-            "title": "The agent produces a clean patch, but it changes a sibling service and the relevant test never runs.",
-            "problem": "The agent produces a clean patch, but it changes a sibling service and the relevant test never runs.",
-            "steps": [
-              {
-                "title": "Classify the failure",
-                "body": "The task did not identify the owning package, and the verification command did not cover the changed behaviour.",
-                "reason": "There are both specification and verification gaps.",
-                "trap": "Treating the result as a pure coding mistake."
-              },
-              {
-                "title": "Choose targeted recovery",
-                "body": "State the package boundary, add the retry acceptance test and rerun the narrow command before asking for further implementation.",
-                "reason": "The next attempt has better information and stronger evidence.",
-                "trap": "Sending the same prompt with 'please be careful' appended."
-              }
-            ]
-          },
+            "body": "Suppose the resulting patch changes the delay but leaves the extra attempt untouched. The final answer looks like a reasoning mistake. Before concluding that the model needs a stronger warning, reconstruct the path that produced it.\n\nIf the request only said “robust”, the run may have solved a different specification. If the exact assertion existed but never entered the context, the missing fact belongs to the input path. If the agent requested the right test but a missing dependency prevented execution, the environment blocked the observation. If it saw the contract and the trace, yet concluded that four calls were permitted, reasoning is the more plausible place to investigate. If an irrelevant green suite was presented as proof, the acceptance process also failed.\n\nThese categories describe possible causes, not mutually exclusive labels. A confusing brief and a weak test can cooperate to produce a polished wrong answer. Start with the earliest divergence you can actually establish, while retaining later failures that would still need repair. A failed test launch does not prove that the patch is correct or incorrect; it establishes that this run did not obtain that evidence.\n\nThe diagnosis should predict what a repair will change. If the missing assertion is the problem, supplying it should let the agent identify the attempt-count mismatch. If the wrong package was tested, fixing the working directory should expose the relevant failure. If adequate evidence was misread, asking for the sequence of counter values may reveal the precise step where the interpretation goes wrong.\n\nKeep the original run, then change one relevant condition when practical. Replacing the model, rewriting the task and repairing the environment at once may produce a better result, but it leaves the explanation unresolved. Even a targeted change followed by success is only evidence for a diagnosis: outputs vary, and another run may differ. Repeat the comparison if you need to establish reliability rather than recover this one task."
+          }
+        ]
+      },
+      {
+        "id": "recovery-experiment",
+        "title": "Let a failed run teach you something specific",
+        "navLabel": "Try an investigation",
+        "blocks": [
           {
             "kind": "content",
-            "title": "Separate the layers",
-            "body": "A specification failure leaves the desired result ambiguous. A context failure withholds a necessary fact or includes misleading noise. An environment failure makes the tool, dependency or checkout unreliable. A reasoning failure misreads adequate evidence. A verification failure lets the wrong result look acceptable. These can overlap, but they point to different repairs."
-          },
-          {
-            "kind": "question",
-            "bridge": "The same visible mistake can have several causes. Classify the cause before choosing the remedy.",
-            "meaning": "A wrong patch is not automatically a model failure. The task, evidence, tools and checks are all part of the system.",
-            "question": "The agent changes the wrong service because the task named a feature but not the owning package. What failed first?",
-            "answer": "The specification or context boundary. The agent lacked a constraint that should have made the target unambiguous.",
-            "further": [
-              {
-                "question": "What is an environment failure?",
-                "answer": "A tool, dependency, permission or checkout prevents the agent from obtaining reliable evidence or applying the intended change."
-              },
-              {
-                "question": "What is a verification failure?",
-                "answer": "The checks allow an incorrect result to appear acceptable, often because the important behaviour is not exercised."
-              }
-            ]
-          },
-          {
-            "kind": "content",
-            "title": "Change one thing that could explain the miss",
-            "body": "Suppose the agent changes the retry delay, but the failing assertion concerns the number of attempts. First inspect what it saw. If the assertion was absent, supply it. If the assertion was present but misunderstood, ask for a trace of the counter through the three attempts before requesting another patch. If the wrong patch passed its checks, add a case that would expose it.\n\nKeep the failed run and change one relevant condition. Otherwise, if a new model, a new prompt and a repaired environment all arrive together, you will not know what helped.\n\nAn unchanged rerun can sometimes succeed because outputs vary. That is useful when measuring variability, but it is weak evidence that you have repaired the cause. For routine recovery, make a change you can explain and check whether the expected effect follows."
-          },
-          {
-            "kind": "question",
-            "bridge": "Recovery should change the condition that could have produced the failure, not merely repeat the request louder.",
-            "meaning": "Targeted retries preserve learning. Blind retries spend time while leaving the original ambiguity or broken evidence untouched.",
-            "question": "A test command is unavailable in the agent's environment. Should the prompt simply be repeated?",
-            "answer": "No. Repair the environment or choose an available verification path, and record what evidence remains unavailable. Repeating the prompt cannot create a missing tool.",
-            "further": [
-              {
-                "question": "When is a smaller follow-up useful?",
-                "answer": "When the evidence is adequate but the reasoning step is too broad. Ask for one discriminating check with a clear expected observation."
-              },
-              {
-                "question": "What should a recovery record contain?",
-                "answer": "The observed failure, its classification, the changed condition and the evidence showing whether the recovery worked."
-              }
-            ]
+            "body": "Take a small maintenance task with an observable result. It can be the retry helper, or a real failure you can reproduce safely in a disposable checkout. Keep the original request and the evidence the agent actually received. You are looking for the first point where the intended investigation and the recorded run diverge.\n\nIf the agent succeeds, there is no need to manufacture a dramatic failure. Inspect which observation made success possible. Then consider what would happen if that observation were absent or misleading. If it fails, choose a repair that makes a prediction you can check: the right test will execute, a missing distinction will become visible, or an incorrect trace will be corrected.\n\nThe interesting output is a causal account of the run. “The second answer was better” is an observation; “the second answer used the previously missing attempt-count assertion, and its patch now passes that regression case” explains more. Keep any remaining uncertainty visible. One repaired run tells us how a failure might be prevented. The next chapter asks how to find out whether that improvement survives across a useful sample of work."
           },
           {
             "kind": "lab",
             "data": {
-              "title": "Lab 3 · Build a recovery loop",
+              "title": "Lab 3 · Investigate one run",
               "minutes": 30,
-              "brief": "Give an agent an intentionally underspecified maintenance task, observe the miss, classify it and improve exactly one layer at a time.",
+              "brief": "Use a small maintenance task to explain which observation or missing condition shaped the result. A successful run is useful evidence too.",
               "steps": [
-                "Run the task once and record the requested result, evidence supplied and failure observed.",
-                "Classify the miss as specification, context, environment, reasoning or verification.",
-                "Change one condition that could explain the miss, then rerun the narrow task.",
-                "Compare the second result and record which evidence supports the diagnosis."
+                "Preserve the request, starting state and observations from one run.",
+                "Locate a specific divergence, or identify the observation that enabled success.",
+                "Predict the effect of changing one relevant condition, then try it in an isolated workspace.",
+                "Compare the recorded behaviour and explain what the experiment did and did not establish."
               ],
               "deliverables": [
-                "A failure classification",
-                "One targeted recovery change",
-                "A before-and-after evidence note"
+                "A short trace connecting the request, evidence and action",
+                "A targeted change with a prediction and observed result"
               ],
-              "review": "A strong lab report explains why the selected layer could produce the failure and shows evidence that the recovery changed the outcome. A second attempt that merely sounds more emphatic is not a controlled recovery."
-            }
-          },
-          {
-            "kind": "takeaway",
-            "body": "Classify the failure, change the condition that caused it and preserve the evidence from the recovery.",
-            "nextConnection": "The delegation loop now has a brief, an executable repository and a diagnosis step. The next chapter asks how to measure whether the resulting work is actually accepted and useful."
-          },
-          {
-            "kind": "summary",
-            "data": {
-              "coreIdea": "Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Shape code, tests and documentation so that the next useful action is easy to discover and verify. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim. Classify failures by cause and choose a targeted recovery instead of repeating the same prompt. The practical question is not whether the system sounds plausible, but which boundary, state transition, or piece of evidence would let another engineer reconstruct and challenge the claim.",
-              "widerConnection": "Once the task is clear, the repository itself can either help or hinder the agent. The next lesson turns good intentions into executable feedback. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. Even a clear brief and a friendly repository cannot remove every uncertainty. The next lesson teaches how to classify what went wrong before asking the agent to try again. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes. The delegation loop now has a brief, an executable repository and a diagnosis step. The next chapter asks how to measure whether the resulting work is actually accepted and useful. This lesson connects the local decision to the wider discipline of reliable delegated work: explicit contracts, bounded authority, observable state, and evidence that remains meaningful after the context or implementation changes.",
-              "primitives": [
-                "The lesson's target: Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point.",
-                "The model, agent, harness, tool, context, memory, or orchestration layer under examination",
-                "An observable outcome and the evidence needed to accept it",
-                "The lesson's target: Shape code, tests and documentation so that the next useful action is easy to discover and verify.",
-                "The lesson's target: Classify failures by cause and choose a targeted recovery instead of repeating the same prompt."
-              ],
-              "assumptions": [
-                "The task boundary and acceptance condition are explicit before execution begins.",
-                "Claims are kept separate from observations produced by the environment or verifier.",
-                "Authority is limited to the actions required by the stated task."
-              ],
-              "derivation": "Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence. Start from the concrete failure or design decision, identify the responsible layer, state the contract and invariant, then test the smallest discriminating change against observable evidence.",
-              "checks": [
-                "What observation would distinguish the intended explanation from its nearest alternative?",
-                "Which action, state transition, or evidence boundary does the system own?",
-                "What would still be unknown after the stated check passes?"
-              ],
-              "governingLaw": "A useful delegation contract maps goal, constraints, inputs, allowed actions, and acceptance evidence into an executable brief. Agent-friendly work exposes small actions, inspectable state, deterministic checks, and recoverable failure paths. A failure mode is useful only when its trigger, observable symptom, containment, and recovery are distinguishable.",
-              "invariant": "The agent cannot be held responsible for an acceptance condition that was never made observable. Every important transition has a visible artifact or test that another operator can inspect. A failure must not be silently converted into apparent success by retries, truncation, or optimistic summaries.",
-              "limitingCase": "If the goal and acceptance test are already unambiguous, extra prose does not improve the contract. A task with no meaningful intermediate state may not benefit from further decomposition. If a failure has no credible effect on acceptance, adding a specialised recovery path may not be justified.",
-              "counterexample": "A detailed task description without a definition of done still permits plausible but unacceptable outputs. Breaking a task into smaller prompts can make it worse when the pieces lose the dependency or global constraint. A successful retry can hide an underlying reliability problem if only final success is counted.",
-              "validity": "Specifications guide delegated work; they do not replace independent review of the resulting artifact. Agent-friendly design improves operability; it does not guarantee that the agent will choose the intended action. Failure taxonomies support diagnosis within their tested environment; novel failures still require investigation."
+              "review": "The explanation should connect the changed condition to an observable difference. An unchanged outcome or an inconclusive experiment is valid if its limits are explained."
             }
           }
         ]
@@ -330,21 +253,8 @@
     }
   ],
   "fadedExercise": {
-    "prompt": "Try the next decision yourself, then compare the layers involved.",
-    "supplied": [
-      {
-        "heading": "Keep this principle in view",
-        "body": "Specify the observable result, the evidence that proves it and the boundaries that keep the task from expanding."
-      },
-      {
-        "heading": "Keep this principle in view",
-        "body": "Make the repository answer common questions through structure, focused tests, local guidance and diagnostic failures."
-      },
-      {
-        "heading": "Keep this principle in view",
-        "body": "Classify the failure, change the condition that caused it and preserve the evidence from the recovery."
-      }
-    ],
+    "prompt": "Use observable behaviour to separate the task, its feedback and a possible failure cause.",
+    "supplied": [],
     "steps": [
       {
         "id": "specification-apply",
@@ -613,31 +523,15 @@
   ],
   "sources": [
     {
-      "title": "Codex: repository instructions",
-      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
-    },
-    {
-      "title": "GitHub: Copilot cloud agent",
-      "url": "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
-    },
-    {
-      "title": "OpenAI: function calling",
-      "url": "https://developers.openai.com/api/docs/guides/function-calling"
-    },
-    {
-      "title": "gh-aw: engine capabilities and limits",
-      "url": "https://github.github.io/gh-aw/reference/engines/"
-    },
-    {
-      "title": "Codex: security boundaries",
-      "url": "https://learn.chatgpt.com/docs/security"
+      "title": "AWS Builders’ Library: making retries safe with idempotent APIs",
+      "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
     }
   ],
-  "heading": "Why does 'fix retries' produce so many plausible wrong patches?",
-  "lead": "Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point. Shape code, tests and documentation so that the next useful action is easy to discover and verify. Classify failures by cause and choose a targeted recovery instead of repeating the same prompt.",
+  "heading": "How do you make the intended result unambiguous?",
+  "lead": "A small retry change can hide several different definitions of correct. Follow those differences until they become observable, then give the agent a way to test them and learn from a miss.",
   "outcomes": [
-    "Turn an intention into an executable brief with acceptance evidence, constraints and a clear stopping point.",
-    "Shape code, tests and documentation so that the next useful action is easy to discover and verify.",
-    "Classify failures by cause and choose a targeted recovery instead of repeating the same prompt."
+    "Specify behaviour and scope without prescribing the implementation.",
+    "Build feedback that distinguishes a code defect from a failed experiment.",
+    "Use a recorded run to form and test a targeted recovery hypothesis."
   ]
 }
