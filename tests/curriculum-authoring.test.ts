@@ -2,8 +2,15 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { choice, defineCurriculumTopic } from "../prefabs/authoring";
 import { applyAction, validatePack } from "../lib/curriculum-engine";
-import pack from "../curriculums/agentic-engineering";
 import type { CurriculumTopicDraft } from "../types/curriculum";
+
+const pack = {
+  id: "authoring-fixture",
+  version: "1",
+  title: "Authoring fixture",
+  description: "A course-independent fixture for authoring tests.",
+  conventions: "",
+};
 
 const draft: CurriculumTopicDraft = {
   id: "reading",
@@ -102,15 +109,4 @@ test("answering an optional warm-up cannot master an unassessed lesson", () => {
   );
   assert.equal(result.state.topics[topic.id].mastered, false);
   assert.equal(result.state.topics[topic.id].schedule, null);
-});
-
-test("reordered warm-ups recall the preceding chapter", () => {
-  for (let i = 1; i < pack.topics.length; i++) {
-    const previous = pack.topics[i - 1];
-    const diagnostic = pack.topics[i].diagnostics[0];
-    assert.equal(diagnostic.prerequisiteId, previous.id);
-    assert.ok(
-      previous.retrievalProblems.some((p) => p.prompt === diagnostic.prompt),
-    );
-  }
 });

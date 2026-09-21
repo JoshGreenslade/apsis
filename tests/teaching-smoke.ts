@@ -197,10 +197,10 @@ async function main() {
   await page.getByText(/^QUESTION 2 OF /).waitFor();
   await page
     .getByLabel("Your course", { exact: true })
-    .selectOption("agentic-engineering");
+    .selectOption("astrodynamics");
   await page
     .getByRole("heading", {
-      name: /Understand the stack\. Build systems worth delegating to\./,
+      name: "Understand an orbit. Then change it.",
     })
     .waitFor();
   await page.setViewportSize({ width: 390, height: 844 });

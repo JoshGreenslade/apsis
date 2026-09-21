@@ -1,7 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import katex from "katex";
-import agents from "../curriculums/agentic-engineering";
 import astrodynamics from "../curriculums/astrodynamics";
 import mathematics from "../curriculums/mathematics-for-physics";
 const mu = 398600.4418; // Independent physical benchmark, km³/s².
@@ -13,7 +12,6 @@ import {
 } from "../lib/practice-generator";
 import { evaluate } from "../lib/curriculum-engine";
 const templates = [
-  ...agents.topics.flatMap((t) => t.practiceTemplates ?? []),
   ...astrodynamics.topics.flatMap((t) => t.practiceTemplates ?? []),
   ...mathematics.topics.flatMap((t) => t.practiceTemplates ?? []),
 ];

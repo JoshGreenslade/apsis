@@ -1,8 +1,8 @@
 # Apsis
 
 Courses built from reusable prefabs, with open reading, optional practice,
-notes and saved progress. Includes agentic engineering, astrodynamics and
-mathematics for physics.
+notes and saved progress. Includes astrodynamics and mathematics for physics.
+Agentic engineering is being redesigned from a new curriculum.
 
 ## Run
 
@@ -55,7 +55,7 @@ catalogue, a minimal lesson and how to extend the library.
 | `lib/store.ts`, `lib/browser-store.ts` | Server and static-site persistence                    |
 | `app/api/`                             | Progress and practice endpoints                       |
 
-All three courses use the same folder layout. Course-specific builders and the
+All courses use the same folder layout. Course-specific builders and the
 legacy lesson renderer have been removed. The current lessons retain their
 authored material and identifiers; future lessons can use any prefab composition.
 
@@ -63,8 +63,7 @@ authored material and identifiers; future lessons can use any prefab composition
 
 Reading is always open. Marking a lesson read is separate from answering its
 knowledge checks; only authored retrieval questions award mastery and scheduled
-review. Labs and reflections are self-reviewed. The [agent lab kit](public/agent-labs/README.md)
-contains runnable offline examples and a downloadable archive.
+review. Labs and reflections are self-reviewed.
 
 Practice templates define variables, bounds, units and arithmetic expression
 trees. Answers are computed locally or on the server. Optional AI selection uses
@@ -95,11 +94,10 @@ to the client for self-study, so this is not a secure examination system.
 ```sh
 npm run typecheck
 npm test
-npm run test:labs
 npm run build
 ```
 
-With the app running, `npm run test:browser` and `npm run test:agents-browser`
+With the app running, `npm run test:browser`
 exercise reading, grading, persistence, course discovery and responsive layouts.
 They use Microsoft Edge by default; set `TEST_BASE_URL` for another local port.
 After building with `PAGES_BASE_PATH=/apsis`, `npm run test:maths-browser` checks

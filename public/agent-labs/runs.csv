@@ -1,4 +1,0 @@
-task,system,accepted,interventions,human_minutes,elapsed_minutes,machine_cost,regressions,unnecessary_changes
-example-only,system-a,true,1,12,25,4,0,0
-example-only,system-a,false,2,18,30,5,0,1
-example-only,system-b,true,0,5,35,8,0,0
