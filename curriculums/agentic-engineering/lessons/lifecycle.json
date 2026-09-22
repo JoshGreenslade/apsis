@@ -1,0 +1,59 @@
+{
+  "id": "lifecycle",
+  "title": "20 · Maintain and retire the system",
+  "description": "Rehearse operation when credentials, models, skills or the need for automation change.",
+  "prerequisites": [
+    "trust-boundaries"
+  ],
+  "minutes": 45,
+  "content": {
+    "sections": [
+      {
+        "id": "monday",
+        "title": "On Monday it starts filing poor reports",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The workflow has been useful for weeks. Then a skill update changes how it interprets historical notes, and several teams receive inaccurate findings. The model service is healthy and the jobs are green. The operational problem is the quality of the work.\n\nSomeone needs to notice, stop further noise, identify the affected revision and decide what to do about existing outputs. A dashboard of failed jobs alone will miss this incident. Outcome feedback and an accountable operator are part of the system."
+          }
+        ]
+      },
+      {
+        "id": "drill",
+        "title": "Run a small incident rehearsal",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use the bad skill change from chapter 18, or a simulated loss of access, as an incident. Open the recovery section of `ADOPTION.md`. Without using real credentials, work through detection, triage, containment, reconciliation and restoration.\n\nName the exact disable mechanism for your chosen runtime. For a scheduled workflow, removing the future trigger does not necessarily stop a run already in progress. For a fleet, stopping new dispatch does not necessarily revoke existing workers' access. Decide which in-flight work should finish, stop or wait for a person.\n\nIdentify the last known-good source, skill, tool and model configuration. Restore that combination in the sandbox, run a known failing case and an unaffected case, and inspect the result. Reverting one prompt file is insufficient if the regression came from a dependency or changed tool response."
+          }
+        ]
+      },
+      {
+        "id": "observe",
+        "title": "Watch the behaviour that matters",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Useful operating signals include time to an accepted result, repeated tool failures, abandoned work, duplicate publications and reviewer rejection. Interpret them together. A sudden drop in cost may mean the system got efficient, or that it stopped doing work. A rise in no-ops may mean the repository is healthy, or that retrieval broke.\n\nRetain enough identifiers to connect a finding to its run, inputs and configuration. Decide which contents must be redacted or not retained at all. More logging helps investigation only when it remains accessible to the right people and does not create a new data problem.\n\nModel upgrades deserve the same empirical treatment as tool and skill changes. Test the proposed configuration, pilot it and keep a rollback path where the provider and runtime permit one. Record when a previous version is unavailable; do not promise a rollback that cannot actually be performed."
+          }
+        ]
+      },
+      {
+        "id": "retire",
+        "title": "Stopping can be a successful outcome",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Perhaps the team replaces the legacy API, so the workflow's main source of value disappears. Retire it deliberately. Disable triggers, reconcile outstanding proposals, remove unused credentials and installed capabilities, and handle retained artifacts according to policy. Tell recipients which work will no longer happen automatically.\n\nReview the original adoption decision. Did the system reduce useful work, move it elsewhere or create a new review burden? That account helps the next team make a better choice, even if this particular workflow is removed.\n\nWe now have the lifecycle of one organisational capability. The remaining workshops increase the coordination challenge: several agents will work on a migration whose pieces must fit together. The same ownership, evidence and recovery principles will apply, but a single run's log will no longer be enough."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Safe rollout of agentic workflows",
+      "url": "https://github.github.com/gh-aw/practices/safe-rollout/"
+    }
+  ]
+}

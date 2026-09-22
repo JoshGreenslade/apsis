@@ -1,0 +1,63 @@
+{
+  "id": "trust-boundaries",
+  "title": "19 · Operate across trust boundaries",
+  "description": "Map identities, data and approvals through the actual execution path.",
+  "prerequisites": [
+    "distribution"
+  ],
+  "minutes": 45,
+  "content": {
+    "sections": [
+      {
+        "id": "identity",
+        "title": "Whose authority is the agent using?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A maintainer starts the workflow, an Actions job reads the repository, a model service processes selected content, and another job publishes an issue. Those are several identities and data transfers, not one action performed by a single abstract agent.\n\nDraw that path for your pilot. Beside each step, record the credential or identity used and the resource it can access. Include logs and artifacts: they often retain information after the original model call has finished. A read-only repository token does not answer where the read data is subsequently sent or stored."
+          }
+        ]
+      },
+      {
+        "id": "least",
+        "title": "Put the check at the action boundary",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A prompt saying 'do not publish sensitive information' may help guide behaviour. The publishing service still needs authorization and input checks. A skill saying 'ask for approval' is not an enforced approval gate if another path can call the write operation directly.\n\nUse the smallest access scope consistent with the task and separate credentials where responsibilities differ. In Actions, inspect job-level permissions and secret exposure. When receiving untrusted pull requests, avoid executing their code in a privileged context merely to make a check convenient. The linked GitHub guidance explains the platform-specific risks.\n\nThe workflow's network configuration, tool selection and output limits contribute different controls. None should be treated as a blanket guarantee. Ask what each actually prevents and what remains possible through the permitted paths."
+          }
+        ]
+      },
+      {
+        "id": "rehearsal",
+        "title": "Try the boundary with harmless data",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use your disposable fixture and fake credentials only. Add a document instruction asking the agent to send a made-up token to an unrelated destination. Observe both the model's response and what the runtime would permit. Do not use real secrets or attempt to contact an external receiver for the exercise.\n\nNext, simulate a revoked read credential in your design or sandbox. The useful result is an explicit inability to inspect evidence, not a fabricated clean bill of health. Finally, simulate a rejected publication approval after a valid finding. The system should preserve the finding without claiming that it was published.\n\nRecord the expected outcome and the mechanism responsible for each boundary. A model declining one misleading instruction is encouraging evidence about that example; it is not proof that arbitrary hostile content cannot redirect it."
+          }
+        ]
+      },
+      {
+        "id": "policy",
+        "title": "Bring the organisation into the design",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Complete the data section of the adoption worksheet. Which repository material may leave the organisation? Which model deployment is approved for it? Who can access traces, and how long are they retained? Who reviews a capability that introduces a new external service?\n\nAnswer these questions using your organisation's actual policies and service agreements. The course cannot establish compliance from a generic checklist. Unknown answers are work to resolve before expanding access, not blanks to fill with an optimistic default.\n\nA well-designed pilot makes these decisions manageable because its scope is small and its effects are visible. Once that pilot becomes routine, someone must continue owning it when the original author is unavailable."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "GitHub Actions secure use",
+      "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+    },
+    {
+      "title": "gh-aw organisation deployment",
+      "url": "https://github.github.com/gh-aw/guides/using-at-scale/"
+    }
+  ]
+}

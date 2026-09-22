@@ -1,0 +1,59 @@
+{
+  "id": "evaluation",
+  "title": "17 · Evaluate a change before release",
+  "description": "Build evidence that catches regressions instead of rewarding persuasive output.",
+  "prerequisites": [
+    "useful-outcomes"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "regression",
+        "title": "The new version fixed yesterday's failure",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "You improved the documentation checker after it missed a stale parameter. It now catches that example. Can you release it?\n\nOnly if that is the entire requirement. Usually you also care about correct documents, historical explanations, missing evidence and changes whose meaning cannot be reduced to a spelling. Improving one failure can create another. An evaluation gives those other cases a place to survive while you iterate.\n\nRun `node evaluate-checker.mjs` in the capability kit. It evaluates our deliberately narrow mechanical checker against four labelled teaching cases. It gets two right. The missed semantic mismatch and the false alarm on a historical explanation are useful: they show the boundary of the rule rather than a random implementation failure."
+          }
+        ]
+      },
+      {
+        "id": "cases",
+        "title": "Write cases that represent the work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Open `evaluation-cases.json`. Each case contains a document, an expected decision and a reason. For an agent evaluation, provide the document and relevant implementation, but keep the expected decision and reason outside the agent's input. Otherwise you are testing whether it can repeat the answer.\n\nAdd two new cases from your own experience or create clearly labelled synthetic ones: one genuine mismatch with different wording, and one correct description that looks suspicious at first glance. Write the expected behaviour before examining a candidate's answer. Include cases where the correct action is to ask for evidence or do nothing.\n\nKeep a development set for refining the prompt or skill and a held-out set for checking the next candidate. Once you repeatedly tune against a held-out failure, that case has effectively become development material. Retain it as a regression case and obtain new evidence rather than pretending it is still an untouched test."
+          }
+        ]
+      },
+      {
+        "id": "grading",
+        "title": "Different claims need different graders",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A program can check whether JSON parses, required fields exist or a test suite passes. A person may need to judge whether a finding is actionable and supported. Another model can help assess a larger set, but its judgement must be calibrated against human decisions and concrete evidence. It can share the candidate's blind spots or prefer confident prose.\n\nFor this workflow, grade separately: was the mismatch real; did the evidence support it; was the proposed correction appropriate; did the system stay within its allowed actions? A single 'good answer' score conceals which property changed.\n\nRepeat uncertain or variable cases. Record failed and interrupted attempts as well as complete answers. Keep the model, settings, tools, skill revision and environment with the results. A changed harness can alter behaviour even when the prompt text is unchanged."
+          }
+        ]
+      },
+      {
+        "id": "release",
+        "title": "Make a release decision, not just a score",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Compare the previous and candidate configurations on the same cases and inspect disagreements. Suppose the candidate finds one additional real mismatch but introduces two false alarms in high-volume repositories. Whether to release depends on workload frequency and the cost of those errors, not only the average score.\n\nUse the [adoption worksheet](https://github.com/JoshGreenslade/apsis/blob/main/examples/agent-workshop/ADOPTION.md) to record the candidate revision, known failures, pilot scope and criteria for stopping. Start with a small observable deployment whose recipients can give feedback. A successful test suite supports that decision; it does not remove the need to learn from actual use.\n\nYour deliverable is a short release argument with evidence and limits. Another engineer should be able to understand what improved, what remains uncertain and which configuration to restore if the pilot disappoints."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Agent evaluation design",
+      "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+    }
+  ]
+}

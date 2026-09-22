@@ -1,0 +1,6 @@
+[
+  { "id": "obsolete", "document": "Use showDrafts=true to include drafts.", "actionableDrift": true, "reason": "The supported parameter is includeDrafts." },
+  { "id": "current", "document": "Use includeDrafts=true to include drafts.", "actionableDrift": false, "reason": "This description matches the fixture." },
+  { "id": "semantic", "document": "Draft releases are included when the query is omitted.", "actionableDrift": true, "reason": "Omitted queries return published releases only." },
+  { "id": "historical", "document": "Do not use the obsolete showDrafts=true parameter. Use includeDrafts=true instead.", "actionableDrift": false, "reason": "The historical spelling is explicitly rejected." }
+]

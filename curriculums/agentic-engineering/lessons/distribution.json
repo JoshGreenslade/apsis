@@ -1,0 +1,59 @@
+{
+  "id": "distribution",
+  "title": "18 · Distribute a capability",
+  "description": "Share skills and workflows while preserving versions, ownership and local needs.",
+  "prerequisites": [
+    "evaluation"
+  ],
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "team",
+        "title": "Another team wants your workflow",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The release team finds the maintenance workflow useful. A second team asks to install it. Their documentation lives somewhere else, they use a different review process and their repository contains private customer examples. Copying your file gets them started, but silently copying your assumptions could get them into trouble.\n\nSeparate the reusable capability from local policy. The method for identifying a documented mismatch may be shared. Paths, permitted destinations, data handling and who approves publication may belong to the receiving team. A shared default is helpful when its override rules are explicit."
+          }
+        ]
+      },
+      {
+        "id": "package",
+        "title": "Make a release identifiable",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "For a skill, retain its entrypoint and any scripts or references it genuinely needs. For a tool, include its interface, dependency versions and a clear owner. For a gh-aw workflow, retain source, imported material, compiler version and generated configuration. The working system is more than one prompt file.\n\nPick an immutable revision for a pilot. A moving branch can deliver improvements quickly, but also changes what runs without a local configuration edit. A version label is useful for people; a resolved revision gives you a reproducible identity. Record both when practical.\n\nWrite a compatibility statement based on what you tested: host, SDK or compiler, transport, required tools and relevant runtime assumptions. Our local MCP example is tested through the SDK, while its direct Node command was not compatible with the gh-aw gateway. Distributing those as equivalent would erase an important fact."
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Prepare an installation for a different team",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In a disposable copy, prepare a small release of the contract-investigation skill and the maintenance workflow. Choose a fictional receiving team with a different documentation path and no permission to publish issues. List the values they must configure and the behaviour that should remain unchanged.\n\nUse the adoption worksheet to name a maintainer for the shared package and an operator for the installed workflow. Then simulate an update to the skill: add an instruction that always proposes an edit. Run the already-correct case from your evaluation set. The regression should make it clear why instructions need release checks too.\n\nRestore the previous skill revision. Confirm that the receiving configuration can stay on it while the shared package is repaired. If your distribution method forces every team to consume the newest instructions immediately, you have chosen a rollout policy whether you meant to or not."
+          }
+        ]
+      },
+      {
+        "id": "maintain",
+        "title": "Shared ownership does not mean ownerless",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Decide who receives compatibility reports, who reviews changes to executable helpers and how deprecated versions are retired. Keep changes small enough that recipients can understand them. A release note should explain behavioural changes, not merely state that the skill has been improved.\n\nAvoid turning every team's exception into an unconditional paragraph in the shared skill. A parameter, a local policy file or a separate capability may preserve a clearer boundary. Conversely, repeated local patches may reveal a missing abstraction worth adding.\n\nThe goal is a capability another team can adopt, inspect, update and remove without inheriting unexplained obligations. Access and data boundaries are the next part of that contract."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Sharing gh-aw workflows in an organisation",
+      "url": "https://github.github.com/gh-aw/practices/sharing-workflows/"
+    }
+  ]
+}

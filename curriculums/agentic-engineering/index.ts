@@ -16,5 +16,9 @@ import recurring from "./lessons/recurring-work.json";
 import connected from "./lessons/workflow-capabilities.json";
 import diagnose from "./lessons/diagnose-runs.json";
 import outcomes from "./lessons/useful-outcomes.json";
+import evaluation from "./lessons/evaluation.json";
+import distribution from "./lessons/distribution.json";
+import trust from "./lessons/trust-boundaries.json";
+import lifecycle from "./lessons/lifecycle.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring, connected, diagnose, outcomes] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring, connected, diagnose, outcomes, evaluation, distribution, trust, lifecycle] });
