@@ -20,5 +20,10 @@ import evaluation from "./lessons/evaluation.json";
 import distribution from "./lessons/distribution.json";
 import trust from "./lessons/trust-boundaries.json";
 import lifecycle from "./lessons/lifecycle.json";
+import decomposition from "./lessons/decomposition.json";
+import integration from "./lessons/integration.json";
+import fleet from "./lessons/fleet-coordination.json";
+import capacity from "./lessons/capacity.json";
+import capstone from "./lessons/capstone.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring, connected, diagnose, outcomes, evaluation, distribution, trust, lifecycle] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring, connected, diagnose, outcomes, evaluation, distribution, trust, lifecycle, decomposition, integration, fleet, capacity, capstone] });

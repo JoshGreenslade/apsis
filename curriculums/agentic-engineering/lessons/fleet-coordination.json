@@ -1,0 +1,52 @@
+{
+  "id": "fleet-coordination",
+  "title": "23 · Coordinate across repositories",
+  "prerequisites": [
+    "integration"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "One worker disappears",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The provider change is ready. Two consumers are being migrated, but one worker stops responding. You want another worker to take over. What prevents the original worker, which may only be slow, from returning later and replacing the new result?\n\nA coordinator needs a record of work and ownership that outlives one conversation. A lease grants temporary ownership. A replacement receives a new token, and the coordinator rejects results carrying the old token. This does not make workers infallible; it makes uncertainty about ownership explicit."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Run the coordination demonstration",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "From `examples/agent-workshop`:\n\n```sh\nnode fleet-demo.mjs\n```\n\nThe output is labelled **scripted workers**. It exercises a real local SQLite queue, but does not run coding agents or apply the migration. You should see capacity reached, an old worker rejected, and four completed job records.\n\nRead `queue.mjs` beside the demonstration. The provider must complete before the consumers can be claimed. At most two jobs hold active leases in this configured queue. The demo advances an injected clock beyond one lease's expiry, claims replacement work and rejects the old completion token.\n\nThe claim transaction prevents two callers using this implementation from both selecting the same queued job at once. Completion checks the token and expiry. This sample has no production authentication, heartbeat, retry budget or dead-letter handling."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Rejecting a result does not undo a remote action",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The token protects the queue's completion record. It does not prevent a stale worker from having already opened a pull request or changed an external service. To protect those effects, the downstream system must enforce an appropriate fencing or idempotency mechanism, or the coordinator must reconcile them.\n\nLease expiry is not proof that the original process stopped. Cancellation, credentials and process lifetime are separate concerns. A production design must decide how long a worker may act, how it renews ownership and what happens when communication is lost.\n\nThe queue identifies tasks, not just repositories. A repository may have several independent changes, while one business operation can span several repositories. Choose identities that distinguish retries, new revisions and superseded work."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Where gh-aw composition fits",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "GitHub Agentic Workflows supports dispatch and reusable-workflow calls. Examine their generated execution semantics before treating them as a general fleet scheduler. Dispatch is not evidence that the child finished, and completion is not evidence that its output was accepted.\n\nThe current [safe-output reference](https://github.github.com/gh-aw/reference/safe-outputs/) notes that the `call-workflow` mechanism executes only the last selected worker when a single call output is produced. Do not infer arbitrary parallel fan-out from a list of allowed workers. Check the pinned runtime you deploy.\n\nUse gh-aw when repository events and Actions jobs fit the unit of work. An external coordinator may fit better when you need long-lived queues, cross-system dependencies, fairness or custom leases. The local queue exposes those requirements; it is not a production scheduler.\n\nWrite a result contract linking each job to its repository revision and proposed patch. Decide how the integration owner learns that a child failed, produced no change or was superseded. That closes the gap between launching agents and coordinating work."
+          }
+        ]
+      }
+    ]
+  }
+}

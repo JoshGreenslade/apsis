@@ -1,0 +1,52 @@
+{
+  "id": "integration",
+  "title": "22 · Integrate their results",
+  "prerequisites": [
+    "decomposition"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Separate directories do not guarantee compatible changes",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Two workers editing the same file can overwrite each other. Separate working directories prevent that immediate collision. They do not ensure that the workers chose the same interface or preserved the same behaviour.\n\nA dashboard worker might import `listReleases` while another decides the new name should be `listPublishedReleases`. Git may merge those changes without a textual conflict. The application still fails. Integration requires a shared contract and executable checks in addition to isolated workspaces."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Use branches you can inspect",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In a standalone disposable Git repository containing the migration fixture, commit the starting files. Create separate worker branches and worktrees from that same starting revision:\n\n```sh\ngit worktree add -b worker-dashboard ../worker-dashboard\ngit worktree add -b worker-report ../worker-report\n```\n\nUse these commands only in the disposable exercise repository. Each worktree has its own checked-out files while sharing repository history. Ensure your agents are operating in the intended directory. After reviewing and preserving their work, remove clean worktrees with `git worktree remove`; do not force-delete uncommitted work.\n\nA Git worktree is not a security sandbox. A process with broader filesystem permissions may still access neighbouring directories. Use operating-system or runtime isolation when the threat model requires it. See the [Git reference](https://git-scm.com/docs/git-worktree) for lifecycle and cleanup details."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Create an integration failure deliberately",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Have both workers update their consumer to the agreed `listReleases` interface. Integrate their changes with the provider expansion and run the behaviour check. Then, in a fresh disposable attempt, instruct one worker to use the inconsistent name `listPublishedReleases`.\n\nInspect the diff before testing. Does a reviewer notice the disagreement? Run the combined check anyway. A module import error establishes that the interfaces do not fit, even if each worker's report sounds complete.\n\nNow create a textual conflict by asking both workers to change the same explanatory line in the brief. Resolve it as integration work, preserving the intended meaning rather than choosing whichever version is newer. One failure concerns file edits; the other concerns assumptions.\n\nAfter both consumers work, remove the obsolete provider alias. Search the integrated tree for `getReleases` and rerun the tests. Completion requires the new interface, preserved behaviour and removal of the old name."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "An independent reviewer needs independent evidence",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A reviewing agent can help when given the requirements and final diff rather than only the implementer's explanation. But another model may share the same misunderstanding. A reviewer that simply repeats the author's summary adds little assurance.\n\nAsk it to identify an actual mismatch, missing check or unsupported claim. Keep deterministic checks for properties you can execute. Human review remains important for policy choices, ambiguous requirements and consequential changes.\n\nRecord integration time separately from worker time. Parallel work that finishes quickly but needs prolonged reconciliation may not improve the team's throughput."
+          }
+        ]
+      }
+    ]
+  }
+}

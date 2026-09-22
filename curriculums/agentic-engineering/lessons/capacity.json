@@ -1,0 +1,52 @@
+{
+  "id": "capacity",
+  "title": "24 · Route work and control capacity",
+  "prerequisites": [
+    "fleet-coordination"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "The agents finish faster than the reviewers",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Your workers can produce twenty patch proposals an hour. The team can review four. Adding workers increases the queue of unreviewed changes, not the rate of accepted work. By the time someone opens later proposals, their starting revisions may be stale.\n\nCapacity belongs to the whole workflow. Model calls, tool services, CI, integration and people each impose limits. A useful fleet keeps work moving through the constrained stage instead of maximizing activity everywhere else."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Find the queue that is growing",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Run the fleet demonstration with capacity one, then two in a disposable copy. Adjust the scripted sequence to complete a claimed job before requesting another when only one slot exists. It uses an injected clock and scripted work, so its wall-clock duration is not an agent speed benchmark. Inspect which tasks can be in flight and why integration waits.\n\nFor a live migration pilot, record arrival, claim, worker completion, review start and acceptance times. Separate waiting from execution. Count rejected, superseded and abandoned work too. This distinguishes a slow model from a saturated review stage.\n\nSet a bounded queue and a policy for overload. You might defer low-priority work, combine repeated requests for the same revision or require a person to approve expansion. Backpressure means stopping admission faster than useful completion, not just adding a warning to a dashboard."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Escalate for a reason you can test",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Your earlier comparison may suggest a cheaper configuration for routine cases and a stronger one for difficult cases. A routing rule needs observable signals: unresolved evidence conflict, failed deterministic checks or a task class known to need greater capability.\n\nDo not rely only on a model saying it feels confident. Test the entire routed workflow, including the cost of the first attempt and escalation. A cheap first pass that usually needs repeating can cost more and finish later than choosing the stronger configuration initially.\n\nPreserve useful evidence when escalating without turning an unverified diagnosis into fact. A compact handoff identifies observations, attempted changes and unresolved questions. This is the context-design problem again, now between workers."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "A per-worker limit is not a fleet budget",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Ten workers each allowed ten calls can make a hundred calls. Repeated dispatch can exceed that again. Apply limits where the organisation bears the cost: per task, team, repository and service as appropriate. Include retries and escalation.\n\nUse fairness rules when teams share capacity. One large repository need not consume every slot while small urgent jobs wait. Separate credentials and quotas where authority or spending constraints differ. Keep cancellation reachable by someone other than the original author.\n\nProduce a capacity plan with one measured bottleneck, a proposed limit and the observation that would justify changing it. 'More agents' should become a specific experiment rather than an operating strategy."
+          }
+        ]
+      }
+    ]
+  }
+}

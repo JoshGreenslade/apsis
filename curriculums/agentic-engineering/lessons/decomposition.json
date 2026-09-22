@@ -1,0 +1,52 @@
+{
+  "id": "decomposition",
+  "title": "21 · Divide a project among workers",
+  "prerequisites": [
+    "lifecycle"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "An API rename is several changes, not several guesses",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The release API exports `getReleases`. The team wants the clearer name `listReleases`. A dashboard and a report generator both call it. We could ask three agents to rename things in parallel, but they would immediately need to agree on the same interface and rollout order.\n\nThe work becomes easier to divide when that agreement is explicit. First the provider adds the new name while retaining the old one as a temporary alias. The consumers can then migrate independently. Only after both are compatible should the provider remove the old export.\n\nThis is a dependency graph: provider expansion, two consumer migrations, then contraction. The interesting parallelism is in the middle. Starting every task at once does not remove the dependency; it moves the resulting confusion into the workers."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Establish the starting behaviour",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Copy `examples/agent-workshop/migration` into a disposable directory. Read `BRIEF.md` and run:\n\n```sh\nnode --test migration.test.mjs\n```\n\nThe starting test passes. This is a migration, not a bug fix. The final result must preserve the behaviour and remove every `getReleases` reference. A passing test alone would also describe the unchanged starting point.\n\nWrite three worker briefs. The provider worker owns `api.mjs` and must maintain compatibility during expansion. The dashboard worker owns `dashboard.mjs`; the report worker owns `report.mjs`. Name the target interface and the evidence each should return. Assign final removal of the alias to the integration owner after both consumers are accepted.\n\nPerform the work manually or use separate agent sessions in disposable copies. The kit does not launch paid agents automatically. Give each worker the brief, relevant files and its allowed write scope, rather than the entire coordinator's conversation."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Ask for evidence the next worker can use",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A useful worker result identifies its starting revision, changed files, checks actually executed and unresolved dependencies. 'Done' is not enough for integration. A consumer may have changed correctly but been unable to test because its workspace still had the old provider.\n\nThat distinction should remain visible in the result. A coordinator can integrate against the compatible provider and run the combined checks. It should not mistake a worker's confident summary for proof that the whole migration is complete.\n\nThe worker's scope also needs an escape route. If the dashboard migration reveals that the contract is wrong, it should report the mismatch rather than quietly edit the provider behind another worker's back. Task boundaries make such coordination visible; they do not eliminate unexpected discoveries."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Choose the amount of planning the task needs",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "For this known rename, an ordinary dependency graph is sufficient. A model can help write or review the plan, but the execution order need not be rediscovered on every run. A more exploratory task may benefit from a supervisor that creates new work as evidence arrives.\n\nKeep the coordinator's role distinct: maintain the task graph, allocate work, preserve decisions and judge whether results satisfy the shared objective. Giving every worker a broad mandate to supervise everyone else can generate messages without resolving ownership.\n\nBefore proceeding, identify the longest dependency chain in your plan. That chain limits how quickly the migration can finish, regardless of how many additional workers are available."
+          }
+        ]
+      }
+    ]
+  }
+}

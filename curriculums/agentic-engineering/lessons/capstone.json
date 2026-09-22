@@ -1,0 +1,52 @@
+{
+  "id": "capstone",
+  "title": "25 · Put a workflow to work",
+  "prerequisites": [
+    "capacity"
+  ],
+  "minutes": 90,
+  "content": {
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Choose work someone actually wants done",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The course ends with a workflow choice, not a requirement to build the largest system. Pick recurring or awkward work with an identifiable recipient. Ask that person what takes effort and what a useful output would let them do.\n\nRepository maintenance, compatibility investigation and coordinated migration are available starting points. Another organisational task is equally suitable if you can obtain appropriate evidence and a safe environment. Keep the first scope small enough to review every result.\n\nWrite down the current alternative: a person, a script, an existing product or not doing the work. This gives the pilot something meaningful to improve."
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "title": "Assemble the parts the task needs",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Map the task onto model, harness, context, tools, skills and execution environment. Name who controls each part. Decide which steps require judgement and which can be ordinary code. Specify external effects and who may approve them.\n\nBuild one end-to-end path in a disposable environment. Use representative inputs, including a case with no work to do and one with missing evidence. Keep known starting states so a failure does not turn into an unrecorded sequence of repairs.\n\nUse gh-aw when the repository-centred model fits. Use an existing coding harness for work benefiting from interactive steering. Choose durable coordination when the lifecycle requires it. Your explanation should follow requirements rather than begin with a preferred product."
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "title": "Learn from a bounded pilot",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Complete `examples/agent-workshop/ADOPTION.md` and run a small comparison against the baseline. Retain configuration revisions, task inputs, observable results, resource use and recipient feedback. Separate simulated and local evidence from live evidence. Do not turn a teaching demonstration into a production performance claim.\n\nRehearse an interruption or rejected action. Confirm you can stop new work and account for work already started. Ask another engineer to follow the runbook without verbal guidance; their questions are part of the result.\n\nIf several agents are involved, evaluate the accepted combined result, including integration and review. If one agent or a script performs the task more simply, keep that result rather than preserve complexity for its own sake."
+          }
+        ]
+      },
+      {
+        "id": "section-4",
+        "title": "Make the decision legible",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Prepare a short account for the team: the work attempted, configuration used, evidence, remaining limitations, operating owner and recommendation. You may recommend adoption, narrower scope, revision, more evidence or stopping.\n\nA strong account might say the workflow identifies a useful class of issue but should remain staged because publication creates duplicates. Another might conclude that a deterministic check covers the requirement. Both demonstrate engineering judgement.\n\nYou should now be able to ask concrete questions of an agentic system: what the model received, which component acted, what state persisted, what supports completion and who owns the consequences. Those questions remain useful as tooling changes. They let you use new capabilities ambitiously while keeping the work understandable."
+          }
+        ]
+      }
+    ]
+  }
+}

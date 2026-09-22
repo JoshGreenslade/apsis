@@ -51,3 +51,20 @@ Run node recovery-demo.mjs to simulate a lost response after a committed local
 effect. It closes and reopens a temporary SQLite database, retries the same key,
 and confirms only one proposal exists. It cleans up its own temporary directory.
 This proves the local transaction pattern, not exactly-once remote execution.
+
+## Evaluation, adoption and fleets
+
+node evaluate-checker.mjs evaluates the narrow spelling check on labelled
+teaching cases; the expected score is 2/4 and demonstrates its limitations.
+node outcomes.mjs accounts for constructed cost/review data, not model results.
+ADOPTION.md is the pilot and recovery worksheet.
+
+migration/BRIEF.md defines the manual or agent-assisted API migration. Its
+behaviour test starts green; the migration must also remove the old API name.
+Run node --test migration/migration.test.mjs to check the starting behaviour.
+
+node fleet-demo.mjs runs scripted workers through a real local SQLite queue.
+It demonstrates dependencies, capacity and rejecting stale completion tokens.
+It does not run agents, apply patches or fence external service writes. The
+temporary database is cleaned up. This is a teaching coordinator, not a
+production job service.
