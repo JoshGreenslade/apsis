@@ -4,5 +4,8 @@ import inspect from "./lessons/inspect-a-run.json";
 import models from "./lessons/model-behaviour.json";
 import selection from "./lessons/model-selection.json";
 import context from "./lessons/context-design.json";
+import tools from "./lessons/usable-tools.json";
+import mcp from "./lessons/mcp.json";
+import skills from "./lessons/skills.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills] });

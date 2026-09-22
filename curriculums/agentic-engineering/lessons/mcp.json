@@ -1,0 +1,63 @@
+{
+  "id": "mcp",
+  "title": "06 · Follow an MCP request",
+  "description": "Connect the same capability through a real SDK client and server.",
+  "minutes": 45,
+  "prerequisites": [
+    "usable-tools"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "why",
+        "title": "The capability is already written",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "We have a contract lookup that works as an ordinary function. Why add a server?\n\nBecause another application may need to discover and call it without importing our application code. MCP provides a shared way to describe and exchange capabilities. The contract lookup remains our responsibility; the protocol gives the host application a standard conversation with the service offering it.\n\nThe application hosting the agent creates an MCP client to communicate with a server. The server exposes capabilities. In this exercise the server runs as a local child process using standard input and output. A remote deployment could instead use an HTTP transport and would require a separate examination of identity, credentials and service access."
+          }
+        ]
+      },
+      {
+        "id": "inspect",
+        "title": "Watch a client discover the tool",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "From the capability kit used in chapter 5, run:\n\n```sh\nnpm run inspect:mcp\n```\n\nThe command starts the server, lists its tools, calls `lookup_contract` with `service: releases`, prints the result and closes the connection. There is no model in this exercise. You are observing an actual protocol integration, not an agent deciding which tool to use.\n\nFind three things in the output: the tool description, the required input schema and the returned contract. Compare the last of these with the direct call from chapter 5. The application capability is the same; its route to the caller has changed.\n\nOpen `inspect-mcp.mjs` beside `server.mjs`. The client constructs a stdio transport pointing to the server program. The server registers a tool and wraps the function's result in an MCP content response. The SDK supplies the protocol implementation. You do not need to hand-write JSON-RPC dispatch to understand who calls whom.\n\nThe kit pins SDK 1.30.0. Its installed code identifies `2025-11-25` as its latest supported protocol version. Use the linked versioned specification for this lab: newer online documentation may describe a different lifecycle. Compatibility is a property of the client and server you actually run, not the newest page you can find."
+          }
+        ]
+      },
+      {
+        "id": "scope",
+        "title": "Tools are one kind of capability",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "An MCP server may expose tools, resources and prompts. Tools provide callable operations. Resources make contextual material available through identifiers. Prompts provide reusable interaction templates. Our lab needs one tool; it does not implement every primitive simply to demonstrate that they exist.\n\nThe host still decides what capabilities to present to its model and what results to include in context. Adding an MCP connection does not automatically provide task planning, persistent memory or good judgement. Nor does a successful protocol call establish that the returned requirement is current or correct. That is why the response includes source and revision information.\n\nInspect the `readOnlyHint` annotation. The server makes a claim about its tool, but a host should not treat an untrusted server's claim as a security boundary. In this lab you can read the implementation and see its limited behaviour. Installing an unfamiliar server is a software and access decision, not merely adding a new vocabulary word to a model."
+          }
+        ]
+      },
+      {
+        "id": "break",
+        "title": "Break one layer at a time",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In a disposable copy, change the client call to use `service: unknown`. Compare the resulting tool error with the successful response. Then restore the argument and give the client an incorrect server filename. This time the capability has not failed; the process could not start correctly. Restore that path before continuing.\n\nA third experiment is to add a normal `console.log` to the server's startup. On stdio, stdout carries protocol messages, so arbitrary text can interfere with transport parsing. Remove it again and use stderr for diagnostic messages. This distinction is easy to miss when turning a command-line script into an MCP server.\n\nFinally, describe the path from a user's task to this lookup in a real agent host. The model may request a capability, the host routes it through its client, the server executes the function and the result returns for the host to use. Each boundary gives you somewhere to inspect a failure. You can now debug the connection without assuming every problem came from the model."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "MCP architecture, protocol 2025-11-25",
+      "url": "https://modelcontextprotocol.io/specification/2025-11-25/architecture"
+    },
+    {
+      "title": "MCP tools, protocol 2025-11-25",
+      "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools"
+    }
+  ]
+}

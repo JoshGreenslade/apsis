@@ -1,0 +1,59 @@
+{
+  "id": "usable-tools",
+  "title": "05 · Tools the agent can use well",
+  "description": "Design an executable interface that helps the agent make the right request.",
+  "minutes": 40,
+  "prerequisites": [
+    "context-design"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "interface",
+        "title": "A useful function still needs a useful interface",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Our investigator needs the release contract. You could give it a general shell and ask it to find the file, or offer a focused operation that returns the current contract and its owner. Both can work. The focused operation becomes attractive when the same information lives behind a service, needs consistent access checks or is requested by several agent applications.\n\nA tool is an interface between a generated request and executable code. The model sees a name, a description and an input shape. The implementation sees actual arguments. Those two views need to agree. A function named `get_data` with an arbitrary string parameter leaves the caller guessing about both purpose and syntax.\n\nIn the [capability kit](https://github.com/JoshGreenslade/apsis/tree/main/examples/agent-workshop), `lookupContract` accepts one named service. It returns the requirement alongside its revision, source and owner. The returned text is small enough to inspect, and its provenance makes it possible to distinguish fixture evidence from general knowledge."
+          }
+        ]
+      },
+      {
+        "id": "run",
+        "title": "Call it without a model first",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Clone Apsis or obtain the complete `examples/agent-workshop` directory, including its lockfile. From that directory, with Node 24 or later:\n\n```sh\nnpm ci\nnpm test\nnode --input-type=module -e \"import { lookupContract } from './contracts.mjs'; console.log(lookupContract({service:'releases'}))\"\n```\n\nInstallation downloads pinned packages from npm. The lookup itself is local and read-only; it makes no model call and requires no credentials. Keep the kit in a disposable copy and remove that copy when finished.\n\nOpen `contracts.mjs`. The schema permits the service name `releases`, and the function validates its input before returning the contract. Try `service:'unknown'`. You should get a validation error rather than a fabricated contract or an unrelated default. The test file also checks an unexpected extra argument.\n\nThis establishes a useful debugging boundary. If the ordinary function call is wrong, a better prompt cannot repair the implementation. If the direct call works but the agent supplies the wrong argument, inspect what the model was told about the operation."
+          }
+        ]
+      },
+      {
+        "id": "design",
+        "title": "Return enough to make the next decision",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Suppose the real contract service holds hundreds of revisions. Returning them all would move selection work into every caller and bury the relevant statement. Returning only 'true means true' would omit the evidence needed to trust the result. A better response identifies the chosen service and revision, includes the relevant requirement and gives a reference for deeper inspection.\n\nFor a larger lookup, decide what happens when the result is incomplete. A bounded page with a continuation cursor is intelligible; silently truncating the last half of a document can produce a misleading answer. State limits explicitly. For failures, distinguish an unknown service from an unavailable backend and from denied access. These outcomes require different next actions.\n\nNow revise the tool description in your copy. Make it clear when the tool should be used, what it returns and whether it changes anything. Ask your agent which operation it would choose for a compatibility investigation and for a formatting-only task. If it selects the lookup for both, inspect whether the description has become so broad that it attracts unrelated work."
+          }
+        ]
+      },
+      {
+        "id": "effects",
+        "title": "A read is not a write with a smaller name",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "It is tempting to add an option such as `update:true` to the lookup. That would make a harmless information request capable of changing the source it is supposed to inspect. Keep consequential operations distinct enough that the caller and the execution layer can recognise them.\n\nThe implementation must enforce access, validate arguments and report what actually happened. A description can help the model choose; it cannot substitute for authorization. Likewise, an annotation saying a tool is read-only is useful metadata, not proof of its implementation.\n\nBefore proceeding, explain which parts of this tool you would retain for a real contract service and which are fixture conveniences. The fixed service name and in-memory object make the lab easy to inspect. A production backend would add identity, freshness and operational failures. The interface should expose those facts without forcing the model to understand every internal detail."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Writing effective tools for agents",
+      "url": "https://www.anthropic.com/engineering/writing-tools-for-agents"
+    }
+  ]
+}

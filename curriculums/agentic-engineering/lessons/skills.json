@@ -1,0 +1,59 @@
+{
+  "id": "skills",
+  "title": "07 · Teach a reusable procedure",
+  "description": "Package useful expertise without turning instructions into a universal checklist.",
+  "minutes": 45,
+  "prerequisites": [
+    "mcp"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "repeat",
+        "title": "What would you rather not explain again?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "After several compatibility investigations, you notice yourself repeating the same advice: find the authoritative contract, distinguish a requirement from a convention, reproduce the reported input and preserve the supported case. These are useful working habits for this class of task. They do not need to occupy every conversation about the repository.\n\nA skill is a way to package such task-specific guidance so a compatible host can make it available when relevant. It may also carry reference material or executable helpers. The point is to reuse expertise without forcing every unrelated task to read a growing instruction manual.\n\nOur tool answers a particular question: what is the current release contract? The skill describes how to conduct an investigation using whatever evidence is appropriate. The tool supplies an operation; the skill supplies guidance. They can work together, but neither replaces the other."
+          }
+        ]
+      },
+      {
+        "id": "read",
+        "title": "A small skill with a specific job",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Read [the supplied skill](https://github.com/JoshGreenslade/apsis/blob/main/examples/agent-workshop/skills/contract-investigation/SKILL.md). It lives in `skills/contract-investigation/SKILL.md` inside the capability kit.\n\nIts frontmatter gives it a name and a description. The body supplies the investigation guidance. The description matters because a host can use it when deciding relevance before loading the full body. The file format is portable; the host's discovery paths, invocation interface and handling of supporting resources must still be checked in that host's documentation.\n\nNotice what the skill does not prescribe. It does not require a particular number of tool calls, insist on editing code when no defect exists or demand the same report format every time. It preserves the useful distinctions: intended versus observed behaviour, proposed versus applied changes, and executed versus merely suggested checks.\n\nThere are no supporting folders because this version needs none. Add a reference when some substantial domain detail is needed only occasionally. Add a script when repeatable computation or validation belongs in code. A folder structure is not a measure of skill quality."
+          }
+        ]
+      },
+      {
+        "id": "trial",
+        "title": "Separate usefulness from discovery",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "First test the guidance without installation. In a disposable agent session, explicitly provide the skill text alongside the investigator task. Compare the resulting work with a fresh session given the same task and files but no skill. Both must have the same tool access. Does the guidance change a consequential decision, or merely produce a longer answer?\n\nThen test discovery separately. Install a copy in the project-skill directory documented by your chosen host and confirm it appears in the host's skill listing or activity log. Do not assume that placing a file in the kit's `skills` directory installs it. Remove the installed copy after the experiment.\n\nTry these requests independently: investigate the query mismatch; explain a compatibility risk without editing; fix a spelling mistake in the README; inspect the already-corrected parser. Record whether the skill was selected and whether its guidance improved the result. The spelling request is a useful negative example. A skill that activates everywhere consumes attention without necessarily contributing anything.\n\nIf your host cannot show which skill was loaded, record discovery as unobserved rather than infer it from a familiar phrase in the answer. You can still test explicit use."
+          }
+        ]
+      },
+      {
+        "id": "revise",
+        "title": "Keep what changes the work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Revise one sentence in the skill based on a failure you actually observed, then repeat that case and a contrasting one. An instruction that fixes one example can make another worse. For instance, 'always edit the parser' would make the broken case look productive and damage the already-correct case.\n\nA useful skill gives the agent enough domain guidance to choose well. Repeating generic advice such as 'be careful' adds little. Encoding every possible incident in the entrypoint makes the important decisions harder to find. Keep specific requirements clear, and leave room for the task to differ.\n\nSkill text also does not confer authority. A script bundled with a skill still needs review and appropriate execution permissions. A request to investigate does not become permission to publish, change production configuration or read unrelated secrets because the skill mentions those actions.\n\nKeep your revised skill, the requests used to assess it and a short account of what improved. Later we will return to versions, distribution and organisational ownership. First we need the execution machinery that turns these capabilities into a working agent."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Agent Skills specification",
+      "url": "https://agentskills.io/specification"
+    }
+  ]
+}

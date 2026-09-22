@@ -1,0 +1,14 @@
+{
+  "name": "apsis-agent-workshop",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "test": "node --test *.test.mjs",
+    "inspect:mcp": "node inspect-mcp.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.6.5"
+  }
+}
