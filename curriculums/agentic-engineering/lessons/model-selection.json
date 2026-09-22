@@ -1,0 +1,59 @@
+{
+  "id": "model-selection",
+  "title": "03 · Choose a model with evidence",
+  "description": "Compare configurations on useful outcomes, not a memorable demonstration.",
+  "prerequisites": [
+    "model-behaviour"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "decision",
+        "title": "The fastest answer may create the most work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Imagine two configurations investigating the release bug. One finishes in twenty seconds and proposes a broad rewrite. The other takes a minute and changes one expression after reading the contract. Which was faster?\n\nFor the model call, the first. For the maintainer, we do not yet know. Reviewing a broad rewrite may cost more time than the response saved. It may also introduce risks the original task did not require. The unit of value is the completed, accepted task, not merely a generated answer.\n\nA useful comparison begins with the decision you are trying to make. Perhaps you want a cheaper default for routine investigations, with a stronger model available when the task remains unresolved. Or perhaps latency matters because a person is waiting interactively. State that decision before collecting numbers; otherwise it is easy to celebrate whichever metric improved."
+          }
+        ]
+      },
+      {
+        "id": "cases",
+        "title": "Build a small comparison you can actually run",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use independent working copies of the investigator fixture and four task briefs:\n\n1. Diagnose and fix explicit `false` exposing drafts, using the contract.\n2. Explain how omitted, empty, true, false and unrecognised values behave, without editing.\n3. Investigate with the implementation but no contract; identify which decisions require clarification.\n4. Check an already-corrected implementation and report whether any change is needed.\n\nFor the fourth case, prepare the corrected copy yourself and keep its expected answer outside the agent's workspace. The agent should not earn credit for making a patch merely because the exercise usually contains a bug.\n\nWrite the success conditions now. The first case requires the contract to remain unchanged, the intended cases to pass and the final explanation to match the actual patch. The third should acknowledge an unspecified convention. The fourth should avoid an unnecessary edit. Preserve these conditions when comparing configurations.\n\nChoose two configurations available to you and perform three independent runs per case if your allowance permits. That is 24 runs. Begin with one run each to catch broken setup before spending on the remainder. Use a disposable directory, fresh sessions and the same permitted tools. Alternate configuration order so one is not always run during a different operating period. If you can only afford a few runs, record the smaller sample honestly."
+          }
+        ]
+      },
+      {
+        "id": "record",
+        "title": "Keep the failures in the table",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Record one row per attempt:\n\n```text\ncase, configuration, attempt, accepted, elapsed_seconds,\nreported_cost, review_minutes, failure_reason\n```\n\nUse an empty cost value when the host does not report cost; do not invent one from an incomplete token count. Keep model identifiers, reasoning settings and tool versions with the run metadata. A product's subscription charge and the marginal API cost of a run are different quantities.\n\nJudge the final artifact and the recorded activity. Passing tests with a weakened test file is not success. A stopped run is still an attempt. Include its time and cost rather than quietly removing it. Inspect borderline cases yourself, using the criteria you wrote before seeing which configuration produced them.\n\nSummarise accepted tasks, elapsed time and review effort. With a small sample, show the counts and the spread rather than a precise-looking percentage alone. Three successful runs do not establish dependable behaviour on a varied production workload. They do help you find obvious differences worth investigating."
+          }
+        ]
+      },
+      {
+        "id": "choice",
+        "title": "Use the result to change one thing",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "If a cheaper configuration handles the routine cases but fails when evidence conflicts, you have a routing hypothesis: use it where inputs are well specified and escalate ambiguous work. Test that routing rule on new cases before adopting it. Otherwise you have designed the rule around the examples that suggested it.\n\nIf both configurations fail because neither reads the contract, changing models may be a less direct intervention than making the task or retrieval path clearer. If both are correct but slow, examine repeated tool calls and unnecessary output. If the expensive configuration mainly writes a more persuasive summary, check whether that persuasion corresponds to better work.\n\nKeep one provisional choice and one uncertainty in your experiment notes. For example: 'Use configuration A for this narrow investigation; we have not tested repositories with conflicting contracts.' This is an actionable conclusion. It gives you a default and tells you where the evidence ends."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Demystifying evaluations for agents",
+      "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents"
+    }
+  ]
+}

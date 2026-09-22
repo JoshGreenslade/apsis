@@ -1,0 +1,59 @@
+{
+  "id": "model-behaviour",
+  "title": "02 · What the model brings",
+  "description": "Separate learned capability from current evidence and execution.",
+  "prerequisites": [
+    "inspect-a-run"
+  ],
+  "minutes": 35,
+  "content": {
+    "sections": [
+      {
+        "id": "knowledge",
+        "title": "It knows JavaScript. It does not know your contract.",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A capable coding model may recognise the truthiness bug almost immediately. That recognition is useful. It has learned patterns involving code, language and problem solving during training, and can apply them to a situation it has not encountered verbatim.\n\nBut recognition leaves an important question unanswered: what should this application do with `includeDrafts=yes`? Some APIs accept several spellings of true. Others reject unrecognised input. Our fixture returns published releases unless the value is exactly `true`. JavaScript knowledge cannot establish that product decision. The contract can.\n\nThis distinction appears everywhere in agent work. A model can understand a migration pattern without knowing which version your team supports. It can write a plausible incident explanation without having the relevant logs. Capability lets it work with evidence; capability does not manufacture the missing evidence."
+          }
+        ]
+      },
+      {
+        "id": "inference",
+        "title": "A new call is a new input",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "During training, a model's parameters are adjusted using data and training objectives. During ordinary inference, the deployed model uses its parameters to produce an output from a supplied input. Giving it your repository in a conversation is not the same operation as retraining it on that repository.\n\nText is represented using tokens. A token is not reliably a word: source code, punctuation and unfamiliar names can split differently. The practical consequence is that the space and processing cost of a conversation do not follow its visible page count exactly. A context window limits how much material a model call can accept, subject to the particular model's input and output rules.\n\nThe harness determines much of what arrives in that window. Your agent may read a file on one turn, retain its content in history, summarise that history later and then work from the summary. The file remains on disk throughout, but the model's immediate evidence has changed. When an agent appears to forget something, examine the supplied context before concluding that it needs a stronger model.\n\nGeneration also involves choices among possible continuations. Depending on the model and service, sampling controls and reasoning settings may be available. Identical requests need not produce identical runs, and a low randomness setting is not a general reproducibility guarantee. Record the model identifier and settings instead of treating a product name as an experimental configuration."
+          }
+        ]
+      },
+      {
+        "id": "experiment",
+        "title": "Make a prediction before asking",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use three fresh sessions with the same model and no previous conversation. Do not reuse the already-solved session from chapter 1.\n\nIn the first, provide only the reported symptom and the implementation. Ask for a diagnosis and explicitly ask which behaviour remains unspecified. In the second, include the contract. In the third, include the contract but add this separately labelled old note:\n\n> Historical design note, superseded: the parameter may accept any non-empty value.\n\nBefore running them, write down what you expect to change. Then inspect whether the agent distinguishes a programming-language fact from an application requirement, and whether it notices that the old note is superseded. The important observation is not whether all three responses use the same wording. It is whether their claims are supported by the information each session had.\n\nThese three trials are a small investigation, not an accuracy estimate. A confident answer in the first session may simply have guessed our convention. A cautious answer may be more appropriate despite looking less decisive. Keep the inputs and results; they will become useful examples when we compare configurations."
+          }
+        ]
+      },
+      {
+        "id": "budget",
+        "title": "More thinking needs a purpose",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Some models can allocate additional inference effort before responding. That may help with a difficult dependency analysis or a long chain of constraints. It also changes latency and resource use. It does not grant access to a missing document, fix an unusable tool or turn a stale statement into a current one.\n\nSuppose the agent spends much longer deliberating over our query parser. If it still lacks the contract, the extra work may elaborate several plausible conventions rather than discover the one we chose. Supplying the authoritative document addresses a different limitation from increasing reasoning effort.\n\nWhen deciding what to improve, ask what the run needed: better capability, better evidence, a more usable action, or more time to work. Those are different interventions. In the next chapter we will compare them through a small, repeatable task set rather than a favourite model's most impressive answer."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762"
+    }
+  ]
+}

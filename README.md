@@ -2,7 +2,7 @@
 
 Courses built from reusable prefabs, with open reading, optional practice,
 notes and saved progress. Includes astrodynamics and mathematics for physics.
-Agentic engineering is being redesigned from a new curriculum.
+The rebuilt agentic engineering workshop is being published in complete batches.
 
 ## Run
 

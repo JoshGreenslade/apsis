@@ -1,0 +1,12 @@
+{
+  "id": "agentic-engineering",
+  "version": "2.0.0",
+  "title": "Agentic engineering",
+  "description": "A hands-on guide to models, harnesses, tools, skills and operating agent workflows.",
+  "conventions": "Work in disposable lab copies. Local exercises need Node 24 or later; live model and GitHub activities have separate access and cost requirements. Recorded or constructed examples are labelled. This rebuilt course is being published in complete workshop batches.",
+  "overview": {
+    "headline": "Understand your agents. Build workflows worth operating.",
+    "introduction": "Start inside an agent run, then develop the capabilities, execution machinery and operational practices behind useful AI workflows. The course connects a repository investigation, recurring maintenance and a coordinated migration.",
+    "startingPoint": "You already write software and use or build agents. Bring a terminal, Git and a willingness to inspect what your tools actually do."
+  }
+}

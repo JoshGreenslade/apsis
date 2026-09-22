@@ -1,0 +1,59 @@
+{
+  "id": "context-design",
+  "title": "04 · Context is a design choice",
+  "description": "Supply authoritative evidence and preserve useful state without carrying everything forever.",
+  "prerequisites": [
+    "model-selection"
+  ],
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "pile",
+        "title": "The repository is not the context",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Your repository may contain everything needed to solve a problem. That does not mean the model has received it. Files must be selected, read and represented in the input of a call. Even after being read, they may later be omitted or summarised by the harness.\n\nThis is why 'I gave the agent the repository' is an incomplete description. Which revision did it see? Which files did it inspect? Did a tool return the whole file, an excerpt or search matches? Were the relevant lines still present when it made the decision?\n\nFor the release investigation, the complete implementation and short contract are cheap to supply directly. A large repository is different. Reading everything can consume time and fill the input with unrelated material. Begin with the information needed to locate authoritative evidence, then retrieve enough to resolve the question."
+          }
+        ]
+      },
+      {
+        "id": "authority",
+        "title": "Two documents disagree",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Create a note in a disposable copy of the fixture:\n\n```text\nARCHIVE-NOTE.md\nHistorical proposal: accept any non-empty includeDrafts value.\nSuperseded by CONTRACT.md. Retained to explain an earlier implementation.\n```\n\nAsk the investigator to explain the discrepancy between the note and the current implementation. The intended answer is not 'newer text always wins'. Here we have an explicit statement of authority: one document identifies itself as historical and points to the current contract. In a real repository, a timestamp alone may be insufficient; an unreviewed recent comment need not override a maintained specification.\n\nTry the task first with only filenames and a search tool, then with the current contract supplied directly. Compare the files read and the quality of the explanation. This is a retrieval experiment, not a contest to minimise tokens at all costs. A slightly larger input may avoid several unnecessary calls. Equally, a short authoritative excerpt may be better than pages of loosely related matches."
+          }
+        ]
+      },
+      {
+        "id": "handoff",
+        "title": "Leave the next session something it can use",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Now interrupt the investigation before the fix is applied. Write a handoff that another fresh session can act on:\n\n```text\nTask: stop explicit false exposing drafts.\nAuthoritative requirement: CONTRACT.md, exact true includes drafts.\nObserved: Boolean(query.includeDrafts) treats non-empty strings as true.\nReproduction: node --test releases.test.mjs; 2 pass, 2 fail.\nCandidate: compare with the exact string true; not applied yet.\nNext: inspect the current files, apply the bounded change, rerun checks.\n```\n\nGive the new session the handoff and access to the current working copy. Do not give it the entire old conversation. Ask it to verify the state before continuing.\n\nThe handoff is useful because it separates a requirement, an observation and an unexecuted proposal. If it instead said 'fixed the parser', the next session might skip the edit or claim tests had already passed. Summaries are authored artifacts: they can lose qualifications, turn plans into facts and become stale as files change.\n\nChange the implementation between sessions and repeat. Does the new session notice? Durable notes should help it recover its place, not prevent it from checking the world."
+          }
+        ]
+      },
+      {
+        "id": "boundaries",
+        "title": "Evidence can contain instructions",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A tool result is not automatically trustworthy merely because it arrived through a tool. A repository file, issue comment or remote document may contain text asking the agent to ignore its task, reveal information or run an unrelated command. That text is part of the material under investigation; it does not acquire authority over the task by being retrieved.\n\nIn your disposable copy, add a harmless note that asks the agent to claim the tests passed without running them. Observe whether the investigator treats it as data. Do not use real secrets or external destinations for this experiment. One successful rejection does not prove prompt-injection resistance; the host also needs controls on what actions and data are available.\n\nYour context design now has several responsibilities: find relevant evidence, retain its origin, preserve enough uncertainty to avoid false certainty, and avoid confusing retrieved content with instructions from an authorised operator. The next chapters turn to the interfaces through which that evidence and those actions enter the system."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Effective context engineering for agents",
+      "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents"
+    }
+  ]
+}

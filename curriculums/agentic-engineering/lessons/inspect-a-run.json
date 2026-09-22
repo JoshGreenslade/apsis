@@ -1,0 +1,56 @@
+{
+  "id": "inspect-a-run",
+  "title": "01 · Inspect a working agent",
+  "description": "Follow a real task through the model, its tools and the harness around it.",
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "start",
+        "title": "You already have an agent. What have you actually got?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "You ask a coding agent to investigate a bug, leave it working for a few minutes, and come back to a patch. It has read files, run commands and explained what it changed. You can review the diff. But could you explain why it looked at those files, what prevented it from reading somewhere else, or what would happen if you closed the session halfway through?\n\nThose questions lead into the engineering of agents. A model matters enormously, but it is only one part of the system you have been using. The surrounding software selects information, exposes tools, executes actions, retains state and decides when another model call is possible. Change that software and the same model can become a very different collaborator.\n\nWe will begin by taking one small investigation apart. The bug is deliberately easy to understand. That leaves us free to examine the system doing the work rather than spend an hour learning the application."
+          }
+        ]
+      },
+      {
+        "id": "case",
+        "title": "An unreleased feature appears in the dashboard",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Our service lists software releases. Published releases should be visible to everyone using the dashboard; drafts should appear only when the query explicitly requests them. A report arrives: passing `includeDrafts=false` shows an unreleased feature, but leaving the parameter out hides it.\n\nThe [lab README](/agent-workshop/investigator/README.md) explains the starting point. Download [releases.ts](/agent-workshop/investigator/releases.ts), [releases.test.mjs](/agent-workshop/investigator/releases.test.mjs), [package.json](/agent-workshop/investigator/package.json) and [CONTRACT.md](/agent-workshop/investigator/CONTRACT.md) into one disposable directory. Alternatively, use `public/agent-workshop/investigator` in a clone of Apsis. Make a separate working copy before changing anything.\n\nWith Node 24 or later, run:\n\n```sh\nnode --test releases.test.mjs\n```\n\nTwo checks pass and two fail. That is the intended starting state. The fixture makes no network calls and needs no key or installation. It is a query-processing fragment, not an authenticated HTTP service.\n\nAsk your coding agent to investigate the issue using the contract, preserve the supported true case and verify the proposed change. Keep its activity log. A live agent may consume your provider allowance; use a small spending limit in your tool if available. You can also do the investigation yourself and follow the constructed sequence below. That route teaches the anatomy of the work, but cannot tell us how a model performs."
+          }
+        ]
+      },
+      {
+        "id": "trace",
+        "title": "Read the activity, not just the answer",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Here is a **constructed teaching sequence**, not a captured model run:\n\n1. **Read the contract.** It permits drafts only for the exact string `true`. This is evidence about intended behaviour.\n2. **Read the implementation.** It uses `Boolean(query.includeDrafts)`. This is evidence about current behaviour.\n3. **Run the checks.** Explicit `false` and `yes` expose a draft. Two contract violations are reproduced.\n4. **Edit the comparison.** Use `query.includeDrafts === \"true\"`. This is a candidate change, not yet a verified result.\n5. **Run the checks again.** All four pass in the changed copy. That establishes these cases, not every possible property.\n\nNotice how little of this is a final answer. Most of the useful work is acquiring evidence and changing the environment. In JavaScript, the non-empty string `\"false\"` is truthy. The implementation therefore confuses the presence of a value with the meaning of that value. Comparing against the permitted string repairs this particular contract.\n\nAn agent might instead change the test, add a parsing library or claim success without executing anything. These alternatives are why a diff and a cheerful summary are insufficient descriptions of a run. Inspect what it actually read and which checks actually ran. A stated intention to run tests is not a test result."
+          }
+        ]
+      },
+      {
+        "id": "parts",
+        "title": "Put names to the responsibilities",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The **model** produces an output from the input it receives. That output may contain text or a request to use a tool. A request to read a file does not itself read the file.\n\nThe **tool** provides the executable operation. Its implementation reads the file or runs the command and returns a result. The **harness** is the surrounding application machinery: it prepares model inputs, offers tools, dispatches requests, adds results to the conversation and manages further turns. Products divide these responsibilities differently, so use the terms to ask concrete questions rather than assume every product has the same architecture.\n\nThe **agent** is the resulting system pursuing work through this cycle. A **workflow** describes the larger arrangement: perhaps a person initiates the investigation, an agent proposes a patch, ordinary CI checks it and a maintainer decides whether to merge.\n\nIn your run, find one example of information supplied to the model, one tool operation and one restriction imposed by the environment. If the activity log does not show a detail, mark it unknown. Logs can reveal actions and observations without exposing every input or the model's internal reasoning.\n\nFinally, compare the proposed patch with the contract yourself. The fixture does not implement authorization: even a correct query parser would not, by itself, decide who is allowed to read drafts in a real service. We have solved a bounded problem. Knowing precisely what that boundary is makes the result more useful."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Building effective agents: patterns and responsibilities",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents"
+    }
+  ]
+}
