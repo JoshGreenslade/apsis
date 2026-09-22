@@ -44,3 +44,15 @@ when finished. Do not paste secrets into prompts or commit them.
 The maintenance fixture has a deliberately stale query parameter name. Its
 implementation is authoritative for this exercise. Change API.md to match and
 repeat: a useful workflow should now report no actionable mismatch.
+
+## Connected variant
+
+docs-connected.md imports workflows/shared/evidence.md and permits the local
+mechanical document check. Copy the shared directory as well when moving the
+workflow into a sandbox. Both variants compile with v0.88.8 without diagnostics;
+neither has been run in GitHub Actions during authoring.
+
+A direct Node stdio MCP configuration was tried and rejected by this release's
+MCP Gateway even though compilation returned exit code zero. That configuration
+was removed. The locally verified SDK MCP server is not advertised as a verified
+gh-aw deployment. A containerized or HTTP deployment needs separate verification.

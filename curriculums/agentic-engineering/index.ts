@@ -13,5 +13,8 @@ import workflows from "./lessons/workflow-shapes.json";
 import firstAw from "./lessons/first-gh-aw.json";
 import authority from "./lessons/bounded-authority.json";
 import recurring from "./lessons/recurring-work.json";
+import connected from "./lessons/workflow-capabilities.json";
+import diagnose from "./lessons/diagnose-runs.json";
+import outcomes from "./lessons/useful-outcomes.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring, connected, diagnose, outcomes] });

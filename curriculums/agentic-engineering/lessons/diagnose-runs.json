@@ -1,0 +1,59 @@
+{
+  "id": "diagnose-runs",
+  "title": "15 · Diagnose a run",
+  "description": "Use evidence to locate failure in the authoring, execution or publication layer.",
+  "prerequisites": [
+    "workflow-capabilities"
+  ],
+  "minutes": 45,
+  "content": {
+    "sections": [
+      {
+        "id": "symptom",
+        "title": "No issue appeared",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The workflow finished, but there is no issue. That symptom has several explanations. Perhaps there was no mismatch. Perhaps staged mode produced only a preview. Perhaps the agent never read the file. Perhaps it produced a valid finding and publication failed.\n\nThe quickest useful question is not 'How should I rewrite the prompt?' It is 'How far did this run get?' Follow the path from trigger to activation, agent execution, proposed output and applied effect. Find the first point where the observed evidence differs from the intended path."
+          }
+        ]
+      },
+      {
+        "id": "logs",
+        "title": "Retrieve the evidence for one run",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "For a live sandbox run, use the workflow ID and repository explicitly:\n\n```sh\ngh aw logs docs-drift --repo OWNER/REPO --count 1 --artifacts all\ngh aw audit RUN_ID --repo OWNER/REPO\n```\n\nReplace the uppercase values with your sandbox and actual run ID. These command forms were checked against v0.88.8 help. They download artifacts and reports; they do not repair the workflow. Treat downloaded logs as potentially sensitive and follow your organisation's retention rules.\n\nBegin with job status and the generated configuration used by that run. Then inspect tool activity and the proposed output. A current source file is not necessarily the file that produced yesterday's run. Keep the run URL, revision and compiler version with your diagnosis.\n\nIf you have no live run, use the supplied compiled files and the local experiments below. Do not invent an audit result to fill the gap."
+          }
+        ]
+      },
+      {
+        "id": "layers",
+        "title": "Three failures with different remedies",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "First, break an import path in a disposable copy and compile. A missing or disallowed path is an authoring/configuration failure. No model has investigated the documentation yet. Restore the path after inspecting the message.\n\nSecond, revisit the unsupported Node MCP configuration discussed in chapter 14. A zero process exit did not establish a usable gateway configuration. This is an integration failure that needs a compatible deployment, not more persuasive task wording.\n\nThird, make the document agree with the implementation and inspect what the agent reports in an optional staged run. A well-supported no-op is success. A fabricated mismatch is a decision-quality problem. A missing-file error is an evidence-access problem. These should become different evaluation cases and different operational alerts.\n\nFor a publication failure, do not immediately rerun the whole agent. Determine whether a proposed output already exists and whether an external effect may have happened. Replaying an uncertain write can reproduce the duplicate-effect problem from chapter 9. Use the runtime's documented recovery mechanism only after checking the prior result and your authority to act."
+          }
+        ]
+      },
+      {
+        "id": "record",
+        "title": "Write a diagnosis that another person can use",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Record the intended action, the observed failure point, the evidence supporting that location and the smallest proposed change. For example: 'The imported file is outside the allowed workflow directory; compilation stops before execution. Move the shared file under workflows and update the import.' That gives a teammate something testable.\n\nA record saying 'the agent was confused' does not. It assigns a cause without showing where the confusion came from. Keep alternative explanations when evidence is incomplete.\n\nAfter the fix, rerun the failing case and one nearby case that should still work. Then return to the actual purpose of the system. A perfectly executing workflow can still waste maintainers' time, which is the next question we need to answer."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "gh-aw debugging workflows",
+      "url": "https://github.github.com/gh-aw/troubleshooting/debugging/"
+    }
+  ]
+}

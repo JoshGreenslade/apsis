@@ -1,0 +1,67 @@
+{
+  "id": "workflow-capabilities",
+  "title": "14 · Connect the workflow",
+  "description": "Reuse guidance and deterministic checks, and test runtime compatibility before adding integrations.",
+  "prerequisites": [
+    "recurring-work"
+  ],
+  "minutes": 45,
+  "content": {
+    "sections": [
+      {
+        "id": "reuse",
+        "title": "A second workflow should not require a second copy of everything",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The maintenance workflow now has a useful way to describe findings. Another workflow could use that guidance, but copying it into several files creates several places to maintain. The connected example extracts a small evidence brief and imports it.\n\nOpen `examples/agent-workshop/gh-aw/workflows/docs-connected.md`. Its `imports` entry refers to `shared/evidence.md` inside the workflows directory. Compile it with the same command as the starter and inspect the generated lockfile. Keep the shared file when transferring this example to a sandbox: the generated workflow can refer to imported content at runtime.\n\nImports are one form of reuse. A host-discovered skill is another. Importing guidance makes it part of this workflow's instructions; a skill can be selected for a relevant task by a compatible host. Choose deliberately rather than assume the mechanisms have the same loading behaviour."
+          }
+        ]
+      },
+      {
+        "id": "deterministic",
+        "title": "Give a small program a small job",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The connected workflow also permits a local documentation check. From `examples/agent-workshop`, run:\n\n```sh\nnode maintenance/check-docs.mjs maintenance/API.md\n```\n\nThe starting document should produce a failure naming `showDrafts=true`. In a disposable copy, change that spelling to `includeDrafts=true` and rerun. The check now passes.\n\nThen replace the document with 'All callers can always read drafts.' The check still passes. Its narrow purpose is to identify one obsolete spelling, not to establish semantic correctness. This is a useful division of labour: the program gives a dependable answer to a mechanical question, while the agent must still compare the meaning of the document and implementation.\n\nThe workflow installs the pinned workshop dependencies in a setup step. Review that step as executable code too. The current checker itself uses only Node's built-in modules; simplify installation when deploying just that capability rather than blindly carrying a whole teaching kit."
+          }
+        ]
+      },
+      {
+        "id": "mcp-boundary",
+        "title": "A working local MCP server may not fit this runtime unchanged",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Our MCP server worked in chapter 6 because the SDK client could spawn Node directly. Trying the same command in gh-aw v0.88.8 exposed a different boundary: its MCP Gateway rejected the direct `node` stdio command, asking for a supported containerized server or HTTP transport. The compiler printed that error while returning an overall successful exit status.\n\nThat was observed during development of this kit. The broken configuration is not included in the runnable connected workflow. It is a concrete reason to inspect diagnostics and generated gateway configuration, not merely check whether compilation returned zero.\n\nTo add a real external capability, choose a deployment the gateway supports, restrict its exposed tools and configure only the required network destinations. Check authentication separately from reachability. A remotely reachable MCP endpoint does not automatically have permission to access your organisation's data. Use the linked guide for the pinned runtime and verify discovery and a read-only call before relying on it for unattended work."
+          }
+        ]
+      },
+      {
+        "id": "skills-host",
+        "title": "Make loading observable",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "For the Copilot engine, current gh-aw documentation includes a `skills` configuration for installing skills before execution. Treat that as engine- and version-specific behaviour. Inspect the compiled activation steps and confirm that the intended revision and files are available; do not assume a skill in your laptop's directory appears on an Actions runner.\n\nA practical next experiment is to port your chapter 7 skill into your sandbox's documented skill location, compile the installation configuration supported by your selected release and compare one relevant and one irrelevant task. Record whether it loaded and whether it changed the work. Keep this extension distinct from the already-verified shared-import example.\n\nThe more capabilities you attach, the more useful it becomes to maintain a small inventory: purpose, owner, version, credentials, permitted operations and evidence that it works in this host. That inventory is the beginning of an organisational operating model, not just a list of plugins."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "gh-aw imports",
+      "url": "https://github.github.com/gh-aw/reference/imports/"
+    },
+    {
+      "title": "MCP integration in gh-aw",
+      "url": "https://github.github.com/gh-aw/guides/mcps/"
+    },
+    {
+      "title": "Frontmatter skills configuration",
+      "url": "https://github.github.com/gh-aw/reference/frontmatter/#frontmatter-skills-skills"
+    }
+  ]
+}

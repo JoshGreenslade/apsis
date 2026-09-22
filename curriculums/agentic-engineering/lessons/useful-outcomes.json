@@ -1,0 +1,59 @@
+{
+  "id": "useful-outcomes",
+  "title": "16 · Improve useful outcomes",
+  "description": "Account for accepted work, review burden and the option of simpler automation.",
+  "prerequisites": [
+    "diagnose-runs"
+  ],
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "cheap",
+        "title": "The bill went down. Did the work improve?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A cheaper model reduces the inference bill for the maintenance workflow. Its issues also become less precise, so maintainers spend longer deciding what each one means. Whether the change helped depends on which cost you counted.\n\nRun the supplied accounting exercise from `examples/agent-workshop`:\n\n```sh\nnode outcomes.mjs\n```\n\nThe file explicitly contains **constructed teaching data**, not a measured comparison of models. Both configurations produce two accepted results from three attempts. The baseline costs 0.27 units in model charges and requires 15 review minutes; the candidate costs 0.12 and requires 23 review minutes. There is no universal answer about which is preferable without knowing how those resources matter to the team."
+          }
+        ]
+      },
+      {
+        "id": "denominator",
+        "title": "Count the attempts that did not help",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The script includes cost from failed attempts when computing cost per accepted result. Dropping unsuccessful runs would make a wasteful system appear efficient. A configuration with no accepted results gets no finite cost-per-accepted figure, rather than a misleading zero.\n\nFor your own runs, keep separate records for execution success and useful outcome. An issue can be created successfully and then dismissed as irrelevant. A patch can pass checks and still duplicate work already done. Conversely, a no-op can be exactly the desired result for an unchanged repository.\n\nChoose outcome categories with the people who receive the work. For maintenance, useful distinctions include accepted finding, duplicate, incorrect finding, useful no-op and inaccessible evidence. Do not count every closed issue as acceptance: closure may mean the opposite."
+          }
+        ]
+      },
+      {
+        "id": "improve",
+        "title": "Change the source of wasted work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use your observed failures to choose an intervention. Duplicate findings suggest work identity and publication control. Unsupported claims suggest evidence or task framing. Long runs with repeated reads suggest context and tool design. Correct findings that are hard to review suggest a clearer output contract.\n\nTry one change, retain the previous configuration and compare a small held-out set. If several things change at once, you may improve the result without learning why. That can be acceptable during exploration, but is a weak basis for an organisation-wide rollout.\n\nBring human review into the experiment early. A concise report containing the exact stale statement, implementation evidence and suggested replacement may be more valuable than a long explanation of documentation quality. Ask the maintainer what they needed to decide, rather than optimizing the report for how impressive it looks."
+          }
+        ]
+      },
+      {
+        "id": "alternative",
+        "title": "Sometimes the useful discovery is a script",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Our fixture's obsolete spelling can be found by `check-docs.mjs`. If that is the entire production requirement, an ordinary script in Actions may be sufficient. The agent becomes more valuable when mismatches require interpreting changed behaviour, finding relevant prose or explaining a correction across varied cases.\n\nCompare those workloads rather than declare one technology universally better. gh-aw is attractive for bounded repository work that benefits from model judgement and the surrounding Actions lifecycle. A deterministic rule needs less machinery when the rule already captures the task. A long-lived service with interactive state may need a different runtime entirely.\n\nWrite a brief adoption decision for the maintenance workflow: where it adds value, what evidence supports that view, what still needs a person and what would make you stop using it. The next part turns that local decision into a repeatable organisational practice."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "gh-aw outcome measurement",
+      "url": "https://github.github.com/gh-aw/reference/outcomes/"
+    }
+  ]
+}

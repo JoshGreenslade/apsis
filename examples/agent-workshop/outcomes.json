@@ -1,0 +1,11 @@
+{
+  "provenance": "Constructed teaching data, not measured model performance.",
+  "runs": [
+    { "configuration": "baseline", "accepted": true, "modelCost": 0.08, "reviewMinutes": 3 },
+    { "configuration": "baseline", "accepted": false, "modelCost": 0.10, "reviewMinutes": 8 },
+    { "configuration": "baseline", "accepted": true, "modelCost": 0.09, "reviewMinutes": 4 },
+    { "configuration": "candidate", "accepted": true, "modelCost": 0.04, "reviewMinutes": 6 },
+    { "configuration": "candidate", "accepted": false, "modelCost": 0.03, "reviewMinutes": 10 },
+    { "configuration": "candidate", "accepted": true, "modelCost": 0.05, "reviewMinutes": 7 }
+  ]
+}
