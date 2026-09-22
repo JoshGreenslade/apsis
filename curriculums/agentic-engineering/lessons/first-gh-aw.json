@@ -1,0 +1,67 @@
+{
+  "id": "first-gh-aw",
+  "title": "11 · Your first GitHub Agentic Workflow",
+  "description": "Compile a maintenance brief and inspect the system GitHub Actions will execute.",
+  "minutes": 50,
+  "prerequisites": [
+    "workflow-shapes"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "maintenance",
+        "title": "Documentation has fallen behind",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Our next service fragment has a different problem from the first lab. Its implementation accepts `includeDrafts=true`, but its documentation tells callers to use `showDrafts=true`. The implementation is authoritative in this maintenance exercise. We want a workflow that notices the discrepancy and proposes a useful correction.\n\nThis task has a natural home in a repository. The evidence is in files, maintainers can review a finding there, and a future version can run after relevant changes. GitHub Agentic Workflows lets us describe this work in Markdown with configuration for its execution. A compiler turns that source into the GitHub Actions workflow that actually runs.\n\nThere are consequently two artifacts to understand: the authored brief and the generated execution plan. The short Markdown file is convenient, but it does not make the runtime disappear."
+          }
+        ]
+      },
+      {
+        "id": "compile",
+        "title": "Compile before configuring credentials",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The [supplied gh-aw example](https://github.com/JoshGreenslade/apsis/tree/main/examples/agent-workshop/gh-aw) is pinned to compiler **v0.88.8**. Install that release using the official release instructions and confirm `gh aw --version`. A standalone release binary can be used in place of `gh aw` in the commands below.\n\nFrom your Apsis clone:\n\n```sh\ngh aw compile --dir examples/agent-workshop/gh-aw/workflows --no-check-update\n```\n\nThis source is outside `.github/workflows`, so it is inert in Apsis. Compilation does not call a model or create an issue. The example was compiled locally without warnings; a generated lockfile is supplied for inspection if you cannot install the compiler.\n\nRead `docs-drift.md`. The frontmatter selects a manual trigger, read access to contents, an engine, limits, tools and staged issue output. The body identifies two files, defines a worthwhile finding and allows a no-action result. A task that always demands an issue will find something to say even when the documentation is already correct."
+          }
+        ]
+      },
+      {
+        "id": "generated",
+        "title": "Open the larger file",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Open `docs-drift.lock.yml` and find its job names. In this compiled example they include activation, agent, conclusion, detection and safe outputs. Look for the `permissions` attached to each job rather than assume one permission block describes the whole run.\n\nFind the engine credential reference, the checked-out source and the generated tool configuration. The compiler has supplied substantially more machinery than our original harness. Some of it concerns running the agent; some concerns inspecting and applying what it produces. This is why reviewing only the natural-language brief gives an incomplete picture of authority.\n\nChange the brief to request a concrete suggested correction, compile again and inspect the diff. Then restore it. Do the same with a configuration change. Do not edit the generated lockfile as your primary authoring method: it should be reproducible from the source and selected compiler."
+          }
+        ]
+      },
+      {
+        "id": "live",
+        "title": "An optional first remote run",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use your own disposable repository, not Apsis or a production repository. Preserve the maintenance fixture's directory layout, copy the Markdown into `.github/workflows`, compile there and commit both source and lockfile to the default branch. Inspect any generated support files too.\n\nThe example selects Copilot. Consult the linked engine authentication documentation for the pinned version and configure its required credential in repository secrets. A GitHub repository token and model access are separate concerns. The supplied lockfile references `COPILOT_GITHUB_TOKEN`; do not paste that credential into the prompt or assume an arbitrary token has the necessary entitlement.\n\nManually run the workflow through the Actions interface. Keep staged output enabled and inspect the preview and job logs. Even a staged run consumes resources, and auxiliary jobs may have effects of their own. Check account pricing and limits before the run. If you remain offline, trace the compiled jobs and compare the two fixture files yourself; record live execution as untested.\n\nThe immediate achievement is modest and concrete: you can explain what was authored, what was compiled and what would execute. Next we examine the boundary between a proposed finding and a published action."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "gh-aw release v0.88.8",
+      "url": "https://github.com/github/gh-aw/releases/tag/v0.88.8"
+    },
+    {
+      "title": "Workflow frontmatter",
+      "url": "https://github.github.com/gh-aw/reference/frontmatter/"
+    },
+    {
+      "title": "Engine authentication",
+      "url": "https://github.github.com/gh-aw/reference/auth/"
+    }
+  ]
+}

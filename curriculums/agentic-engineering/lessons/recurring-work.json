@@ -1,0 +1,63 @@
+{
+  "id": "recurring-work",
+  "title": "13 · Make maintenance recurring",
+  "description": "Design triggers, no-ops and repeat behaviour before leaving a workflow unattended.",
+  "minutes": 45,
+  "prerequisites": [
+    "bounded-authority"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "twice",
+        "title": "It was useful once. What happens tomorrow?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A manual run found a genuine problem. Running the same workflow tomorrow may rediscover precisely the same problem. If it creates another issue, the system has become noisier without becoming more useful.\n\nRecurring work needs a definition of what is new. For a documentation finding, that might be a specific mismatch at a particular source revision, associated with an existing open report. A timestamp alone identifies a run, not a new finding. Two runs can encounter the same work.\n\nBegin with the manual trigger until you understand this behaviour. Scheduling is easy to add and expensive to ignore."
+          }
+        ]
+      },
+      {
+        "id": "trigger",
+        "title": "Choose what should wake it up",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A schedule suits checks where timeliness is loose and evidence may change outside a single push. A repository event can reduce delay when relevant code changes. Manual dispatch remains valuable for controlled investigation and reruns.\n\nIn a disposable copy of `docs-drift.md`, add a schedule under the existing `on` block:\n\n```yaml\non:\n  workflow_dispatch:\n  schedule:\n    - cron: '17 9 * * 1'\n```\n\nThis expresses a Monday 09:17 UTC schedule. Compile and inspect the generated trigger. Do not publish this variant unless you intend to leave it running, have budgeted for it and know how to disable it. Scheduled Actions are not a precise real-time scheduler; use the official trigger documentation to understand their operational behaviour.\n\nFor an event-driven variant, define which changed paths matter before enabling it. A documentation workflow should not wake for every unrelated asset change. Yet path filtering alone is not enough: a relevant file may change only in formatting, producing no semantic mismatch."
+          }
+        ]
+      },
+      {
+        "id": "matrix",
+        "title": "Exercise the repeat cases",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use the sandbox or a paper trace to walk through four situations: stale documentation with no existing report; the same stale documentation with an open report; corrected documentation; and an irrelevant change. Write the expected action for each before running anything.\n\nThe original starter does not implement durable deduplication. To extend it, supply a bounded lookup of existing findings and choose a stable way to match them. A search followed by creation can still race with another run. Decide whether to serialize publication, use a deterministic coordinator or tolerate and reconcile rare duplicates. The chosen mechanism should match the cost of duplication.\n\nA no-op is a legitimate result when there is no new useful action. It is different from failing to read the evidence or exhausting a tool limit. Preserve that distinction in your run record so a quiet workflow does not conceal a broken one."
+          }
+        ]
+      },
+      {
+        "id": "limits",
+        "title": "Bound the unattended work",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Inspect the workflow's time and turn limits, its concurrency settings and what happens to overlapping runs. Cancelling old work may be reasonable for a read-only report about the newest revision; cancelling during publication raises the uncertain-effect problem from chapter 9.\n\nConsider feedback loops as well. If the workflow creates a patch, and that patch triggers the same workflow, what stops repeated self-generated work? Use event conditions, actor checks and a definition of the work already handled where appropriate. A natural-language request not to loop is not a replacement for those controls.\n\nBefore leaving any recurring version enabled, record its owner, expected frequency, cost budget, publication limits and disable procedure. Remove the schedule or disable the workflow when the exercise ends. At this point you should be able to explain not only why one run helps, but why repeated runs remain useful."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "GitHub Actions scheduled events",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule"
+    },
+    {
+      "title": "gh-aw concurrency",
+      "url": "https://github.github.com/gh-aw/reference/concurrency/"
+    }
+  ]
+}

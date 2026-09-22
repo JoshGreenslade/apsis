@@ -1,0 +1,63 @@
+{
+  "id": "bounded-authority",
+  "title": "12 · Give the workflow bounded authority",
+  "description": "Follow a proposed action through preview, validation and publication.",
+  "minutes": 45,
+  "prerequisites": [
+    "first-gh-aw"
+  ],
+  "content": {
+    "sections": [
+      {
+        "id": "proposal",
+        "title": "A finding is not yet an issue",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The agent has found a mismatched parameter name. It can explain the discrepancy and propose an issue. Whether an issue is actually created is a separate operational decision.\n\nIn the supplied workflow, the safe-output configuration permits at most one issue proposal and enables staged mode. The intended exercise is to inspect that proposal before allowing publication in the sandbox. We are separating judgement about the documentation from the mechanism that changes the repository.\n\nThat separation is useful even when you trust the model to spot the error. A correct diagnosis can still arrive with an unhelpful title, duplicate an existing report or contain information that should not be published."
+          }
+        ]
+      },
+      {
+        "id": "inspect",
+        "title": "Read authority from the compiled jobs",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In `docs-drift.lock.yml`, compare the agent job with `safe_outputs` and `conclusion`. Find which jobs read contents and which can write issues. Follow the credential references as well as the permission declarations.\n\nStaged safe outputs preview supported operations rather than applying them. They are not a promise that every auxiliary job in a workflow is side-effect-free. The compiled conclusion job is one reason to inspect the whole file. Similarly, the workflow's shell tool is only part of its tool surface: inspect the generated manifest for any default MCP tools the compiler includes.\n\nWrite down what the system can read, what it can propose and what can be published by which job. If you cannot identify a boundary from the source, consult the generated code and versioned documentation. Do not infer a security guarantee from a reassuring field name."
+          }
+        ]
+      },
+      {
+        "id": "trial",
+        "title": "Test an output before enabling it",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In your disposable repository, run the staged workflow with the stale documentation. Check whether its proposed issue names the old and actual parameters and cites the two files. Correct the document, commit the change and run again. There should be no actionable mismatch.\n\nIf the corrected case still produces a finding, inspect its evidence before expanding permissions. It may be reporting the fixture's explanatory note or inventing a stylistic improvement. Narrow the task to the caller-visible API description and repeat the contrast.\n\nOnly after a useful preview should you try removing `staged: true`, recompiling and running once in the sandbox. This enables the configured publication. Inspect the created object, then close or remove the test output as appropriate. Restore staged mode before continuing experiments. This is an optional live exercise, not a requirement to grant Apsis credentials."
+          }
+        ]
+      },
+      {
+        "id": "patch",
+        "title": "When the desired output is a patch",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "An issue makes the evidence visible. A patch proposal can save the maintainer another editing step, but requires a different capability boundary. The agent must be able to prepare the change, the output mechanism must be permitted to create the pull request, and the workflow must verify that it changed only the intended documentation.\n\nDo not broaden the agent's token to general write access merely because the output should be a pull request. Investigate the compiler's dedicated pull-request output and the generated jobs that apply it. Keep a reviewer in the loop, and check the target branch, changed paths and validation results.\n\nThe next iteration should be justified by the workflow's purpose: a bounded documentation patch with evidence is useful; an unattended merge is a separate decision. We will return to patch integration once the workflow has a repeatable way to decide when there is work to do."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Safe outputs and staged mode",
+      "url": "https://github.github.com/gh-aw/reference/safe-outputs/"
+    },
+    {
+      "title": "Pull-request safe outputs",
+      "url": "https://github.github.com/gh-aw/reference/safe-outputs-pull-requests/"
+    }
+  ]
+}

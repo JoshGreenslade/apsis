@@ -10,5 +10,8 @@ import skills from "./lessons/skills.json";
 import harness from "./lessons/harness.json";
 import recovery from "./lessons/recovery.json";
 import workflows from "./lessons/workflow-shapes.json";
+import firstAw from "./lessons/first-gh-aw.json";
+import authority from "./lessons/bounded-authority.json";
+import recurring from "./lessons/recurring-work.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows, firstAw, authority, recurring] });
