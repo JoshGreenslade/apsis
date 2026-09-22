@@ -33,3 +33,21 @@ It is not installed automatically. First give its contents explicitly to your
 chosen host in a disposable session. For discovery tests, install a copy using
 that host's documented project-skill directory and confirm loading in its log.
 Remove the copy afterwards. The skill is guidance, not an authorization boundary.
+
+## Harness and recovery
+
+Run node run-harness.mjs for a labelled scripted demonstration, or add --live
+with ANTHROPIC_API_KEY and ANTHROPIC_MODEL configured for paid SDK calls. Live
+mode is limited to five calls and 1200 output tokens per call, with a 45-second
+request timeout and no automatic retries. These are work bounds, not a currency
+ceiling. Check provider pricing and spending controls. Never commit credentials.
+Live provider execution has not been performed as part of course verification.
+
+The harness reads the investigator fixture from the Apsis checkout, so retain
+the repository directory layout. It proposes a fix; it cannot edit or run tests.
+The default demonstration and automated tests make no provider calls.
+
+Run node recovery-demo.mjs to simulate a lost response after a committed local
+effect. It closes and reopens a temporary SQLite database, retries the same key,
+and confirms only one proposal exists. It cleans up its own temporary directory.
+This proves the local transaction pattern, not exactly-once remote execution.

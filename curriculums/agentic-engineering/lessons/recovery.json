@@ -1,0 +1,59 @@
+{
+  "id": "recovery",
+  "title": "09 · Work that survives interruption",
+  "description": "Recover from an uncertain result without blindly repeating its effects.",
+  "prerequisites": [
+    "harness"
+  ],
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "uncertain",
+        "title": "Did it fail, or did the reply disappear?",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Your agent submits a proposed maintenance issue. The server stores it, but the connection drops before the response arrives. From the agent's point of view, the call failed. From the team's point of view, the issue exists.\n\nRetrying may create a duplicate. Not retrying may leave the task unfinished if the first call really did fail before storage. The caller cannot resolve this ambiguity by thinking harder about the timeout. It needs an execution protocol that can identify the operation and inspect or repeat it safely.\n\nA stable request identifier is one way to make the ambiguity manageable. The service records which request produced an effect. A retry with that identifier can recover the existing result instead of creating another."
+          }
+        ]
+      },
+      {
+        "id": "lab",
+        "title": "Lose a response on purpose",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "From the capability kit, run:\n\n```sh\nnode recovery-demo.mjs\n```\n\nThe program creates a temporary SQLite database, stores a proposed fix, deliberately throws after committing it, closes the database, opens it again and repeats the request. The output should show a recovered proposal and `Stored proposals: 1`. The temporary directory is removed in a cleanup block. No model or remote service is involved.\n\nRead `effects.mjs`. The request ID is the table's primary key. The implementation checks for an existing record inside a transaction. The same identifier with the same body retrieves the existing operation; the same identifier with a different body is rejected. Reusing a key must not silently turn one requested action into another.\n\nThis is a durable local effect and receipt in the same database. That detail matters. We have not solved arbitrary remote exactly-once execution. If you instead wrote a local receipt and then called an external service, a crash between those steps would reopen the ambiguity. Prefer the external service's idempotency support or reconcile against its authoritative state."
+          }
+        ]
+      },
+      {
+        "id": "state",
+        "title": "A conversation is not a work ledger",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Conversation history can explain why an agent proposed an action. It is a poor substitute for a record of which effects actually committed. A summary may omit a failed response or describe a planned action in the past tense. A work ledger should distinguish proposed, started, confirmed, uncertain and abandoned work according to the needs of the system.\n\nUse identifiers at the level of the business action. Generating a fresh key every time you retry defeats deduplication. Reusing one key for every maintenance issue suppresses distinct work. For a documentation proposal, a key might include the repository, inspected revision and the specific finding being acted upon. Define what makes two actions the same before choosing the key.\n\nCancellation has a similar boundary. Stopping the agent prevents further requests; it does not necessarily undo a completed action or a remote request already in flight. Recovery may require a compensating operation, a human decision or simply recording that the effect stands."
+          }
+        ]
+      },
+      {
+        "id": "exercise",
+        "title": "Change the recovery rule",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "In a disposable copy, retry with a new identifier after the simulated lost response. Predict the count before running: it should become two, because the service has been told these are separate requests. Restore the identifier and change the body. The service should reject the mismatch.\n\nThen sketch the equivalent workflow for a real issue tracker. Where is the durable identity stored? How would you find the original issue after an uncertain response? Who decides whether a partially completed operation should continue? Do not fill gaps with a promise to 'retry safely'; identify the actual mechanism or leave the gap explicit.\n\nThe lesson is not that every agent needs a database from its first line of code. It is that repeated or consequential work needs a way to distinguish an unobserved result from an unperformed action. That requirement helps determine which execution environment to choose."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "SQLite atomic commit",
+      "url": "https://www.sqlite.org/atomiccommit.html"
+    }
+  ]
+}

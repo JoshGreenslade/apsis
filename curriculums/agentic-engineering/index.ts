@@ -7,5 +7,8 @@ import context from "./lessons/context-design.json";
 import tools from "./lessons/usable-tools.json";
 import mcp from "./lessons/mcp.json";
 import skills from "./lessons/skills.json";
+import harness from "./lessons/harness.json";
+import recovery from "./lessons/recovery.json";
+import workflows from "./lessons/workflow-shapes.json";
 
-export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills] });
+export default defineCourse({ ...course, topics: [inspect, models, selection, context, tools, mcp, skills, harness, recovery, workflows] });

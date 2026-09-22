@@ -8,6 +8,7 @@
     "inspect:mcp": "node inspect-mcp.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.127.0",
     "@modelcontextprotocol/sdk": "1.30.0",
     "zod": "4.6.5"
   }

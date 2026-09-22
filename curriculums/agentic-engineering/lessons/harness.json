@@ -1,0 +1,59 @@
+{
+  "id": "harness",
+  "title": "08 · Build the execution loop",
+  "description": "Own the cycle that turns model requests into actions and observations.",
+  "prerequisites": [
+    "skills"
+  ],
+  "minutes": 50,
+  "content": {
+    "sections": [
+      {
+        "id": "own",
+        "title": "The model has asked. Now your program must decide.",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The model returns a request to call `lookup_contract`. Nothing has been looked up yet. Your program must recognise the request, validate its arguments, execute the permitted operation and return the result in a form the next model call can use.\n\nThis is a useful place to build a small harness. We already understand the task and the tool, so there is little application machinery to distract us. The exercise is deliberately read-only: it investigates and proposes a fix. It cannot edit source or run tests. That limitation lets us identify exactly what the runtime can establish, rather than treat any final answer as a completed code change."
+          }
+        ]
+      },
+      {
+        "id": "demo",
+        "title": "Run the machinery before paying for inference",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Update your Apsis clone, then run these commands in `examples/agent-workshop`:\n\n```sh\nnpm ci\nnode run-harness.mjs\n```\n\nThe default mode is a **scripted demonstration**. A small adapter emits predetermined tool requests followed by a constructed answer. The harness executes real local reads and logs the requests and results. No provider is contacted.\n\nRead `harness.mjs` while following the output. The first message describes the task. A completion function receives the messages and tool definitions. Tool-use blocks are dispatched, their results are associated with the original request IDs, and those observations are added before another call. The harness keeps the full assistant content rather than reconstructing a response from only its visible text.\n\nThe completion function is supplied from outside the loop. In scripted mode it lets us test the plumbing. In live mode it calls the pinned Anthropic SDK. This boundary makes the runtime inspectable without making a claim that all providers have interchangeable message formats."
+          }
+        ]
+      },
+      {
+        "id": "live",
+        "title": "Use the live adapter deliberately",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The optional live route requires an Anthropic API key and access to a currently available tool-capable model. Configure `ANTHROPIC_API_KEY` and `ANTHROPIC_MODEL` in your shell using your provider's instructions. Do not put a key in source control, a task prompt or a captured trace. Check the current model price before running:\n\n```sh\nnode run-harness.mjs --live\n```\n\nThe supplied adapter allows at most five model calls, each with an output limit of 1,200 tokens, a 45-second request timeout and automatic SDK retries disabled. Those bounds limit work; they are not a fixed currency ceiling because input size and model pricing matter too. Set provider-side spending controls where available. You can complete the runtime exercise using the scripted route if you do not want paid calls.\n\nInspect whether the model requests both the contract and implementation, and whether its final explanation accurately states that no edit or test occurred. Compare this with the earlier coding agent, which had a broader tool surface. Two systems using capable models can have different completion boundaries because their runtimes permit different work."
+          }
+        ]
+      },
+      {
+        "id": "stop",
+        "title": "Stopping is a result worth naming",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "The harness distinguishes an answer, truncated output, another stop condition and reaching its turn limit. A tool error is returned to the model as an error observation; it is not silently converted into an empty successful result. These distinctions give the caller something meaningful to do next.\n\nTry reducing `maxTurns` to one in a working copy. The scripted adapter requests tools, receives their results and then reaches its limit before producing an answer. The correct status is `turn-limit`, not success. The useful local observations still exist, but the requested explanation does not.\n\nThis small runtime lacks many things a production system may need: durable state, authenticated users, richer validation, concurrency control and a decision about retaining potentially sensitive logs. Add them in response to a requirement you can name. The next exercise isolates one especially important requirement: recovering after an action succeeded but its result never reached the caller."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Claude client tool definitions",
+      "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
+    }
+  ]
+}

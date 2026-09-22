@@ -1,0 +1,59 @@
+{
+  "id": "workflow-shapes",
+  "title": "10 · Choose a workflow shape",
+  "description": "Place model judgement within an execution structure that fits the work.",
+  "prerequisites": [
+    "recovery"
+  ],
+  "minutes": 40,
+  "content": {
+    "sections": [
+      {
+        "id": "different",
+        "title": "Three jobs hiding behind the word agent",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "A developer asks for help understanding an unfamiliar function. A scheduled job checks whether documentation still matches a changed API. A migration must update several services over a week, waiting for reviews along the way. All three may use a model. They have very different execution needs.\n\nThe first benefits from an interactive session: the developer supplies missing context and changes direction as understanding develops. The second has a recurring trigger, a bounded task and a place to publish its result. The third needs durable coordination across interruptions, dependencies and people who are not continuously present.\n\nChoosing a runtime begins with these facts. You do not need the same architecture merely because each system can be described as agentic."
+          }
+        ]
+      },
+      {
+        "id": "split",
+        "title": "Keep a decision where it is easiest to understand",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Consider documentation drift. Determining which files changed between two revisions is ordinary version-control work. Checking whether a referenced file exists is an ordinary program. Deciding whether a paragraph still explains the changed behaviour may require judgement. Applying an approved patch can return to deterministic tooling.\n\nIf you ask a model to do all of these things from an unrestricted shell, it may succeed. You also give it more opportunities to repeat work, misunderstand a command or spend inference on a mechanical step. Conversely, trying to encode every semantic mismatch as a brittle pattern may make the system harder to maintain than a bounded model review.\n\nDraw the proposed path as a short sequence: select changed files, gather relevant documentation, assess a mismatch, validate a proposed result, request review. For each step, name the input and output. Then decide whether it needs judgement, ordinary computation or authority from a person. This is an implementation decision, not a ranking of intelligence."
+          }
+        ]
+      },
+      {
+        "id": "practice",
+        "title": "Build the non-model boundary",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "Use the investigator as a small experiment. Ask the agent to propose a fix without applying it. Apply the proposed patch yourself in a disposable copy, then run:\n\n```sh\nnode --test releases.test.mjs\n```\n\nDeliberately try a patch that treats every non-empty string as true. The tests should reject it even if the explanation sounds convincing. Then try the exact comparison required by the contract. The validator does not need to understand the agent's narrative to check those cases.\n\nNow consider an incomplete explanation attached to a correct patch. The code checks can pass while a maintainer still needs a clearer account of the change. Different aspects of success need different evidence. Avoid asking one model-generated verdict to stand in for code execution, permission checks and human acceptance all at once."
+          }
+        ]
+      },
+      {
+        "id": "choice",
+        "title": "Choose what you will operate",
+        "blocks": [
+          {
+            "kind": "content",
+            "body": "An existing coding harness gives you mature editing, navigation and interaction behaviour without implementing it yourself. A provider SDK exposes lower-level control over calls and tool use, but leaves more lifecycle responsibilities with you. A durable job or workflow system can own scheduling, retries and state while an agent performs a bounded portion of the job.\n\nThe maintenance project we are about to build is naturally connected to a repository: its inputs are changes, its output is a finding or patch proposal, and its operator already works in GitHub. That makes GitHub Agentic Workflows worth investigating. It does not settle every future choice. If the task needs a long-lived interactive service, custom latency guarantees or a coordinator spanning systems with different lifecycles, we will compare other arrangements.\n\nWrite a brief for the maintenance workflow before choosing its configuration: what it inspects, what counts as a useful finding, what it may publish and when it should do nothing. This brief will become the basis of the next workshop. The execution design should make those responsibilities visible."
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "title": "Building effective agents: workflow patterns",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents"
+    }
+  ]
+}
